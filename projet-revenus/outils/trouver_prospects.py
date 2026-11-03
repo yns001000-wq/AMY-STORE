@@ -76,13 +76,15 @@ def appeler_api(params: dict) -> dict:
     raise RuntimeError("API indisponible")
 
 
-def extraire(resultat: dict, depuis: dt.date | None) -> dict | None:
+def extraire(resultat: dict, depuis: dt.date | None, naf: list[str] | None = None) -> dict | None:
     """Transforme un résultat d'API en ligne de prospect, ou None s'il faut l'écarter."""
     if resultat.get("opposition_diffusion_commerciale"):
         return None  # la personne s'est opposée à la prospection : on respecte
     if resultat.get("etat_administratif") != "A":
         return None
     etabs = [e for e in (resultat.get("matching_etablissements") or []) if e.get("etat_administratif") == "A"]
+    if naf:  # garder uniquement un établissement qui exerce bien le métier recherché
+        etabs = [e for e in etabs if (e.get("activite_principale") or "").upper() in naf]
     if not etabs:
         return None
     et = etabs[0]
@@ -120,7 +122,7 @@ def chercher(naf: list[str], zone: dict, depuis: dt.date | None, maximum: int, p
                 params["est_entrepreneur_individuel"] = "true"
             data = appel(params)
             for r in data.get("results", []):
-                ligne = extraire(r, depuis)
+                ligne = extraire(r, depuis, [code])
                 if ligne and ligne["siren"] not in deja:
                     deja.add(ligne["siren"])
                     trouves.append(ligne)
@@ -138,16 +140,25 @@ def sirens_existants(chemin: Path) -> set[str]:
 
 
 def ajouter(chemin: Path, lignes: list[dict], segment: str) -> None:
+    """Ajoute des prospects. Si le fichier a d'anciennes colonnes, il est réécrit au format actuel (aucune donnée perdue)."""
     existant = crm.lire(chemin.parent, chemin.name)
     prochain_id = max([int(p["id"]) for p in existant if p.get("id", "").isdigit()] + [0]) + 1
     aujourd_hui = dt.date.today().isoformat()
-    nouveau_fichier = not chemin.exists() or chemin.stat().st_size == 0
-    with chemin.open("a", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=colonnes())
-        if nouveau_fichier:
-            w.writeheader()
-        for i, l in enumerate(lignes):
-            w.writerow({c: "" for c in colonnes()} | l | {"id": prochain_id + i, "date_ajout": aujourd_hui, "segment": segment})
+    entete_actuelle = []
+    if chemin.exists() and chemin.stat().st_size:
+        with chemin.open(encoding="utf-8-sig", newline="") as f:
+            entete_actuelle = next(csv.reader(f), [])
+    cols = colonnes() + [c for c in entete_actuelle if c and c not in colonnes()]
+    nouvelles = [{c: "" for c in cols} | l | {"id": prochain_id + i, "date_ajout": aujourd_hui, "segment": segment}
+                 for i, l in enumerate(lignes)]
+    if entete_actuelle == cols:
+        with chemin.open("a", encoding="utf-8", newline="") as f:
+            csv.DictWriter(f, fieldnames=cols).writerows(nouvelles)
+        return
+    with chemin.open("w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=cols)
+        w.writeheader()
+        w.writerows([{c: ligne.get(c, "") for c in cols} for ligne in existant] + nouvelles)
 
 
 def main(argv=None) -> int:

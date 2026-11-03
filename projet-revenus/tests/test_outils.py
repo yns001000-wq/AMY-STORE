@@ -287,6 +287,24 @@ class TestProspects(unittest.TestCase):
         self.assertEqual(lus[0]["segment"], "A-artisans")
         self.assertEqual(trouver_prospects.sirens_existants(fichier), {"111", "444", "555"})
 
+    def test_metier_hors_cible_exclu(self):
+        r = self.resultat("9")
+        r["matching_etablissements"][0]["activite_principale"] = "70.10Z"
+        self.assertIsNone(trouver_prospects.extraire(r, None, ["43.22A"]))
+        self.assertIsNotNone(trouver_prospects.extraire(self.resultat("9"), None, ["43.22A"]))
+
+    def test_migration_ancien_format(self):
+        d = Path(tempfile.mkdtemp())
+        fichier = d / "prospects.csv"
+        fichier.write_text("id,date_ajout,segment,entreprise,statut,notes\n1,2026-11-01,A,Ancienne,contacte,garder\n", encoding="utf-8")
+        trouver_prospects.ajouter(fichier, [self.resultat_ligne("777")], "A")
+        lus = crm.lire(d, "prospects.csv")
+        self.assertEqual(lus[0]["entreprise"], "Ancienne")
+        self.assertEqual(lus[0]["notes"], "garder")
+        self.assertEqual(lus[1]["pays"], "FR")
+        self.assertEqual(lus[1]["statut"], "nouveau")
+        self.assertEqual(lus[1]["id"], "2")
+
     def resultat_ligne(self, siren):
         return trouver_prospects.extraire(self.resultat(siren), None)
 
