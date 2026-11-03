@@ -1,20 +1,42 @@
 {
-  "_note": "EXEMPLE FICTIF — entreprise inventée pour démonstration. Ne pas présenter comme un vrai client.",
+  "_note": "EXEMPLE FICTIF — entreprise inventée pour démonstration. Avis d'exemple signalés comme tels sur la page. Ne pas présenter comme un vrai client.",
   "demo": true,
   "modele": "commande-whatsapp",
   "pays": "FR",
   "slug": "exemple-patisserie-lea",
-  "nom": "Les Gâteaux de Léa (exemple fictif)",
+  "nom": "Les Gâteaux de Léa",
   "metier": "Pâtisserie sur commande",
   "ville": "Saint-Étienne",
-  "zone": "Retrait à Saint-Étienne, livraison possible à 10 km",
-  "accroche": "Gâteaux faits maison, à commander en 2 minutes",
-  "description": "Pâtisserie artisanale sur commande pour vos anniversaires, baptêmes et fêtes. Commande au plus tard 48 h à l'avance.",
+  "zone_courte": "Saint-Étienne",
+  "titre": "Des gâteaux faits maison, commandés en 2 minutes",
+  "zone": "Retrait à Saint-Étienne (Jacquard). Livraison possible à 10 km.",
+  "communes": [
+    "Saint-Étienne",
+    "Saint-Priest-en-Jarez",
+    "La Talaudière",
+    "Villars"
+  ],
+  "accroche": "Anniversaires, baptêmes, gourmandises du week-end : choisissez, envoyez votre commande sur WhatsApp, on s'occupe du reste.",
+  "description": "Léa prépare chaque gâteau à la main, avec des fruits de saison et du beurre AOP. Commandez au moins 48 h à l'avance. (Entreprise fictive de démonstration.)",
   "telephone": "06 00 00 00 01",
   "whatsapp": "33600000001",
   "couleur": "#b0466b",
+  "atouts": [
+    "Fait maison, fruits de saison",
+    "Commande sous 48 h",
+    "Retrait ou livraison",
+    "Paiement au retrait"
+  ],
+  "modes": [
+    "Retrait (Jacquard)",
+    "Livraison à domicile (+5 €, 10 km)"
+  ],
+  "delai_commande": "Commande au plus tard 48 h à l'avance (72 h pour plus de 12 parts).",
+  "mode_retrait": "Retrait du mercredi au samedi, livraison possible à 10 km (+5 €).",
+  "allergenes": "Allergènes : gluten, œufs, lait, fruits à coque. Liste détaillée sur demande.",
   "produits": [
     {
+      "categorie": "Gâteaux de fête",
       "nom": "Fraisier",
       "desc": "Génoise, crème mousseline vanille, fraises fraîches.",
       "prix": 32,
@@ -22,42 +44,106 @@
         "6 parts",
         "8 parts",
         "10 parts"
-      ]
+      ],
+      "image": "images-demo/patisserie-fraisier.jpg",
+      "badge": "Le plus commandé"
     },
     {
+      "categorie": "Gâteaux de fête",
       "nom": "Layer cake chocolat",
-      "desc": "Trois étages, ganache chocolat noir.",
+      "desc": "Trois étages, ganache chocolat noir, fruits rouges.",
       "prix": 38,
       "options": [
         "8 parts",
         "12 parts"
-      ]
+      ],
+      "image": "images-demo/patisserie-chocolat.jpg"
     },
     {
-      "nom": "Boîte de 12 cookies",
-      "desc": "Assortiment : chocolat, noisette, caramel.",
-      "prix": 15
+      "categorie": "Gâteaux de fête",
+      "nom": "Naked cake fraises",
+      "desc": "Génoise légère, chantilly mascarpone, fraises.",
+      "prix": 42,
+      "options": [
+        "10 parts",
+        "14 parts"
+      ],
+      "image": "images-demo/patisserie-hero.jpg"
     },
     {
+      "categorie": "Douceurs",
       "nom": "Tarte citron meringuée",
       "desc": "Pâte sablée, crème citron, meringue italienne.",
       "prix": 24,
       "options": [
         "6 parts",
         "8 parts"
-      ]
+      ],
+      "image": "images-demo/patisserie-citron.jpg"
+    },
+    {
+      "categorie": "Douceurs",
+      "nom": "Boîte de 12 cookies",
+      "desc": "Chocolat, noisette et caramel beurre salé.",
+      "prix": 15,
+      "image": "images-demo/patisserie-cookies.jpg",
+      "badge": "Nouveau"
     }
   ],
-  "horaires": [
-    [
-      "Mercredi – Samedi",
-      "10h – 19h"
-    ],
-    [
-      "Retrait",
-      "sur rendez-vous"
+  "images": {
+    "hero": "images-demo/patisserie-hero.jpg"
+  },
+  "avis": {
+    "note": 5.0,
+    "nombre": 52,
+    "source": "Google",
+    "liste": [
+      {
+        "auteur": "Nadia R.",
+        "note": 5,
+        "date": "octobre 2026",
+        "texte": "Le fraisier pour les 6 ans de ma fille était magnifique et délicieux. Commande super simple par WhatsApp."
+      },
+      {
+        "auteur": "Thomas G.",
+        "note": 5,
+        "date": "septembre 2026",
+        "texte": "Les cookies sont une tuerie. Retrait à l'heure, accueil adorable."
+      },
+      {
+        "auteur": "Élodie P.",
+        "note": 5,
+        "date": "septembre 2026",
+        "texte": "Layer cake chocolat parfait pour notre baptême, tout le monde a demandé l'adresse !"
+      }
     ]
+  },
+  "horaires_semaine": {
+    "lun": "",
+    "mar": "",
+    "mer": "10:00-19:00",
+    "jeu": "10:00-19:00",
+    "ven": "10:00-19:00",
+    "sam": "09:00-17:00",
+    "dim": ""
+  },
+  "faq": [
+    {
+      "q": "Comment je paie ?",
+      "r": "Au retrait ou à la livraison, en espèces, carte ou virement. Aucun paiement en ligne."
+    },
+    {
+      "q": "Puis-je personnaliser mon gâteau ?",
+      "r": "Oui : message, couleurs, bougies. Précisez-le dans le message WhatsApp."
+    },
+    {
+      "q": "Faites-vous des gâteaux sans gluten ?",
+      "r": "Sur demande, pour certaines recettes. Écrivez-nous avant de commander."
+    }
   ],
+  "reseaux": {
+    "instagram": "https://www.instagram.com/"
+  },
   "statut_juridique": "Exemple fictif",
   "numero_entreprise": "Exemple fictif",
   "adresse_editeur": "Exemple fictif",

@@ -19,88 +19,134 @@ import rapport  # noqa: E402
 import trouver_prospects  # noqa: E402
 
 
-def fiche_artisan(**surcharges):
-    f = json.loads((RACINE / "modeles-sites" / "fiche-exemple-artisan.json").read_text(encoding="utf-8"))
+def charger(fichier, /, **surcharges):
+    f = json.loads((RACINE / "modeles-sites" / f"fiche-exemple-{fichier}.json").read_text(encoding="utf-8"))
     f.update(surcharges)
     return f
+
+
+def fiche_artisan(**surcharges):
+    return charger("artisan", **surcharges)
 
 
 class TestGenerateur(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
 
-    def test_artisan_complet_sans_variable_restante(self):
+    def lire(self, dossier, nom="index.html"):
+        return (dossier / nom).read_text(encoding="utf-8")
+
+    def test_trois_modeles_complets(self):
+        for nom in ("artisan", "commande", "beaute"):
+            dossier, _ = generer_site.generer(charger(nom), self.tmp)
+            page = self.lire(dossier)
+            self.assertNotIn("{{", page)
+            self.assertTrue((dossier / "img").is_dir(), nom)
+            for f in ("mentions-legales.html", "merci.html"):
+                self.assertTrue((dossier / f).exists())
+            # toutes les images référencées existent
+            for src in __import__("re").findall(r'(?:src="|url\(\x27)(img/[^"\x27]+)', page):
+                self.assertTrue((dossier / src).is_file(), src)
+
+    def test_artisan_contenu(self):
         dossier, _ = generer_site.generer(fiche_artisan(), self.tmp)
-        page = (dossier / "index.html").read_text(encoding="utf-8")
-        self.assertNotIn("{{", page)
-        self.assertIn("Plombier chauffagiste à Villeurbanne", page)
+        page = self.lire(dossier)
+        self.assertIn("Votre plombier à Villeurbanne", page)
         self.assertIn('href="tel:0600000000"', page)
-        for f in ("mentions-legales.html", "merci.html"):
-            self.assertTrue((dossier / f).exists())
+        self.assertIn("À partir de 90 €", page)
+        self.assertIn("data-ouverture", page)
+        self.assertIn("Site de démonstration", page)
+
+    def test_avis_demo_signales_et_non_declares_aux_moteurs(self):
+        dossier, _ = generer_site.generer(fiche_artisan(), self.tmp)
+        page = self.lire(dossier)
+        self.assertIn("avis d'exemple", page)
+        self.assertNotIn("aggregateRating", page)  # pas de note structurée pour une démo
+        reel = fiche_artisan(demo=False)
+        dossier, _ = generer_site.generer(reel, self.tmp / "reel")
+        page = self.lire(dossier)
+        self.assertNotIn("avis d'exemple", page)
+        self.assertIn("aggregateRating", page)
+        self.assertIn('data-netlify="true"', page)
+
+    def test_sections_facultatives_absentes(self):
+        f = fiche_artisan()
+        for cle in ("avis", "faq", "images", "atouts"):
+            f.pop(cle)
+        dossier, avert = generer_site.generer(f, self.tmp)
+        page = self.lire(dossier)
+        self.assertNotIn('id="avis"', page)
+        self.assertNotIn('id="faq"', page)
+        self.assertNotIn('class="galerie"', page)
+        self.assertTrue(any("photo principale" in a for a in avert))
 
     def test_echappement_html(self):
         dossier, _ = generer_site.generer(fiche_artisan(nom='<script>alert(1)</script>', demo=False), self.tmp)
-        page = (dossier / "index.html").read_text(encoding="utf-8")
+        page = self.lire(dossier)
         self.assertNotIn("<script>alert(1)</script>", page)
         self.assertIn("&lt;script&gt;", page)
-        self.assertIn('data-netlify="true"', page)
 
     def test_json_dans_script_ne_casse_pas_la_balise(self):
-        f = json.loads((RACINE / "modeles-sites" / "fiche-exemple-commande.json").read_text(encoding="utf-8"))
-        f["nom"] = "Test </script><b>"
+        f = charger("commande", nom="Test </script><b>")
         dossier, _ = generer_site.generer(f, self.tmp)
-        page = (dossier / "index.html").read_text(encoding="utf-8")
-        self.assertEqual(page.count("</script>"), 2)  # JSON-LD + script panier, pas plus
+        page = self.lire(dossier)
+        normal, _ = generer_site.generer(charger("commande"), self.tmp / "n")
+        self.assertEqual(page.count("</script>"), self.lire(normal).count("</script>"))
 
     def test_apercu_non_indexable(self):
         dossier, _ = generer_site.generer(fiche_artisan(), self.tmp, apercu=True)
-        page = (dossier / "index.html").read_text(encoding="utf-8")
+        page = self.lire(dossier)
         self.assertTrue(dossier.name.endswith("-apercu"))
         self.assertIn('content="noindex, nofollow"', page)
         self.assertIn("non contractuel", page)
         self.assertTrue((dossier / "robots.txt").exists())
 
     def test_fiche_invalide(self):
+        cas = [dict(telephone=""), dict(slug="Avec Espaces"), dict(whatsapp="+33 6 00"), dict(couleur="red"),
+               dict(pays="DE"), dict(modele="inconnu"), dict(avis={"note": 7}),
+               dict(avis={"liste": [{"texte": "sans auteur"}]}), dict(images={"hero": "images-demo/absente.jpg"}),
+               dict(horaires_semaine={"lun": "8h-18h"})]
+        for surcharge in cas:
+            with self.assertRaises(generer_site.FicheInvalide, msg=str(surcharge)):
+                generer_site.generer(fiche_artisan(**surcharge), self.tmp)
         with self.assertRaises(generer_site.FicheInvalide):
-            generer_site.generer(fiche_artisan(telephone=""), self.tmp)
-        with self.assertRaises(generer_site.FicheInvalide):
-            generer_site.generer(fiche_artisan(slug="Avec Espaces"), self.tmp)
-        with self.assertRaises(generer_site.FicheInvalide):
-            generer_site.generer(fiche_artisan(whatsapp="+33 6 00"), self.tmp)
-        with self.assertRaises(generer_site.FicheInvalide):
-            generer_site.generer(fiche_artisan(couleur="red"), self.tmp)
+            generer_site.generer(charger("beaute", prestations=[]), self.tmp)
 
     def test_avertissement_mentions_manquantes(self):
-        f = fiche_artisan()
+        f = fiche_artisan(demo=False)
         del f["numero_entreprise"]
         dossier, avert = generer_site.generer(f, self.tmp)
         self.assertTrue(any("numero_entreprise" in a for a in avert))
-        self.assertIn("[À COMPLÉTER]", (dossier / "mentions-legales.html").read_text(encoding="utf-8"))
+        self.assertIn("[À COMPLÉTER]", self.lire(dossier, "mentions-legales.html"))
 
     def test_mentions_par_pays(self):
         for code, attendu, autorite in [("FR", "SIRET", "CNIL"), ("BE", "BCE", "autoriteprotectiondonnees.be"), ("CH", "IDE", "edoeb.admin.ch")]:
-            f = fiche_artisan(pays=code, slug=f"test-{code.lower()}")
-            f.pop("siret", None)
-            f["numero_entreprise"] = "123"
+            f = fiche_artisan(pays=code, slug=f"test-{code.lower()}", numero_entreprise="123")
             dossier, avert = generer_site.generer(f, self.tmp)
-            mentions = (dossier / "mentions-legales.html").read_text(encoding="utf-8")
+            mentions = self.lire(dossier, "mentions-legales.html")
             self.assertIn(attendu, mentions)
             self.assertIn(autorite, mentions)
-            self.assertIn(f'"addressCountry": "{code}"', (dossier / "index.html").read_text(encoding="utf-8"))
-            self.assertFalse(any("numero_entreprise" in a for a in avert))
-        with self.assertRaises(generer_site.FicheInvalide):
-            generer_site.generer(fiche_artisan(pays="DE"), self.tmp)
+            self.assertIn(f'"addressCountry": "{code}"', self.lire(dossier))
+            self.assertIn(f'lang="fr-{code}"', self.lire(dossier))
 
-    def test_commande_whatsapp_produits(self):
-        f = json.loads((RACINE / "modeles-sites" / "fiche-exemple-commande.json").read_text(encoding="utf-8"))
+    def test_commande_produits_et_photos(self):
+        f = charger("commande")
         dossier, _ = generer_site.generer(f, self.tmp)
-        page = (dossier / "index.html").read_text(encoding="utf-8")
+        page = self.lire(dossier)
         self.assertEqual(page.count("data-produit "), len(f["produits"]))
-        self.assertIn("32,00 €", page)
+        self.assertIn("32 €", page)
         self.assertIn('"33600000001"', page)
-        f["produits"] = []
-        with self.assertRaises(generer_site.FicheInvalide):
-            generer_site.generer(f, self.tmp)
+        self.assertIn("Le plus commandé", page)
+        self.assertIn('id="cat-1"', page)  # 2 catégories
+
+    def test_beaute_tarifs_et_reservation(self):
+        f = charger("beaute", reservation_url="https://reservation.exemple.invalid/nova")
+        dossier, _ = generer_site.generer(f, self.tmp)
+        page = self.lire(dossier)
+        self.assertIn("Prestations &amp; tarifs", page)
+        self.assertIn("dès 115 €", page)
+        self.assertIn("https://reservation.exemple.invalid/nova", page)
+        self.assertIn("Itinéraire", page)
 
 
 def ecrire_csv(dossier: Path, nom: str, lignes: list[dict]):

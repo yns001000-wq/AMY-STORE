@@ -48,6 +48,13 @@ _Dernière mise à jour : 3 novembre 2026 (retrait de la boutique AMY Store et r
 - Recherche de prospects : plusieurs départements possibles en une seule commande. Test réel réussi sur les départements 59 et 62.
 - Tests : 16 tests unitaires OK.
 
+### 03/11/2026 (nuit) — Modèles de sites clients refaits
+- Recherche sur ce qui fait vendre par métier (`docs/CONVERSION.md`).
+- 3 modèles : **artisan**, **commande WhatsApp** (métiers de bouche) et **beauté** (nouveau). Ils incluent : grande photo, note et avis, bande de confiance, galerie, prix, étapes, FAQ, « ouvert maintenant », barre d'action mobile, panier avec retrait ou livraison et date.
+- 14 photos libres de droits (CC0, Wikimedia Commons) pour les démos, avec leurs crédits. Les vrais sites utiliseront les photos des clients.
+- Avis : uniquement de vrais avis pour les clients. Les démos portent un avertissement visible.
+- Tests : 20 tests unitaires OK, et vérification navigateur OK (7 pages × 2 largeurs, images, panier).
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`

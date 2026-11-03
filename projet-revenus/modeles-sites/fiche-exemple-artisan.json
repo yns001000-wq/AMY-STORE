@@ -1,55 +1,136 @@
 {
-  "_note": "EXEMPLE FICTIF — entreprise inventée pour démonstration. Ne pas présenter comme un vrai client.",
+  "_note": "EXEMPLE FICTIF — entreprise inventée pour démonstration. Avis d'exemple signalés comme tels sur la page. Ne pas présenter comme un vrai client.",
   "demo": true,
   "modele": "artisan",
   "pays": "FR",
   "slug": "exemple-plomberie-martin",
-  "nom": "Plomberie Martin (exemple fictif)",
+  "nom": "Plomberie Martin",
   "metier": "Plombier chauffagiste",
   "ville": "Villeurbanne",
-  "zone": "Villeurbanne, Lyon et communes à 15 km",
-  "accroche": "Dépannage, installation et entretien de chauffage. Devis gratuit, intervention rapide, travail propre.",
-  "description": "Artisan plombier installé à Villeurbanne, j'interviens chez les particuliers et les petits commerces pour les fuites, chauffe-eau, salles de bain et chaudières. Je vous donne un prix clair avant de commencer.",
+  "zone_courte": "Villeurbanne et 15 km",
+  "titre": "Votre plombier à Villeurbanne, rapide et soigné",
+  "zone": "Villeurbanne, Lyon et les communes à 15 km autour.",
+  "communes": [
+    "Villeurbanne",
+    "Lyon 3e",
+    "Lyon 6e",
+    "Vaulx-en-Velin",
+    "Bron",
+    "Caluire-et-Cuire",
+    "Décines"
+  ],
+  "accroche": "Fuite, chauffe-eau, salle de bain ou chaudière : un devis clair avant de commencer, un travail propre, et une réponse le jour même.",
+  "description": "Artisan plombier installé à Villeurbanne depuis 2019, j'interviens chez les particuliers et les petits commerces. Je vous explique ce que je fais, je vous donne le prix avant de commencer, et je laisse le chantier propre. (Entreprise fictive de démonstration.)",
   "telephone": "06 00 00 00 00",
   "whatsapp": "33600000000",
   "email": "contact@exemple.invalid",
-  "couleur": "#1f5fbf",
+  "couleur": "#1d5fd1",
+  "delai_reponse": "Réponse sous 2 h en journée, du lundi au samedi.",
+  "bandeau": "Dépannage du lundi au samedi · Devis gratuit",
   "atouts": [
-    "Devis gratuit",
-    "Prix annoncé avant travaux",
-    "Assurance décennale"
+    "Devis gratuit et prix annoncé",
+    "Intervention sous 24 h",
+    "Assurance décennale",
+    "Chantier laissé propre"
   ],
   "services": [
     {
-      "titre": "Dépannage fuite",
-      "texte": "Recherche et réparation de fuites, robinetterie, WC, évacuations bouchées."
+      "icone": "💧",
+      "titre": "Recherche et réparation de fuite",
+      "texte": "Robinetterie, WC, évacuations, canalisations encastrées.",
+      "prix": "À partir de 90 €"
     },
     {
+      "icone": "🔥",
       "titre": "Chauffe-eau",
-      "texte": "Remplacement et entretien de chauffe-eau électriques et thermodynamiques."
+      "texte": "Remplacement et entretien de chauffe-eau électriques et thermodynamiques.",
+      "prix": "Sur devis gratuit"
     },
     {
+      "icone": "🛁",
       "titre": "Salle de bain",
-      "texte": "Remplacement de baignoire par douche, pose de sanitaires et meubles vasques."
+      "texte": "Douche à l'italienne, remplacement de baignoire, meubles vasques.",
+      "prix": "Sur devis gratuit"
     },
     {
+      "icone": "🌡",
       "titre": "Chauffage",
-      "texte": "Entretien annuel de chaudière, désembouage, remplacement de radiateurs."
+      "texte": "Entretien annuel de chaudière, désembouage, radiateurs.",
+      "prix": "Entretien à partir de 120 €"
     }
   ],
-  "horaires": [
-    [
-      "Lundi – Vendredi",
-      "8h – 18h30"
-    ],
-    [
-      "Samedi",
-      "9h – 12h"
-    ],
-    [
-      "Dimanche",
-      "Fermé"
+  "images": {
+    "hero": "images-demo/plomberie-robinet.jpg",
+    "galerie": [
+      {
+        "src": "images-demo/plomberie-salle-de-bain.jpg",
+        "legende": "Meuble vasque posé"
+      },
+      {
+        "src": "images-demo/plomberie-douche.jpg",
+        "legende": "Douche à l'italienne"
+      },
+      {
+        "src": "images-demo/plomberie-tuyaux.jpg",
+        "legende": "Réseau multicouche"
+      },
+      {
+        "src": "images-demo/plomberie-cuisine.jpg",
+        "legende": "Robinetterie cuisine"
+      }
     ]
+  },
+  "avis": {
+    "note": 4.9,
+    "nombre": 37,
+    "source": "Google",
+    "liste": [
+      {
+        "auteur": "Sophie L.",
+        "note": 5,
+        "date": "octobre 2026",
+        "texte": "Fuite sous l'évier un samedi matin : il est venu dans l'heure, a expliqué le problème et annoncé le prix avant de commencer."
+      },
+      {
+        "auteur": "Karim B.",
+        "note": 5,
+        "date": "septembre 2026",
+        "texte": "Remplacement du chauffe-eau impeccable, chantier propre. Devis respecté au centime près."
+      },
+      {
+        "auteur": "Claire M.",
+        "note": 5,
+        "date": "août 2026",
+        "texte": "Très bon conseil pour la douche à l'italienne, travail soigné et dans les délais."
+      }
+    ]
+  },
+  "horaires_semaine": {
+    "lun": "08:00-18:30",
+    "mar": "08:00-18:30",
+    "mer": "08:00-18:30",
+    "jeu": "08:00-18:30",
+    "ven": "08:00-18:30",
+    "sam": "09:00-12:00",
+    "dim": ""
+  },
+  "faq": [
+    {
+      "q": "Le devis est-il vraiment gratuit ?",
+      "r": "Oui. Le devis est gratuit et sans engagement, et le prix est annoncé avant toute intervention."
+    },
+    {
+      "q": "Intervenez-vous en urgence ?",
+      "r": "Oui, du lundi au samedi. Appelez directement : c'est le plus rapide."
+    },
+    {
+      "q": "Quels moyens de paiement acceptez-vous ?",
+      "r": "Carte bancaire, virement et chèque. Une facture détaillée est remise à chaque intervention."
+    },
+    {
+      "q": "Êtes-vous assuré ?",
+      "r": "Oui, assurance responsabilité civile et décennale. L'attestation est fournie sur demande."
+    }
   ],
   "statut_juridique": "Exemple fictif",
   "numero_entreprise": "Exemple fictif",

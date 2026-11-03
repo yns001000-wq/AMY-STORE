@@ -22,12 +22,12 @@ Activité choisie : **création de sites vitrines à prix fixe pour artisans, co
 | `LEGAL.md` | Statut, facturation, prospection légale, mentions légales |
 | `SOURCES.md` | Sources consultées, avec leur niveau de fiabilité |
 | `site/` | Page de l'offre (prête à déposer sur Netlify) et démos fictives |
-| `modeles-sites/` | Modèles de sites clients et fiches d'exemple |
+| `modeles-sites/` | Style commun, fiches d'exemple des 3 modèles (artisan, commande WhatsApp, beauté), photos de démo sous licence CC0 |
 | `outils/` | `trouver_prospects.py`, `generer_site.py`, `rapport.py` (Python, aucune dépendance) |
 | `crm/` | Suivi : modèles CSV, statuts, données fictives de test. **Vos vraies données vont dans `crm/donnees/`, jamais publié** |
 | `marketing/` | Messages de prospection, publicités préparées, calendrier, visuels |
 | `ventes/` | Devis, facture, CGV (projet), questionnaire, liste de vérification de livraison |
-| `docs/` | Procédure de mise en ligne |
+| `docs/` | Procédure de mise en ligne, `CONVERSION.md` (ce qui fait vendre un site, par métier) |
 | `tests/` | Tests automatisés |
 
 ## Vérifier que tout fonctionne

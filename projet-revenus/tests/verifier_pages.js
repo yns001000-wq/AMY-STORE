@@ -10,6 +10,7 @@ const pages = [
   'site/index.html', 'site/mentions-legales.html', 'site/merci.html',
   'site/exemples/exemple-plomberie-martin/index.html',
   'site/exemples/exemple-patisserie-lea/index.html',
+  'site/exemples/exemple-salon-atelier-nova/index.html',
 ];
 const tdb = process.env.TABLEAU_DE_BORD; if (tdb) pages.push(tdb);
 
@@ -37,17 +38,25 @@ const tdb = process.env.TABLEAU_DE_BORD; if (tdb) pages.push(tdb);
         if (!fs.existsSync(cible)) echec('lien interne cassé : ' + h);
       }
       if (rel.includes('patisserie')) {
-        const btn = page.locator('#cartSend');
-        if ((await btn.getAttribute('aria-disabled')) !== 'true') echec('panier vide mais bouton actif');
+        const bouton = largeur < 760 ? '#ouvrirPanier' : '#ouvrirPanier2';
+        if (!(await page.locator(bouton).isDisabled())) echec('panier vide mais bouton actif');
         await page.locator('[data-produit] .btn-add').first().click();
         await page.locator('[data-produit] .btn-add').first().click();
-        const href = await btn.getAttribute('href');
+        await page.locator(bouton).click();
+        if (!(await page.locator('#panier').isVisible())) echec("le panier ne s'ouvre pas");
+        await page.fill('#c-nom', 'Test');
+        await page.fill('#c-date', 'samedi 14h');
+        const href = await page.locator('#envoyer').getAttribute('href');
         const texte = decodeURIComponent(href.split('text=')[1] || '');
         if (!href.startsWith('https://wa.me/33600000001?text=')) echec('lien WhatsApp incorrect : ' + href);
-        if (!texte.includes('2 × Fraisier (6 parts) — 64,00 €') || !texte.includes('Total : 64,00 €')) echec('message de commande incorrect : ' + texte);
-        await page.locator('#cartList button').first().click(); // −1
-        if (!(await page.locator('#cartTotal').textContent()).includes('32,00')) echec('le bouton − ne met pas à jour le total');
+        for (const attendu of ['2 × Fraisier (6 parts) — 64 €', 'Total : 64 €', 'samedi 14h', 'Prénom : Test'])
+          if (!texte.includes(attendu)) echec('message de commande incomplet (' + attendu + ') : ' + texte);
+        await page.locator('#lignes button').first().click(); // −1
+        if (!(await page.locator('#total').textContent()).includes('32')) echec('le bouton − ne met pas à jour le total');
+        await page.locator('.tiroir [data-fermer]').click();
       }
+      const imgsCassees = await page.$$eval('img', is => is.filter(i => i.complete && i.naturalWidth === 0).map(i => i.src));
+      if (imgsCassees.length) echec('images cassées : ' + imgsCassees.join(', '));
       if (captures) {
         fs.mkdirSync(captures, { recursive: true });
         const nom = rel.replace(/[\/]/g, '_').replace('.html', '') + `_${largeur}.png`;

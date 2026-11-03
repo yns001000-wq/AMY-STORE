@@ -15,7 +15,7 @@
 - **Objectif :** que tout soit prêt pour prospecter et livrer un site sans rien dépenser.
 - **Actions 🤖 :**
   - page de présentation de l'offre ;
-  - 2 modèles de sites clients (artisan, commande WhatsApp) et le générateur d'aperçus ;
+  - 3 modèles de sites clients (artisan, commande WhatsApp, beauté) et le générateur d'aperçus ;
   - outil de recherche de prospects (API Sirene officielle) ;
   - système de suivi (fichiers CSV) et tableau de bord ;
   - rapport automatique ;

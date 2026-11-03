@@ -1,0 +1,170 @@
+{
+  "_note": "EXEMPLE FICTIF — entreprise inventée pour démonstration. Avis d'exemple signalés comme tels sur la page. Ne pas présenter comme un vrai client.",
+  "demo": true,
+  "modele": "beaute",
+  "pays": "BE",
+  "slug": "exemple-salon-atelier-nova",
+  "nom": "Atelier Nova",
+  "metier": "Coiffure & beauté des mains",
+  "ville": "Liège",
+  "zone_courte": "Liège centre",
+  "titre": "Votre salon de coiffure et d'ongles à Liège",
+  "zone": "Rue fictive 12, 4000 Liège. À 5 minutes à pied de la place Saint-Lambert.",
+  "adresse": "Rue fictive 12, 4000 Liège",
+  "accroche": "Coupe, couleur, soins et manucure dans un salon lumineux. Tarifs affichés, réservation en quelques secondes.",
+  "description": "Atelier Nova, c'est une équipe de trois passionnées qui prennent le temps de vous conseiller. Produits professionnels, ambiance détendue, et un vrai diagnostic avant chaque couleur. (Entreprise fictive de démonstration.)",
+  "telephone": "+32 470 00 00 00",
+  "whatsapp": "32470000000",
+  "couleur": "#8a5a44",
+  "atouts": [
+    "Diagnostic offert avant couleur",
+    "Produits professionnels",
+    "Ouvert le samedi",
+    "Réservation 24 h/24"
+  ],
+  "prestations": [
+    {
+      "categorie": "Coiffure femme",
+      "liste": [
+        {
+          "nom": "Coupe + brushing",
+          "duree": "1 h",
+          "prix": 48
+        },
+        {
+          "nom": "Couleur racines + brushing",
+          "duree": "1 h 45",
+          "prix": 72
+        },
+        {
+          "nom": "Balayage + soin + brushing",
+          "duree": "2 h 30",
+          "prix": "dès 115 €",
+          "desc": "Prix selon la longueur, confirmé au diagnostic"
+        },
+        {
+          "nom": "Brushing",
+          "duree": "40 min",
+          "prix": 28
+        }
+      ]
+    },
+    {
+      "categorie": "Coiffure homme & enfant",
+      "liste": [
+        {
+          "nom": "Coupe homme",
+          "duree": "30 min",
+          "prix": 26
+        },
+        {
+          "nom": "Coupe + barbe",
+          "duree": "45 min",
+          "prix": 36
+        },
+        {
+          "nom": "Coupe enfant (−12 ans)",
+          "duree": "30 min",
+          "prix": 18
+        }
+      ]
+    },
+    {
+      "categorie": "Mains",
+      "liste": [
+        {
+          "nom": "Manucure classique",
+          "duree": "40 min",
+          "prix": 30
+        },
+        {
+          "nom": "Semi-permanent mains",
+          "duree": "1 h",
+          "prix": 38
+        },
+        {
+          "nom": "Pose gel complète",
+          "duree": "1 h 30",
+          "prix": 55
+        }
+      ]
+    }
+  ],
+  "images": {
+    "hero": "images-demo/beaute-salon.jpg",
+    "galerie": [
+      {
+        "src": "images-demo/beaute-bac.jpg",
+        "legende": "Espace soins"
+      },
+      {
+        "src": "images-demo/beaute-vernis.jpg",
+        "legende": "Plus de 80 teintes"
+      },
+      {
+        "src": "images-demo/beaute-ongles.jpg",
+        "legende": "Pose gel"
+      },
+      {
+        "src": "images-demo/beaute-salon.jpg",
+        "legende": "Le salon"
+      }
+    ]
+  },
+  "avis": {
+    "note": 4.8,
+    "nombre": 64,
+    "source": "Google",
+    "liste": [
+      {
+        "auteur": "Julie D.",
+        "note": 5,
+        "date": "octobre 2026",
+        "texte": "Balayage exactement comme je le voulais, et de très bons conseils pour l'entretien."
+      },
+      {
+        "auteur": "Amandine V.",
+        "note": 5,
+        "date": "octobre 2026",
+        "texte": "Semi-permanent qui tient trois semaines, accueil chaleureux, réservation en deux clics."
+      },
+      {
+        "auteur": "Marc H.",
+        "note": 4,
+        "date": "août 2026",
+        "texte": "Coupe + barbe nickel, rapide et efficace. Un peu d'attente le samedi."
+      }
+    ]
+  },
+  "horaires_semaine": {
+    "lun": "",
+    "mar": "09:30-18:30",
+    "mer": "09:30-18:30",
+    "jeu": "09:30-20:00",
+    "ven": "09:30-18:30",
+    "sam": "09:00-17:00",
+    "dim": ""
+  },
+  "faq": [
+    {
+      "q": "Puis-je annuler un rendez-vous ?",
+      "r": "Oui, gratuitement jusqu'à 24 h avant, par message ou téléphone."
+    },
+    {
+      "q": "Le prix du balayage est-il fixe ?",
+      "r": "Il dépend de la longueur et de l'épaisseur : il est confirmé au diagnostic, avant de commencer."
+    },
+    {
+      "q": "Acceptez-vous les paiements par carte ?",
+      "r": "Oui : Bancontact, cartes de crédit et espèces."
+    }
+  ],
+  "reseaux": {
+    "instagram": "https://www.instagram.com/"
+  },
+  "statut_juridique": "Exemple fictif",
+  "numero_entreprise": "Exemple fictif",
+  "adresse_editeur": "Exemple fictif",
+  "responsable_publication": "Exemple fictif",
+  "hebergeur": "Exemple fictif"
+}
