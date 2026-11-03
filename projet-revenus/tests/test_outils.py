@@ -18,6 +18,7 @@ import generer_site  # noqa: E402
 import rapport  # noqa: E402
 import trouver_prospects  # noqa: E402
 import preparer_apercus  # noqa: E402
+import exporter_cockpit  # noqa: E402
 
 
 def charger(fichier, /, **surcharges):
@@ -298,6 +299,7 @@ class TestProspects(unittest.TestCase):
         self.assertEqual(trouver_prospects.joli_nom("JH CONFORT"), "JH Confort")
         self.assertEqual(trouver_prospects.joli_nom("C'EST MOMO QUI REGALE"), "C'est Momo qui Regale")
         self.assertEqual(trouver_prospects.joli_nom("  Déjà Bien  "), "Déjà Bien")
+        self.assertEqual(trouver_prospects.joli_nom("MORPHEE CLEMENT (CLEMENT)"), "Morphee Clement (Clement)")
 
     def test_metier_hors_cible_exclu(self):
         r = self.resultat("9")
@@ -319,6 +321,20 @@ class TestProspects(unittest.TestCase):
 
     def resultat_ligne(self, siren):
         return trouver_prospects.extraire(self.resultat(siren), None)
+
+
+class TestCockpit(unittest.TestCase):
+    def test_export_identifiants_stables_et_decoupage(self):
+        d = Path(tempfile.mkdtemp())
+        ecrire_csv(d, "prospects.csv", [{"id": str(i), "siren": str(100000000 + i), "entreprise": f"E{i}", "date_ajout": "2026-11-03"} for i in range(55)])
+        out = d / "out"
+        exporter_cockpit.main(["--donnees", str(d), "--sortie", str(out)])
+        w1 = json.loads((out / "writes-1.json").read_text(encoding="utf-8"))
+        w2 = json.loads((out / "writes-2.json").read_text(encoding="utf-8"))
+        self.assertEqual((len(w1), len(w2)), (50, 5))
+        self.assertEqual(w1[0]["doc_id"], "p100000000")
+        doc = json.loads(Path(w1[0]["file_path"]).read_text(encoding="utf-8"))
+        self.assertEqual(doc["statut"], "nouveau")
 
 
 class TestApercus(unittest.TestCase):

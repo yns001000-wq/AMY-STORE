@@ -63,6 +63,11 @@ _Dernière mise à jour : 3 novembre 2026 (retrait de la boutique AMY Store et r
 - **Personne n'a été contacté.** Les données des prospects restent hors de GitHub.
 - Tests : 25 tests unitaires OK, vérification navigateur OK.
 
+### 03/11/2026 (nuit) — Cockpit privé
+- **Cockpit Mysite** publié (https://claude.ai/artifact/V6BmL9ZDXnEWohf6wTKba6) : 40 prospects et 6 aperçus chargés ; actions planifiées automatiquement ; ventes ; messages ; rédaction par Claude ; export CSV.
+- Accès vérifié : la base n'est lisible que par le propriétaire (test au niveau « éditeur » et « lecteur » : rien de visible).
+- Nouvel outil `outils/exporter_cockpit.py` pour ajouter de nouveaux prospects sans doublon. 26 tests OK.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`

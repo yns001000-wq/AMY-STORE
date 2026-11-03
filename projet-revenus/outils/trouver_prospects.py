@@ -91,7 +91,10 @@ def joli_nom(nom: str) -> str:
             mots.append(mot)  # sigle : JH, TLBT, SSK, RBS…
             continue
         parties = mot.lower().split("'")
-        parties = [pa if (j > 0 or (i > 0 and pa in PETITS_MOTS)) else pa.capitalize() for j, pa in enumerate(parties)]
+        def maj(pa):  # majuscule sur la première lettre, même après « ( »
+            k = next((n for n, ch in enumerate(pa) if ch.isalpha()), None)
+            return pa if k is None else pa[:k] + pa[k].upper() + pa[k + 1:]
+        parties = [pa if (j > 0 or (i > 0 and pa in PETITS_MOTS)) else maj(pa) for j, pa in enumerate(parties)]
         if len(parties) > 1 and parties[0] in ("l", "d") and i > 0:
             parties[0] = parties[0].lower()
         mots.append("'".join(parties))

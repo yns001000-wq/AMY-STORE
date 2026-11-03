@@ -12,6 +12,8 @@
 |---|---|---|---|---|
 | 1 | Trouver des prospects (entreprises actives récentes, par métier et par zone), sans doublon, en excluant les entreprises qui ont fait opposition | `outils/trouver_prospects.py`, qui interroge l'API officielle Recherche d'entreprises | ✅ | Testé en conditions réelles le 03/11/2026 (8 résultats à Villeurbanne, en mode essai, sans rien écrire), plus 2 tests automatisés avec une API simulée |
 | 1 bis | Trouver des prospects en Belgique et en Suisse | KBO Open Data (BE) / API Zefix (CH) | 🔌🔐 | Non construit : conditions de réutilisation (BE) et identifiants (CH) à obtenir d'abord. En attendant, recherche manuelle (voir MARCHES.md) |
+| 1 ter | **Cockpit privé** : prospects, numéros, actions du jour planifiées seules, ventes, messages, rédaction par Claude | Artifact privé (voir `docs/COCKPIT.md`) | ✅ | 40 prospects et 6 aperçus chargés le 03/11/2026. Accès vérifié : propriétaire seul |
+| 1 quater | Envoyer les nouveaux prospects dans le cockpit sans doublon | `outils/exporter_cockpit.py`, puis l'outil de base de données de Claude | ✅ | Test automatisé (identifiants stables, envoi par paquets de 50) |
 | 2 | Organiser les contacts (suivi en fichiers CSV avec statuts, canaux et prochaines actions) | `crm/donnees/*.csv` + `crm/STATUTS.md` | ✅ | Fichiers créés au premier lancement de `rapport.py`. Validation des statuts testée |
 | 3 | Générer un aperçu de site personnalisé pour un prospect (non indexable, avec bandeau « non contractuel ») | `outils/generer_site.py --apercu` | ✅ | 7 tests automatisés, vérification dans le navigateur à 375 px et 1 280 px |
 | 3 bis | Préparer en série les aperçus des prospects (fiche par métier, aucun avis ni label inventé, suivi mis à jour) | `outils/preparer_apercus.py --nombre 5` | ✅ | Test automatisé. Première série réelle générée le 03/11/2026 |
@@ -46,6 +48,9 @@ Routine du lundi pour projet-revenus :
    (segment et zone indiqués dans PROGRESS.md, section « Paramètres de prospection »), 30 prospects maximum.
 3. Lance `python outils/preparer_apercus.py --nombre 5` pour préparer les aperçus des 5 prochains prospects,
    puis fais une capture d'écran mobile de chacun.
+3 bis. Lance `python outils/exporter_cockpit.py --depuis <date du lundi>` et ajoute les nouveaux prospects au Cockpit
+   (https://claude.ai/artifact/V6BmL9ZDXnEWohf6wTKba6) avec l'outil ArtifactData, action « batch » et le fichier writes.json.
+   Ensuite, lis la collection « prospects » du cockpit pour connaître les statuts mis à jour par l'utilisateur.
 4. Prépare les messages personnalisés (modèles 2 et 3 de marketing/messages_prospection.md) pour ces 5 prospects
    et pour les relances du jour. NE LES ENVOIE PAS.
 5. Rédige les 2 brouillons de contenu de la semaine dans marketing/calendrier_contenu.md.

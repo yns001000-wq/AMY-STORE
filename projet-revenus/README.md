@@ -5,6 +5,7 @@ Activité choisie : **création de sites vitrines à prix fixe pour artisans, co
 > L'ancienne boutique AMY Store 30K a été retirée du dépôt à votre demande le 03/11/2026. Elle reste récupérable dans l'historique Git (commit `e634dac`).
 
 ## Par où commencer
+0. Ouvrir votre **Cockpit privé** : https://claude.ai/artifact/V6BmL9ZDXnEWohf6wTKba6
 1. Lire **[PROGRESS.md](PROGRESS.md)** : où on en est et ce qu'il vous reste à faire.
 2. Lire **[PLAN.md](PLAN.md)** : les phases, avec 👤 (vous), 🤖 (Claude) et 🔐 (votre autorisation requise).
 3. Ouvrir **`site/index.html`** dans votre navigateur : la page de présentation de l'offre.
@@ -24,6 +25,7 @@ Activité choisie : **création de sites vitrines à prix fixe pour artisans, co
 | `site/` | Page de l'offre (prête à déposer sur Netlify) et démos fictives |
 | `modeles-sites/` | Style commun, fiches d'exemple des 3 modèles (artisan, commande WhatsApp, beauté), photos de démo sous licence CC0 |
 | `outils/` | `trouver_prospects.py`, `generer_site.py`, `rapport.py` (Python, aucune dépendance) |
+| `cockpit/` | Code du Cockpit privé (voir `docs/COCKPIT.md`) : prospects, actions du jour, ventes, messages |
 | `crm/` | Suivi : modèles CSV, statuts, données fictives de test. **Vos vraies données vont dans `crm/donnees/`, jamais publié** |
 | `marketing/` | Messages de prospection, publicités préparées, calendrier, visuels |
 | `ventes/` | Devis, facture, CGV (projet), questionnaire, liste de vérification de livraison |
