@@ -27,7 +27,7 @@ Adaptez aussi la ville et les tournures : « GSM » en Belgique, « Natel » en 
 - **Si c'est non** : « Pas de souci, merci de m'avoir écouté, bonne journée. » → statut `refus`.
 
 ## 2. Appel téléphonique — moins de 60 secondes avant la question
-> Bonjour, {prénom} de Enseigne Web. Je vous appelle parce que je crée des sites simples pour les {métier}s du secteur, et j'ai remarqué que {nom entreprise} n'en avait pas encore. Vous avez 30 secondes ?
+> Bonjour, {prénom} de Mysite. Je vous appelle parce que je crée des sites simples pour les {métier}s du secteur, et j'ai remarqué que {nom entreprise} n'en avait pas encore. Vous avez 30 secondes ?
 > *(oui)* J'ai préparé gratuitement un aperçu de ce que pourrait être votre site. Je peux vous l'envoyer par SMS ou par email, sans engagement, et vous me dites ce que vous en pensez ?
 
 - **Si c'est « envoyez »** : envoyer la capture de l'aperçu, avec en prochaine action « Rappeler J+2 ».
@@ -47,7 +47,7 @@ Adaptez aussi la ville et les tournures : « GSM » en Belgique, « Natel » en 
 > Si cela vous intéresse, une réponse ou un appel au {téléphone} suffit pour en parler 15 minutes.
 >
 > Bonne journée,
-> {prénom nom} — Enseigne Web, {SIRET}
+> {prénom nom} — Mysite, {SIRET}
 > {lien vers la page de l'offre}
 >
 > _Vous recevez ce message car votre adresse professionnelle est publiée pour votre activité de {métier}. Pour ne plus recevoir de message de ma part, répondez simplement « STOP »._

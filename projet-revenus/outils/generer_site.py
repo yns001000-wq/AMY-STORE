@@ -339,7 +339,7 @@ def page(fiche: dict, imgs: dict, apercu: bool, corps: str, menu: list[tuple[str
 </head>
 <body>
 {('<div class="apercu">Aperçu de proposition réalisé pour ' + e(fiche['nom']) + ' — non publié, non contractuel. Textes et visuels à valider ensemble.</div>') if apercu else ''}
-{'<div class="apercu">Site de démonstration réalisé par Enseigne Web — entreprise, avis et coordonnées fictifs.</div>' if fiche.get('demo') and not apercu else ''}
+{'<div class="apercu">Site de démonstration réalisé par Mysite — entreprise, avis et coordonnées fictifs.</div>' if fiche.get('demo') and not apercu else ''}
 {('<div class="bandeau">' + e(fiche['bandeau']) + '</div>') if fiche.get('bandeau') else ''}
 <header class="top"><div class="wrap">
   <a class="logo" href="#">{e(fiche['nom'])}<small>{e(fiche['metier'])} · {e(fiche['ville'])}</small></a>
@@ -375,7 +375,8 @@ def lien_wa(fiche: dict, texte: str) -> str:
 def corps_artisan(fiche: dict, imgs: dict) -> tuple[str, list, str, str, str]:
     tel_lien = e(chiffres(fiche["telephone"]))
     wa = fiche.get("whatsapp")
-    boutons = f'<a class="btn btn-main" href="tel:{tel_lien}">📞 Appeler le {e(fiche["telephone"])}</a>'
+    libelle = f"Appeler le {e(fiche['telephone'])}" if re.search(r"\d", fiche["telephone"]) else "Appeler"
+    boutons = f'<a class="btn btn-main" href="tel:{tel_lien}">📞 {libelle}</a>'
     if wa:
         boutons += f'<a class="btn btn-wa" href="{e(lien_wa(fiche, "Bonjour, je souhaite un devis pour : "))}" target="_blank" rel="noopener">WhatsApp</a>'
     boutons += '<a class="btn btn-light" href="#contact">Devis gratuit</a>'
@@ -388,14 +389,14 @@ def corps_artisan(fiche: dict, imgs: dict) -> tuple[str, list, str, str, str]:
              + section_galerie(fiche, imgs, "Quelques réalisations", "Réalisations")
              + section_etapes(fiche) + section_avis(fiche)
              + f'<section class="alt"><div class="wrap deux"><div>{entete_section("Qui sommes-nous ?", fiche.get("titre_apropos", "Un artisan près de chez vous"))}<p style="font-size:17px">{e(fiche["description"])}</p></div>'
-             + f'<div>{entete_section("Urgence ?", "Appelez directement")}<p><a class="btn btn-main" href="tel:{tel_lien}">📞 {e(fiche["telephone"])}</a></p><p class="petit">{e(fiche.get("delai_reponse", ""))}</p></div></div></section>'
+             + f'<div>{entete_section(*fiche.get("bloc_appel", ("Urgence ?", "Appelez directement")))}<p><a class="btn btn-main" href="tel:{tel_lien}">📞 {e(fiche["telephone"])}</a></p><p class="petit">{e(fiche.get("delai_reponse", ""))}</p></div></div></section>'
              + section_infos(fiche, "Zone d'intervention") + section_faq(fiche)
              + section_contact(fiche, "Demandez votre devis gratuit", "Décrivez votre besoin : réponse rapide, sans engagement.", bouton="Recevoir mon devis"))
     menu = [("services", "Services"), ("realisations", "Réalisations"), ("avis", "Avis"), ("infos", "Zone"), ("contact", "Contact")]
     entete = f'<a class="btn btn-main" href="tel:{tel_lien}">📞 Appeler</a>'
     barre = f'<a class="btn btn-main" href="tel:{tel_lien}">📞 Appeler</a>' + (
         f'<a class="btn btn-wa" href="{e(lien_wa(fiche, "Bonjour, je souhaite un devis pour : "))}" target="_blank" rel="noopener">WhatsApp</a>' if wa
-        else '<a class="btn btn-light" href="#contact">Devis</a>')
+        else '<a class="btn btn-ghost" href="#contact">Devis</a>')
     return corps, menu, entete, barre, ""
 
 

@@ -31,7 +31,7 @@
 - **Objectif :** pouvoir facturer légalement.
 - **Actions :**
   1. 👤 Créer la micro-entreprise sur **formalites.entreprise.gouv.fr** (gratuit). Activité : « création de sites internet ». Notez la catégorie retenue (BIC ou BNC), car elle fixe le taux de cotisation.
-  2. 👤 Choisir un nom définitif. « Enseigne Web » est un **nom provisoire** : vérifiez sur data.inpi.fr et chez un registraire de noms de domaine qu'il est libre.
+  2. 👤 Choisir un nom définitif. « Mysite » est le nom choisi (03/11/2026), **disponibilité INPI à confirmer** : vérifiez sur data.inpi.fr et chez un registraire de noms de domaine qu'il est libre.
   3. 👤 Créer une adresse email dédiée (gratuite), par exemple via Gmail.
   4. 🤖 Compléter les mentions légales, CGV et modèles de devis/facture avec votre SIRET (des emplacements sont prévus).
   5. 🔐 Facultatif : souscrire une assurance RC Pro (demander des devis, rien n'est souscrit sans vous).

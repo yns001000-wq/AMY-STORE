@@ -1,6 +1,6 @@
 # DEVIS N° {AAAA}-{NNN}
 
-**Émetteur :** {Prénom NOM} — Enseigne Web, entrepreneur individuel
+**Émetteur :** {Prénom NOM} — Mysite, entrepreneur individuel
 SIRET : {SIRET} · {Adresse} · {Email} · {Téléphone}
 
 **Client :** {Raison sociale / Nom} — {Adresse} — SIRET : {SIRET client}

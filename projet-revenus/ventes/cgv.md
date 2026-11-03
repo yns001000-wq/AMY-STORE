@@ -1,8 +1,8 @@
-# Conditions générales de vente — Enseigne Web (PROJET à faire relire)
+# Conditions générales de vente — Mysite (PROJET à faire relire)
 
 > ⚠️ Ce document est une **base de travail rédigée par une IA**, pas un avis juridique. Faites-le relire avant votre première vente : un juriste, la CCI ou la chambre de métiers proposent souvent des permanences gratuites ou peu coûteuses. Il est prévu pour des clients **professionnels** (B2B). Pour un client particulier, des règles supplémentaires s'appliquent (droit de rétractation, médiateur de la consommation).
 
-**1. Objet.** Les présentes conditions régissent les prestations de création de sites internet proposées par {Prénom NOM}, entrepreneur individuel exerçant sous le nom commercial Enseigne Web (SIRET {SIRET}), ci-après « le Prestataire », à des clients professionnels, ci-après « le Client ».
+**1. Objet.** Les présentes conditions régissent les prestations de création de sites internet proposées par {Prénom NOM}, entrepreneur individuel exerçant sous le nom commercial Mysite (SIRET {SIRET}), ci-après « le Prestataire », à des clients professionnels, ci-après « le Client ».
 
 **2. Commande.** Toute prestation fait l'objet d'un devis. La commande est ferme à réception du devis signé, avec la mention « Bon pour accord », et de l'acompte.
 

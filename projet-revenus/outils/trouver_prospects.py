@@ -76,6 +76,28 @@ def appeler_api(params: dict) -> dict:
     raise RuntimeError("API indisponible")
 
 
+PETITS_MOTS = {"de", "du", "des", "la", "le", "les", "et", "qui", "a", "à", "au", "aux", "en", "l", "d"}
+
+
+def joli_nom(nom: str) -> str:
+    """« TLBT PLOMBERIE » → « TLBT Plomberie », « C'EST MOMO QUI REGALE » → « C'est Momo qui Regale »."""
+    nom = " ".join(nom.split())
+    if not nom.isupper():
+        return nom
+    mots = []
+    for i, mot in enumerate(nom.split(" ")):
+        lettres = "".join(c for c in mot if c.isalpha())
+        if lettres and len(lettres) <= 4 and not any(v in lettres.lower() for v in "aeiouy"):
+            mots.append(mot)  # sigle : JH, TLBT, SSK, RBS…
+            continue
+        parties = mot.lower().split("'")
+        parties = [pa if (j > 0 or (i > 0 and pa in PETITS_MOTS)) else pa.capitalize() for j, pa in enumerate(parties)]
+        if len(parties) > 1 and parties[0] in ("l", "d") and i > 0:
+            parties[0] = parties[0].lower()
+        mots.append("'".join(parties))
+    return " ".join(mots)
+
+
 def extraire(resultat: dict, depuis: dt.date | None, naf: list[str] | None = None) -> dict | None:
     """Transforme un résultat d'API en ligne de prospect, ou None s'il faut l'écarter."""
     if resultat.get("opposition_diffusion_commerciale"):
@@ -89,7 +111,9 @@ def extraire(resultat: dict, depuis: dt.date | None, naf: list[str] | None = Non
         return None
     et = etabs[0]
     creation = crm.date(et.get("date_creation") or "") or crm.date(resultat.get("date_creation") or "")
-    if depuis and (not creation or creation < depuis):
+    creation_entreprise = crm.date(resultat.get("date_creation") or "") or creation
+    # Entreprise réellement récente (pas un nouvel établissement d'une entreprise ancienne)
+    if depuis and (not creation or creation < depuis or not creation_entreprise or creation_entreprise < depuis):
         return None
     enseignes = et.get("liste_enseignes") or []
     nom = et.get("nom_commercial") or (enseignes[0] if enseignes else "") or resultat.get("nom_complet", "")
@@ -97,7 +121,7 @@ def extraire(resultat: dict, depuis: dt.date | None, naf: list[str] | None = Non
     siren = resultat.get("siren", "")
     return {
         "pays": "FR",
-        "entreprise": nom.title() if nom.isupper() else nom,
+        "entreprise": joli_nom(nom),
         "metier": METIERS.get(naf, naf),
         "naf": naf,
         "ville": (et.get("libelle_commune") or "").title(),

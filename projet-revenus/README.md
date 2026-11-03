@@ -1,4 +1,4 @@
-# Projet revenus — « Enseigne Web » (nom provisoire)
+# Projet revenus — « Mysite »
 
 Activité choisie : **création de sites vitrines à prix fixe pour artisans, commerçants et indépendants**, livrés en 5 jours, sans abonnement obligatoire. Pourquoi ce choix : voir [BUSINESS_MODEL.md](BUSINESS_MODEL.md).
 

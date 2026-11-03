@@ -1,7 +1,7 @@
 # FACTURE N° {AAAA}-{NNN}
 _(Numérotation chronologique continue, sans trou. Ne jamais supprimer une facture : en cas d'erreur, faire un avoir.)_
 
-**Émetteur :** {Prénom NOM} — Enseigne Web, entrepreneur individuel (EI)
+**Émetteur :** {Prénom NOM} — Mysite, entrepreneur individuel (EI)
 SIRET : {SIRET} · {Adresse} · {Email}
 
 **Client :** {Raison sociale / Nom} — {Adresse} — SIREN : {SIREN client}

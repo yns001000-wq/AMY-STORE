@@ -14,6 +14,7 @@
 | 1 bis | Trouver des prospects en Belgique et en Suisse | KBO Open Data (BE) / API Zefix (CH) | 🔌🔐 | Non construit : conditions de réutilisation (BE) et identifiants (CH) à obtenir d'abord. En attendant, recherche manuelle (voir MARCHES.md) |
 | 2 | Organiser les contacts (suivi en fichiers CSV avec statuts, canaux et prochaines actions) | `crm/donnees/*.csv` + `crm/STATUTS.md` | ✅ | Fichiers créés au premier lancement de `rapport.py`. Validation des statuts testée |
 | 3 | Générer un aperçu de site personnalisé pour un prospect (non indexable, avec bandeau « non contractuel ») | `outils/generer_site.py --apercu` | ✅ | 7 tests automatisés, vérification dans le navigateur à 375 px et 1 280 px |
+| 3 bis | Préparer en série les aperçus des prospects (fiche par métier, aucun avis ni label inventé, suivi mis à jour) | `outils/preparer_apercus.py --nombre 5` | ✅ | Test automatisé. Première série réelle générée le 03/11/2026 |
 | 4 | Produire le site final d'un client (3 modèles : artisan, commande WhatsApp, beauté) : photos, avis réels, « ouvert maintenant », FAQ, mentions légales par pays | `outils/generer_site.py` | ✅ | 3 démos dans `site/exemples/`, 20 tests automatisés. Parcours panier → WhatsApp (retrait/livraison, date, prénom) testé dans le navigateur |
 | 5 | Calculer les indicateurs, les actions du jour, les alertes, la décision par segment et les recommandations | `outils/rapport.py` → `rapports/rapport-AAAA-MM-JJ.md` | ✅ | 6 tests automatisés, rapport complet sur des données fictives |
 | 6 | Tableau de bord visuel (prospects, conversions, chiffre d'affaires, coûts) | `rapports/tableau-de-bord.html`, généré par `rapport.py` | ✅ | Capture vérifiée. Fonctionne hors ligne |
@@ -43,8 +44,8 @@ Routine du lundi pour projet-revenus :
 1. Lance `python outils/rapport.py` et résume-moi le rapport en 10 lignes (actions du jour, alertes, décision par segment).
 2. S'il reste moins de 20 prospects « nouveau », lance `python outils/trouver_prospects.py` avec les paramètres de la semaine
    (segment et zone indiqués dans PROGRESS.md, section « Paramètres de prospection »), 30 prospects maximum.
-3. Pour les 5 prospects les plus récents qui ont un téléphone renseigné, prépare une fiche JSON et génère un aperçu
-   avec `outils/generer_site.py --apercu --sortie sorties/apercus`, puis une capture d'écran mobile.
+3. Lance `python outils/preparer_apercus.py --nombre 5` pour préparer les aperçus des 5 prochains prospects,
+   puis fais une capture d'écran mobile de chacun.
 4. Prépare les messages personnalisés (modèles 2 et 3 de marketing/messages_prospection.md) pour ces 5 prospects
    et pour les relances du jour. NE LES ENVOIE PAS.
 5. Rédige les 2 brouillons de contenu de la semaine dans marketing/calendrier_contenu.md.
@@ -56,6 +57,7 @@ Routine du lundi pour projet-revenus :
 ```
 python outils/rapport.py                                    # rapport + tableau de bord
 python outils/trouver_prospects.py --naf 43.22A --code-postal 69100 --segment A-artisans --depuis 2024-01-01 --essai
+python outils/preparer_apercus.py --nombre 5                # aperçus des 5 prochains prospects
 python outils/generer_site.py clients/mon-client/fiche.json --apercu
 python -m unittest discover -s tests -v                     # tests automatisés
 node tests/verifier_pages.js                                # vérification navigateur (nécessite Node + Playwright)

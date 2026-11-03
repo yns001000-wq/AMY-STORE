@@ -17,6 +17,7 @@ import crm  # noqa: E402
 import generer_site  # noqa: E402
 import rapport  # noqa: E402
 import trouver_prospects  # noqa: E402
+import preparer_apercus  # noqa: E402
 
 
 def charger(fichier, /, **surcharges):
@@ -287,6 +288,17 @@ class TestProspects(unittest.TestCase):
         self.assertEqual(lus[0]["segment"], "A-artisans")
         self.assertEqual(trouver_prospects.sirens_existants(fichier), {"111", "444", "555"})
 
+    def test_nouvel_etablissement_entreprise_ancienne_exclu(self):
+        r = self.resultat("8", creation="2025-06-01")
+        r["date_creation"] = "1998-01-01"
+        self.assertIsNone(trouver_prospects.extraire(r, dt.date(2025, 1, 1)))
+
+    def test_joli_nom(self):
+        self.assertEqual(trouver_prospects.joli_nom("TLBT PLOMBERIE"), "TLBT Plomberie")
+        self.assertEqual(trouver_prospects.joli_nom("JH CONFORT"), "JH Confort")
+        self.assertEqual(trouver_prospects.joli_nom("C'EST MOMO QUI REGALE"), "C'est Momo qui Regale")
+        self.assertEqual(trouver_prospects.joli_nom("  Déjà Bien  "), "Déjà Bien")
+
     def test_metier_hors_cible_exclu(self):
         r = self.resultat("9")
         r["matching_etablissements"][0]["activite_principale"] = "70.10Z"
@@ -307,6 +319,25 @@ class TestProspects(unittest.TestCase):
 
     def resultat_ligne(self, siren):
         return trouver_prospects.extraire(self.resultat(siren), None)
+
+
+class TestApercus(unittest.TestCase):
+    def test_preparation_sans_avis_ni_invention(self):
+        d = Path(tempfile.mkdtemp())
+        ecrire_csv(d, "prospects.csv", [
+            {"id": "1", "pays": "FR", "entreprise": "SARL Test Chauffage (TC)", "metier": "Chauffagiste", "ville": "Lyon", "statut": "nouveau", "siren": "123"},
+            {"id": "2", "entreprise": "Inconnu", "metier": "70.10Z", "statut": "nouveau"},
+            {"id": "3", "entreprise": "Salon X", "metier": "Coiffure", "ville": "Lyon", "statut": "ne_pas_contacter"},
+        ])
+        code = preparer_apercus.main(["--ids", "1,2,3", "--fichier", str(d / "prospects.csv"), "--sortie", str(d / "out")])
+        self.assertEqual(code, 0)
+        page = (d / "out" / "test-chauffage-lyon-apercu" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("noindex", page)
+        self.assertNotIn('id="avis"', page)
+        self.assertIn("Test Chauffage", page)
+        lus = crm.lire(d, "prospects.csv")
+        self.assertEqual([l["apercu"] for l in lus], ["oui", "", ""])
+        self.assertFalse((d / "out" / "salon-x-lyon-apercu").exists())
 
 
 if __name__ == "__main__":

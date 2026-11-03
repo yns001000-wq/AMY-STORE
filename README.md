@@ -1,4 +1,4 @@
-# Enseigne Web (nom provisoire) — activité de création de sites pour TPE
+# Mysite — activité de création de sites pour TPE
 
 Tout le projet se trouve dans le dossier **[`projet-revenus/`](projet-revenus/README.md)**.
 

@@ -5,7 +5,7 @@ _Dernière mise à jour : 3 novembre 2026 (retrait de la boutique AMY Store et r
 ## Indicateurs réels
 | Indicateur | Valeur | Commentaire |
 |---|---|---|
-| Prospects contactés | **0** | La prospection n'a pas commencé : elle attend vos actions de la phase 2 |
+| Prospects contactés | **0** | 40 prospects trouvés et 6 aperçus prêts ; aucun contact sans votre accord |
 | Ventes | **0** | — |
 | Chiffre d'affaires | **0 €** | — |
 | Dépenses engagées | **0 €** | Aucun budget approuvé |
@@ -37,7 +37,7 @@ _Dernière mise à jour : 3 novembre 2026 (retrait de la boutique AMY Store et r
 2. Les taux de cotisations 2026 (BNC 25,6 %) et le seuil de TVA (37 500 €) viennent de sources concordantes mais en partie secondaires. À vérifier sur urssaf.fr et impots.gouv.fr à la création.
 3. Le formulaire Netlify n'est vérifiable qu'après la mise en ligne (phase 3).
 4. La boutique AMY Store a été retirée du dépôt à votre demande. **Le site déjà publié sur Vercel reste en ligne** tant que vous n'avez pas supprimé le projet dans Vercel.
-5. Le nom « Enseigne Web » est **provisoire** : sa disponibilité (INPI, nom de domaine) n'est pas vérifiée.
+5. Nom choisi : « Mysite ». Vérification INPI impossible en automatique (la base bloque les robots) : **à faire par vous sur data.inpi.fr**. Les domaines mysite.fr, mysite.com et mysite.ch sont déjà pris ; mysite-pro.fr était libre le 03/11/2026. Nom très générique : faible protection en tant que marque.
 6. Zone définie : France entière + Belgique francophone + Suisse romande. La recherche automatique de prospects ne couvre que la France ; la Belgique et la Suisse demandent une recherche manuelle ou des accès à obtenir (MARCHES.md).
 
 ### 03/11/2026 (soir) — Extension à la Belgique et à la Suisse
@@ -55,6 +55,14 @@ _Dernière mise à jour : 3 novembre 2026 (retrait de la boutique AMY Store et r
 - Avis : uniquement de vrais avis pour les clients. Les démos portent un avertissement visible.
 - Tests : 20 tests unitaires OK, et vérification navigateur OK (7 pages × 2 largeurs, images, panier).
 
+### 03/11/2026 (nuit) — Nom « Mysite » et première prospection préparée
+- Nom remplacé partout par **Mysite**. INPI : la base bloque les recherches automatiques (protection anti-robots), **vérification à faire par vous** sur data.inpi.fr. Domaines mysite.fr, .com et .ch déjà pris.
+- Recherche de prospects corrigée : seulement des entreprises **créées depuis 2025** (et non de nouveaux établissements d'entreprises anciennes), métier vérifié, noms bien écrits (sigles conservés).
+- **40 prospects** (Rhône, Loire, Isère) : 17 plombiers, 3 peintres, 7 traiteurs, 1 pâtisserie, 12 coiffure ou beauté. 9 vérifiés en ligne : aucun site trouvé.
+- Nouvel outil `outils/preparer_apercus.py` : **6 aperçus** prêts (Imperial Habitat, JH Confort, TLBT Plomberie, Slay Station, Black Chic Coiffure, C'est Momo qui Régale). Aucun avis ni label inventé.
+- **Personne n'a été contacté.** Les données des prospects restent hors de GitHub.
+- Tests : 25 tests unitaires OK, vérification navigateur OK.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`
@@ -65,7 +73,7 @@ _Dernière mise à jour : 3 novembre 2026 (retrait de la boutique AMY Store et r
 ## Prochaines étapes
 | # | Étape | Qui | Autorisation |
 |---|---|---|---|
-| 1 | Me donner votre choix de nom (ou garder « Enseigne Web ») | 👤 | — |
+| 1 | Vérifier « Mysite » sur data.inpi.fr (classes 35 et 42) | 👤 | — |
 | 2 | Créer la micro-entreprise (gratuit, formalites.entreprise.gouv.fr) | 👤 | — |
 | 3 | Créer le compte Netlify et y déposer `site/` | 👤 | 🔐 Publication publique |
 | 4 | Compléter mentions légales, devis et CGV avec votre SIRET | 🤖 dès réception | — |
