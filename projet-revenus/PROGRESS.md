@@ -1,6 +1,6 @@
 # PROGRESS.md — Avancement, problèmes et prochaines étapes
 
-_Dernière mise à jour : 3 novembre 2026._
+_Dernière mise à jour : 3 novembre 2026 (retrait de la boutique AMY Store et réorganisation du dépôt)._
 
 ## Indicateurs réels
 | Indicateur | Valeur | Commentaire |
@@ -36,7 +36,7 @@ _Dernière mise à jour : 3 novembre 2026._
 1. Le chiffre « part des TPE sans site » (environ 20 %) vient d'une source secondaire. À confirmer dans le rapport France Num 2025.
 2. Les taux de cotisations 2026 (BNC 25,6 %) et le seuil de TVA (37 500 €) viennent de sources concordantes mais en partie secondaires. À vérifier sur urssaf.fr et impots.gouv.fr à la création.
 3. Le formulaire Netlify n'est vérifiable qu'après la mise en ligne (phase 3).
-4. AMY Store est hébergée sur Vercel Hobby, ce qui est contraire à l'usage non commercial (voir `docs/MIGRATION_AMY_STORE.md`). **Décision à prendre par vous.**
+4. La boutique AMY Store a été retirée du dépôt à votre demande. **Le site déjà publié sur Vercel reste en ligne** tant que vous n'avez pas supprimé le projet dans Vercel.
 5. Le nom « Enseigne Web » est **provisoire** : sa disponibilité (INPI, nom de domaine) n'est pas vérifiée.
 6. Il manque votre **ville / zone** pour lancer la prospection réelle.
 
@@ -55,4 +55,4 @@ _Dernière mise à jour : 3 novembre 2026._
 | 4 | Compléter mentions légales, devis et CGV avec votre SIRET | 🤖 dès réception | — |
 | 5 | Lancer la première liste de 60 prospects (2 segments × 30) et 10 aperçus | 🤖 | — (aucun envoi) |
 | 6 | Premiers contacts (5 par jour) | 👤 | 🔐 Prise de contact en votre nom |
-| 7 | Décider pour l'hébergement d'AMY Store | 👤 | 🔐 |
+| 7 | Supprimer l'ancien projet AMY Store dans Vercel, si vous voulez qu'il disparaisse d'internet | 👤 | 🔐 |

@@ -2,7 +2,7 @@
 
 Activité choisie : **création de sites vitrines à prix fixe pour artisans, commerçants et indépendants**, livrés en 5 jours, sans abonnement obligatoire. Pourquoi ce choix : voir [BUSINESS_MODEL.md](BUSINESS_MODEL.md).
 
-> Ce dossier est séparé de votre boutique AMY Store 30K, qui n'a pas été modifiée.
+> L'ancienne boutique AMY Store 30K a été retirée du dépôt à votre demande le 03/11/2026. Elle reste récupérable dans l'historique Git (commit `e634dac`).
 
 ## Par où commencer
 1. Lire **[PROGRESS.md](PROGRESS.md)** : où on en est et ce qu'il vous reste à faire.
@@ -26,7 +26,7 @@ Activité choisie : **création de sites vitrines à prix fixe pour artisans, co
 | `crm/` | Suivi : modèles CSV, statuts, données fictives de test. **Vos vraies données vont dans `crm/donnees/`, jamais publié** |
 | `marketing/` | Messages de prospection, publicités préparées, calendrier, visuels |
 | `ventes/` | Devis, facture, CGV (projet), questionnaire, liste de vérification de livraison |
-| `docs/` | Mise en ligne, note sur l'hébergement d'AMY Store |
+| `docs/` | Procédure de mise en ligne |
 | `tests/` | Tests automatisés |
 
 ## Vérifier que tout fonctionne

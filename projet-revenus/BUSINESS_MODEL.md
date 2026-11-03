@@ -12,7 +12,7 @@ _Rédigé le 3 novembre 2026. Les sources sont dans [SOURCES.md](SOURCES.md). Qu
 | Débutant en code et en création d'entreprise | Le modèle doit pouvoir fonctionner avec des modèles prêts à l'emploi et des listes de vérification produits par l'IA |
 | Outils disponibles : Claude Pro et Cowork sur Windows | Claude rédige, code, analyse et prépare les campagnes. Les rendez-vous, signatures et paiements restent entre vos mains |
 | Objectif : 1 000 €/mois de chiffre d'affaires | Ce chiffre est un **objectif, pas une promesse** (voir §5 pour le calcul) |
-| Atout déjà en place : la boutique AMY Store 30K (site statique, commande via WhatsApp, déployée gratuitement) | C'est la preuve que vous savez déjà mettre en ligne un site simple. On peut réutiliser ce savoir-faire |
+| Expérience déjà acquise : la boutique AMY Store 30K (site statique, commande via WhatsApp), que vous aviez mise en ligne | C'est la preuve que vous savez déjà mettre en ligne un site simple. On peut réutiliser ce savoir-faire |
 
 ---
 
@@ -69,14 +69,14 @@ Il existe donc de la place pour une offre **à prix fixe et bas, dont le client 
 2. **Un écart de prix exploitable** : le marché se situe entre 1 000 et 5 000 € chez un freelance, ou entre 100 et 300 €/mois chez Solocal. Notre offre, de 290 à 490 € à payer une seule fois, est **nettement moins chère** et plus simple, sans engagement.
 3. **Un coût de production quasi nul** : un site statique, un modèle réutilisable, un hébergement gratuit autorisé pour un usage commercial, et Claude pour rédiger les textes et adapter le modèle.
 4. **Une acquisition gratuite et légale** : les données publiques Sirene (licence ouverte), la prospection B2B encadrée par la CNIL, le démarchage en personne et le réseau local.
-5. **Une compétence déjà démontrée** : la boutique AMY Store est un site statique en ligne, avec une commande WhatsApp qui fonctionne.
+5. **Une compétence déjà démontrée** : vous avez déjà mis en ligne la boutique AMY Store, un site statique avec commande WhatsApp.
 6. **Un test rapide et peu coûteux** : on peut savoir en 3 à 4 semaines si les prospects répondent, sans rien dépenser.
 
 ### Clients visés (deux segments à tester, puis on garde le meilleur)
 | Segment | Exemples (code NAF) | Hypothèse de besoin | Offre phare |
 |---|---|---|---|
 | **A. Artisans et services à domicile** | Plomberie/chauffage 43.22A-B, électricité 43.21A, peinture 43.34Z, menuiserie 43.32A, nettoyage 81.21Z, jardinage 81.30Z | Être trouvé et paraître sérieux quand un client potentiel fait une recherche après un bouche-à-oreille | « Vitrine » |
-| **B. Alimentation et beauté indépendants** | Traiteur 56.21Z, restauration rapide 56.10C, pâtisserie 10.71D, coiffure 96.02A, soins de beauté 96.02B | Recevoir des commandes ou des rendez-vous sans commission de plateforme, en gardant WhatsApp | « Vitrine + commande WhatsApp » (reprend le principe de la boutique AMY Store) |
+| **B. Alimentation et beauté indépendants** | Traiteur 56.21Z, restauration rapide 56.10C, pâtisserie 10.71D, coiffure 96.02A, soins de beauté 96.02B | Recevoir des commandes ou des rendez-vous sans commission de plateforme, en gardant WhatsApp | « Vitrine + commande WhatsApp » (reprend le principe de l'ancienne boutique AMY Store) |
 
 ### Ce qui nous distingue (sans dénigrer personne)
 - **Le prix est fixe et annoncé publiquement**, sans devis flou.
@@ -160,8 +160,10 @@ Claude fournit les scripts, les listes de vérification et la production.
 
 ---
 
-## 7. Point d'attention sur l'existant (AMY Store 30K)
+## 7. Ancienne boutique AMY Store 30K
 
-La boutique actuelle est hébergée sur **Vercel**. Or la formule gratuite de Vercel (Hobby) est **réservée à un usage personnel et non commercial** d'après la documentation officielle de Vercel. Une boutique qui vend relève a priori d'un usage commercial.
+À votre demande, la boutique a été **retirée du dépôt** le 03/11/2026 (`index.html`, `vercel.json`, `README.md`). Ses fichiers restent récupérables dans l'historique Git (commit `e634dac`).
 
-**Je n'ai rien modifié.** Je recommande de la déplacer vers Netlify (formule gratuite qui autorise l'usage commercial) ou vers Cloudflare Pages. La procédure est décrite dans [docs/MIGRATION_AMY_STORE.md](docs/MIGRATION_AMY_STORE.md). C'est **à vous de décider** : la décision touche votre site en ligne.
+**À faire de votre côté 👤 :** ce retrait ne met **pas** hors ligne le site déjà publié sur Vercel. Pour le retirer, supprimez le projet dans votre tableau de bord Vercel (Settings → Delete Project).
+
+**À noter :** la formule gratuite de Vercel (Hobby) est réservée à un usage non commercial. N'y hébergez ni l'activité ni les sites de vos clients (voir LEGAL.md §6).
