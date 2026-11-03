@@ -72,6 +72,9 @@ Il existe donc de la place pour une offre **à prix fixe et bas, dont le client 
 5. **Une compétence déjà démontrée** : vous avez déjà mis en ligne la boutique AMY Store, un site statique avec commande WhatsApp.
 6. **Un test rapide et peu coûteux** : on peut savoir en 3 à 4 semaines si les prospects répondent, sans rien dépenser.
 
+### Zone
+Toute la France, la Belgique francophone et la Suisse romande, avec une vente à distance. Lancement dans cet ordre : France, puis Belgique, puis Suisse (voir [MARCHES.md](MARCHES.md)).
+
 ### Clients visés (deux segments à tester, puis on garde le meilleur)
 | Segment | Exemples (code NAF) | Hypothèse de besoin | Offre phare |
 |---|---|---|---|

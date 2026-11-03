@@ -18,6 +18,7 @@ Activité choisie : **création de sites vitrines à prix fixe pour artisans, co
 | `AUTOMATION.md` | Ce qui est automatisé, à connecter ou soumis à autorisation, et la routine du lundi |
 | `BUDGET.md` | Coûts (0 € à ce jour) et hypothèses |
 | `PROGRESS.md` | Avancement, preuves, problèmes, prochaines étapes |
+| `MARCHES.md` | France, Belgique, Suisse : sources de prospects, règles de prospection, facturation, ordre de lancement |
 | `LEGAL.md` | Statut, facturation, prospection légale, mentions légales |
 | `SOURCES.md` | Sources consultées, avec leur niveau de fiabilité |
 | `site/` | Page de l'offre (prête à déposer sur Netlify) et démos fictives |

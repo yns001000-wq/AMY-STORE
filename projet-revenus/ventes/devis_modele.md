@@ -13,7 +13,7 @@ SIRET : {SIRET} · {Adresse} · {Email} · {Téléphone}
 | {Option Fiche Google} | {1} | {90,00 €} | {90,00 €} |
 | **Total** | | | **{480,00 €}** |
 
-**TVA non applicable, article 293 B du CGI.**
+**TVA non applicable, article 293 B du CGI.** _(Client belge ou suisse : utiliser la mention adaptée, voir `ventes/facture_modele.md`.)_
 
 **Ce qui n'est pas inclus :**
 - nom de domaine (acheté et payé par le client directement auprès du registraire de son choix) ;

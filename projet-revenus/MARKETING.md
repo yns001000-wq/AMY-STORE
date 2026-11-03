@@ -37,15 +37,17 @@
 
 ## 3. Stratégie d'acquisition (canaux gratuits d'abord)
 
+**Zone : toute la France, la Belgique francophone et la Suisse romande.** La vente se fait à distance. Les règles diffèrent selon le pays, surtout pour l'email : voir **[MARCHES.md](MARCHES.md)** avant tout contact en Belgique ou en Suisse.
+
 **Hypothèse centrale à vérifier : l'aperçu personnalisé.** Montrer au prospect « son » site déjà maquetté devrait obtenir beaucoup plus de réponses qu'un message générique. Claude produit cet aperçu en quelques minutes avec `outils/generer_site.py --apercu`.
 
 **Règle de confidentialité :** l'aperçu n'est **jamais publié en ligne** sans l'accord du prospect. On le montre sur votre téléphone, ou en capture d'écran jointe à l'email.
 
 | # | Canal | Coût | Effort | Utilisation | Ordre de test |
 |---|---|---|---|---|---|
-| 1 | **Visite en personne** (commerces, ateliers) avec l'aperçu sur téléphone | 0 € | Élevé | 3 visites par jour regroupées dans un même quartier | Semaine 2 |
-| 2 | **Appel téléphonique** au numéro professionnel public | 0 € | Moyen | Script en §4. Mardi à jeudi, 10h-11h30 ou 14h-16h | Semaine 2 |
-| 3 | **Email professionnel** avec la capture d'écran de l'aperçu | 0 € | Faible | Uniquement vers une adresse professionnelle publiée par l'entreprise, avec un lien de désinscription dans chaque message | Semaine 3 |
+| 1 | **Visite en personne** (commerces, ateliers) avec l'aperçu sur téléphone | 0 € | Élevé | Seulement autour de chez vous, en complément de la vente à distance | Semaine 2 |
+| 2 | **Appel téléphonique** au numéro professionnel public, puis rendez-vous en visio (Google Meet, gratuit) | 0 € | Moyen | Canal principal à distance, dans les 3 pays. En Suisse, jamais vers un numéro marqué d'un astérisque (\*). Mardi à jeudi, 10h-11h30 ou 14h-16h | Semaine 2 |
+| 3 | **Email professionnel** avec la capture d'écran de l'aperçu | 0 € | Faible | France : adresse professionnelle publiée. Belgique : **seulement** l'adresse générique d'une société (info@…). Suisse : **pas d'email à froid**. Désinscription dans chaque message | Semaine 3 |
 | 4 | **Message Instagram** (segment B) | 0 € | Faible | Pour les comptes professionnels uniquement, avec un message personnalisé, jamais en masse | Semaine 3 |
 | 5 | **Réseau personnel** (famille, amis, anciens collègues) | 0 € | Faible | Annonce unique : « je lance mon activité, connaissez-vous un artisan sans site ? » | Semaine 1 |
 | 6 | **Fiche Google** de votre propre activité, une fois immatriculé | 0 € | Faible | Être trouvé sur « création site internet + ville » | Semaine 2 |

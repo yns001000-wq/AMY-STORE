@@ -5,6 +5,13 @@
 - Personnalisez toujours au moins une phrase sur l'entreprise : son métier, son quartier, un détail de sa fiche publique.
 - Un message générique envoyé en masse, c'est du spam : on ne le fait pas.
 
+**Selon le pays** (détails dans MARCHES.md) :
+- 🇫🇷 France : email et téléphone autorisés selon les règles ci-dessous ;
+- 🇧🇪 Belgique : email **uniquement** vers l'adresse générique d'une société (info@, contact@), sinon téléphone ;
+- 🇨🇭 Suisse : **pas d'email à froid**. Téléphone uniquement si le numéro ne porte pas d'astérisque (\*) dans l'annuaire.
+
+Adaptez aussi la ville et les tournures : « GSM » en Belgique, « Natel » en Suisse, « septante » et « nonante » dans les deux pays.
+
 **Règles légales intégrées** (détails dans LEGAL.md) :
 - email : uniquement vers une adresse professionnelle publiée par l'entreprise, avec un objet lié à son métier, votre identité claire et un moyen simple de refuser ;
 - téléphone : uniquement vers un numéro professionnel publié, pour parler de son activité. Si le numéro semble personnel, préférez la visite ou l'email ;
@@ -20,7 +27,7 @@
 - **Si c'est non** : « Pas de souci, merci de m'avoir écouté, bonne journée. » → statut `refus`.
 
 ## 2. Appel téléphonique — moins de 60 secondes avant la question
-> Bonjour, {prénom} de Enseigne Web, je suis à {ville}. Je vous appelle parce que je crée des sites simples pour les {métier}s du secteur, et j'ai remarqué que {nom entreprise} n'en avait pas encore. Vous avez 30 secondes ?
+> Bonjour, {prénom} de Enseigne Web. Je vous appelle parce que je crée des sites simples pour les {métier}s du secteur, et j'ai remarqué que {nom entreprise} n'en avait pas encore. Vous avez 30 secondes ?
 > *(oui)* J'ai préparé gratuitement un aperçu de ce que pourrait être votre site. Je peux vous l'envoyer par SMS ou par email, sans engagement, et vous me dites ce que vous en pensez ?
 
 - **Si c'est « envoyez »** : envoyer la capture de l'aperçu, avec en prochaine action « Rappeler J+2 ».
@@ -31,7 +38,7 @@
 
 > Bonjour {Madame/Monsieur Nom, ou Bonjour},
 >
-> Je suis {prénom nom}, je crée des sites internet pour les artisans et commerçants autour de {ville}.
+> Je suis {prénom nom}, je crée des sites internet pour les artisans et commerçants, partout en France, en Belgique et en Suisse romande.
 >
 > En cherchant des {métier}s du secteur, j'ai vu que {nom entreprise} n'avait pas encore de site. Je me suis permis de préparer un aperçu de ce qu'il pourrait être (capture jointe). Il n'est publié nulle part.
 >

@@ -136,6 +136,7 @@ class Indicateurs:
     entonnoir: Entonnoir = field(default_factory=Entonnoir)
     par_segment: "OrderedDict[str, Entonnoir]" = field(default_factory=OrderedDict)
     par_canal: "OrderedDict[str, Entonnoir]" = field(default_factory=OrderedDict)
+    par_pays: "OrderedDict[str, Entonnoir]" = field(default_factory=OrderedDict)
     actions_du_jour: list = field(default_factory=list)
     alertes: list = field(default_factory=list)
     ca_mois: float = 0.0
@@ -177,6 +178,7 @@ def calculer(dossier: Path = DONNEES, aujourd_hui: dt.date | None = None) -> Ind
         canal = p.get("canal") or "(pas encore contacté)"
         ind.entonnoir.ajouter(statut)
         ind.par_segment.setdefault(seg, Entonnoir()).ajouter(statut)
+        ind.par_pays.setdefault((p.get("pays") or "FR").upper(), Entonnoir()).ajouter(statut)
         if statut in CONTACTES:
             ind.par_canal.setdefault(canal, Entonnoir()).ajouter(statut)
 

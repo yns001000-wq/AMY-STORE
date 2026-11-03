@@ -43,3 +43,12 @@
 
 ## Données de prospection
 - [O] API Recherche d'entreprises (DINUM, gratuite, sans clé, 7 requêtes/seconde maximum par adresse IP) — https://recherche-entreprises.api.gouv.fr/docs/ ; données Sirene sous Licence Ouverte Etalab. Le champ `opposition_diffusion_commerciale` est **respecté** : les entreprises concernées sont exclues par notre outil.
+
+## Belgique et Suisse
+- [O] OFCOM (Suisse), « Quand l'envoi de masse est-il autorisé ? » : consentement préalable exigé (article 3, lettre o, de la LCD) et respect de l'astérisque dans l'annuaire (article 3, lettre u) — https://www.bakom.admin.ch/en/when-is-mass-sending-allowed
+- [O] SPF Économie (Belgique), données ouvertes de la BCE (KBO Open Data) — https://economie.fgov.be/en/themes/enterprises/crossroads-bank-enterprises/services-everyone/public-data-available-reuse/cbe-open-data
+- [S] Arrêté royal belge du 4 avril 2003 : régime d'opposition (opt-out) admis pour les adresses impersonnelles des personnes morales — https://www.droit-technologie.org/wp-content/uploads/2016/11/annexes/actuality/1071-1.pdf
+- [O] Chambre des représentants (Belgique) : choix de l'opt-in pour l'email — https://www.dekamer.be/FLWB/PDF/54/2686/54K2686001.pdf
+- [S] Accès à l'API Zefix sur demande d'identifiants (wrapper communautaire) — https://github.com/jschwendener/zefix-php
+- [O] impots.gouv.fr, obligations TVA des micro-entrepreneurs — https://www.impots.gouv.fr/portail/professionnel/questions/je-suis-micro-entrepreneur-ou-la-tete-dune-micro-entreprise-ai-je-des
+- [S] Copeps, TVA intracommunautaire et micro-entreprise (numéro auprès du SIE, autoliquidation) — https://copeps.fr/actualites/micro-entreprise-et-tva-intracommunautaire/

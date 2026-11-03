@@ -26,6 +26,13 @@ MODELES = RACINE / "modeles-sites"
 MODELES_DISPONIBLES = ("artisan", "commande-whatsapp")
 A_COMPLETER = "[À COMPLÉTER]"
 
+# Particularités par pays (mentions légales). Voir MARCHES.md.
+PAYS = {
+    "FR": {"nom": "France", "id_label": "SIRET", "autorite": "la CNIL (www.cnil.fr)"},
+    "BE": {"nom": "Belgique", "id_label": "Numéro d'entreprise (BCE)", "autorite": "l'Autorité de protection des données (www.autoriteprotectiondonnees.be)"},
+    "CH": {"nom": "Suisse", "id_label": "Numéro IDE (CHE-…)", "autorite": "le Préposé fédéral à la protection des données et à la transparence (www.edoeb.admin.ch)"},
+}
+
 CHAMPS_OBLIGATOIRES = ("modele", "slug", "nom", "metier", "ville", "accroche", "description", "telephone")
 
 
@@ -61,6 +68,8 @@ def valider(fiche: dict) -> list[str]:
         raise FicheInvalide(f"Modèle inconnu « {fiche['modele']} ». Choix : {', '.join(MODELES_DISPONIBLES)}")
     if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", fiche["slug"]):
         raise FicheInvalide("Le slug doit contenir uniquement des minuscules, chiffres et tirets (ex. plomberie-martin)")
+    if fiche.get("pays", "FR") not in PAYS:
+        raise FicheInvalide(f"Pays inconnu « {fiche.get('pays')} ». Choix : {', '.join(PAYS)}")
     couleur = fiche.get("couleur", "#1f5fbf")
     if not re.fullmatch(r"#[0-9a-fA-F]{6}", couleur):
         raise FicheInvalide("La couleur doit être au format #RRGGBB")
@@ -78,8 +87,9 @@ def valider(fiche: dict) -> list[str]:
                 raise FicheInvalide(f"Produit invalide : {p!r} (nom et prix positif obligatoires)")
 
     avertissements = []
-    for champ in ("siret", "statut_juridique", "adresse_editeur", "responsable_publication", "hebergeur"):
-        if not str(fiche.get(champ, "")).strip():
+    for champ in ("numero_entreprise", "statut_juridique", "adresse_editeur", "responsable_publication", "hebergeur"):
+        valeur = fiche.get(champ) or (fiche.get("siret") if champ == "numero_entreprise" else "")
+        if not str(valeur or "").strip():
             avertissements.append(f"Mentions légales : « {champ} » manquant (affiché {A_COMPLETER}).")
     if not fiche.get("services") and fiche["modele"] == "artisan":
         avertissements.append("Aucun service renseigné.")
@@ -98,7 +108,7 @@ def _commun(fiche: dict, apercu: bool) -> dict:
         "description": fiche["description"],
         "telephone": tel,
         "areaServed": fiche.get("zone", fiche["ville"]),
-        "address": {"@type": "PostalAddress", "addressLocality": fiche["ville"]},
+        "address": {"@type": "PostalAddress", "addressLocality": fiche["ville"], "addressCountry": fiche.get("pays", "FR")},
     }
     if fiche.get("email"):
         jsonld["email"] = fiche["email"]
@@ -197,6 +207,10 @@ def page_mentions(fiche: dict) -> str:
         val = str(fiche.get(cle, "")).strip()
         return e(val) if val else A_COMPLETER
 
+    pays = PAYS[fiche.get("pays", "FR")]
+    identifiant = str(fiche.get("numero_entreprise") or fiche.get("siret") or "").strip()
+    identifiant = e(identifiant) if identifiant else A_COMPLETER
+
     return f"""<!DOCTYPE html>
 <html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mentions légales — {e(fiche['nom'])}</title>
@@ -205,12 +219,12 @@ def page_mentions(fiche: dict) -> str:
 <p><a href="index.html">← Retour au site</a></p>
 <h1>Mentions légales</h1>
 <h2>Éditeur du site</h2>
-<p>{e(fiche['nom'])}<br>Statut : {v('statut_juridique')}<br>SIRET : {v('siret')}<br>Adresse : {v('adresse_editeur')}<br>Téléphone : {e(fiche['telephone'])}{('<br>Email : ' + e(fiche['email'])) if fiche.get('email') else ''}</p>
+<p>{e(fiche['nom'])}<br>Statut : {v('statut_juridique')}<br>{e(pays['id_label'])} : {identifiant}<br>Adresse : {v('adresse_editeur')}<br>Téléphone : {e(fiche['telephone'])}{('<br>Email : ' + e(fiche['email'])) if fiche.get('email') else ''}</p>
 <p>Responsable de la publication : {v('responsable_publication')}</p>
 <h2>Hébergeur</h2>
 <p>{v('hebergeur')}</p>
 <h2>Données personnelles</h2>
-<p>Les informations envoyées via le formulaire de contact ou par WhatsApp sont utilisées uniquement pour répondre à votre demande et ne sont ni vendues ni cédées. Elles sont conservées au maximum 3 ans après le dernier contact. Vous pouvez demander leur consultation, rectification ou suppression en écrivant à l'éditeur (coordonnées ci-dessus). Vous pouvez également adresser une réclamation à la CNIL (www.cnil.fr).</p>
+<p>Les informations envoyées via le formulaire de contact ou par WhatsApp sont utilisées uniquement pour répondre à votre demande et ne sont ni vendues ni cédées. Elles sont conservées au maximum 3 ans après le dernier contact. Vous pouvez demander leur consultation, rectification ou suppression en écrivant à l'éditeur (coordonnées ci-dessus). Vous pouvez également adresser une réclamation auprès de {pays['autorite']}.</p>
 <p>Ce site n'utilise pas de cookies de mesure d'audience ni de publicité.</p>
 <h2>Propriété intellectuelle</h2>
 <p>Les textes et images de ce site appartiennent à {e(fiche['nom'])} ou sont utilisés avec autorisation.</p>

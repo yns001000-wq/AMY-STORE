@@ -38,10 +38,19 @@ _Dernière mise à jour : 3 novembre 2026 (retrait de la boutique AMY Store et r
 3. Le formulaire Netlify n'est vérifiable qu'après la mise en ligne (phase 3).
 4. La boutique AMY Store a été retirée du dépôt à votre demande. **Le site déjà publié sur Vercel reste en ligne** tant que vous n'avez pas supprimé le projet dans Vercel.
 5. Le nom « Enseigne Web » est **provisoire** : sa disponibilité (INPI, nom de domaine) n'est pas vérifiée.
-6. Il manque votre **ville / zone** pour lancer la prospection réelle.
+6. Zone définie : France entière + Belgique francophone + Suisse romande. La recherche automatique de prospects ne couvre que la France ; la Belgique et la Suisse demandent une recherche manuelle ou des accès à obtenir (MARCHES.md).
+
+### 03/11/2026 (soir) — Extension à la Belgique et à la Suisse
+- Zone élargie à toute la France, la Belgique francophone et la Suisse romande, avec une vente à distance.
+- Recherche des règles propres à chaque pays (prospection, facturation, sources de données), synthétisée dans MARCHES.md.
+- Générateur : nouveau champ `pays` (FR, BE ou CH) qui adapte les mentions légales (SIRET, BCE ou IDE ; CNIL, APD ou PFPDT).
+- Suivi : nouvelle colonne `pays`, et rapport par pays.
+- Recherche de prospects : plusieurs départements possibles en une seule commande. Test réel réussi sur les départements 59 et 62.
+- Tests : 16 tests unitaires OK.
 
 ## Paramètres de prospection (à compléter par vous)
-- Ville / codes postaux visés : **[À COMPLÉTER]**
+- Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
+- Premier lot de départements (semaine 1) : `69,42,38`
 - Segment A (artisans) : codes NAF `43.22A,43.22B,43.21A,43.34Z,43.32A,81.30Z`
 - Segment B (bouche / beauté) : codes NAF `56.21Z,56.10C,10.71D,96.02A,96.02B`
 - Créés depuis : `2024-01-01` (entreprises jeunes, souvent sans site)
@@ -49,7 +58,7 @@ _Dernière mise à jour : 3 novembre 2026 (retrait de la boutique AMY Store et r
 ## Prochaines étapes
 | # | Étape | Qui | Autorisation |
 |---|---|---|---|
-| 1 | Me donner votre ville ou zone, et votre choix de nom (ou garder « Enseigne Web ») | 👤 | — |
+| 1 | Me donner votre choix de nom (ou garder « Enseigne Web ») | 👤 | — |
 | 2 | Créer la micro-entreprise (gratuit, formalites.entreprise.gouv.fr) | 👤 | — |
 | 3 | Créer le compte Netlify et y déposer `site/` | 👤 | 🔐 Publication publique |
 | 4 | Compléter mentions légales, devis et CGV avec votre SIRET | 🤖 dès réception | — |

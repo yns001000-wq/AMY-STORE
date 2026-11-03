@@ -14,7 +14,12 @@ SIRET : {SIRET} · {Adresse} · {Email}
 | {Acompte 50 % / Solde} — Offre {Vitrine} selon devis {N°} | 1 | {195,00 €} | {195,00 €} |
 | **Total à payer** | | | **{195,00 €}** |
 
-**TVA non applicable, article 293 B du CGI.**
+**Mention de TVA selon le client :**
+- 🇫🇷 client en France : « TVA non applicable, article 293 B du CGI » ;
+- 🇧🇪 client belge **assujetti à la TVA** : « Autoliquidation » + votre n° de TVA intracommunautaire (FR…) + celui du client (BE…). Penser à la DES ;
+- 🇨🇭 client suisse professionnel : « TVA non applicable – article 259 du CGI (prestation de services à un preneur établi hors de l'Union européenne) ».
+
+À faire valider par un comptable ou le service des impôts des entreprises avant la première facture BE ou CH (voir MARCHES.md).
 
 **Échéance :** {date} — paiement par virement : IBAN {IBAN}.
 En cas de retard : pénalités au taux de 3 fois le taux d'intérêt légal et indemnité forfaitaire de 40 € pour frais de recouvrement.

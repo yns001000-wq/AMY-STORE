@@ -41,3 +41,6 @@
 
 ## 7. Assurance (recommandée, non obligatoire)
 - [ ] Demander 2 ou 3 devis de responsabilité civile professionnelle pour l'activité « création de sites web ». 🔐 Rien n'est souscrit sans votre accord.
+
+## 8. Belgique et Suisse
+Les règles de prospection (email, téléphone), de facturation (autoliquidation, DES, mentions TVA) et de mentions légales propres à ces deux pays sont détaillées dans **[MARCHES.md](MARCHES.md)**. À faire valider par un comptable avant la première vente dans chacun de ces pays.

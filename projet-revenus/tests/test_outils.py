@@ -72,10 +72,24 @@ class TestGenerateur(unittest.TestCase):
 
     def test_avertissement_mentions_manquantes(self):
         f = fiche_artisan()
-        del f["siret"]
+        del f["numero_entreprise"]
         dossier, avert = generer_site.generer(f, self.tmp)
-        self.assertTrue(any("siret" in a for a in avert))
+        self.assertTrue(any("numero_entreprise" in a for a in avert))
         self.assertIn("[À COMPLÉTER]", (dossier / "mentions-legales.html").read_text(encoding="utf-8"))
+
+    def test_mentions_par_pays(self):
+        for code, attendu, autorite in [("FR", "SIRET", "CNIL"), ("BE", "BCE", "autoriteprotectiondonnees.be"), ("CH", "IDE", "edoeb.admin.ch")]:
+            f = fiche_artisan(pays=code, slug=f"test-{code.lower()}")
+            f.pop("siret", None)
+            f["numero_entreprise"] = "123"
+            dossier, avert = generer_site.generer(f, self.tmp)
+            mentions = (dossier / "mentions-legales.html").read_text(encoding="utf-8")
+            self.assertIn(attendu, mentions)
+            self.assertIn(autorite, mentions)
+            self.assertIn(f'"addressCountry": "{code}"', (dossier / "index.html").read_text(encoding="utf-8"))
+            self.assertFalse(any("numero_entreprise" in a for a in avert))
+        with self.assertRaises(generer_site.FicheInvalide):
+            generer_site.generer(fiche_artisan(pays="DE"), self.tmp)
 
     def test_commande_whatsapp_produits(self):
         f = json.loads((RACINE / "modeles-sites" / "fiche-exemple-commande.json").read_text(encoding="utf-8"))
@@ -121,7 +135,9 @@ class TestCRM(unittest.TestCase):
             {"statut": "nouveau", "segment": "A"},
             {"statut": "ne_pas_contacter", "segment": "A"},
         ])
-        e = crm.calculer(self.d, self.jour).entonnoir
+        ind = crm.calculer(self.d, self.jour)
+        e = ind.entonnoir
+        self.assertEqual(list(ind.par_pays), ["FR"])
         self.assertEqual((e.total, e.contactes, e.reponses, e.gagnes, e.a_contacter), (4, 3, 2, 1, 1))
 
     def test_regles_de_decision(self):
@@ -201,6 +217,7 @@ class TestProspects(unittest.TestCase):
         self.assertEqual(ligne["entreprise"], "Plomberie Test")
         self.assertEqual(ligne["metier"], "Plombier")
         self.assertEqual(ligne["statut"], "nouveau")
+        self.assertEqual(ligne["pays"], "FR")
 
     def test_recherche_dedoublonnage_et_ecriture(self):
         pages = {1: {"results": [self.resultat("111"), self.resultat("222"), self.resultat("333", opposition=True)], "total_pages": 2},

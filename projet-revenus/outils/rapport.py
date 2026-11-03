@@ -60,6 +60,9 @@ def markdown(ind: crm.Indicateurs) -> str:
     ]
     for nom, s in ind.par_segment.items():
         l.append(f"| {nom} | {s.contactes} | {s.reponses} | {crm.pct(s.taux_reponse)} | {s.rdv} | {s.gagnes} | {s.decision()} |")
+    l += ["", "## Par pays", "", "| Pays | Prospects | Contactés | Réponses | Taux | Ventes |", "|---|---|---|---|---|---|"]
+    for nom, s in ind.par_pays.items():
+        l.append(f"| {nom} | {s.total} | {s.contactes} | {s.reponses} | {crm.pct(s.taux_reponse)} | {s.gagnes} |")
     l += ["", "## Par canal de contact", "", "| Canal | Contactés | Réponses | Taux | RDV | Ventes |", "|---|---|---|---|---|---|"]
     for nom, s in ind.par_canal.items():
         l.append(f"| {nom} | {s.contactes} | {s.reponses} | {crm.pct(s.taux_reponse)} | {s.rdv} | {s.gagnes} |")

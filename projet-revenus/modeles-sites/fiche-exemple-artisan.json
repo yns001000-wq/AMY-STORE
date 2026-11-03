@@ -2,6 +2,7 @@
   "_note": "EXEMPLE FICTIF — entreprise inventée pour démonstration. Ne pas présenter comme un vrai client.",
   "demo": true,
   "modele": "artisan",
+  "pays": "FR",
   "slug": "exemple-plomberie-martin",
   "nom": "Plomberie Martin (exemple fictif)",
   "metier": "Plombier chauffagiste",
@@ -51,7 +52,7 @@
     ]
   ],
   "statut_juridique": "Exemple fictif",
-  "siret": "Exemple fictif",
+  "numero_entreprise": "Exemple fictif",
   "adresse_editeur": "Exemple fictif",
   "responsable_publication": "Exemple fictif",
   "hebergeur": "Exemple fictif"

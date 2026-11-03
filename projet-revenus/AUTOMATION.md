@@ -11,6 +11,7 @@
 | # | Tâche | Outil | Statut | Preuve ou condition |
 |---|---|---|---|---|
 | 1 | Trouver des prospects (entreprises actives récentes, par métier et par zone), sans doublon, en excluant les entreprises qui ont fait opposition | `outils/trouver_prospects.py`, qui interroge l'API officielle Recherche d'entreprises | ✅ | Testé en conditions réelles le 03/11/2026 (8 résultats à Villeurbanne, en mode essai, sans rien écrire), plus 2 tests automatisés avec une API simulée |
+| 1 bis | Trouver des prospects en Belgique et en Suisse | KBO Open Data (BE) / API Zefix (CH) | 🔌🔐 | Non construit : conditions de réutilisation (BE) et identifiants (CH) à obtenir d'abord. En attendant, recherche manuelle (voir MARCHES.md) |
 | 2 | Organiser les contacts (suivi en fichiers CSV avec statuts, canaux et prochaines actions) | `crm/donnees/*.csv` + `crm/STATUTS.md` | ✅ | Fichiers créés au premier lancement de `rapport.py`. Validation des statuts testée |
 | 3 | Générer un aperçu de site personnalisé pour un prospect (non indexable, avec bandeau « non contractuel ») | `outils/generer_site.py --apercu` | ✅ | 7 tests automatisés, vérification dans le navigateur à 375 px et 1 280 px |
 | 4 | Produire le site final d'un client (2 modèles : artisan, commande WhatsApp) avec mentions légales et page de remerciement | `outils/generer_site.py` | ✅ | Démos dans `site/exemples/`. Parcours panier → WhatsApp testé dans le navigateur |

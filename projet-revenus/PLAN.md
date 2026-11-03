@@ -51,6 +51,7 @@
 - **Remplacement :** Cloudflare Pages.
 
 ## Phase 4 — Test de la demande, sans dépenser (semaines 2 à 5)
+- **Zone :** toute la France, en commençant par des lots de 2 ou 3 départements par semaine (voir [MARCHES.md](MARCHES.md)). La vente se fait à distance (téléphone, visio, email).
 - **Objectif :** mesurer de vrais taux de réponse **avant** d'investir du temps ou de l'argent.
 - **Actions :**
   - 🤖 Chaque semaine, `outils/trouver_prospects.py` produit une liste de prospects dans votre zone (2 segments × 30 entreprises).
@@ -65,6 +66,19 @@
   - taux de réponse < 3 % après 60 contacts → on **abandonne** ce segment et on teste un autre métier ou une autre ville.
 - **Coût :** 0 €.
 - **Risque :** manque de temps. **Parade :** un minimum de 5 contacts par jour, préparés par Claude la veille.
+
+## Phase 4 bis — Extension Belgique francophone et Suisse romande (après les 3 premières ventes en France)
+- **Objectif :** ouvrir les deux autres marchés en respectant leurs règles de prospection et de facturation.
+- **Actions :**
+  - 👤 numéro de TVA intracommunautaire (gratuit) ;
+  - 👤 se renseigner sur la DES pour la Belgique ;
+  - 🔐 décider d'utiliser ou non les sources de données officielles (KBO, Zefix) ;
+  - 🤖 adaptation des messages et des mentions légales (déjà prise en charge par le générateur via le champ `pays`).
+- **Prospection :**
+  - Belgique : téléphone, et email seulement vers les adresses génériques des sociétés ;
+  - Suisse : téléphone (sauf numéros marqués d'un astérisque) et demandes entrantes ; **pas d'email à froid**.
+- **Critère de fin :** 30 prospects contactés par pays, résultats saisis avec la colonne `pays`.
+- **Les demandes entrantes** de Belgique et de Suisse sont acceptées dès maintenant.
 
 ## Phase 5 — Premiers clients pilotes (semaines 3 à 8)
 - **Objectif :** 3 clients livrés et satisfaits, qui deviennent vos premières références.

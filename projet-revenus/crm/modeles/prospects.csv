@@ -1,1 +1,1 @@
-id,date_ajout,segment,entreprise,metier,naf,ville,code_postal,adresse,siren,telephone,email,site_existant,source,statut,canal,date_dernier_contact,prochaine_action,date_prochaine_action,apercu,notes
+id,date_ajout,pays,segment,entreprise,metier,naf,ville,code_postal,adresse,siren,telephone,email,site_existant,source,statut,canal,date_dernier_contact,prochaine_action,date_prochaine_action,apercu,notes

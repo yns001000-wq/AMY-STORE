@@ -4,6 +4,7 @@ Claude transforme vos réponses en fiche JSON (`clients/{slug}/fiche.json`), pui
 
 | Question | Champ de la fiche |
 |---|---|
+| Pays : France, Belgique ou Suisse | `pays` (FR, BE ou CH) |
 | Nom de l'entreprise tel qu'il doit apparaître | `nom` |
 | Métier en quelques mots (« plombier chauffagiste ») | `metier` |
 | Ville principale / zone couverte | `ville`, `zone` |
@@ -17,7 +18,7 @@ Claude transforme vos réponses en fiche JSON (`clients/{slug}/fiche.json`), pui
 | Adresse affichée ? (beaucoup d'artisans préfèrent ne pas l'afficher) | `adresse` |
 | Couleur préférée ou couleur du logo / camion | `couleur` |
 | (Commande WhatsApp) Produits : nom, description, prix, options | `produits` |
-| Mentions légales : statut, SIRET, adresse de l'éditeur, responsable de la publication | `statut_juridique`, `siret`, `adresse_editeur`, `responsable_publication` |
+| Mentions légales : statut, numéro d'entreprise (SIRET en France, BCE en Belgique, IDE en Suisse), adresse de l'éditeur, responsable de la publication | `statut_juridique`, `numero_entreprise`, `adresse_editeur`, `responsable_publication` |
 | Photos et logo : le client les fournit et **confirme en avoir les droits** | (dossier `clients/{slug}/images/`) |
 
 ⚠️ **Points de vigilance :**

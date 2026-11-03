@@ -94,6 +94,7 @@ def extraire(resultat: dict, depuis: dt.date | None) -> dict | None:
     naf = et.get("activite_principale") or resultat.get("activite_principale", "")
     siren = resultat.get("siren", "")
     return {
+        "pays": "FR",
         "entreprise": nom.title() if nom.isupper() else nom,
         "metier": METIERS.get(naf, naf),
         "naf": naf,
@@ -154,7 +155,7 @@ def main(argv=None) -> int:
     p.add_argument("--naf", required=True, help="Codes NAF séparés par des virgules (ex. 43.22A,43.21A)")
     g = p.add_mutually_exclusive_group(required=True)
     g.add_argument("--code-postal", help="Un ou plusieurs codes postaux séparés par des virgules")
-    g.add_argument("--departement", help="Code département (ex. 69)")
+    g.add_argument("--departement", help="Un ou plusieurs codes départements séparés par des virgules (ex. 69,42,38)")
     p.add_argument("--segment", required=True, help="Nom du segment testé (ex. A-artisans)")
     p.add_argument("--depuis", help="Établissements créés depuis cette date AAAA-MM-JJ (ex. 2024-01-01)")
     p.add_argument("--max", type=int, default=30, help="Nombre maximum de prospects ajoutés (défaut 30)")
