@@ -1,0 +1,58 @@
+# PROGRESS.md — Avancement, problèmes et prochaines étapes
+
+_Dernière mise à jour : 3 novembre 2026._
+
+## Indicateurs réels
+| Indicateur | Valeur | Commentaire |
+|---|---|---|
+| Prospects contactés | **0** | La prospection n'a pas commencé : elle attend vos actions de la phase 2 |
+| Ventes | **0** | — |
+| Chiffre d'affaires | **0 €** | — |
+| Dépenses engagées | **0 €** | Aucun budget approuvé |
+| Publicités diffusées | **Aucune** | Textes seulement préparés (`marketing/annonces.md`) |
+| Messages envoyés à des prospects | **Aucun** | Modèles seulement préparés |
+| Publications | **Aucune** | Brouillons seulement préparés |
+
+## Journal
+### 03/11/2026 — Phases 0 et 1 terminées
+**Fait :**
+- Étude de 8 modèles économiques, plus 2 écartés, et choix du **site vitrine à prix fixe pour TPE locales** (BUSINESS_MODEL.md, avec sources dans SOURCES.md).
+- Plan en 7 phases (PLAN.md), budget à 0 € (BUDGET.md), liste de vérification juridique (LEGAL.md).
+- Outils construits et testés :
+
+| Livrable | Preuve |
+|---|---|
+| `outils/generer_site.py` + 2 modèles (artisan, commande WhatsApp) | 7 tests automatisés OK. Démos générées dans `site/exemples/` |
+| `outils/trouver_prospects.py` (API officielle Sirene) | Exécution réelle OK le 03/11/2026 (mode essai, rien enregistré) + 2 tests OK |
+| `outils/crm.py` + `outils/rapport.py` (rapport + tableau de bord) | 6 tests OK. Rapport et tableau de bord générés sur des données fictives (`crm/exemple/`) et vérifiés visuellement |
+| Page de l'offre `site/` (accueil, mentions légales, remerciement) | Vérification navigateur : 0 erreur JS, 0 débordement à 375 px et 1 280 px, liens internes valides |
+| Parcours panier → WhatsApp (modèle commande) | Test navigateur : ajout, quantité, message pré-rempli et total corrects |
+| Marketing : stratégie, objections, 9 modèles de messages, publicités (longueurs vérifiées), calendrier sur 4 semaines, 2 visuels SVG | Relu. Visuels contrôlés après rendu |
+| Vente : devis, facture, CGV (projet), questionnaire, liste de vérification de livraison | Relus |
+
+- **Total des tests : 15 tests unitaires OK, et vérification navigateur OK sur 6 pages × 2 largeurs.**
+
+**Problèmes et limites identifiés :**
+1. Le chiffre « part des TPE sans site » (environ 20 %) vient d'une source secondaire. À confirmer dans le rapport France Num 2025.
+2. Les taux de cotisations 2026 (BNC 25,6 %) et le seuil de TVA (37 500 €) viennent de sources concordantes mais en partie secondaires. À vérifier sur urssaf.fr et impots.gouv.fr à la création.
+3. Le formulaire Netlify n'est vérifiable qu'après la mise en ligne (phase 3).
+4. AMY Store est hébergée sur Vercel Hobby, ce qui est contraire à l'usage non commercial (voir `docs/MIGRATION_AMY_STORE.md`). **Décision à prendre par vous.**
+5. Le nom « Enseigne Web » est **provisoire** : sa disponibilité (INPI, nom de domaine) n'est pas vérifiée.
+6. Il manque votre **ville / zone** pour lancer la prospection réelle.
+
+## Paramètres de prospection (à compléter par vous)
+- Ville / codes postaux visés : **[À COMPLÉTER]**
+- Segment A (artisans) : codes NAF `43.22A,43.22B,43.21A,43.34Z,43.32A,81.30Z`
+- Segment B (bouche / beauté) : codes NAF `56.21Z,56.10C,10.71D,96.02A,96.02B`
+- Créés depuis : `2024-01-01` (entreprises jeunes, souvent sans site)
+
+## Prochaines étapes
+| # | Étape | Qui | Autorisation |
+|---|---|---|---|
+| 1 | Me donner votre ville ou zone, et votre choix de nom (ou garder « Enseigne Web ») | 👤 | — |
+| 2 | Créer la micro-entreprise (gratuit, formalites.entreprise.gouv.fr) | 👤 | — |
+| 3 | Créer le compte Netlify et y déposer `site/` | 👤 | 🔐 Publication publique |
+| 4 | Compléter mentions légales, devis et CGV avec votre SIRET | 🤖 dès réception | — |
+| 5 | Lancer la première liste de 60 prospects (2 segments × 30) et 10 aperçus | 🤖 | — (aucun envoi) |
+| 6 | Premiers contacts (5 par jour) | 👤 | 🔐 Prise de contact en votre nom |
+| 7 | Décider pour l'hébergement d'AMY Store | 👤 | 🔐 |

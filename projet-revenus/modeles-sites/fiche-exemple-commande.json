@@ -1,0 +1,65 @@
+{
+  "_note": "EXEMPLE FICTIF — entreprise inventée pour démonstration. Ne pas présenter comme un vrai client.",
+  "demo": true,
+  "modele": "commande-whatsapp",
+  "slug": "exemple-patisserie-lea",
+  "nom": "Les Gâteaux de Léa (exemple fictif)",
+  "metier": "Pâtisserie sur commande",
+  "ville": "Saint-Étienne",
+  "zone": "Retrait à Saint-Étienne, livraison possible à 10 km",
+  "accroche": "Gâteaux faits maison, à commander en 2 minutes",
+  "description": "Pâtisserie artisanale sur commande pour vos anniversaires, baptêmes et fêtes. Commande au plus tard 48 h à l'avance.",
+  "telephone": "06 00 00 00 01",
+  "whatsapp": "33600000001",
+  "couleur": "#b0466b",
+  "produits": [
+    {
+      "nom": "Fraisier",
+      "desc": "Génoise, crème mousseline vanille, fraises fraîches.",
+      "prix": 32,
+      "options": [
+        "6 parts",
+        "8 parts",
+        "10 parts"
+      ]
+    },
+    {
+      "nom": "Layer cake chocolat",
+      "desc": "Trois étages, ganache chocolat noir.",
+      "prix": 38,
+      "options": [
+        "8 parts",
+        "12 parts"
+      ]
+    },
+    {
+      "nom": "Boîte de 12 cookies",
+      "desc": "Assortiment : chocolat, noisette, caramel.",
+      "prix": 15
+    },
+    {
+      "nom": "Tarte citron meringuée",
+      "desc": "Pâte sablée, crème citron, meringue italienne.",
+      "prix": 24,
+      "options": [
+        "6 parts",
+        "8 parts"
+      ]
+    }
+  ],
+  "horaires": [
+    [
+      "Mercredi – Samedi",
+      "10h – 19h"
+    ],
+    [
+      "Retrait",
+      "sur rendez-vous"
+    ]
+  ],
+  "statut_juridique": "Exemple fictif",
+  "siret": "Exemple fictif",
+  "adresse_editeur": "Exemple fictif",
+  "responsable_publication": "Exemple fictif",
+  "hebergeur": "Exemple fictif"
+}

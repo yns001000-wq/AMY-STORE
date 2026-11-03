@@ -1,0 +1,10 @@
+# Données réelles (personnelles) : jamais versionnées ni publiées
+crm/donnees/*
+!crm/donnees/LISEZMOI.txt
+clients/
+sorties/
+rapports/*.md
+rapports/*.html
+!rapports/LISEZMOI.md
+__pycache__/
+*.pyc

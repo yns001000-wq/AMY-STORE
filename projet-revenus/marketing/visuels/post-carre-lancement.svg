@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080">
+  <rect width="1080" height="1080" fill="#f6f4ef"/>
+  <rect x="0" y="0" width="1080" height="16" fill="#d9622b"/>
+  <text x="90" y="170" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="44" font-weight="800" fill="#14213d">Enseigne<tspan fill="#d9622b">Web</tspan></text>
+  <text font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="92" font-weight="800" fill="#14213d">
+    <tspan x="90" y="380">Votre site pro</tspan>
+    <tspan x="90" y="490">en 5 jours.</tspan>
+  </text>
+  <text font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="46" font-weight="600" fill="#55607a">
+    <tspan x="90" y="610">✓ Prix fixe, payé une fois</tspan>
+    <tspan x="90" y="680">✓ Sans abonnement</tspan>
+    <tspan x="90" y="750">✓ Le site est à votre nom</tspan>
+  </text>
+  <rect x="90" y="840" width="660" height="110" rx="20" fill="#d9622b"/>
+  <text x="420" y="910" text-anchor="middle" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="42" font-weight="800" fill="#ffffff">Aperçu gratuit</text>
+  <text x="90" y="1020" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="28" fill="#55607a">Artisans · Commerçants · Indépendants — {ville}</text>
+</svg>

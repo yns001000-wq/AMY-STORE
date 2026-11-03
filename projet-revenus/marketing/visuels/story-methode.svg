@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <rect width="1080" height="1920" fill="#14213d"/>
+  <text x="90" y="240" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="44" font-weight="800" fill="#ffffff">Enseigne<tspan fill="#f08a57">Web</tspan></text>
+  <text font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="84" font-weight="800" fill="#ffffff">
+    <tspan x="90" y="420">Un site en</tspan><tspan x="90" y="520">5 jours :</tspan>
+  </text>
+  <g font-family="Segoe UI, Roboto, Arial, sans-serif" fill="#ffffff">
+    <g transform="translate(90,640)"><circle cx="40" cy="40" r="40" fill="#d9622b"/><text x="40" y="54" text-anchor="middle" font-size="40" font-weight="800">1</text><text x="110" y="54" font-size="46">Échange de 15 min</text></g>
+    <g transform="translate(90,800)"><circle cx="40" cy="40" r="40" fill="#d9622b"/><text x="40" y="54" text-anchor="middle" font-size="40" font-weight="800">2</text><text x="110" y="54" font-size="46">Aperçu gratuit</text></g>
+    <g transform="translate(90,960)"><circle cx="40" cy="40" r="40" fill="#d9622b"/><text x="40" y="54" text-anchor="middle" font-size="40" font-weight="800">3</text><text x="110" y="54" font-size="46">Vos retours</text></g>
+    <g transform="translate(90,1120)"><circle cx="40" cy="40" r="40" fill="#d9622b"/><text x="40" y="54" text-anchor="middle" font-size="40" font-weight="800">4</text><text x="110" y="54" font-size="46">Finitions + mentions légales</text></g>
+    <g transform="translate(90,1280)"><circle cx="40" cy="40" r="40" fill="#d9622b"/><text x="40" y="54" text-anchor="middle" font-size="40" font-weight="800">5</text><text x="110" y="54" font-size="46">En ligne, à votre nom</text></g>
+  </g>
+  <text x="90" y="1560" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="40" fill="#c9cfdc">Prix fixe · Sans abonnement</text>
+  <text x="90" y="1630" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="40" fill="#c9cfdc">Lien en bio pour votre aperçu</text>
+</svg>

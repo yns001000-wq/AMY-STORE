@@ -1,0 +1,3 @@
+id,date,client,segment,canal_origine,offre,montant,montant_encaisse,statut_paiement,notes
+1,2026-10-01,EXEMPLE Client octobre,A-artisans,visite,Vitrine pilote,290,290,paye,DONNÉES FICTIVES
+2,2026-11-05,EXEMPLE Plomberie A,A-artisans,visite,Vitrine pilote,290,145,acompte,DONNÉES FICTIVES

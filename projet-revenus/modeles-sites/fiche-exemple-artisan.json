@@ -1,0 +1,58 @@
+{
+  "_note": "EXEMPLE FICTIF — entreprise inventée pour démonstration. Ne pas présenter comme un vrai client.",
+  "demo": true,
+  "modele": "artisan",
+  "slug": "exemple-plomberie-martin",
+  "nom": "Plomberie Martin (exemple fictif)",
+  "metier": "Plombier chauffagiste",
+  "ville": "Villeurbanne",
+  "zone": "Villeurbanne, Lyon et communes à 15 km",
+  "accroche": "Dépannage, installation et entretien de chauffage. Devis gratuit, intervention rapide, travail propre.",
+  "description": "Artisan plombier installé à Villeurbanne, j'interviens chez les particuliers et les petits commerces pour les fuites, chauffe-eau, salles de bain et chaudières. Je vous donne un prix clair avant de commencer.",
+  "telephone": "06 00 00 00 00",
+  "whatsapp": "33600000000",
+  "email": "contact@exemple.invalid",
+  "couleur": "#1f5fbf",
+  "atouts": [
+    "Devis gratuit",
+    "Prix annoncé avant travaux",
+    "Assurance décennale"
+  ],
+  "services": [
+    {
+      "titre": "Dépannage fuite",
+      "texte": "Recherche et réparation de fuites, robinetterie, WC, évacuations bouchées."
+    },
+    {
+      "titre": "Chauffe-eau",
+      "texte": "Remplacement et entretien de chauffe-eau électriques et thermodynamiques."
+    },
+    {
+      "titre": "Salle de bain",
+      "texte": "Remplacement de baignoire par douche, pose de sanitaires et meubles vasques."
+    },
+    {
+      "titre": "Chauffage",
+      "texte": "Entretien annuel de chaudière, désembouage, remplacement de radiateurs."
+    }
+  ],
+  "horaires": [
+    [
+      "Lundi – Vendredi",
+      "8h – 18h30"
+    ],
+    [
+      "Samedi",
+      "9h – 12h"
+    ],
+    [
+      "Dimanche",
+      "Fermé"
+    ]
+  ],
+  "statut_juridique": "Exemple fictif",
+  "siret": "Exemple fictif",
+  "adresse_editeur": "Exemple fictif",
+  "responsable_publication": "Exemple fictif",
+  "hebergeur": "Exemple fictif"
+}

@@ -1,0 +1,1 @@
+Ce dossier contient vos VRAIES données (prospects, ventes). Il est exclu de Git pour protéger la vie privée des prospects.

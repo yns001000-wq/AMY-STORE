@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Les Gâteaux de Léa (exemple fictif) — Pâtisserie sur commande à Saint-Étienne | Commande sur WhatsApp</title>
+<meta name="description" content="Les Gâteaux de Léa (exemple fictif), pâtisserie sur commande à Saint-Étienne. Gâteaux faits maison, à commander en 2 minutes">
+
+<meta property="og:title" content="Les Gâteaux de Léa (exemple fictif) — Pâtisserie sur commande à Saint-Étienne">
+<meta property="og:description" content="Les Gâteaux de Léa (exemple fictif), pâtisserie sur commande à Saint-Étienne. Gâteaux faits maison, à commander en 2 minutes">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "LocalBusiness", "name": "Les Gâteaux de Léa (exemple fictif)", "description": "Pâtisserie artisanale sur commande pour vos anniversaires, baptêmes et fêtes. Commande au plus tard 48 h à l'avance.", "telephone": "06 00 00 00 01", "areaServed": "Retrait à Saint-Étienne, livraison possible à 10 km", "address": {"@type": "PostalAddress", "addressLocality": "Saint-Étienne"}}</script>
+<style>
+  :root{--brand:#b0466b;--ink:#1b1a17;--soft:#6a655c;--line:#ebe6dc;--bg:#fffdf9;--bg2:#f7f2e9}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;padding-bottom:84px}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+  .apercu{background:#fff4d6;color:#5a4200;font-size:13px;text-align:center;padding:8px 16px;border-bottom:1px solid #f0dc9c}
+  header{border-bottom:1px solid var(--line);background:#fff}
+  header .wrap{display:flex;justify-content:space-between;align-items:center;padding-top:14px;padding-bottom:14px;gap:12px}
+  .logo{font-weight:800;font-size:19px}
+  .logo small{display:block;font-weight:500;font-size:12px;color:var(--soft)}
+  .hero{padding:44px 0 24px;background:var(--bg2)}
+  .hero h1{font-size:clamp(26px,5vw,40px);margin:0 0 10px;line-height:1.15}
+  .hero p{color:var(--soft);font-size:17px;max-width:620px;margin:0}
+  .steps{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;padding:0;list-style:none;counter-reset:s}
+  .steps li{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px;counter-increment:s}
+  .steps li::before{content:counter(s) ". ";font-weight:700;color:var(--brand)}
+  section{padding:36px 0}
+  h2{font-size:24px;margin:0 0 18px}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px}
+  .card h3{margin:0;font-size:17px}
+  .card p{margin:0;color:var(--soft);font-size:14px;flex:1}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .price{font-weight:800;font-size:18px}
+  select{padding:9px;border-radius:9px;border:1px solid #d6d0c4;font:inherit;width:100%}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:10px;padding:11px 16px;font-weight:700;font-size:15px;cursor:pointer;text-decoration:none}
+  .btn-add{background:var(--brand);color:#fff}
+  .btn-wa{background:#1fa855;color:#fff;width:100%}
+  .btn-wa[aria-disabled="true"]{opacity:.45;pointer-events:none}
+  .infos{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .infos div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+  .cart-bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:10px 16px;z-index:20}
+  .cart-bar .wrap{display:flex;align-items:center;gap:12px;padding:0}
+  .cart-bar .total{white-space:nowrap;font-weight:700}
+  .cart-list{max-width:1040px;margin:0 auto 8px;padding:0;list-style:none;font-size:14px;max-height:30vh;overflow:auto}
+  .cart-list li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:4px 0;border-bottom:1px dashed var(--line)}
+  .cart-list button{border:1px solid var(--line);background:#fff;border-radius:6px;width:28px;height:28px;cursor:pointer}
+  footer{padding:28px 0;font-size:14px;color:var(--soft);border-top:1px solid var(--line)}
+  footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
+  footer a{color:inherit}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">Les Gâteaux de Léa (exemple fictif)<small>Pâtisserie sur commande — Saint-Étienne</small></div>
+    <a class="btn btn-add" href="tel:0600000001">Appeler</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>Gâteaux faits maison, à commander en 2 minutes</h1>
+    <p>Pâtisserie artisanale sur commande pour vos anniversaires, baptêmes et fêtes. Commande au plus tard 48 h à l&#x27;avance.</p>
+    <ol class="steps"><li>Choisissez vos produits</li><li>Envoyez la commande sur WhatsApp</li><li>Nous confirmons le retrait ou la livraison</li></ol>
+  </div>
+</div>
+
+<section id="carte">
+  <div class="wrap">
+    <h2>La carte</h2>
+    <div class="grid" id="produits"><div class="card" data-produit data-nom="Fraisier" data-prix="32.00"><h3>Fraisier</h3><p>Génoise, crème mousseline vanille, fraises fraîches.</p><select aria-label="Option pour Fraisier"><option>6 parts</option><option>8 parts</option><option>10 parts</option></select><div class="row"><span class="price">32,00 €</span><button class="btn btn-add" type="button">Ajouter</button></div></div><div class="card" data-produit data-nom="Layer cake chocolat" data-prix="38.00"><h3>Layer cake chocolat</h3><p>Trois étages, ganache chocolat noir.</p><select aria-label="Option pour Layer cake chocolat"><option>8 parts</option><option>12 parts</option></select><div class="row"><span class="price">38,00 €</span><button class="btn btn-add" type="button">Ajouter</button></div></div><div class="card" data-produit data-nom="Boîte de 12 cookies" data-prix="15.00"><h3>Boîte de 12 cookies</h3><p>Assortiment : chocolat, noisette, caramel.</p><div class="row"><span class="price">15,00 €</span><button class="btn btn-add" type="button">Ajouter</button></div></div><div class="card" data-produit data-nom="Tarte citron meringuée" data-prix="24.00"><h3>Tarte citron meringuée</h3><p>Pâte sablée, crème citron, meringue italienne.</p><select aria-label="Option pour Tarte citron meringuée"><option>6 parts</option><option>8 parts</option></select><div class="row"><span class="price">24,00 €</span><button class="btn btn-add" type="button">Ajouter</button></div></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap infos">
+    <div><strong>Zone</strong><br>Retrait à Saint-Étienne, livraison possible à 10 km</div>
+    <div><strong>Horaires</strong><br>Mercredi – Samedi : 10h – 19h<br>Retrait : sur rendez-vous</div>
+    <div><strong>Contact</strong><br><a href="tel:0600000001">06 00 00 00 01</a></div>
+  </div>
+  <div class="wrap"><p style="font-size:13px;color:var(--soft)">Aucun paiement en ligne : la commande est confirmée par message, puis réglée selon les modalités convenues avec nous. Les prix sont indiqués TTC.</p></div>
+</section>
+
+<footer><div class="wrap"><span>© 2026 Les Gâteaux de Léa (exemple fictif)</span><a href="mentions-legales.html">Mentions légales</a></div></footer>
+
+<div class="cart-bar">
+  <ul class="cart-list" id="cartList"></ul>
+  <div class="wrap">
+    <span class="total" id="cartTotal">0,00 €</span>
+    <a class="btn btn-wa" id="cartSend" href="#" target="_blank" rel="noopener" aria-disabled="true">Commander sur WhatsApp</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var WHATSAPP = "33600000001";
+  var NOM = "Les Gâteaux de Léa (exemple fictif)";
+  var cart = [];
+  function euros(n){ return n.toFixed(2).replace('.', ',') + ' €'; }
+  function render(){
+    var list = document.getElementById('cartList');
+    list.textContent = '';
+    var total = 0;
+    cart.forEach(function(item, i){
+      total += item.prix * item.qte;
+      var li = document.createElement('li');
+      var label = document.createElement('span');
+      label.textContent = item.qte + ' × ' + item.nom + (item.option ? ' (' + item.option + ')' : '') + ' — ' + euros(item.prix * item.qte);
+      var actions = document.createElement('span');
+      [['−', -1], ['+', 1]].forEach(function(b){
+        var btn = document.createElement('button');
+        btn.type = 'button'; btn.textContent = b[0];
+        btn.setAttribute('aria-label', (b[1] > 0 ? 'Ajouter un ' : 'Retirer un ') + item.nom);
+        btn.onclick = function(){ item.qte += b[1]; if(item.qte <= 0){ cart.splice(i, 1); } render(); };
+        actions.appendChild(btn);
+      });
+      li.appendChild(label); li.appendChild(actions); list.appendChild(li);
+    });
+    document.getElementById('cartTotal').textContent = euros(total);
+    var send = document.getElementById('cartSend');
+    if(!cart.length){ send.setAttribute('aria-disabled', 'true'); send.href = '#'; return; }
+    send.setAttribute('aria-disabled', 'false');
+    var lignes = ['Bonjour ' + NOM + ', je souhaite commander :'];
+    cart.forEach(function(it){ lignes.push('- ' + it.qte + ' × ' + it.nom + (it.option ? ' (' + it.option + ')' : '') + ' — ' + euros(it.prix * it.qte)); });
+    lignes.push('Total : ' + euros(total));
+    lignes.push('Merci de me confirmer la disponibilité et le retrait/la livraison.');
+    send.href = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(lignes.join('\n'));
+  }
+  document.querySelectorAll('[data-produit]').forEach(function(card){
+    card.querySelector('.btn-add').addEventListener('click', function(){
+      var sel = card.querySelector('select');
+      var option = sel ? sel.value : '';
+      var nom = card.getAttribute('data-nom');
+      var prix = parseFloat(card.getAttribute('data-prix'));
+      var found = cart.find(function(it){ return it.nom === nom && it.option === option; });
+      if(found){ found.qte += 1; } else { cart.push({nom: nom, option: option, prix: prix, qte: 1}); }
+      render();
+    });
+  });
+  render();
+})();
+</script>
+</body>
+</html>

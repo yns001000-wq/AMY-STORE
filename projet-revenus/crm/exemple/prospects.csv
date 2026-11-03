@@ -1,0 +1,10 @@
+id,date_ajout,segment,entreprise,metier,naf,ville,code_postal,adresse,siren,telephone,email,site_existant,source,statut,canal,date_dernier_contact,prochaine_action,date_prochaine_action,apercu,notes
+1,2026-11-02,A-artisans,EXEMPLE Plomberie A,Plombier,43.22A,Villeurbanne,69100,,,,,non,exemple,gagne,visite,2026-11-05,,,oui,DONNÉES FICTIVES DE TEST
+2,2026-11-02,A-artisans,EXEMPLE Électricité B,Électricien,43.21A,Villeurbanne,69100,,,,,non,exemple,devis,appel,2026-11-12,Relancer le devis,2026-11-14,oui,DONNÉES FICTIVES DE TEST
+3,2026-11-02,A-artisans,EXEMPLE Peinture C,Peintre,43.34Z,Lyon,69003,,,,,non,exemple,refus,email,2026-11-04,,,non,DONNÉES FICTIVES DE TEST
+4,2026-11-02,A-artisans,EXEMPLE Menuiserie D,Menuisier,43.32A,Lyon,69003,,,,,non,exemple,contacte,email,2026-10-20,Relance 2,2026-11-18,non,DONNÉES FICTIVES DE TEST
+5,2026-11-02,B-food-beaute,EXEMPLE Traiteur E,Traiteur,56.21Z,Lyon,69007,,,,,non,exemple,contacte,email,2026-11-10,Relance 1,2026-11-17,non,DONNÉES FICTIVES DE TEST
+6,2026-11-02,B-food-beaute,EXEMPLE Coiffure F,Coiffeuse,96.02A,Lyon,69007,,,,,non,exemple,rdv,visite,2026-11-15,RDV présentation,2026-11-20,oui,DONNÉES FICTIVES DE TEST
+7,2026-11-02,B-food-beaute,EXEMPLE Snack G,Restauration rapide,56.10C,Lyon,69007,,,,,non,exemple,nouveau,,,,,non,DONNÉES FICTIVES DE TEST
+8,2026-11-02,B-food-beaute,EXEMPLE Ongles H,Esthétique,96.02B,Lyon,69007,,,,,non,exemple,ne_pas_contacter,email,2026-11-03,,,non,A demandé à ne plus être contacté — DONNÉES FICTIVES
+9,2026-11-02,A-artisans,EXEMPLE Jardin I,Paysagiste,81.30Z,Bron,69500,,,,,non,exemple,repondu,appel,2026-11-16,,,non,Sans prochaine action — DONNÉES FICTIVES
