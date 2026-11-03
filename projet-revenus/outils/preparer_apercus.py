@@ -113,6 +113,7 @@ def fiche_pour(prospect: dict) -> dict | None:
         "description": f"{nom}, {metier.lower()} à {ville}. Ce texte sera remplacé par votre présentation : votre parcours, votre façon de travailler et ce que vos clients apprécient.",
         "telephone": prospect.get("telephone") or TEL_DEFAUT, "couleur": couleur,
         "images": images, "numero_entreprise": prospect.get("siren", ""),
+        "avis_a_venir": True,  # emplacement des VRAIS avis Google du prospect, jamais d'avis inventés
     }
     if modele == "artisan":
         fiche["services"] = [{"icone": i, "titre": t, "texte": x} for i, t, x in contenu]

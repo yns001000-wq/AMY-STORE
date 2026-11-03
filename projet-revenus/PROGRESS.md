@@ -68,6 +68,11 @@ _Dernière mise à jour : 3 novembre 2026 (retrait de la boutique AMY Store et r
 - Accès vérifié : la base n'est lisible que par le propriétaire (test au niveau « éditeur » et « lecteur » : rien de visible).
 - Nouvel outil `outils/exporter_cockpit.py` pour ajouter de nouveaux prospects sans doublon. 26 tests OK.
 
+### 03/11/2026 (nuit) — Design modernisé et bloc « Avis Google »
+- Nouveau haut de page (texte et grande photo arrondie avec badge de note), en-tête translucide, cartes animées au survol, bande d'appel à l'action en couleur, bloc d'avis façon widget (note, nombre d'avis, cartes avec initiales).
+- Aperçus des prospects : emplacement « Vos avis Google, mis en avant » **sans aucun avis inventé** (cartes vides). Leurs vrais avis seront ajoutés avec leur accord.
+- 6 aperçus régénérés et remplacés dans le cockpit. 26 tests et vérification navigateur OK.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`

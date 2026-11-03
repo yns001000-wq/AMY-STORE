@@ -155,37 +155,56 @@ def etoiles(note: float) -> str:
     return "★" * pleines + "☆" * (5 - pleines)
 
 
+def initiales(nom: str) -> str:
+    morceaux = [m for m in re.split(r"[\s.-]+", nom) if m]
+    return "".join(m[0] for m in morceaux[:2]).upper() or "?"
+
+
 def bloc_note_hero(fiche: dict) -> str:
     avis = fiche.get("avis") or {}
     if avis.get("note") is None or not avis.get("nombre"):
         return ""
-    src = f" sur {e(avis['source'])}" if avis.get("source") else ""
+    src = f" {e(avis['source'])}" if avis.get("source") else ""
     return (f'<div class="note-hero"><span class="etoiles" aria-hidden="true">{etoiles(avis["note"])}</span>'
             f'<span><strong>{str(avis["note"]).replace(".", ",")}/5</strong> · {int(avis["nombre"])} avis{src}</span></div>')
 
 
 def section_avis(fiche: dict) -> str:
+    """Bloc d'avis façon widget (note, nombre, cartes). Uniquement des avis réels pour un vrai client."""
     avis = fiche.get("avis") or {}
     liste = avis.get("liste") or []
+    source = avis.get("source", "Google")
     if not liste:
-        return ""
-    entete = ""
+        if not fiche.get("avis_a_venir"):
+            return ""
+        squelettes = "".join('<div class="avis-carte squelette" aria-hidden="true"><div class="av-tete"><span class="avatar"></span>'
+                             '<span class="barre" style="width:40%"></span></div><span class="barre"></span><span class="barre"></span>'
+                             '<span class="barre" style="width:70%"></span></div>' for _ in range(3))
+        return (f'<section id="avis"><div class="wrap">{entete_section("Avis clients", "Vos avis Google, mis en avant")}'
+                '<div class="avis-grille"><div class="avis-resume"><div class="avis-note">★</div><p><strong>Vos vrais avis apparaîtront ici</strong></p>'
+                '<p class="petit">Votre note, le nombre d\'avis et vos derniers commentaires Google, recopiés tels quels avec votre accord. '
+                'Aucun avis n\'est inventé.</p></div>'
+                f'<div class="avis-cartes">{squelettes}</div></div></div></section>')
+    resume = ""
     if avis.get("note") is not None and avis.get("nombre"):
-        lien = f' <a href="{e(avis["lien"])}" target="_blank" rel="noopener">Voir tous les avis</a>' if avis.get("lien") else ""
-        src = f" sur {e(avis['source'])}" if avis.get("source") else ""
-        entete = (f'<div class="avis-entete"><div class="avis-note">{str(avis["note"]).replace(".", ",")}<small>/5</small></div>'
-                  f'<div><div class="etoiles" aria-hidden="true">{etoiles(avis["note"])}</div>'
-                  f'<div class="petit">{int(avis["nombre"])} avis{src}.{lien}</div></div></div>')
+        boutons = ""
+        if avis.get("lien"):
+            boutons = f'<a class="btn btn-ghost" href="{e(avis["lien"])}" target="_blank" rel="noopener">Voir les avis sur {e(source)}</a>'
+        resume = (f'<div class="avis-resume"><div class="avis-source">Avis {e(source)}</div>'
+                  f'<div class="avis-note">{str(avis["note"]).replace(".", ",")}<small>/5</small></div>'
+                  f'<div class="etoiles grandes" aria-label="{avis["note"]} sur 5">{etoiles(avis["note"])}</div>'
+                  f'<p class="petit">Basé sur {int(avis["nombre"])} avis</p>{boutons}</div>')
     demo = ('<div class="mention-demo">Démonstration : avis d\'exemple, entreprise fictive. '
             "Sur votre site, seuls vos vrais avis clients apparaîtront, avec leur source.</div>") if fiche.get("demo") else ""
     cartes = "".join(
-        f'<blockquote><div class="etoiles" aria-label="{int(a.get("note", 5))} sur 5">{etoiles(a.get("note", 5))}</div>'
-        f'<p>« {e(a["texte"])} »</p><footer><strong>{e(a["auteur"])}</strong>'
-        + (f" · {e(a['date'])}" if a.get("date") else "") + (f" · {e(avis['source'])}" if avis.get("source") else "")
-        + "</footer></blockquote>"
+        f'<blockquote class="avis-carte"><div class="av-tete"><span class="avatar" aria-hidden="true">{e(initiales(a["auteur"]))}</span>'
+        f'<span><strong>{e(a["auteur"])}</strong><br><span class="petit">{e(a.get("date", ""))}</span></span>'
+        f'<span class="av-src">{e(source)}</span></div>'
+        f'<div class="etoiles" aria-label="{int(a.get("note", 5))} sur 5">{etoiles(a.get("note", 5))}</div>'
+        f'<p>{e(a["texte"])}</p></blockquote>'
         for a in liste)
     return (f'<section id="avis"><div class="wrap">{entete_section("Avis clients", fiche.get("titre_avis", "Ils nous ont fait confiance"))}'
-            f"{demo}{entete}<div class=\"avis\">{cartes}</div></div></section>")
+            f'{demo}<div class="avis-grille">{resume}<div class="avis-cartes">{cartes}</div></div></div></section>')
 
 
 def section_galerie(fiche: dict, imgs: dict, titre: str, surtitre: str) -> str:
@@ -359,13 +378,27 @@ def page(fiche: dict, imgs: dict, apercu: bool, corps: str, menu: list[tuple[str
 
 
 def hero(fiche: dict, imgs: dict, boutons: str, kicker_extra: str = "") -> str:
+    """Haut de page moderne : texte à gauche, grande photo arrondie à droite avec badge flottant."""
     h = (fiche.get("images") or {}).get("hero")
-    fond = f' style="background-image:url(\'{e(imgs[h])}\')"' if h else ""
     ouverture = '<span class="pill" data-ouverture hidden></span>' if fiche.get("horaires_semaine") else ""
     titre = fiche.get("titre") or f"{fiche['metier']} à {fiche['ville']}"
-    return (f'<div class="hero"{fond}><div class="wrap"><div class="kicker">{ouverture}{kicker_extra}'
+    avis = fiche.get("avis") or {}
+    badge = ""
+    if avis.get("note") is not None and avis.get("nombre"):
+        badge = (f'<div class="flottant"><span class="etoiles">★</span><span><strong>{str(avis["note"]).replace(".", ",")}/5</strong>'
+                 f'<br><span class="petit">{int(avis["nombre"])} avis {e(avis.get("source", ""))}</span></span></div>')
+    elif fiche.get("atouts"):
+        badge = f'<div class="flottant"><span class="etoiles">✓</span><span><strong>{e(fiche["atouts"][0])}</strong></span></div>'
+    visuel = (f'<div class="visuel"><img src="{e(imgs[h])}" alt="{e(fiche["nom"])}" width="900" height="700" fetchpriority="high">{badge}</div>'
+              if h else "")
+    return (f'<section class="hero2{" sans-photo" if not h else ""}"><div class="wrap"><div class="txt"><div class="kicker">{ouverture}{kicker_extra}'
             f'<span class="pill">📍 {e(fiche.get("zone_courte") or fiche["ville"])}</span></div>'
-            f'<h1>{e(titre)}</h1><p class="lead">{e(fiche["accroche"])}</p><div class="cta">{boutons}</div>{bloc_note_hero(fiche)}</div></div>')
+            f'<h1>{e(titre)}</h1><p class="lead">{e(fiche["accroche"])}</p><div class="cta">{boutons}</div>{bloc_note_hero(fiche)}</div>'
+            f'{visuel}</div></section>')
+
+
+def bande_cta(fiche: dict, titre: str, texte: str, boutons: str) -> str:
+    return f'<section class="cta-final"><div class="wrap"><h2>{e(titre)}</h2><p>{e(texte)}</p><div class="cta">{boutons}</div></div></section>'
 
 
 def lien_wa(fiche: dict, texte: str) -> str:
@@ -391,6 +424,8 @@ def corps_artisan(fiche: dict, imgs: dict) -> tuple[str, list, str, str, str]:
              + f'<section class="alt"><div class="wrap deux"><div>{entete_section("Qui sommes-nous ?", fiche.get("titre_apropos", "Un artisan près de chez vous"))}<p style="font-size:17px">{e(fiche["description"])}</p></div>'
              + f'<div>{entete_section(*fiche.get("bloc_appel", ("Urgence ?", "Appelez directement")))}<p><a class="btn btn-main" href="tel:{tel_lien}">📞 {e(fiche["telephone"])}</a></p><p class="petit">{e(fiche.get("delai_reponse", ""))}</p></div></div></section>'
              + section_infos(fiche, "Zone d'intervention") + section_faq(fiche)
+             + bande_cta(fiche, "Un problème ? Une question ?", "Appelez maintenant ou demandez votre devis : réponse rapide.",
+                         f'<a class="btn btn-light" href="tel:{tel_lien}">📞 {libelle}</a><a class="btn btn-ghost-clair" href="#contact">Demander un devis</a>')
              + section_contact(fiche, "Demandez votre devis gratuit", "Décrivez votre besoin : réponse rapide, sans engagement.", bouton="Recevoir mon devis"))
     menu = [("services", "Services"), ("realisations", "Réalisations"), ("avis", "Avis"), ("infos", "Zone"), ("contact", "Contact")]
     entete = f'<a class="btn btn-main" href="tel:{tel_lien}">📞 Appeler</a>'
@@ -419,7 +454,7 @@ def corps_beaute(fiche: dict, imgs: dict) -> tuple[str, list, str, str, str]:
              + section_avis(fiche) + section_etapes(fiche)
              + f'<section class="alt"><div class="wrap" style="max-width:820px">{entete_section("À propos", fiche.get("titre_apropos", "Une équipe à votre écoute"))}<p style="font-size:17px">{e(fiche["description"])}</p></div></section>'
              + section_infos(fiche, "Le salon") + section_faq(fiche)
-             + f'<section class="cta-final"><div class="wrap"><h2>Envie de vous faire plaisir ?</h2><p>Réservez en quelques secondes.</p><div class="cta"><a class="btn btn-main" href="{e(resa)}"{cible}>Prendre rendez-vous</a><a class="btn btn-light" href="tel:{e(chiffres(fiche["telephone"]))}">📞 {e(fiche["telephone"])}</a></div></div></section>')
+             + bande_cta(fiche, "Envie de vous faire plaisir ?", "Réservez en quelques secondes.", f'<a class="btn btn-light" href="{e(resa)}"{cible}>Prendre rendez-vous</a><a class="btn btn-ghost-clair" href="tel:{e(chiffres(fiche["telephone"]))}">📞 Appeler</a>'))
     menu = [("tarifs", "Tarifs"), ("realisations", "Galerie"), ("avis", "Avis"), ("infos", "Infos")]
     entete = f'<a class="btn btn-main" href="{e(resa)}"{cible}>Réserver</a>'
     barre = f'<a class="btn btn-light" href="tel:{e(chiffres(fiche["telephone"]))}">📞 Appeler</a><a class="btn btn-main" href="{e(resa)}"{cible}>Réserver</a>'
@@ -453,7 +488,8 @@ def corps_commande(fiche: dict, imgs: dict) -> tuple[str, list, str, str, str]:
     corps = (hero(fiche, imgs, boutons) + section_confiance(fiche) + carte + section_etapes(fiche) + section_avis(fiche)
              + section_galerie(fiche, imgs, "Nos créations", "En images")
              + f'<section class="alt"><div class="wrap" style="max-width:820px">{entete_section("Notre histoire", fiche.get("titre_apropos", "Fait maison, avec amour"))}<p style="font-size:17px">{e(fiche["description"])}</p></div></section>'
-             + section_infos(fiche, "Retrait et livraison") + section_faq(fiche))
+             + section_infos(fiche, "Retrait et livraison") + section_faq(fiche)
+             + bande_cta(fiche, "Une envie gourmande ?", "Composez votre commande en deux minutes.", '<a class="btn btn-light" href="#carte">Voir la carte</a>'))
     menu = [("carte", "La carte"), ("avis", "Avis"), ("infos", "Infos pratiques"), ("faq", "FAQ")]
     entete = '<a class="btn btn-main" href="#carte">Commander</a>'
     barre = ('<button class="btn btn-wa" id="ouvrirPanier" type="button" disabled>🛒 <span id="panierResume">Panier vide</span></button>')

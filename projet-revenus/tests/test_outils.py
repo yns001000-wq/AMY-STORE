@@ -349,7 +349,9 @@ class TestApercus(unittest.TestCase):
         self.assertEqual(code, 0)
         page = (d / "out" / "test-chauffage-lyon-apercu" / "index.html").read_text(encoding="utf-8")
         self.assertIn("noindex", page)
-        self.assertNotIn('id="avis"', page)
+        self.assertIn("Vos vrais avis apparaîtront ici", page)
+        self.assertNotIn("avis-carte\"><div", page)  # aucune carte d'avis rédigée
+        self.assertNotIn("<blockquote", page)
         self.assertIn("Test Chauffage", page)
         lus = crm.lire(d, "prospects.csv")
         self.assertEqual([l["apercu"] for l in lus], ["oui", "", ""])
