@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mentions légales | Mysite</title>
+<meta name="description" content="Mentions légales du site Mysite : éditeur, hébergeur, propriété intellectuelle.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<a class="lien-evitement" href="#contenu">Aller au contenu</a>
+<!--inclure:entete-->
+<main id="contenu" class="page-texte">
+<div class="conteneur">
+<!--si:manquant--><p class="alerte-publication" role="note">Page à compléter avant publication : les éléments surlignés doivent être renseignés dans le fichier <code>site-src/infos.json</code>.</p><!--/si-->
+<h1>Mentions légales</h1>
+<h2>Éditeur du site</h2>
+<p>{{nom_ou_vide}} EI, entrepreneur individuel exerçant sous le nom commercial Mysite (micro-entreprise).</p>
+<p>SIRET : {{siret_ou_vide}}<br>Adresse : {{adresse_ou_vide}}<br>Email : {{email_ou_vide}}<!--si:telephone--><br>Téléphone : {{telephone}}<!--/si--></p>
+<p>TVA non applicable, article 293 B du Code général des impôts.</p>
+<p>Responsable de la publication : {{responsable_ou_vide}}</p>
+<h2>Hébergeur</h2>
+<p>{{hebergeur_ou_vide}}</p>
+<h2>Propriété intellectuelle</h2>
+<p>Les textes, la mise en page et les éléments graphiques de ce site appartiennent à l'éditeur, sauf mention contraire. Toute reproduction sans autorisation est interdite.</p>
+<p>La police de caractères Bricolage Grotesque est utilisée sous licence SIL Open Font License 1.1. Les photographies des sites de démonstration proviennent de Wikimedia Commons, sous licence CC0 (domaine public).</p>
+<h2>Sites de démonstration</h2>
+<p>Les sites présentés dans la rubrique « Exemples » sont des démonstrations réalisées pour des entreprises fictives. Les noms, coordonnées et avis qui y figurent sont fictifs.</p>
+<h2>Données personnelles</h2>
+<p>Le traitement des informations envoyées via le formulaire est décrit dans la page <a href="confidentialite.html">Confidentialité</a>.</p>
+</div>
+</main>
+<!--inclure:pied-->
+<script src="assets/main.js" defer></script>
+</body>
+</html>

@@ -83,6 +83,12 @@ _Dernière mise à jour : 3 novembre 2026 (retrait de la boutique AMY Store et r
 - Onglet Légal : informations d'entreprise, déclaration URSSAF (encaissé, cotisations, date limite), seuils TVA et micro, livre des recettes automatique avec export CSV, registre des oppositions, checklist de 12 obligations.
 - Testé de bout en bout dans un navigateur avec une IA simulée : devis, puis acompte, puis paiement, puis livre des recettes, et PDF vérifiés (texte extrait et rendu visuel). Toutes les vues sans débordement à 400 px.
 
+### 04/11/2026 — Site de l'agence refait au niveau « agence »
+- Nouvelle direction artistique « fiche technique d'atelier » : filets plutôt que cartes, un seul accent, police de titre hébergée localement, aucun emoji, aucun dégradé décoratif.
+- Source séparée (`site-src/`), construction par `outils/construire_site.py` à partir de `infos.json`, emplacements légaux « À COMPLÉTER » visibles, en-têtes de sécurité Netlify.
+- Tests : QA complète (7 largeurs, liens, clavier, menu, formulaire, axe : 0 violation) ; Lighthouse mobile 99 / 100 / 100 / 100 et ordinateur 100 partout ; 28 tests unitaires.
+- Auto-évaluation : 90/100 (détail dans le compte rendu). Emojis retirés des démos (icônes SVG).
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`

@@ -1,0 +1,13 @@
+{
+  "_aide": "Informations de l'entreprise utilisées par outils/construire_site.py. Laissez vide ce que vous ne connaissez pas encore : la page affichera un emplacement [À COMPLÉTER]. Ne mettez jamais de mot de passe ici.",
+  "nom": "",
+  "siret": "",
+  "adresse": "",
+  "email": "",
+  "telephone": "",
+  "responsable": "",
+  "domaine": "",
+  "hebergeur": "",
+  "hebergeur_court": "Netlify, Inc.",
+  "garanties_transfert": ""
+}

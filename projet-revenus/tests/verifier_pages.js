@@ -1,4 +1,4 @@
-// Vérification navigateur : erreurs JS, débordement horizontal sur mobile, liens internes, parcours panier WhatsApp.
+// Vérification navigateur des sites de démonstration : erreurs JS, débordement horizontal sur mobile, liens internes, parcours panier WhatsApp.
 // Usage (depuis projet-revenus/) : node tests/verifier_pages.js [dossier_captures]
 const { chromium } = require('playwright');
 const path = require('path');
@@ -6,8 +6,8 @@ const fs = require('fs');
 
 const racine = path.resolve(__dirname, '..');
 const captures = process.argv[2];
+// Les pages du site de l'agence sont testées par tests/qa_site_agence.js (servies en HTTP).
 const pages = [
-  'site/index.html', 'site/mentions-legales.html', 'site/merci.html',
   'site/exemples/exemple-plomberie-martin/index.html',
   'site/exemples/exemple-patisserie-lea/index.html',
   'site/exemples/exemple-salon-atelier-nova/index.html',

@@ -19,6 +19,7 @@ import rapport  # noqa: E402
 import trouver_prospects  # noqa: E402
 import preparer_apercus  # noqa: E402
 import exporter_cockpit  # noqa: E402
+import construire_site  # noqa: E402
 
 
 def charger(fichier, /, **surcharges):
@@ -321,6 +322,37 @@ class TestProspects(unittest.TestCase):
 
     def resultat_ligne(self, siren):
         return trouver_prospects.extraire(self.resultat(siren), None)
+
+
+class TestSiteAgence(unittest.TestCase):
+    def test_blocs_conditionnels_imbriques(self):
+        g = "<div><!--si:a--><p>A<!--si:b-->B<!--/si--><!--si:c-->C<!--/si--></p><!--/si--></div>"
+        self.assertEqual(construire_site.assembler(g, {}, {"a": False}, ""), "<div></div>")
+        self.assertEqual(construire_site.assembler(g, {}, {"a": True, "b": False, "c": True}, ""), "<div><p>AC</p></div>")
+
+    def test_construction_complete_et_balises_equilibrees(self):
+        from html.parser import HTMLParser
+        out = Path(tempfile.mkdtemp())
+        manquants = construire_site.construire(sortie=out)
+        self.assertTrue(manquants)  # infos.json vide dans le dépôt : emplacements à compléter
+        for nom in construire_site.PAGES:
+            page = (out / nom).read_text(encoding="utf-8")
+            self.assertNotIn("{{", page)
+            pile = []
+            vides = {"meta", "link", "img", "input", "br", "hr", "source"}
+            class P(HTMLParser):
+                def handle_starttag(self, tag, attrs):
+                    if tag not in vides:
+                        pile.append(tag)
+                def handle_endtag(self, tag):
+                    self_ = pile.pop() if pile else None
+                    if self_ != tag:
+                        raise AssertionError(f"{nom} : </{tag}> ferme <{self_}>")
+            P().feed(page)
+            self.assertEqual(pile, [], nom)
+        self.assertIn("[À COMPLÉTER", (out / "mentions-legales.html").read_text(encoding="utf-8"))
+        self.assertTrue((out / "_headers").exists() and (out / "robots.txt").exists())
+        self.assertIn('href="/assets/styles.css"', (out / "404.html").read_text(encoding="utf-8"))
 
 
 class TestCockpit(unittest.TestCase):

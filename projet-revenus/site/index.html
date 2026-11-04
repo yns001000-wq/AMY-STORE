@@ -1,288 +1,285 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mysite — Site professionnel pour artisans et commerçants, prix fixe, sans abonnement</title>
-<meta name="description" content="France, Belgique, Suisse romande : un site professionnel d'une page, adapté au mobile, livré en 5 jours ouvrés à prix fixe. Vous en êtes propriétaire, sans abonnement obligatoire. Aperçu gratuit avant tout engagement.">
-<meta property="og:title" content="Mysite — votre site pro en 5 jours, prix fixe">
-<meta property="og:description" content="Pour artisans, commerçants et indépendants. Aperçu gratuit avant tout engagement.">
-<style>
-  :root{--ink:#14213d;--soft:#55607a;--line:#e3e6ee;--bg:#ffffff;--bg2:#f6f4ef;--accent:#d9622b;--accent-dark:#b44d1d;--ok:#1d7a4c}
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6}
-  a{color:var(--accent-dark)}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
-  header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line)}
-  header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:12px;padding-bottom:12px}
-  .logo{font-weight:800;font-size:19px;text-decoration:none;color:var(--ink);letter-spacing:-.01em}
-  .logo span{color:var(--accent)}
-  nav a{color:var(--soft);text-decoration:none;margin-left:18px;font-size:15px}
-  @media(max-width:720px){nav .hide-m{display:none}}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:10px;font-weight:700;text-decoration:none;border:2px solid var(--accent);font-size:16px;cursor:pointer;font-family:inherit}
-  .btn-main{background:var(--accent);color:#fff}
-  .btn-main:hover{background:var(--accent-dark);border-color:var(--accent-dark)}
-  .btn-ghost{background:transparent;color:var(--accent-dark)}
-  header .btn{padding:9px 14px;font-size:14px}
-  .hero{background:var(--bg2);padding:64px 0 56px}
-  .hero h1{font-size:clamp(30px,5.4vw,52px);line-height:1.1;margin:0 0 18px;letter-spacing:-.02em;max-width:820px}
-  .hero p.lead{font-size:clamp(17px,2.2vw,20px);color:var(--soft);max-width:680px;margin:0 0 28px}
-  .cta{display:flex;flex-wrap:wrap;gap:12px}
-  .proofs{display:flex;flex-wrap:wrap;gap:10px 22px;margin:28px 0 0;padding:0;list-style:none;font-weight:600;font-size:15px}
-  .proofs li::before{content:"✓ ";color:var(--ok)}
-  section{padding:64px 0}
-  h2{font-size:clamp(24px,3.6vw,34px);margin:0 0 12px;letter-spacing:-.01em}
-  .intro{color:var(--soft);max-width:680px;margin:0 0 32px;font-size:17px}
-  .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-  .card{border:1px solid var(--line);border-radius:16px;padding:24px;background:#fff}
-  .card h3{margin:0 0 8px;font-size:19px}
-  .card p{margin:0;color:var(--soft)}
-  .steps{counter-reset:s}
-  .steps .card{position:relative;padding-top:56px}
-  .steps .card::before{counter-increment:s;content:counter(s);position:absolute;top:20px;left:24px;width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
-  .alt{background:var(--bg2)}
-  .price-card{display:flex;flex-direction:column;gap:14px}
-  .price-card.featured{border:2px solid var(--accent);box-shadow:0 8px 28px rgba(20,33,61,.08)}
-  .tag{display:inline-block;background:#fde9dd;color:var(--accent-dark);font-weight:700;font-size:12px;padding:4px 10px;border-radius:999px;align-self:flex-start}
-  .price{font-size:38px;font-weight:800;letter-spacing:-.02em}
-  .price small{font-size:15px;font-weight:500;color:var(--soft)}
-  .pilot{font-size:14px;color:var(--ok);font-weight:600}
-  .price-card ul{margin:0;padding-left:20px;color:var(--soft)}
-  .price-card li{margin:4px 0}
-  .price-card .btn{margin-top:auto}
-  .options{margin-top:24px;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-  .opt{display:flex;justify-content:space-between;gap:12px;border:1px dashed #cfd4df;border-radius:12px;padding:14px 18px;background:#fff}
-  .opt strong{white-space:nowrap}
-  .demo{display:block;text-decoration:none;color:inherit}
-  .demo .card{height:100%;transition:border-color .15s}
-  .demo:hover .card{border-color:var(--accent)}
-  .demo .lbl{font-size:12px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.06em}
-  .table-wrap{overflow-x:auto}
-  table{border-collapse:collapse;width:100%;min-width:560px;background:#fff;border:1px solid var(--line);border-radius:12px}
-  th,td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-  th{font-size:14px;color:var(--soft)}
-  td.us{font-weight:700;background:#fff8f3}
-  .note{font-size:13px;color:var(--soft);margin-top:10px}
-  details{border-bottom:1px solid var(--line);padding:16px 0}
-  summary{font-weight:700;cursor:pointer;font-size:17px}
-  details p{color:var(--soft);margin:10px 0 0}
-  .contact{display:grid;gap:32px;grid-template-columns:1fr}
-  @media(min-width:860px){.contact{grid-template-columns:5fr 6fr}}
-  form{display:grid;gap:14px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px}
-  .row2{display:grid;gap:14px;grid-template-columns:1fr}
-  @media(min-width:560px){.row2{grid-template-columns:1fr 1fr}}
-  label{font-weight:600;font-size:14px;display:block;margin-bottom:4px}
-  input,textarea,select{width:100%;padding:12px;border:1px solid #cdd2dc;border-radius:10px;font:inherit;background:#fff;color:var(--ink)}
-  textarea{min-height:110px}
-  .small{font-size:13px;color:var(--soft)}
-  .hp{position:absolute;left:-9999px}
-  .direct a{display:inline-flex;margin:6px 10px 0 0}
-  footer{border-top:1px solid var(--line);padding:28px 0 40px;font-size:14px;color:var(--soft)}
-  footer .wrap{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
-</style>
+<title>Création de site internet pour artisans et commerçants, 390 € | Mysite</title>
+<meta name="description" content="Site professionnel d'une page, rapide sur mobile, livré en 5 jours ouvrés pour 390 € payés une fois, sans abonnement. Aperçu gratuit avant tout paiement. France, Belgique, Suisse romande.">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Votre site professionnel en 5 jours, pour 390 € payés une fois">
+<meta property="og:description" content="Pour les artisans, commerçants et indépendants. Aperçu gratuit avant tout paiement, sans abonnement, site à votre nom.">
+<meta name="theme-color" content="#14213d">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/styles.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ProfessionalService", "name": "Mysite", "description": "Création de sites internet à prix fixe pour artisans, commerçants et indépendants.", "areaServed": ["France", "Belgique", "Suisse"], "priceRange": "290 € - 490 €"}</script>
 </head>
 <body>
-
-<header>
-  <div class="wrap">
-    <a class="logo" href="#">My<span>site</span></a>
-    <nav>
-      <a class="hide-m" href="#offres">Offres</a>
-      <a class="hide-m" href="#exemples">Exemples</a>
-      <a class="hide-m" href="#faq">Questions</a>
-      <a class="btn btn-main" href="#contact">Aperçu gratuit</a>
+<a class="lien-evitement" href="#contenu">Aller au contenu</a>
+<header class="entete">
+  <div class="conteneur">
+    <a class="logo" href="index.html" aria-label="Mysite, retour à l'accueil">My<span>site</span></a>
+    <a class="bouton bouton--mobile" href="index.html#contact">Aperçu gratuit</a>
+    <button class="menu-bouton" type="button" aria-expanded="false" aria-controls="navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span class="menu-texte">Menu</span>
+    </button>
+    <nav class="nav" id="navigation" aria-label="Navigation principale">
+      <ul>
+        <li><a href="index.html#inclus">Ce qui est inclus</a></li>
+        <li><a href="index.html#exemples">Exemples</a></li>
+        <li><a href="index.html#offres">Prix</a></li>
+        <li><a href="index.html#questions">Questions</a></li>
+        <li class="nav-action"><a class="bouton" href="index.html#contact">Recevoir mon aperçu gratuit</a></li>
+      </ul>
     </nav>
+    <a class="bouton bouton--entete" href="index.html#contact">Aperçu gratuit</a>
   </div>
 </header>
 
-<main>
-  <div class="hero">
-    <div class="wrap">
-      <h1>Votre site professionnel en 5 jours. Prix fixe. Sans abonnement.</h1>
-      <p class="lead">Pour les artisans, commerçants et indépendants qui veulent être trouvés et inspirer confiance, sans y passer leurs soirées. Vous voyez votre site <strong>avant</strong> de payer quoi que ce soit.</p>
-      <div class="cta">
-        <a class="btn btn-main" href="#contact">Recevoir mon aperçu gratuit</a>
-        <a class="btn btn-ghost" href="#offres">Voir les prix</a>
-      </div>
-      <ul class="proofs">
-        <li>France · Belgique · Suisse romande</li>
-        <li>Prix affiché, pas de devis flou</li>
-        <li>Vous êtes propriétaire du site</li>
-        <li>Aucun engagement de durée</li>
-      </ul>
-    </div>
-  </div>
-
-  <section id="pour-qui">
-    <div class="wrap">
-      <h2>Pour qui ?</h2>
-      <p class="intro">Pour celles et ceux dont le métier n'est pas internet, mais dont les clients cherchent sur leur téléphone avant d'appeler. Partout en France, en Belgique francophone et en Suisse romande : tout se fait à distance.</p>
-      <div class="grid">
-        <div class="card"><h3>Artisans</h3><p>Plombiers, électriciens, peintres, menuisiers, paysagistes… Un client vous recommande ? Il vous cherche en ligne avant d'appeler.</p></div>
-        <div class="card"><h3>Métiers de bouche</h3><p>Traiteurs, pâtisseries, snacks : une carte en ligne et la commande qui arrive directement sur votre WhatsApp, sans commission.</p></div>
-        <div class="card"><h3>Beauté &amp; services</h3><p>Coiffure, esthétique, bien-être, coaching : vos prestations, vos tarifs et un bouton pour vous joindre en un geste.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="alt" id="methode">
-    <div class="wrap">
-      <h2>Comment ça se passe</h2>
-      <p class="intro">Quatre étapes, et vous ne payez rien avant d'avoir vu le résultat.</p>
-      <div class="grid steps">
-        <div class="card"><h3>On échange 15 minutes</h3><p>Par téléphone ou en visio : votre métier, votre zone, ce que vos clients demandent.</p></div>
-        <div class="card"><h3>Aperçu gratuit sous 72 h</h3><p>Nous vous montrons votre futur site. S'il ne vous plaît pas, on s'arrête là, sans frais.</p></div>
-        <div class="card"><h3>Validation et acompte</h3><p>Vous validez les textes et photos. Acompte de 50 % par virement.</p></div>
-        <div class="card"><h3>Mise en ligne</h3><p>Le site est publié sur un hébergement à votre nom. Solde à la mise en ligne.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="offres">
-    <div class="wrap">
-      <h2>Offres et prix</h2>
-      <p class="intro">Prix en euros, payés une seule fois. Pas de TVA facturée en France (TVA non applicable, article 293 B du CGI) ; pour la Belgique et la Suisse, la facture applique les règles du pays du client. L'hébergement d'un site simple est gratuit chez les hébergeurs que nous utilisons.</p>
-      <div class="grid">
-        <div class="card price-card">
-          <h3>Vitrine</h3>
-          <div class="price">390 € <small>une fois</small></div>
-          <div class="pilot">Tarif pilote : 290 € pour nos 3 premiers clients</div>
-          <ul>
-            <li>Site d'une page, adapté au mobile</li>
-            <li>Photos, services et prix, zone, horaires</li>
-            <li>Vos vrais avis clients mis en avant</li>
-            <li>Boutons appel, WhatsApp, email</li>
-            <li>Formulaire de contact</li>
-            <li>Mentions légales rédigées</li>
-            <li>1 série de modifications incluse</li>
-          </ul>
-          <a class="btn btn-ghost" href="#contact">Demander un aperçu</a>
+<main id="contenu">
+  <section class="accueil" aria-labelledby="titre-accueil">
+    <div class="conteneur">
+      <div>
+        <span class="etiquette">Sites internet pour artisans, commerçants et indépendants</span>
+        <h1 id="titre-accueil">Votre site professionnel en 5 jours, pour 390&nbsp;€ payés une fois.</h1>
+        <p class="chapeau">Une page claire qui présente vos services, votre zone et vos horaires, et qui permet à vos clients de vous appeler en un geste depuis leur téléphone. Vous voyez votre site avant de payer quoi que ce soit.</p>
+        <div class="actions">
+          <a class="bouton" href="#contact">Recevoir mon aperçu gratuit</a>
+          <a class="bouton bouton--secondaire" href="#inclus">Voir ce qui est inclus</a>
         </div>
-        <div class="card price-card featured">
-          <span class="tag">Idéal métiers de bouche</span>
-          <h3>Vitrine + commande WhatsApp</h3>
-          <div class="price">490 € <small>une fois</small></div>
-          <div class="pilot">Tarif pilote : 390 € pour nos 3 premiers clients</div>
+        <dl class="faits">
+          <div><dt>Prix</dt><dd>390 € fixes</dd></div>
+          <div><dt>Délai</dt><dd>5 jours ouvrés</dd></div>
+          <div><dt>Abonnement</dt><dd>Aucun imposé</dd></div>
+          <div><dt>Propriété</dt><dd>Le site est à vous</dd></div>
+        </dl>
+      </div>
+      <figure class="telephone">
+        <div class="telephone__cadre">
+          <img src="assets/img/telephone-artisan-360.webp" srcset="assets/img/telephone-artisan-360.webp 360w, assets/img/telephone-artisan-720.webp 720w" sizes="(min-width: 64rem) 19rem, 78vw" width="360" height="720" alt="Site d'un plombier affiché sur un téléphone : titre, bouton Appeler, bouton WhatsApp et note des avis." fetchpriority="high">
+        </div>
+        <figcaption>Exemple de démonstration, entreprise fictive.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" id="inclus" aria-labelledby="titre-inclus">
+    <div class="conteneur fiche">
+      <div class="intro">
+        <span class="etiquette">Ce qui est inclus</span>
+        <h2 id="titre-inclus">Un site pensé pour qu'on vous appelle, pas pour faire joli.</h2>
+        <p>Quand un client vous cherche, il veut savoir en quelques secondes ce que vous faites, si vous intervenez chez lui et comment vous joindre. Votre site répond à ces trois questions, sur téléphone d'abord.</p>
+      </div>
+      <div>
+        <ul class="fiche__liste">
+          <li><strong>Une page complète</strong><span>Présentation, services, zone d'intervention, horaires et coordonnées, rédigés avec vous.</span></li>
+          <li><strong>Pensé pour le téléphone</strong><span>Boutons Appeler et WhatsApp toujours accessibles, textes lisibles sans zoomer.</span></li>
+          <li><strong>Demandes de devis</strong><span>Un formulaire simple dont les messages arrivent dans votre boîte email.</span></li>
+          <li><strong>Visible sur Google</strong><span>Titre, description et informations de votre entreprise renseignés pour les recherches locales. Personne ne peut garantir une première place.</span></li>
+          <li><strong>Obligations légales</strong><span>Mentions légales et page de confidentialité rédigées avec vos informations.</span></li>
+          <li><strong>Mise en ligne</strong><span>Sur un hébergement gratuit ouvert à votre nom, avec vos propres accès.</span></li>
+          <li><strong>Une série de retouches</strong><span>Après l'aperçu, vous demandez vos changements : nous les faisons.</span></li>
+        </ul>
+        <div class="non-inclus">
+          <h3>Ce qui n'est pas inclus</h3>
+          <ul>
+            <li>Le nom de domaine (votre-entreprise.fr), acheté à votre nom : comptez environ 10 € par an chez le prestataire de votre choix.</li>
+            <li>Les photos professionnelles : nous utilisons les vôtres, prises au téléphone si besoin.</li>
+            <li>La boutique en ligne avec paiement par carte.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--grise" id="exemples" aria-labelledby="titre-exemples">
+    <div class="conteneur">
+      <div class="intro">
+        <span class="etiquette">Exemples</span>
+        <h2 id="titre-exemples">Trois métiers, trois façons de convertir.</h2>
+        <p>Un artisan veut des appels, une pâtisserie des commandes, un salon des rendez-vous. Le site s'organise autour de cette action.</p>
+      </div>
+      <div class="exemples">
+        <article class="exemple">
+          <a href="exemples/exemple-plomberie-martin/index.html">
+            <img src="assets/img/exemple-artisan-480.webp" srcset="assets/img/exemple-artisan-480.webp 480w, assets/img/exemple-artisan-960.webp 960w" sizes="(min-width: 48rem) 22rem, 100vw" width="480" height="300" loading="lazy" alt="Page d'accueil du site de démonstration d'un plombier chauffagiste.">
+            <h3>Plombier chauffagiste</h3>
+            <p>Appel en un geste, devis gratuit, zone d'intervention et horaires d'ouverture.</p>
+          </a>
+        </article>
+        <article class="exemple">
+          <a href="exemples/exemple-patisserie-lea/index.html">
+            <img src="assets/img/exemple-patisserie-480.webp" srcset="assets/img/exemple-patisserie-480.webp 480w, assets/img/exemple-patisserie-960.webp 960w" sizes="(min-width: 48rem) 22rem, 100vw" width="480" height="300" loading="lazy" alt="Page d'accueil du site de démonstration d'une pâtisserie sur commande.">
+            <h3>Pâtisserie sur commande</h3>
+            <p>Carte en photos et panier : la commande arrive rédigée sur WhatsApp, sans commission.</p>
+          </a>
+        </article>
+        <article class="exemple">
+          <a href="exemples/exemple-salon-atelier-nova/index.html">
+            <img src="assets/img/exemple-beaute-480.webp" srcset="assets/img/exemple-beaute-480.webp 480w, assets/img/exemple-beaute-960.webp 960w" sizes="(min-width: 48rem) 22rem, 100vw" width="480" height="300" loading="lazy" alt="Page d'accueil du site de démonstration d'un salon de coiffure.">
+            <h3>Salon de coiffure</h3>
+            <p>Tarifs et durées affichés, bouton de réservation présent sur chaque écran.</p>
+          </a>
+        </article>
+      </div>
+      <p class="mention">Ces trois sites sont des démonstrations pour des entreprises fictives, avis compris. Votre site utilisera vos vraies informations, vos photos et uniquement vos vrais avis clients.</p>
+    </div>
+  </section>
+
+  <section class="section" id="offres" aria-labelledby="titre-offres">
+    <div class="conteneur">
+      <div class="intro">
+        <span class="etiquette">Offres et prix</span>
+        <h2 id="titre-offres">Deux offres, un prix affiché, aucun abonnement imposé.</h2>
+      </div>
+      <div class="offres">
+        <article class="offre" aria-labelledby="offre-vitrine">
+          <div class="offre__entete"><h3 id="offre-vitrine">Vitrine</h3></div>
+          <p class="prix">390 € <small>payés une fois</small></p>
+          <p class="pilote">290 € pour nos 3 premiers clients</p>
+          <ul>
+            <li>Tout ce qui est décrit dans « Ce qui est inclus »</li>
+            <li>Pour les artisans et prestataires de services</li>
+          </ul>
+          <a class="bouton" href="#contact">Demander l'aperçu Vitrine</a>
+        </article>
+        <article class="offre" aria-labelledby="offre-commande">
+          <div class="offre__entete"><h3 id="offre-commande">Vitrine + commande WhatsApp</h3><span class="offre__badge">Métiers de bouche</span></div>
+          <p class="prix">490 € <small>payés une fois</small></p>
+          <p class="pilote">390 € pour nos 3 premiers clients</p>
           <ul>
             <li>Tout le contenu de l'offre Vitrine</li>
-            <li>Votre carte ou catalogue en ligne</li>
-            <li>Panier : le client choisit, la commande arrive sur votre WhatsApp, déjà rédigée</li>
-            <li>Aucune commission sur vos ventes</li>
+            <li>Votre carte ou catalogue en ligne, avec photos et prix</li>
+            <li>Un panier : la commande arrive rédigée sur votre WhatsApp, sans commission</li>
           </ul>
-          <a class="btn btn-main" href="#contact">Demander un aperçu</a>
-        </div>
+          <a class="bouton bouton--secondaire" href="#contact">Demander l'aperçu Commande</a>
+        </article>
       </div>
-      <div class="options">
-        <div class="opt"><span><strong>Fiche Google</strong><br><span class="small">Création ou optimisation de votre fiche Google, faite avec vous sur votre compte.</span></span><strong>+90 €</strong></div>
-        <div class="opt"><span><strong>Sérénité</strong><br><span class="small">Jusqu'à 30 min de modifications par mois et une vérification mensuelle. Résiliable à tout moment.</span></span><strong>19 €/mois</strong></div>
-      </div>
-      <p class="note">Nom de domaine (ex. votre-nom.fr) facultatif : acheté à votre nom, vous le payez directement au prestataire (en général une dizaine d'euros par an).</p>
+      <dl class="options">
+        <div><dt>Option Fiche Google</dt><dd>Création ou optimisation de votre fiche Google, faite avec vous sur votre compte.</dd><dd class="montant">+ 90 €</dd></div>
+        <div><dt>Option Sérénité</dt><dd>Jusqu'à 30 minutes de modifications par mois et une vérification mensuelle. Résiliable à tout moment.</dd><dd class="montant">19 € / mois</dd></div>
+      </dl>
+      <p class="conditions">Paiement par virement : 50 % à la validation de l'aperçu, 50 % à la mise en ligne. TVA non applicable, article 293 B du CGI.</p>
     </div>
   </section>
 
-  <section class="alt" id="exemples">
-    <div class="wrap">
-      <h2>Exemples de réalisation</h2>
-      <p class="intro">Nous démarrons : ces trois sites sont des <strong>démonstrations pour des entreprises fictives</strong> (avis compris), pour vous montrer le rendu. Votre site utilisera vos vraies photos et vos vrais avis. Nos réalisations clients apparaîtront ici, avec leur accord.</p>
-      <div class="grid">
-        <a class="demo" href="exemples/exemple-plomberie-martin/index.html"><div class="card"><div class="lbl">Démo · Artisans</div><h3>Plombier chauffagiste</h3><p>Appel en un geste, devis gratuit, réalisations en photos, avis, zone d'intervention, « ouvert maintenant ».</p></div></a>
-        <a class="demo" href="exemples/exemple-patisserie-lea/index.html"><div class="card"><div class="lbl">Démo · Métiers de bouche</div><h3>Pâtisserie sur commande</h3><p>Carte en photos, panier, choix retrait ou livraison, commande envoyée sur WhatsApp.</p></div></a>
-        <a class="demo" href="exemples/exemple-salon-atelier-nova/index.html"><div class="card"><div class="lbl">Démo · Beauté</div><h3>Salon de coiffure et ongles</h3><p>Tarifs et durées affichés, réservation en un geste, galerie, avis, horaires.</p></div></a>
+  <section class="section section--grise" id="methode" aria-labelledby="titre-methode">
+    <div class="conteneur">
+      <div class="intro">
+        <span class="etiquette">Méthode</span>
+        <h2 id="titre-methode">Cinq jours ouvrés, du premier appel à la mise en ligne.</h2>
+      </div>
+      <ol class="etapes">
+        <li class="etape"><span class="etape__jour">J1</span><div><h3>On échange 15 minutes</h3><p>Par téléphone ou en visio : vos services, votre zone, ce que vos clients vous demandent.</p></div></li>
+        <li class="etape"><span class="etape__jour">J2</span><div><h3>Vous recevez l'aperçu</h3><p>Votre site, avec vos informations. S'il ne vous convient pas, on s'arrête là, sans frais.</p></div></li>
+        <li class="etape"><span class="etape__jour">J3</span><div><h3>Vous validez</h3><p>Vos retouches, vos photos, puis l'acompte de 50 % par virement.</p></div></li>
+        <li class="etape"><span class="etape__jour">J4</span><div><h3>Finitions</h3><p>Textes relus, mentions légales, vérifications sur téléphone et ordinateur.</p></div></li>
+        <li class="etape"><span class="etape__jour">J5</span><div><h3>Mise en ligne</h3><p>Le site est publié sur un compte à votre nom. Vous réglez le solde.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="comparer" aria-labelledby="titre-comparer">
+    <div class="conteneur">
+      <div class="intro">
+        <span class="etiquette">Comparer</span>
+        <h2 id="titre-comparer">Choisir en connaissance de cause.</h2>
+        <p>Chaque solution a ses avantages. Voici les ordres de grandeur.</p>
+      </div>
+      <div class="tableau-defilant" tabindex="0" role="region" aria-label="Tableau comparatif, défilable horizontalement sur petit écran">
+        <table>
+          <thead><tr><th scope="col">Critère</th><th scope="col">Mysite</th><th scope="col">Outil à faire soi-même</th><th scope="col">Freelance ou agence classique</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Prix</th><td data-label="Mysite" class="nous">390 €, une fois</td><td data-label="Outil à faire soi-même"None>Environ 12 à 17 € par mois</td><td data-label="Freelance ou agence classique"None>Environ 1 000 à 5 000 €</td></tr>
+            <tr><th scope="row">Qui fait le travail</th><td data-label="Mysite" class="nous">Nous</td><td data-label="Outil à faire soi-même"None>Vous</td><td data-label="Freelance ou agence classique"None>Le prestataire</td></tr>
+            <tr><th scope="row">Délai</th><td data-label="Mysite" class="nous">5 jours ouvrés</td><td data-label="Outil à faire soi-même"None>Selon votre temps</td><td data-label="Freelance ou agence classique"None>Souvent plusieurs semaines</td></tr>
+            <tr><th scope="row">Abonnement</th><td data-label="Mysite" class="nous">Aucun imposé</td><td data-label="Outil à faire soi-même"None>Oui, pour rester en ligne</td><td data-label="Freelance ou agence classique"None>Variable</td></tr>
+            <tr><th scope="row">Idéal si</th><td data-label="Mysite" class="nous">Vous voulez un site simple, vite, sans y passer de temps</td><td data-label="Outil à faire soi-même"None>Vous aimez construire vous-même</td><td data-label="Freelance ou agence classique"None>Vous avez besoin d'un site complexe</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="source">Ordres de grandeur relevés en novembre 2026 sur des comparatifs publics et des plateformes de freelances. Ils peuvent varier.</p>
+    </div>
+  </section>
+
+  <section class="section section--grise" id="questions" aria-labelledby="titre-questions">
+    <div class="conteneur">
+      <div class="intro">
+        <span class="etiquette">Questions fréquentes</span>
+        <h2 id="titre-questions">Ce qu'on nous demande avant de se lancer.</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Est-ce que l'aperçu est vraiment gratuit ?</summary><p>Oui. Vous ne payez rien avant d'avoir vu et validé votre site. S'il ne vous convient pas, il n'est ni publié ni réutilisé.</p></details>
+        <details><summary>Y a-t-il des frais chaque mois ?</summary><p>Non. L'hébergement d'un site comme le vôtre est gratuit chez les hébergeurs que nous utilisons. Seul le nom de domaine coûte environ 10 € par an, payé directement par vous. L'option Sérénité à 19 € par mois est facultative.</p></details>
+        <details><summary>À qui appartient le site ?</summary><p>À vous. Il est publié sur un compte ouvert à votre nom et vous recevez tous les fichiers. Vous pouvez le confier à quelqu'un d'autre quand vous le souhaitez.</p></details>
+        <details><summary>Je n'ai pas de photos ni de textes. Est-ce un problème ?</summary><p>Non. Nous rédigeons les textes à partir de notre échange de 15 minutes. Pour les photos, quelques images prises au téléphone sur vos chantiers ou dans votre boutique suffisent : elles sont plus convaincantes que des photos d'illustration.</p></details>
+        <details><summary>Serai-je premier sur Google ?</summary><p>Personne ne peut vous le promettre honnêtement. Votre site est construit pour être bien compris par Google sur les recherches locales. Votre fiche Google compte aussi beaucoup : c'est l'objet de l'option Fiche Google.</p></details>
+        <details><summary>Et si je veux changer quelque chose plus tard ?</summary><p>Une série de retouches est incluse avant la mise en ligne. Ensuite, soit l'option Sérénité, soit une intervention ponctuelle facturée 40 € de l'heure.</p></details>
+        <details><summary>Vous travaillez où ?</summary><p>Partout en France, en Belgique francophone et en Suisse romande. Tout se fait à distance : téléphone, visio, email et virement.</p></details>
       </div>
     </div>
   </section>
 
-  <section id="comparer">
-    <div class="wrap">
-      <h2>Comparer honnêtement</h2>
-      <p class="intro">Chaque solution a ses avantages. Voici les ordres de grandeur pour choisir en connaissance de cause.</p>
-      <div class="table-wrap">
-      <table>
-        <thead><tr><th></th><th>Mysite</th><th>Outil à faire soi-même</th><th>Freelance / agence classique</th></tr></thead>
-        <tbody>
-          <tr><th>Prix</th><td class="us">290 à 490 €, une fois</td><td>Environ 12 à 17 €/mois pour une formule d'entrée de gamme</td><td>Environ 1 000 à 5 000 € pour un site vitrine</td></tr>
-          <tr><th>Qui fait le travail ?</th><td class="us">Nous</td><td>Vous</td><td>Le prestataire</td></tr>
-          <tr><th>Délai</th><td class="us">5 jours ouvrés après validation</td><td>Selon votre temps disponible</td><td>Plusieurs semaines en général</td></tr>
-          <tr><th>Abonnement</th><td class="us">Aucun obligatoire</td><td>Oui, pour garder le site en ligne</td><td>Variable</td></tr>
-          <tr><th>Idéal si…</th><td class="us">Vous voulez un site simple, vite, sans y passer du temps</td><td>Vous aimez faire vous-même</td><td>Vous avez besoin d'un site complexe ou sur mesure</td></tr>
-        </tbody>
-      </table>
-      </div>
-      <p class="note">Ordres de grandeur relevés en novembre 2026 sur des sources publiques (comparatifs tarifaires et plateformes de freelances). Ils peuvent varier.</p>
-    </div>
-  </section>
-
-  <section class="alt" id="faq">
-    <div class="wrap">
-      <h2>Questions fréquentes</h2>
-      <details><summary>Où travaillez-vous ?</summary><p>Partout en France, en Belgique francophone et en Suisse romande. Tout se fait à distance : échange par téléphone ou en visio, validation par email, paiement par virement (SEPA, y compris depuis la Suisse). Les mentions légales de votre site sont adaptées à votre pays.</p></details>
-      <details><summary>Est-ce que je paie quelque chose pour l'aperçu ?</summary><p>Non. L'aperçu est gratuit et sans engagement. Si vous ne donnez pas suite, il n'est ni publié ni réutilisé.</p></details>
-      <details><summary>Y a-t-il des frais chaque mois ?</summary><p>Non, sauf si vous choisissez l'option Sérénité (19 €/mois, résiliable à tout moment). L'hébergement d'un site simple comme le vôtre est gratuit chez les hébergeurs que nous utilisons. Seul le nom de domaine, si vous en voulez un, coûte en général une dizaine d'euros par an.</p></details>
-      <details><summary>À qui appartient le site ?</summary><p>À vous. Il est publié sur un compte d'hébergement créé à votre nom, et vous recevez tous les fichiers. Vous pouvez le confier à quelqu'un d'autre quand vous voulez.</p></details>
-      <details><summary>Et si je veux changer quelque chose après la mise en ligne ?</summary><p>Une série de modifications est incluse. Ensuite, soit l'option Sérénité, soit une intervention ponctuelle sur devis.</p></details>
-      <details><summary>Est-ce que je vais apparaître premier sur Google ?</summary><p>Personne ne peut le garantir honnêtement. Votre site est construit proprement pour être compris par Google (titres, description, informations locales). La fiche Google reste le levier le plus important pour les recherches locales : c'est l'objet de l'option Fiche Google.</p></details>
-      <details><summary>Qui êtes-vous ?</summary><p>Une micro-entreprise qui démarre et qui fabrique des sites simples pour les petites entreprises locales, en s'appuyant sur des outils modernes, dont l'intelligence artificielle pour gagner du temps. Chaque site est relu et validé par un humain, puis par vous. Comme nous démarrons, nos 3 premiers clients bénéficient d'un tarif pilote.</p></details>
-      <details><summary>Comment je paie ?</summary><p>Par virement : 50 % d'acompte à la validation, 50 % à la mise en ligne. Une facture vous est remise à chaque paiement.</p></details>
-    </div>
-  </section>
-
-  <section id="contact">
-    <div class="wrap contact">
+  <section class="section" id="contact" aria-labelledby="titre-contact">
+    <div class="conteneur contact">
       <div>
-        <h2>Recevoir mon aperçu gratuit</h2>
-        <p class="intro">Laissez quelques informations : nous vous recontactons sous 24 h ouvrées pour un échange de 15 minutes.</p>
-        <p class="direct" id="direct"></p>
-        <p class="small">Pas de démarchage à répétition : si vous ne donnez pas suite, nous ne vous relançons qu'une fois.</p>
+        <span class="etiquette">Aperçu gratuit</span>
+        <h2 id="titre-contact">Recevez l'aperçu de votre site, sans engagement.</h2>
+        <ol class="suite">
+          <li>Vous remplissez ce formulaire en une minute.</li>
+          <li>Nous vous rappelons sous 24 heures ouvrées pour un échange de 15 minutes.</li>
+          <li>Vous recevez l'aperçu de votre site le lendemain.</li>
+        </ol>
+        
       </div>
-      <form name="demande-apercu" method="POST" action="/merci" data-netlify="true" netlify-honeypot="site_web">
+      <form class="formulaire" id="formulaire-apercu" name="demande-apercu" method="POST" action="/" data-merci="merci.html" data-secours="" data-netlify="true" netlify-honeypot="adresse_web">
         <input type="hidden" name="form-name" value="demande-apercu">
-        <p class="hp"><label>Ne pas remplir : <input name="site_web" tabindex="-1" autocomplete="off"></label></p>
-        <div class="row2">
-          <div><label for="c-nom">Votre nom</label><input id="c-nom" name="nom" required autocomplete="name"></div>
-          <div><label for="c-ent">Nom de l'entreprise</label><input id="c-ent" name="entreprise" required autocomplete="organization"></div>
+        <p class="piege"><label for="adresse_web">Ne pas remplir ce champ</label><input id="adresse_web" name="adresse_web" tabindex="-1" autocomplete="off"></p>
+        <div class="duo">
+          <div class="champ"><label for="nom">Votre nom</label><input id="nom" name="nom" autocomplete="name" required aria-describedby="erreur-nom"><p class="message-erreur" id="erreur-nom" aria-live="polite"></p></div>
+          <div class="champ"><label for="telephone">Téléphone</label><input id="telephone" name="telephone" type="tel" autocomplete="tel" inputmode="tel" required pattern="[+0-9 ().\-]{8,20}" aria-describedby="erreur-telephone"><p class="message-erreur" id="erreur-telephone" aria-live="polite"></p></div>
         </div>
-        <div class="row2">
-          <div><label for="c-metier">Métier</label><input id="c-metier" name="metier" required placeholder="ex. plombier, traiteur…"></div>
-          <div><label for="c-ville">Ville et pays</label><input id="c-ville" name="ville" required placeholder="ex. Lyon, Liège, Lausanne…"></div>
+        <div class="duo">
+          <div class="champ"><label for="entreprise">Nom de l'entreprise</label><input id="entreprise" name="entreprise" autocomplete="organization" required aria-describedby="erreur-entreprise"><p class="message-erreur" id="erreur-entreprise" aria-live="polite"></p></div>
+          <div class="champ"><label for="activite">Métier et ville</label><input id="activite" name="activite" placeholder="Plombier à Lyon" required aria-describedby="erreur-activite"><p class="message-erreur" id="erreur-activite" aria-live="polite"></p></div>
         </div>
-        <div class="row2">
-          <div><label for="c-tel">Téléphone</label><input id="c-tel" name="telephone" type="tel" required autocomplete="tel"></div>
-          <div><label for="c-mail">Email (facultatif)</label><input id="c-mail" name="email" type="email" autocomplete="email"></div>
-        </div>
-        <div><label for="c-offre">Offre qui vous intéresse</label>
-          <select id="c-offre" name="offre"><option>Je ne sais pas encore</option><option>Vitrine</option><option>Vitrine + commande WhatsApp</option></select></div>
-        <div><label for="c-msg">Un mot sur votre activité (facultatif)</label><textarea id="c-msg" name="message"></textarea></div>
-        <p class="small">Vos informations servent uniquement à vous recontacter au sujet de votre demande. Elles ne sont ni vendues ni cédées et sont supprimées après 3 ans sans échange. Détails dans les <a href="mentions-legales.html">mentions légales</a>.</p>
-        <button class="btn btn-main" type="submit">Envoyer ma demande</button>
+        <div class="champ"><label for="email">Email <span class="aide">(facultatif)</span></label><input id="email" name="email" type="email" autocomplete="email" aria-describedby="erreur-email"><p class="message-erreur" id="erreur-email" aria-live="polite"></p></div>
+        <div class="champ"><label for="message">Un mot sur votre activité <span class="aide">(facultatif)</span></label><textarea id="message" name="message"></textarea></div>
+        <p class="rgpd">Vos informations servent uniquement à vous recontacter au sujet de votre demande. Elles ne sont ni vendues ni cédées. <a href="confidentialite.html">Comment nous utilisons vos données</a>.</p>
+        <div class="retour" id="retour-formulaire" role="alert"></div>
+        <button class="bouton" type="submit">Envoyer ma demande</button>
       </form>
     </div>
   </section>
 </main>
 
-<footer>
-  <div class="wrap">
-    <span>© <span id="annee">2026</span> Mysite — création de sites pour TPE</span>
-    <a href="mentions-legales.html">Mentions légales</a>
+<footer class="pied">
+  <div class="conteneur">
+    <div>
+      <a class="logo" href="index.html">My<span>site</span></a>
+      <p style="margin-top:1rem;max-width:26rem">Sites internet à prix fixe pour artisans, commerçants et indépendants, en France, en Belgique francophone et en Suisse romande.</p>
+    </div>
+    <div>
+      <h2>Le site</h2>
+      <ul>
+        <li><a href="index.html#offres">Offres et prix</a></li>
+        <li><a href="index.html#exemples">Exemples</a></li>
+        <li><a href="index.html#contact">Demander un aperçu</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Informations</h2>
+      <ul>
+        <li><a href="mentions-legales.html">Mentions légales</a></li>
+        <li><a href="confidentialite.html">Confidentialité</a></li>
+        
+      </ul>
+    </div>
+    <p class="bas">© 2026 Mysite · Ce site n'utilise ni cookie publicitaire ni outil de mesure d'audience.</p>
   </div>
 </footer>
-
-<script>
-  // Coordonnées directes : à compléter dans CONTACT (laisser vide pour masquer).
-  var CONTACT = { telephone: "", whatsapp: "" }; // whatsapp au format 336XXXXXXXX
-  (function(){
-    var d = document.getElementById('direct');
-    if (CONTACT.telephone) {
-      var a = document.createElement('a'); a.className = 'btn btn-ghost';
-      a.href = 'tel:' + CONTACT.telephone.replace(/[^0-9+]/g, ''); a.textContent = '📞 ' + CONTACT.telephone; d.appendChild(a);
-    }
-    if (CONTACT.whatsapp) {
-      var w = document.createElement('a'); w.className = 'btn btn-ghost'; w.target = '_blank'; w.rel = 'noopener';
-      w.href = 'https://wa.me/' + CONTACT.whatsapp + '?text=' + encodeURIComponent("Bonjour, je souhaite recevoir un aperçu gratuit de site pour mon entreprise.");
-      w.textContent = 'WhatsApp'; d.appendChild(w);
-    }
-    document.getElementById('annee').textContent = new Date().getFullYear();
-  })();
-</script>
+<script src="assets/main.js" defer></script>
 </body>
 </html>

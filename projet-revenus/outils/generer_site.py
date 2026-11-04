@@ -62,6 +62,18 @@ ETAPES_DEFAUT = {
 }
 
 
+
+# Icônes SVG (traits simples, dessinées pour ce projet) : remplacent les emojis, qui font peu professionnel.
+def _ico(chemin: str) -> str:
+    return ('<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" '
+            f'stroke-linejoin="round" aria-hidden="true" focusable="false">{chemin}</svg>')
+
+
+ICO_TEL = _ico('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>')
+ICO_PIN = _ico('<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>')
+ICO_PANIER = _ico('<path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="17" cy="20" r="1"/>')
+ICO_CHECK = _ico('<path d="M5 12.5l4.5 4.5L19 7.5"/>')
+
 class FicheInvalide(ValueError):
     """Erreur de contenu dans la fiche JSON."""
 
@@ -254,7 +266,7 @@ def section_infos(fiche: dict, titre_zone: str) -> str:
     carte = ""
     if fiche.get("adresse"):
         q = quote(f"{fiche['adresse']}, {fiche['ville']}")
-        carte = f'<p style="margin-top:16px"><a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&query={q}" target="_blank" rel="noopener">📍 Itinéraire</a></p>'
+        carte = f'<p style="margin-top:16px"><a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&query={q}" target="_blank" rel="noopener">{ICO_PIN} Itinéraire</a></p>'
     return (f'<section id="infos"><div class="wrap deux"><div>{entete_section("Où nous trouver", titre_zone)}'
             f'<p style="font-size:17px">{zone}</p>{chips}{carte}</div>'
             f'<div>{entete_section("Horaires", "Quand nous joindre")}{tableau_horaires(fiche)}</div></div></section>')
@@ -264,8 +276,7 @@ def section_confiance(fiche: dict) -> str:
     atouts = fiche.get("atouts") or []
     if not atouts:
         return ""
-    icones = ["✓", "★", "⏱", "🛡", "€", "♥"]
-    items = "".join(f'<li><span class="ic" aria-hidden="true">{icones[i % len(icones)]}</span>{e(a)}</li>' for i, a in enumerate(atouts))
+    items = "".join(f'<li><span class="ic">{ICO_CHECK}</span>{e(a)}</li>' for a in atouts)
     return f'<div class="confiance"><div class="wrap"><ul>{items}</ul></div></div>'
 
 
@@ -392,7 +403,7 @@ def hero(fiche: dict, imgs: dict, boutons: str, kicker_extra: str = "") -> str:
     visuel = (f'<div class="visuel"><img src="{e(imgs[h])}" alt="{e(fiche["nom"])}" width="900" height="700" fetchpriority="high">{badge}</div>'
               if h else "")
     return (f'<section class="hero2{" sans-photo" if not h else ""}"><div class="wrap"><div class="txt"><div class="kicker">{ouverture}{kicker_extra}'
-            f'<span class="pill">📍 {e(fiche.get("zone_courte") or fiche["ville"])}</span></div>'
+            f'<span class="pill">{ICO_PIN} {e(fiche.get("zone_courte") or fiche["ville"])}</span></div>'
             f'<h1>{e(titre)}</h1><p class="lead">{e(fiche["accroche"])}</p><div class="cta">{boutons}</div>{bloc_note_hero(fiche)}</div>'
             f'{visuel}</div></section>')
 
@@ -409,12 +420,12 @@ def corps_artisan(fiche: dict, imgs: dict) -> tuple[str, list, str, str, str]:
     tel_lien = e(chiffres(fiche["telephone"]))
     wa = fiche.get("whatsapp")
     libelle = f"Appeler le {e(fiche['telephone'])}" if re.search(r"\d", fiche["telephone"]) else "Appeler"
-    boutons = f'<a class="btn btn-main" href="tel:{tel_lien}">📞 {libelle}</a>'
+    boutons = f'<a class="btn btn-main" href="tel:{tel_lien}">{ICO_TEL} {libelle}</a>'
     if wa:
         boutons += f'<a class="btn btn-wa" href="{e(lien_wa(fiche, "Bonjour, je souhaite un devis pour : "))}" target="_blank" rel="noopener">WhatsApp</a>'
     boutons += '<a class="btn btn-light" href="#contact">Devis gratuit</a>'
     services = "".join(
-        f'<div class="card"><div class="ic" aria-hidden="true">{e(s.get("icone", "🔧"))}</div><h3>{e(s["titre"])}</h3><p>{e(s.get("texte", ""))}</p>'
+        f'<div class="card"><h3>{e(s["titre"])}</h3><p>{e(s.get("texte", ""))}</p>'
         + (f'<div class="prix">{e(s["prix"])}</div>' if s.get("prix") else "") + "</div>"
         for s in fiche.get("services") or [])
     corps = (hero(fiche, imgs, boutons) + section_confiance(fiche)
@@ -422,14 +433,14 @@ def corps_artisan(fiche: dict, imgs: dict) -> tuple[str, list, str, str, str]:
              + section_galerie(fiche, imgs, "Quelques réalisations", "Réalisations")
              + section_etapes(fiche) + section_avis(fiche)
              + f'<section class="alt"><div class="wrap deux"><div>{entete_section("Qui sommes-nous ?", fiche.get("titre_apropos", "Un artisan près de chez vous"))}<p style="font-size:17px">{e(fiche["description"])}</p></div>'
-             + f'<div>{entete_section(*fiche.get("bloc_appel", ("Urgence ?", "Appelez directement")))}<p><a class="btn btn-main" href="tel:{tel_lien}">📞 {e(fiche["telephone"])}</a></p><p class="petit">{e(fiche.get("delai_reponse", ""))}</p></div></div></section>'
+             + f'<div>{entete_section(*fiche.get("bloc_appel", ("Urgence ?", "Appelez directement")))}<p><a class="btn btn-main" href="tel:{tel_lien}">{ICO_TEL} {e(fiche["telephone"])}</a></p><p class="petit">{e(fiche.get("delai_reponse", ""))}</p></div></div></section>'
              + section_infos(fiche, "Zone d'intervention") + section_faq(fiche)
              + bande_cta(fiche, "Un problème ? Une question ?", "Appelez maintenant ou demandez votre devis : réponse rapide.",
-                         f'<a class="btn btn-light" href="tel:{tel_lien}">📞 {libelle}</a><a class="btn btn-ghost-clair" href="#contact">Demander un devis</a>')
+                         f'<a class="btn btn-light" href="tel:{tel_lien}">{ICO_TEL} {libelle}</a><a class="btn btn-ghost-clair" href="#contact">Demander un devis</a>')
              + section_contact(fiche, "Demandez votre devis gratuit", "Décrivez votre besoin : réponse rapide, sans engagement.", bouton="Recevoir mon devis"))
     menu = [("services", "Services"), ("realisations", "Réalisations"), ("avis", "Avis"), ("infos", "Zone"), ("contact", "Contact")]
-    entete = f'<a class="btn btn-main" href="tel:{tel_lien}">📞 Appeler</a>'
-    barre = f'<a class="btn btn-main" href="tel:{tel_lien}">📞 Appeler</a>' + (
+    entete = f'<a class="btn btn-main" href="tel:{tel_lien}">{ICO_TEL} Appeler</a>'
+    barre = f'<a class="btn btn-main" href="tel:{tel_lien}">{ICO_TEL} Appeler</a>' + (
         f'<a class="btn btn-wa" href="{e(lien_wa(fiche, "Bonjour, je souhaite un devis pour : "))}" target="_blank" rel="noopener">WhatsApp</a>' if wa
         else '<a class="btn btn-ghost" href="#contact">Devis</a>')
     return corps, menu, entete, barre, ""
@@ -454,10 +465,10 @@ def corps_beaute(fiche: dict, imgs: dict) -> tuple[str, list, str, str, str]:
              + section_avis(fiche) + section_etapes(fiche)
              + f'<section class="alt"><div class="wrap" style="max-width:820px">{entete_section("À propos", fiche.get("titre_apropos", "Une équipe à votre écoute"))}<p style="font-size:17px">{e(fiche["description"])}</p></div></section>'
              + section_infos(fiche, "Le salon") + section_faq(fiche)
-             + bande_cta(fiche, "Envie de vous faire plaisir ?", "Réservez en quelques secondes.", f'<a class="btn btn-light" href="{e(resa)}"{cible}>Prendre rendez-vous</a><a class="btn btn-ghost-clair" href="tel:{e(chiffres(fiche["telephone"]))}">📞 Appeler</a>'))
+             + bande_cta(fiche, "Envie de vous faire plaisir ?", "Réservez en quelques secondes.", f'<a class="btn btn-light" href="{e(resa)}"{cible}>Prendre rendez-vous</a><a class="btn btn-ghost-clair" href="tel:{e(chiffres(fiche["telephone"]))}">{ICO_TEL} Appeler</a>'))
     menu = [("tarifs", "Tarifs"), ("realisations", "Galerie"), ("avis", "Avis"), ("infos", "Infos")]
     entete = f'<a class="btn btn-main" href="{e(resa)}"{cible}>Réserver</a>'
-    barre = f'<a class="btn btn-light" href="tel:{e(chiffres(fiche["telephone"]))}">📞 Appeler</a><a class="btn btn-main" href="{e(resa)}"{cible}>Réserver</a>'
+    barre = f'<a class="btn btn-light" href="tel:{e(chiffres(fiche["telephone"]))}">{ICO_TEL} Appeler</a><a class="btn btn-main" href="{e(resa)}"{cible}>Réserver</a>'
     return corps, menu, entete, barre, ""
 
 
@@ -492,7 +503,7 @@ def corps_commande(fiche: dict, imgs: dict) -> tuple[str, list, str, str, str]:
              + bande_cta(fiche, "Une envie gourmande ?", "Composez votre commande en deux minutes.", '<a class="btn btn-light" href="#carte">Voir la carte</a>'))
     menu = [("carte", "La carte"), ("avis", "Avis"), ("infos", "Infos pratiques"), ("faq", "FAQ")]
     entete = '<a class="btn btn-main" href="#carte">Commander</a>'
-    barre = ('<button class="btn btn-wa" id="ouvrirPanier" type="button" disabled>🛒 <span id="panierResume">Panier vide</span></button>')
+    barre = (f'<button class="btn btn-wa" id="ouvrirPanier" type="button" disabled>{ICO_PANIER} <span id="panierResume">Panier vide</span></button>')
     style = """<style>
 .onglets{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 8px;position:sticky;top:64px;z-index:5;background:var(--bg);padding:10px 0}
 .pill-cat{border:1px solid var(--line);border-radius:999px;padding:8px 16px;text-decoration:none;color:var(--ink);font-weight:600;font-size:14px;background:#fff}
@@ -520,7 +531,7 @@ h3.cat{font-size:24px;margin:28px 0 14px;scroll-margin-top:130px}
 .panier-flottant{position:fixed;right:24px;bottom:24px;z-index:45;display:none}@media(min-width:760px){.panier-flottant:not([disabled]){display:inline-flex}}
 </style>"""
     modes = fiche.get("modes") or ["Retrait"]
-    panier = f"""<button class="btn btn-wa panier-flottant" id="ouvrirPanier2" type="button" disabled>🛒 <span id="panierResume2">Panier vide</span></button>
+    panier = f"""<button class="btn btn-wa panier-flottant" id="ouvrirPanier2" type="button" disabled>{ICO_PANIER} <span id="panierResume2">Panier vide</span></button>
 <div class="panier" id="panier" aria-hidden="true"><div class="fond" data-fermer></div><aside class="tiroir" role="dialog" aria-label="Votre panier">
 <header><h2>Votre commande</h2><button class="fermer" type="button" data-fermer aria-label="Fermer">×</button></header>
 <ul class="lignes" id="lignes"></ul>

@@ -26,6 +26,7 @@ nav.menu a:hover{color:var(--ink)}
 @media(min-width:900px){nav.menu{display:flex}}
 
 /* Boutons */
+.ico{width:1.15em;height:1.15em;flex:none;vertical-align:-.2em}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 22px;border-radius:12px;font-weight:700;font-size:16px;text-decoration:none;border:2px solid transparent;cursor:pointer;font-family:var(--texte);transition:transform .12s ease,box-shadow .12s ease}
 .btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.12)}
 .btn-main{background:var(--brand);color:var(--brand-ink)}

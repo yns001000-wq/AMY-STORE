@@ -22,7 +22,7 @@ Activité choisie : **création de sites vitrines à prix fixe pour artisans, co
 | `MARCHES.md` | France, Belgique, Suisse : sources de prospects, règles de prospection, facturation, ordre de lancement |
 | `LEGAL.md` | Statut, facturation, prospection légale, mentions légales |
 | `SOURCES.md` | Sources consultées, avec leur niveau de fiabilité |
-| `site/` | Page de l'offre (prête à déposer sur Netlify) et démos fictives |
+| `site-src/` → `site/` | Site de l'agence (source, puis version construite par `outils/construire_site.py`) et démos fictives. Voir `docs/SITE_AGENCE.md` |
 | `modeles-sites/` | Style commun, fiches d'exemple des 3 modèles (artisan, commande WhatsApp, beauté), photos de démo sous licence CC0 |
 | `outils/` | `trouver_prospects.py`, `generer_site.py`, `rapport.py` (Python, aucune dépendance) |
 | `cockpit/` | Code du Cockpit privé (voir `docs/COCKPIT.md`) : prospects, actions du jour, ventes, messages |
