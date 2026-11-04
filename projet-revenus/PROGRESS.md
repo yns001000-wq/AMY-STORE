@@ -73,6 +73,11 @@ _Dernière mise à jour : 3 novembre 2026 (retrait de la boutique AMY Store et r
 - Aperçus des prospects : emplacement « Vos avis Google, mis en avant » **sans aucun avis inventé** (cartes vides). Leurs vrais avis seront ajoutés avec leur accord.
 - 6 aperçus régénérés et remplacés dans le cockpit. 26 tests et vérification navigateur OK.
 
+### 04/11/2026 — Cockpit IA
+- Remise à zéro de la fiche Black Chic Coiffure (clics d'essai). Aucune vente d'essai à supprimer.
+- Cockpit refait : briefing IA du jour, score de priorité expliqué, pipeline par glisser-déposer, assistant IA avec accès à vos données (lecture et programmation de relances), copilote de vente dans chaque fiche, recherche rapide Ctrl+K, nouveau design.
+- Testé dans un navigateur avec une IA simulée (briefing, glisser-déposer, assistant et outils, copilote, recherche) : aucune erreur, affichage mobile correct. Données et règles d'accès vérifiées après publication (propriétaire seul).
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`

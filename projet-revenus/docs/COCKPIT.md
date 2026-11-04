@@ -2,26 +2,32 @@
 
 **Adresse :** https://claude.ai/artifact/V6BmL9ZDXnEWohf6wTKba6 (lien privé : il ne fonctionne que pour vous, connecté à votre compte Claude)
 
-## Ce que vous y trouvez
-| Onglet | Utilité |
+## Ce que vous y trouvez (version IA du 04/11/2026)
+| Vue | Utilité |
 |---|---|
-| **Aujourd'hui** | Chiffre du mois et objectif de 1 000 €, actions à faire (relances, RDV, avec les retards en rouge), prochains prospects à appeler, résultats par segment |
-| **Prospects** | Tous vos prospects : recherche, filtres (statut, segment, métier), numéro de téléphone, statut, prochaine action. Un clic ouvre la fiche |
-| **Fiche prospect** | Numéro à copier ou appeler, bouton « Chercher sur Google Maps » si le numéro manque, boutons de résultat en un clic (pas de réponse, intéressé, RDV, devis, gagné, refus, ne plus contacter), notes, historique, aperçu du site préparé, rédaction d'un message par Claude |
-| **Ventes** | Ventes, encaissé et reste à encaisser, bouton « Solde reçu » |
-| **Messages types** | Script d'appel, SMS, email, relance et récapitulatif, remplis automatiquement avec le nom du prospect, plus les avertissements par pays |
+| **Aujourd'hui** | Indicateurs (chiffre du mois et objectif, prospects à contacter, taux de réponse, prospects chauds), **briefing IA du jour**, actions programmées (retards en rouge), **meilleures opportunités** classées par score, résultats par segment |
+| **Pipeline** | Tableau en colonnes (À contacter, Contacté, A répondu, Rendez-vous, Devis, Gagné). On **glisse une carte** pour changer son statut, et l'historique se met à jour |
+| **Prospects** | Liste triée par **score de priorité**, avec filtres et export CSV |
+| **Assistant IA** | Conversation avec Claude, qui **consulte vos données** (prospects, fiches, statistiques) et peut **programmer des relances** à votre demande. Il ne contacte jamais personne |
+| **Fiche prospect** | Numéro, bouton Google Maps, **copilote de vente IA** (préparer l'appel, rédiger un message, répondre à une objection), boutons de résultat en un clic, notes, aperçu, historique |
+| **Ventes, Messages types** | Inchangés : suivi des ventes et de l'encaissé, modèles prêts à copier |
+| **Recherche rapide** | `Ctrl + K`, puis le nom, la ville ou le numéro, et `Entrée` pour ouvrir la fiche |
 
 ## Ce qui est automatique
-- **Les prochaines actions se planifient seules** à chaque résultat noté :
-  - appel sans réponse : rappel 2 jours ouvrés plus tard, et arrêt après 3 tentatives ;
-  - message laissé : relance à J+3 ouvrés ;
-  - devis envoyé : relance du devis à J+3 ouvrés ;
+- **Score de priorité (0 à 100)**, calculé sans IA et expliqué sur chaque fiche :
+  - statut : devis +45, RDV +40, a répondu +35, contacté +10 ;
+  - numéro connu +20, aperçu prêt +15, pas de site +10, action due +10, entreprise créée depuis moins de 6 mois +10 ;
+  - 2 appels ou plus sans réponse : −10.
+- **Relances planifiées** à chaque résultat noté :
+  - pas de réponse : rappel à J+2 ouvrés, et arrêt après 3 essais ;
+  - message laissé ou devis envoyé : relance à J+3 ouvrés ;
   - RDV fixé : action à la date choisie.
-- **L'historique** se remplit tout seul (50 dernières entrées par prospect).
-- **Une vente gagnée** crée la ligne de vente (montant et acompte pré-remplis selon l'offre) et met à jour l'objectif du mois.
-- **Claude rédige** un SMS, un email, un message Instagram ou un script d'appel à partir de la fiche. La première fois, Claude vous demande l'autorisation : cela consomme votre forfait Claude. **Rien n'est envoyé automatiquement.**
-- **Export CSV** (bouton dans Prospects) pour garder une copie sur votre ordinateur. Une confirmation vous est demandée avant l'enregistrement.
-- **Ajout de nouveaux prospects par Claude** : la routine du lundi trouve de nouvelles entreprises (`outils/trouver_prospects.py`), prépare l'envoi (`outils/exporter_cockpit.py`), puis Claude les ajoute au cockpit avec son outil de base de données. Les prospects déjà présents ne sont jamais dupliqués, car leur identifiant est fixe : « p » + SIREN.
+- **Briefing IA** (bouton) : Claude lit l'état du pipeline et propose les 5 actions du jour. Une même analyse est réutilisée pendant 30 minutes, sans nouvelle consommation.
+- **Assistant IA** : outils « chercher des prospects », « voir une fiche », « statistiques » et « programmer une action ». Chaque utilisation d'un outil s'affiche dans la conversation.
+- **Copilote dans la fiche** : préparation d'appel (accroche, questions, objections probables), messages, réponses aux objections.
+- **Gagné** crée automatiquement la vente.
+- **Coût :** les fonctions IA utilisent votre forfait Claude, uniquement quand vous cliquez. Le premier usage demande votre autorisation.
+- **Ajout de nouveaux prospects par Claude :** voir la routine du lundi dans AUTOMATION.md (`outils/exporter_cockpit.py`, puis l'outil de base de données de Claude).
 
 ## Confidentialité
 - **Lien privé :** seul le propriétaire peut ouvrir le cockpit.
