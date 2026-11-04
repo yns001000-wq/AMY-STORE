@@ -11,6 +11,7 @@
 - [ ] Tenir un livre des recettes : le fichier `crm/donnees/ventes.csv` peut servir de base, à compléter avec le mode de paiement.
 
 ## 2. Facturation
+- **Outil :** le Cockpit (onglets Facturation et Légal) crée des devis, factures et avoirs conformes en PDF, tient le livre des recettes et prépare la déclaration URSSAF. Voir `docs/COCKPIT.md`.
 - [ ] Mentions obligatoires sur chaque facture : voir `ventes/facture_modele.md`.
 - [ ] Facturation électronique : vous devez déjà pouvoir **recevoir** des factures électroniques (depuis le 1er septembre 2026). L'**émission** sera obligatoire pour les micro-entreprises à partir du 1er septembre 2027. Choisissez une plateforme agréée avant cette date (l'administration publie la liste des plateformes).
 

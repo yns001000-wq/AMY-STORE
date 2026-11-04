@@ -13,6 +13,29 @@
 | **Ventes, Messages types** | Inchangés : suivi des ventes et de l'encaissé, modèles prêts à copier |
 | **Recherche rapide** | `Ctrl + K`, puis le nom, la ville ou le numéro, et `Entrée` pour ouvrir la fiche |
 
+## Facturation et Légal (ajouté le 04/11/2026)
+
+**Facturation**
+- Devis, factures et avoirs **numérotés automatiquement et sans trou** (D-2026-001, F-2026-001, A-2026-001), en **PDF**.
+- Boutons d'offres pré-remplis (Vitrine, WhatsApp, Fiche Google, Sérénité…). Client rempli depuis un prospect en un clic. Bouton « Créer un devis » dans chaque fiche prospect.
+- Depuis un devis : « Facture d'acompte 50 % », puis « Facture de solde » (les acomptes déjà facturés sont déduits).
+- **Une facture émise ne peut plus être modifiée ni supprimée** : on corrige en créant un avoir.
+- Mentions obligatoires ajoutées automatiquement :
+  - « EI » après votre nom, SIRET, numéro et dates ;
+  - mention de TVA selon le pays du client : France (art. 293 B), client belge assujetti (autoliquidation avec les deux numéros de TVA), Suisse (art. 259) ;
+  - échéance, pénalités de retard et indemnité de 40 €.
+- Paiements enregistrés (montant, date, mode). Le statut passe à « Payée » ou « Paiement partiel », et les retards apparaissent en rouge.
+
+**Légal**
+- **Mon entreprise** : vos informations, utilisées sur tous les documents. L'émission est bloquée tant que nom, adresse, SIRET et email ne sont pas remplis.
+- **Déclaration URSSAF** : chiffre d'affaires **encaissé** de la période à déclarer (mois ou trimestre), cotisations estimées et date limite.
+- **Seuils de l'année** : franchise de TVA (37 500 €) et plafond micro-entreprise (83 600 €), avec alerte à 80 %.
+- **Livre des recettes** : obligatoire en micro-entreprise. Il se remplit tout seul à chaque paiement, avec export CSV.
+- **Registre des oppositions** : les personnes qui ont demandé à ne plus être contactées, avec la date (preuve en cas de contrôle).
+- **Checklist légale** : 12 obligations et démarches à cocher.
+
+**Limite :** c'est un outil d'aide, pas une plateforme agréée de facturation électronique. Depuis le 01/09/2026, vous devez pouvoir **recevoir** des factures électroniques. À partir du 01/09/2027, vos factures entre entreprises devront être **émises** via une plateforme agréée : il faudra en choisir une d'ici là (il en existe des gratuites).
+
 ## Ce qui est automatique
 - **Score de priorité (0 à 100)**, calculé sans IA et expliqué sur chaque fiche :
   - statut : devis +45, RDV +40, a répondu +35, contacté +10 ;
@@ -40,5 +63,7 @@
 - **Collections :**
   - `prospects/p<SIREN>` : champs identiques au CSV, plus `journal` (liste `{d, t}`), `apercu_url`, `tentatives` et `modifie_le` ;
   - `ventes/<id>` : `client`, `offre`, `montant`, `encaisse`, `date`, `prospect`.
+- `documents/<id>` : `type` (devis, facture ou avoir), `numero`, `statut`, `date`, `date_prestation`, `echeance` ou `validite`, `client` {nom, adresse, siren, tva, pays, email}, `lignes` [{designation, qte, pu}], `paiements` [{date, montant, mode}], `ref`, `notes`.
+- `config/entreprise`, `config/compteurs` (dernier numéro par type et par année), `config/checklist`.
 - **Règles d'accès :** `{path: "", read: "owner", write: "owner"}`.
 - **Aperçus :** les captures sont importées comme fichiers de l'artifact, et l'adresse de chaque capture est enregistrée dans `apercu_url`.

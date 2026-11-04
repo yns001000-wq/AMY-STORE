@@ -78,6 +78,11 @@ _Dernière mise à jour : 3 novembre 2026 (retrait de la boutique AMY Store et r
 - Cockpit refait : briefing IA du jour, score de priorité expliqué, pipeline par glisser-déposer, assistant IA avec accès à vos données (lecture et programmation de relances), copilote de vente dans chaque fiche, recherche rapide Ctrl+K, nouveau design.
 - Testé dans un navigateur avec une IA simulée (briefing, glisser-déposer, assistant et outils, copilote, recherche) : aucune erreur, affichage mobile correct. Données et règles d'accès vérifiées après publication (propriétaire seul).
 
+### 04/11/2026 — Facturation et Légal dans le cockpit
+- Devis, factures et avoirs numérotés, en PDF, avec les mentions obligatoires (EI, SIRET, mentions de TVA par pays, pénalités et 40 €), factures d'acompte et de solde depuis un devis, paiements et retards.
+- Onglet Légal : informations d'entreprise, déclaration URSSAF (encaissé, cotisations, date limite), seuils TVA et micro, livre des recettes automatique avec export CSV, registre des oppositions, checklist de 12 obligations.
+- Testé de bout en bout dans un navigateur avec une IA simulée : devis, puis acompte, puis paiement, puis livre des recettes, et PDF vérifiés (texte extrait et rendu visuel). Toutes les vues sans débordement à 400 px.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`
