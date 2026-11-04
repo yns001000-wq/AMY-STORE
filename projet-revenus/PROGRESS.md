@@ -1,6 +1,6 @@
 # PROGRESS.md — Avancement, problèmes et prochaines étapes
 
-_Dernière mise à jour : 3 novembre 2026 (retrait de la boutique AMY Store et réorganisation du dépôt)._
+_Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
 
 ## Indicateurs réels
 | Indicateur | Valeur | Commentaire |
@@ -88,6 +88,23 @@ _Dernière mise à jour : 3 novembre 2026 (retrait de la boutique AMY Store et r
 - Source séparée (`site-src/`), construction par `outils/construire_site.py` à partir de `infos.json`, emplacements légaux « À COMPLÉTER » visibles, en-têtes de sécurité Netlify.
 - Tests : QA complète (7 largeurs, liens, clavier, menu, formulaire, axe : 0 violation) ; Lighthouse mobile 99 / 100 / 100 / 100 et ordinateur 100 partout ; 28 tests unitaires.
 - Auto-évaluation : 90/100 (détail dans le compte rendu). Emojis retirés des démos (icônes SVG).
+
+### 04/11/2026 — Sites clients refaits au niveau « agence »
+- Trois directions artistiques distinctes : artisan « carnet de chantier », commande « carte de maison », beauté « salon calme ». Polices hébergées localement, aucune carte empilée, aucun dégradé, aucun emoji (`docs/SITES_CLIENTS.md`).
+- Générateur :
+  - contraste AA garanti quelle que soit la couleur du client ;
+  - photos converties en WebP avec `srcset` ;
+  - favicon ;
+  - formulaire désactivé sur les démos **et les aperçus** (avant, un aperçu pouvait tenter un envoi réel) ;
+  - plus aucun bouton d'appel vide quand le numéro manque ;
+  - textes adaptables au métier (un traiteur ne voit plus « Des chantiers récents »).
+- Démos, captures du site de l'agence et 6 aperçus prospects régénérés. Captures des aperçus remplacées dans le cockpit.
+- Preuves :
+  - nouvelle QA `tests/qa_demos.js` (7 largeurs, clavier, formulaire, axe) : conforme sur les 3 démos et les 6 aperçus, 0 violation ;
+  - panier vérifié ;
+  - Lighthouse sur les démos : 97 à 100 en performance sur mobile, 100 sur ordinateur, et 100 en accessibilité, bonnes pratiques et référencement ;
+  - QA du site de l'agence conforme ;
+  - 30 tests unitaires OK.
 
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)

@@ -35,25 +35,21 @@
   ],
   "services": [
     {
-      "icone": "💧",
       "titre": "Recherche et réparation de fuite",
       "texte": "Robinetterie, WC, évacuations, canalisations encastrées.",
       "prix": "À partir de 90 €"
     },
     {
-      "icone": "🔥",
       "titre": "Chauffe-eau",
       "texte": "Remplacement et entretien de chauffe-eau électriques et thermodynamiques.",
       "prix": "Sur devis gratuit"
     },
     {
-      "icone": "🛁",
       "titre": "Salle de bain",
       "texte": "Douche à l'italienne, remplacement de baignoire, meubles vasques.",
       "prix": "Sur devis gratuit"
     },
     {
-      "icone": "🌡",
       "titre": "Chauffage",
       "texte": "Entretien annuel de chaudière, désembouage, radiateurs.",
       "prix": "Entretien à partir de 120 €"

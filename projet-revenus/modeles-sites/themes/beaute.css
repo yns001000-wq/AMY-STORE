@@ -1,0 +1,56 @@
+/* Thème BEAUTÉ — « salon calme » : lumineux, aéré, élégant. Titres Marcellus, encre presque noire,
+   accent couleur du client. Signature : la grille de tarifs façon carte de salon, avec points de conduite. */
+@font-face{font-family:"Marcellus";src:url("polices/marcellus-latin.woff2") format("woff2");font-weight:400;font-display:swap}
+:root{--titre:"Marcellus",Georgia,serif;--fond:#fff;--fond-2:#f6f3f1;--encre:#1b1716;--texte:#2b2523;--gris:#5f5753;--filet:#e2dbd7;--rayon:2px}
+h1{font-size:clamp(2.2rem,1.4rem + 3vw,3.6rem);font-weight:400;letter-spacing:.005em}
+h2{font-size:clamp(1.7rem,1.3rem + 1.5vw,2.4rem);font-weight:400}
+h3{font-size:1.25rem;font-weight:400;letter-spacing:.02em}
+.marque{letter-spacing:.06em;text-transform:uppercase;font-size:1.15rem}
+.accueil{display:grid;grid-template-columns:minmax(0,1fr)}
+@media (min-width:60rem){.accueil{grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:min(42rem,80vh)}}
+.accueil .photo-accueil img{width:100%;height:100%;min-height:18rem;max-height:34rem;object-fit:cover}
+@media (min-width:60rem){.accueil .photo-accueil img{max-height:none}}
+.accueil .texte{display:flex;flex-direction:column;justify-content:center;padding:3rem max(1.25rem,env(safe-area-inset-right,0px)) 3.5rem max(1.25rem,env(safe-area-inset-left,0px))}
+@media (min-width:60rem){.accueil .texte{padding:4rem 5vw}}
+.accueil .lieu{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;color:var(--gris);font-size:.95rem;margin-bottom:1.25rem}
+.accueil .lieu span{display:inline-flex;align-items:center;gap:.35rem}
+.actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2rem}
+.note-ligne{margin-top:1.5rem;color:var(--gris);font-size:.95rem}
+.atouts{border-block:1px solid var(--filet)}
+.atouts ul{list-style:none;margin:0;padding:1.1rem 0;display:flex;flex-wrap:wrap;flex-direction:column;gap:.6rem 2.5rem;color:var(--gris);font-size:.95rem}
+.atouts li{display:flex;gap:.45rem;align-items:center}
+@media (min-width:40rem){.atouts ul{flex-direction:row;justify-content:center}}
+.atouts .ico{color:var(--accent-texte)}
+.tarifs{display:grid;gap:3rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:60rem){.tarifs{grid-template-columns:repeat(2,minmax(0,1fr));gap:3rem 5rem}}
+.tarifs h3{text-transform:uppercase;letter-spacing:.12em;font-size:1rem;color:var(--accent-texte);margin-bottom:.75rem;padding-bottom:.6rem;border-bottom:1px solid var(--filet)}
+.tarifs ul{list-style:none;margin:0;padding:0}
+.tarifs li{padding:.7rem 0}
+.tarifs .ligne{display:flex;align-items:baseline;gap:.5rem}
+.tarifs .nom{color:var(--encre)}
+.tarifs .points{flex:1;border-bottom:1px dotted #a69c96;transform:translateY(-.3em);min-width:1rem}
+.tarifs .prix{font-variant-numeric:tabular-nums;color:var(--encre);white-space:nowrap}
+.tarifs .detail{font-size:.9rem;color:var(--gris);margin-top:.15rem}
+.galerie{display:grid;gap:.75rem;grid-template-columns:minmax(0,1fr)}
+.galerie figure{margin:0;position:relative;overflow:hidden;border-radius:var(--rayon)}
+.galerie img{display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover}
+@media (min-width:40rem){.galerie{grid-template-columns:3fr 2fr;grid-template-rows:repeat(2,minmax(0,15rem))}
+  .galerie figure:first-child{grid-row:span 2}.galerie img{aspect-ratio:auto}}
+@media (min-width:64rem){.galerie{grid-template-rows:repeat(2,minmax(0,19rem))}}
+.galerie figcaption{position:absolute;left:.75rem;bottom:.75rem;background:#fff;color:var(--encre);font-size:.85rem;padding:.3rem .65rem;border-radius:2px}
+.gris{background:var(--fond-2)}
+.avis-resume{margin-bottom:2rem;color:var(--gris)}
+.avis-resume .note{font:400 2.4rem/1 var(--titre);color:var(--encre);margin-right:.5rem}
+.avis-liste{display:grid;gap:2.5rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:60rem){.avis-liste{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.avis-liste blockquote{margin:0;text-align:center}
+.avis-liste p{font:400 1.2rem/1.5 var(--titre);color:var(--encre);margin:.6rem 0 .8rem}
+.avis-liste footer{font-size:.9rem;color:var(--gris)}
+.deux{display:grid;gap:3rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:60rem){.deux{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.reserver{background:var(--encre);color:#fff;text-align:center}
+.reserver h2{color:#fff}
+.reserver p{color:rgba(255,255,255,.8);margin-top:.75rem}
+.reserver .actions{justify-content:center}
+.reserver .btn--ligne{color:#fff;border-color:#fff}
+.reserver .btn--ligne:hover{background:#fff;color:var(--encre)}

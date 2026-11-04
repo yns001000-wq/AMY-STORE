@@ -36,41 +36,52 @@ ARTISAN_IMG = {"hero": "images-demo/plomberie-robinet.jpg", "galerie": [
     {"src": "images-demo/plomberie-cuisine.jpg", "legende": "Exemple de réalisation"}]}
 BEAUTE_IMG = {"hero": "images-demo/beaute-salon.jpg", "galerie": [
     {"src": "images-demo/beaute-bac.jpg", "legende": "Vos photos ici"}, {"src": "images-demo/beaute-vernis.jpg", "legende": "Vos photos ici"},
-    {"src": "images-demo/beaute-ongles.jpg", "legende": "Vos photos ici"}, {"src": "images-demo/beaute-salon.jpg", "legende": "Vos photos ici"}]}
+    {"src": "images-demo/beaute-ongles.jpg", "legende": "Vos photos ici"}]}
 BOUCHE_IMG = {"hero": "images-demo/patisserie-hero.jpg", "galerie": [
     {"src": "images-demo/patisserie-fraisier.jpg", "legende": "Vos créations ici"}, {"src": "images-demo/patisserie-chocolat.jpg", "legende": "Vos créations ici"},
     {"src": "images-demo/patisserie-citron.jpg", "legende": "Vos créations ici"}, {"src": "images-demo/patisserie-cookies.jpg", "legende": "Vos créations ici"}]}
 
-# Contenu générique par métier : (modèle, couleur, services ou prestations, images, icônes)
+# Contenu générique par métier : (modèle, couleur, services ou prestations, images)
 METIERS = {
-    "Plombier": ("artisan", "#1d5fd1", [("💧", "Dépannage et fuites", "Robinetterie, WC, évacuations, recherche de fuite."),
-                                        ("🛁", "Salle de bain", "Douche, baignoire, meubles vasques, rénovation."),
-                                        ("🔥", "Chauffe-eau", "Remplacement et entretien."),
-                                        ("🔧", "Installation neuve", "Raccordements et réseaux d'eau.")], ARTISAN_IMG),
-    "Chauffagiste": ("artisan", "#c2410c", [("🔥", "Chaudières et pompes à chaleur", "Installation, remplacement, mise en service."),
-                                            ("🛠", "Entretien annuel", "Contrôle, nettoyage et attestation d'entretien."),
-                                            ("🌡", "Radiateurs et planchers chauffants", "Pose, équilibrage, désembouage."),
-                                            ("❄", "Climatisation", "Installation et entretien.")], ARTISAN_IMG),
-    "Électricien": ("artisan", "#ca8a04", [("⚡", "Dépannage électrique", "Pannes, disjonctions, remise en service."),
-                                           ("🏠", "Rénovation et mise aux normes", "Tableau, prises, circuits."),
-                                           ("💡", "Éclairage", "Intérieur, extérieur, LED."),
-                                           ("🔌", "Bornes et équipements", "Borne de recharge, VMC, chauffage électrique.")], {}),
-    "Peintre": ("artisan", "#0f766e", [("🎨", "Peinture intérieure", "Murs, plafonds, boiseries, finitions soignées."),
-                                       ("🏠", "Façades", "Ravalement, nettoyage, peinture extérieure."),
-                                       ("🧱", "Préparation des supports", "Enduits, rebouchage, ponçage."),
-                                       ("🪟", "Revêtements", "Papiers peints, toile de verre.")], {}),
-    "Traiteur": ("artisan", "#9a3412", [("🍽", "Buffets et repas", "Pour vos fêtes, mariages et anniversaires."),
-                                        ("🥪", "Plateaux repas", "Pour les entreprises et réunions."),
-                                        ("🎉", "Événements", "Menus sur mesure selon votre budget."),
-                                        ("🚚", "Livraison", "Dans votre secteur, à l'heure convenue.")], BOUCHE_IMG),
-    "Pâtisserie": ("artisan", "#b0466b", [("🎂", "Gâteaux de fête", "Anniversaires, baptêmes, mariages."),
-                                          ("🥐", "Douceurs du quotidien", "Tartes, entremets, biscuits."),
-                                          ("✨", "Sur mesure", "Personnalisation selon votre thème."),
-                                          ("📦", "Commande facile", "Retrait ou livraison selon disponibilité.")], BOUCHE_IMG),
+    "Plombier": ("artisan", "#1d5fd1", [("Dépannage et fuites", "Robinetterie, WC, évacuations, recherche de fuite."),
+                                        ("Salle de bain", "Douche, baignoire, meubles vasques, rénovation."),
+                                        ("Chauffe-eau", "Remplacement et entretien."),
+                                        ("Installation neuve", "Raccordements et réseaux d'eau.")], ARTISAN_IMG),
+    "Chauffagiste": ("artisan", "#c2410c", [("Chaudières et pompes à chaleur", "Installation, remplacement, mise en service."),
+                                            ("Entretien annuel", "Contrôle, nettoyage et attestation d'entretien."),
+                                            ("Radiateurs et planchers chauffants", "Pose, équilibrage, désembouage."),
+                                            ("Climatisation", "Installation et entretien.")], ARTISAN_IMG),
+    "Électricien": ("artisan", "#ca8a04", [("Dépannage électrique", "Pannes, disjonctions, remise en service."),
+                                           ("Rénovation et mise aux normes", "Tableau, prises, circuits."),
+                                           ("Éclairage", "Intérieur, extérieur, LED."),
+                                           ("Bornes et équipements", "Borne de recharge, VMC, chauffage électrique.")], {}),
+    "Peintre": ("artisan", "#0f766e", [("Peinture intérieure", "Murs, plafonds, boiseries, finitions soignées."),
+                                       ("Façades", "Ravalement, nettoyage, peinture extérieure."),
+                                       ("Préparation des supports", "Enduits, rebouchage, ponçage."),
+                                       ("Revêtements", "Papiers peints, toile de verre.")], {}),
+    "Traiteur": ("artisan", "#9a3412", [("Buffets et repas", "Pour vos fêtes, mariages et anniversaires."),
+                                        ("Plateaux repas", "Pour les entreprises et réunions."),
+                                        ("Événements", "Menus sur mesure selon votre budget."),
+                                        ("Livraison", "Dans votre secteur, à l'heure convenue.")], BOUCHE_IMG),
+    "Pâtisserie": ("artisan", "#b0466b", [("Gâteaux de fête", "Anniversaires, baptêmes, mariages."),
+                                          ("Douceurs du quotidien", "Tartes, entremets, biscuits."),
+                                          ("Sur mesure", "Personnalisation selon votre thème."),
+                                          ("Commande facile", "Retrait ou livraison selon disponibilité.")], BOUCHE_IMG),
     "Coiffure": ("beaute", "#8a5a44", [("Coiffure", [("Coupe + brushing", "", "Tarif à préciser"), ("Couleur", "", "Tarif à préciser"),
                                                     ("Balayage", "", "Tarif à préciser"), ("Coupe homme", "", "Tarif à préciser")])], BEAUTE_IMG),
     "Soins de beauté": ("beaute", "#9d4e6a", [("Soins", [("Soin du visage", "", "Tarif à préciser"), ("Épilations", "", "Tarif à préciser"),
                                                          ("Manucure", "", "Tarif à préciser"), ("Semi-permanent", "", "Tarif à préciser")])], BEAUTE_IMG),
+}
+
+
+# Textes du modèle artisan adaptés aux métiers de bouche (traiteur, pâtisserie)
+BOUCHE_TEXTES = {
+    "libelle_realisations": "Créations", "titre_realisations": "Nos dernières créations",
+    "titre_contact": "Une date, un événement, une envie ?", "texte_whatsapp": "Nous écrire sur WhatsApp",
+    "titre_zone": "Secteur de livraison", "titre_apropos": "Fait maison, près de chez vous",
+    "etapes": [{"titre": "Vous nous contactez", "texte": "Date, nombre de personnes, envies : quelques mots suffisent."},
+               {"titre": "Une proposition claire", "texte": "Un menu et un prix annoncés avant de commander."},
+               {"titre": "Prêt à l'heure convenue", "texte": "Retrait ou livraison, selon ce qui vous arrange."}],
 }
 
 
@@ -116,9 +127,9 @@ def fiche_pour(prospect: dict) -> dict | None:
         "avis_a_venir": True,  # emplacement des VRAIS avis Google du prospect, jamais d'avis inventés
     }
     if modele == "artisan":
-        fiche["services"] = [{"icone": i, "titre": t, "texte": x} for i, t, x in contenu]
+        fiche["services"] = [{"titre": t, "texte": x} for t, x in contenu]
         if metier in ("Traiteur", "Pâtisserie"):
-            fiche["bloc_appel"] = ["Une question ?", "Appelez-nous directement"]
+            fiche.update(BOUCHE_TEXTES)
             fiche["titre"] = f"{metier} à {ville}"
     else:
         fiche["prestations"] = [{"categorie": c, "liste": [{"nom": n, "duree": d, "prix": p} for n, d, p in lst]} for c, lst in contenu]

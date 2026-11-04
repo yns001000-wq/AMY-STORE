@@ -1,0 +1,58 @@
+/* Thème ARTISAN — « carnet de chantier » : robuste, direct, lisible au soleil.
+   Titres Archivo serrés, fonds blancs et gris béton, un accent (couleur du client) pour l'appel. */
+@font-face{font-family:"Archivo";src:url("polices/archivo-latin.woff2") format("woff2");font-weight:500 800;font-display:swap}
+:root{--titre:"Archivo",system-ui,sans-serif;--fond:#fff;--fond-2:#f2f3f5;--encre:#0f1b2d;--texte:#1d2736;--gris:#4b5565;--filet:#d5d9e0;--rayon:3px}
+h1{font-size:clamp(2.1rem,1.4rem + 3vw,3.6rem);font-weight:800;letter-spacing:-.025em}
+h2{font-size:clamp(1.6rem,1.2rem + 1.6vw,2.4rem);font-weight:800;letter-spacing:-.02em}
+h3{font-size:1.15rem;font-weight:700}
+.marque{font-weight:800;letter-spacing:-.02em}
+.accueil{padding-block:3rem 4rem;border-bottom:1px solid var(--filet)}
+.accueil .conteneur{display:grid;gap:2.5rem;grid-template-columns:minmax(0,1fr);align-items:center}
+@media (min-width:60rem){.accueil .conteneur{grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:4rem}.accueil{padding-block:5rem}}
+.accueil .lieu{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;align-items:center;font-weight:600;color:var(--gris);font-size:.95rem;margin-bottom:1.25rem}
+.accueil .lieu span{display:inline-flex;align-items:center;gap:.35rem}
+.accueil .chapo{color:var(--texte)}
+.actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2rem}
+.btn--appel{font-size:1.1rem;min-height:3.4rem;padding-inline:1.5rem}
+.note-ligne{margin-top:1.5rem;color:var(--gris);font-size:.95rem}
+.note-ligne strong{color:var(--encre)}
+.photo-accueil img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--rayon)}
+.atouts{background:var(--encre);color:#fff}
+.atouts ul{list-style:none;margin:0;padding:1.1rem 0;display:grid;gap:.6rem 2rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr))}
+.atouts li{display:flex;gap:.55rem;align-items:center;font-weight:600}
+.atouts .ico{color:var(--accent-clair)}
+.services{border-top:3px solid var(--encre)}
+.service{display:grid;gap:.4rem 2rem;grid-template-columns:minmax(0,1fr);padding:1.4rem 0;border-bottom:1px solid var(--filet)}
+@media (min-width:48rem){.service{grid-template-columns:16rem minmax(0,1fr) auto;align-items:baseline}}
+.service p{color:var(--gris)}
+.service .prix{font-weight:700;color:var(--encre);white-space:nowrap}
+.gris{background:var(--fond-2)}
+.realisations{display:grid;gap:1.25rem;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:60rem){.realisations{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.realisations figure{margin:0}
+.realisations img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:var(--rayon)}
+.realisations figcaption{margin-top:.5rem;font-size:.92rem;color:var(--gris)}
+.etapes{list-style:none;margin:0;padding:0;display:grid;gap:2rem;grid-template-columns:minmax(0,1fr);counter-reset:e}
+@media (min-width:48rem){.etapes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.etapes li{counter-increment:e;border-top:3px solid var(--encre);padding-top:1rem}
+.etapes li::before{content:"0" counter(e);display:block;font:800 1.6rem/1 var(--titre);color:var(--accent-texte);margin-bottom:.6rem}
+.etapes p{color:var(--gris);margin-top:.4rem}
+.avis-resume{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem 1rem;margin-bottom:2rem}
+.avis-resume .note{font:800 2.6rem/1 var(--titre);color:var(--encre)}
+.avis-liste{display:grid;gap:2rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:60rem){.avis-liste{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.avis-liste blockquote{margin:0;padding-left:1.1rem;border-left:3px solid var(--accent)}
+.avis-liste p{margin:.5rem 0 .75rem;font-size:1.05rem}
+.avis-liste footer{font-size:.9rem;color:var(--gris)}
+.deux{display:grid;gap:3rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:60rem){.deux{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.contact{background:var(--encre);color:#fff}
+.contact h2,.contact .surtitre{color:#fff}
+.contact .surtitre{color:var(--accent-clair)}
+.contact .conteneur{display:grid;gap:3rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:60rem){.contact .conteneur{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}}
+.contact .tel-geant{display:inline-block;margin-top:1.5rem;font:800 clamp(1.7rem,1.2rem + 2vw,2.4rem)/1 var(--titre);color:#fff;text-decoration:none;border-bottom:3px solid var(--accent-clair)}
+.contact .infos-contact{margin-top:1.5rem;color:rgba(255,255,255,.82)}
+.contact .infos-contact p+p{margin-top:.35rem}
+.contact .infos-contact a{color:#fff}
+.contact .form{background:#fff;color:var(--texte);padding:1.75rem;border-radius:var(--rayon)}

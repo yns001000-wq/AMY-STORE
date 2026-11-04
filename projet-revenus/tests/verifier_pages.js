@@ -1,11 +1,13 @@
 // Vérification navigateur des sites de démonstration : erreurs JS, débordement horizontal sur mobile, liens internes, parcours panier WhatsApp.
-// Usage (depuis projet-revenus/) : node tests/verifier_pages.js [dossier_captures]
+// Usage (depuis projet-revenus/, site servi en HTTP) : BASE=http://127.0.0.1:8080 node tests/verifier_pages.js [dossier_captures]
+// (le mode file:// bloque les polices hébergées localement : on passe par un serveur)
 const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
 
 const racine = path.resolve(__dirname, '..');
 const captures = process.argv[2];
+const BASE = process.env.BASE || 'http://127.0.0.1:8080';
 // Les pages du site de l'agence sont testées par tests/qa_site_agence.js (servies en HTTP).
 const pages = [
   'site/exemples/exemple-plomberie-martin/index.html',
@@ -26,7 +28,7 @@ const tdb = process.env.TABLEAU_DE_BORD; if (tdb) pages.push(tdb);
       page.on('pageerror', e => erreurs.push(e.message));
       page.on('console', m => { if (m.type() === 'error') erreurs.push(m.text()); });
       const fichier = path.isAbsolute(rel) ? rel : path.join(racine, rel);
-      await page.goto('file://' + fichier);
+      await page.goto(path.isAbsolute(rel) ? 'file://' + fichier : BASE + '/' + rel.replace(/^site\//, ''));
       console.log(`[${largeur}px] ${rel}`);
       if (erreurs.length) echec('erreurs JS : ' + erreurs.join(' | '));
       const deborde = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -38,10 +40,10 @@ const tdb = process.env.TABLEAU_DE_BORD; if (tdb) pages.push(tdb);
         if (!fs.existsSync(cible)) echec('lien interne cassé : ' + h);
       }
       if (rel.includes('patisserie')) {
-        const bouton = largeur < 760 ? '#ouvrirPanier' : '#ouvrirPanier2';
+        const bouton = largeur < 768 ? '#ouvrirPanier' : '#ouvrirPanier2';
         if (!(await page.locator(bouton).isDisabled())) echec('panier vide mais bouton actif');
-        await page.locator('[data-produit] .btn-add').first().click();
-        await page.locator('[data-produit] .btn-add').first().click();
+        await page.locator('[data-produit] .btn-ajout').first().click();
+        await page.locator('[data-produit] .btn-ajout').first().click();
         await page.locator(bouton).click();
         if (!(await page.locator('#panier').isVisible())) echec("le panier ne s'ouvre pas");
         await page.fill('#c-nom', 'Test');

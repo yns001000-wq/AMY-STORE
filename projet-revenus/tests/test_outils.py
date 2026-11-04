@@ -103,6 +103,31 @@ class TestGenerateur(unittest.TestCase):
         self.assertIn('content="noindex, nofollow"', page)
         self.assertIn("non contractuel", page)
         self.assertTrue((dossier / "robots.txt").exists())
+        # un aperçu n'est pas en ligne : formulaire désactivé, même pour une fiche réelle
+        dossier, _ = generer_site.generer(fiche_artisan(demo=False), self.tmp / "ap", apercu=True)
+        page = self.lire(dossier)
+        self.assertIn("Aperçu non publié : le formulaire est désactivé", page)
+        self.assertNotIn("data-netlify", page)
+
+    def test_polices_et_images_optimisees(self):
+        dossier, _ = generer_site.generer(charger("beaute"), self.tmp)
+        page = self.lire(dossier)
+        self.assertTrue((dossier / "polices" / "marcellus-latin.woff2").is_file())
+        self.assertIn('rel="icon" href="data:image/svg+xml', page)
+        try:
+            import PIL  # noqa: F401
+        except ImportError:
+            return
+        self.assertIn("srcset=", page)
+        self.assertTrue(list((dossier / "img").glob("*.webp")))
+        self.assertFalse(list((dossier / "img").glob("*.jpg")))
+
+    def test_contraste_couleur_client(self):
+        for couleur in ("#ffd400", "#1d5fd1", "#b0466b", "#f2f2f2"):
+            pal = generer_site.palette(couleur, "#0f1b2d")
+            self.assertGreaterEqual(generer_site.contraste(pal["accent-texte"], "#ffffff"), 4.5, couleur)
+            self.assertGreaterEqual(generer_site.contraste(pal["accent"], pal["sur-accent"]), 4.5, couleur)
+            self.assertGreaterEqual(generer_site.contraste(pal["accent-clair"], "#0f1b2d"), 4.5, couleur)
 
     def test_fiche_invalide(self):
         cas = [dict(telephone=""), dict(slug="Avec Espaces"), dict(whatsapp="+33 6 00"), dict(couleur="red"),
@@ -384,6 +409,7 @@ class TestApercus(unittest.TestCase):
         self.assertIn("Vos vrais avis apparaîtront ici", page)
         self.assertNotIn("avis-carte\"><div", page)  # aucune carte d'avis rédigée
         self.assertNotIn("<blockquote", page)
+        self.assertNotIn('href="tel:"', page)  # aucun bouton d'appel factice sans numéro
         self.assertIn("Test Chauffage", page)
         lus = crm.lire(d, "prospects.csv")
         self.assertEqual([l["apercu"] for l in lus], ["oui", "", ""])

@@ -23,7 +23,7 @@ Activité choisie : **création de sites vitrines à prix fixe pour artisans, co
 | `LEGAL.md` | Statut, facturation, prospection légale, mentions légales |
 | `SOURCES.md` | Sources consultées, avec leur niveau de fiabilité |
 | `site-src/` → `site/` | Site de l'agence (source, puis version construite par `outils/construire_site.py`) et démos fictives. Voir `docs/SITE_AGENCE.md` |
-| `modeles-sites/` | Style commun, fiches d'exemple des 3 modèles (artisan, commande WhatsApp, beauté), photos de démo sous licence CC0 |
+| `modeles-sites/` | Thèmes des 3 modèles (artisan, commande WhatsApp, beauté), polices hébergées, fiches d'exemple, photos de démo sous licence CC0. Voir `docs/SITES_CLIENTS.md` |
 | `outils/` | `trouver_prospects.py`, `generer_site.py`, `rapport.py` (Python, aucune dépendance) |
 | `cockpit/` | Code du Cockpit privé (voir `docs/COCKPIT.md`) : prospects, actions du jour, ventes, messages |
 | `crm/` | Suivi : modèles CSV, statuts, données fictives de test. **Vos vraies données vont dans `crm/donnees/`, jamais publié** |

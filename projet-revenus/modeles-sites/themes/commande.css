@@ -1,0 +1,69 @@
+/* Thème COMMANDE (métiers de bouche) — « carte de maison » : éditorial, appétissant, la photo au centre.
+   Titres Gloock, fond blanc, accent couleur du client, produits sans cadres. */
+@font-face{font-family:"Gloock";src:url("polices/gloock-latin.woff2") format("woff2");font-weight:400;font-display:swap}
+:root{--titre:"Gloock",Georgia,serif;--fond:#fff;--fond-2:#f7f4f1;--encre:#231a17;--texte:#2d2420;--gris:#5e534d;--filet:#e3dbd4;--rayon:4px}
+h1{font-size:clamp(2.2rem,1.4rem + 3.2vw,3.8rem);font-weight:400;letter-spacing:-.01em}
+h2{font-size:clamp(1.7rem,1.3rem + 1.6vw,2.5rem);font-weight:400}
+h3{font-size:1.3rem;font-weight:400}
+.accueil .conteneur{display:grid;gap:2.5rem;grid-template-columns:minmax(0,1fr);align-items:end;padding-block:2.5rem 3.5rem}
+@media (min-width:60rem){.accueil .conteneur{grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:4rem;padding-block:4.5rem}}
+.accueil .chapo{color:var(--texte)}
+.actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2rem}
+.note-ligne{margin-top:1.25rem;color:var(--gris);font-size:.95rem}
+.photo-accueil img{width:100%;aspect-ratio:5/4;object-fit:cover;border-radius:var(--rayon)}
+.pratique{border-block:1px solid var(--filet)}
+.pratique dl{margin:0;display:grid;grid-template-columns:minmax(0,1fr);gap:0}
+@media (min-width:48rem){.pratique dl{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.pratique dl div{padding:1.2rem 0;border-bottom:1px solid var(--filet)}
+@media (min-width:48rem){.pratique dl div{border-bottom:0;padding:1.4rem 1.5rem 1.4rem 0}.pratique dl div+div{border-left:1px solid var(--filet);padding-left:1.5rem}}
+.pratique dt{font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-texte)}
+.pratique dd{margin:.3rem 0 0}
+.categories{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;margin-bottom:2rem;padding:0;list-style:none}
+.categories a{font-weight:650;color:var(--encre)}
+h3.cat{font-size:1.8rem;margin:2.5rem 0 1.25rem;padding-bottom:.6rem;border-bottom:1px solid var(--filet);scroll-margin-top:5.5rem}
+.produits{display:grid;gap:2.5rem 1.75rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:40rem){.produits{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:64rem){.produits{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.produit{display:flex;flex-direction:column}
+.produit .visuel{position:relative}
+.produit img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--rayon)}
+.produit .badge{position:absolute;left:.6rem;top:.6rem;background:#fff;color:var(--encre);font-size:.8rem;font-weight:700;padding:.3rem .6rem;border-radius:2px}
+.produit h4{font:400 1.35rem/1.2 var(--titre);color:var(--encre);margin:1rem 0 .35rem}
+.produit p{color:var(--gris);font-size:.98rem}
+.produit .ligne{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem;margin-top:auto;padding-top:.9rem}
+.produit .prix{font:400 1.4rem/1 var(--titre);color:var(--encre)}
+.produit select{min-height:2.75rem;padding:.4rem .6rem;border:1px solid #858c99;border-radius:var(--rayon);font:inherit;background:#fff;margin-top:.75rem;width:100%}
+.produit .btn{min-height:2.75rem;padding:.5rem 1rem}
+.precisions{list-style:none;padding:0;margin-top:2.5rem;color:var(--gris);font-size:.95rem}
+.precisions li+li{margin-top:.3rem}
+.gris{background:var(--fond-2)}
+.etapes{list-style:none;margin:0;padding:0;display:grid;gap:1.5rem 2rem;grid-template-columns:minmax(0,1fr);counter-reset:e}
+@media (min-width:48rem){.etapes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.etapes li{counter-increment:e}
+.etapes li::before{content:counter(e);display:block;font:400 2.4rem/1 var(--titre);color:var(--accent-texte);margin-bottom:.4rem}
+.etapes p{color:var(--gris)}
+.avis-resume{margin-bottom:2rem;color:var(--gris)}
+.avis-resume .note{font:400 2.4rem/1 var(--titre);color:var(--encre);margin-right:.5rem}
+.avis-liste{display:grid;gap:2.5rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:60rem){.avis-liste{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.avis-liste blockquote{margin:0}
+.avis-liste p{font:400 1.25rem/1.4 var(--titre);color:var(--encre);margin:.5rem 0 .8rem}
+.avis-liste footer{font-size:.9rem;color:var(--gris)}
+.deux{display:grid;gap:3rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:60rem){.deux{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+/* panier */
+.panier-bouton{position:fixed;right:max(1.25rem,env(safe-area-inset-right,0px));bottom:calc(1.25rem + env(safe-area-inset-bottom,0px));z-index:35;display:none}
+@media (min-width:48rem){.panier-bouton:not([disabled]){display:inline-flex}}
+.panier{position:fixed;inset:0;z-index:60;display:none}
+.panier.ouvert{display:block}
+.panier .fond{position:absolute;inset:0;background:rgba(20,14,12,.45)}
+.panier .tiroir{position:absolute;right:0;top:0;bottom:0;width:min(28rem,100%);background:#fff;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)}
+.tiroir header{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 1.25rem;border-bottom:1px solid var(--filet)}
+.tiroir header h2{font-size:1.6rem}
+.fermer{min-width:2.75rem;min-height:2.75rem;border:1px solid var(--filet);background:#fff;border-radius:var(--rayon);font-size:1.4rem;cursor:pointer}
+.tiroir .lignes{flex:1;overflow:auto;list-style:none;margin:0;padding:.5rem 1.25rem}
+.tiroir .lignes li{display:flex;justify-content:space-between;align-items:center;gap:.75rem;padding:.8rem 0;border-bottom:1px solid var(--filet)}
+.qte{display:flex;align-items:center;gap:.5rem}
+.qte button{min-width:2.5rem;min-height:2.5rem;border:1px solid var(--filet);background:#fff;border-radius:var(--rayon);font-size:1.1rem;cursor:pointer}
+.tiroir .pied-panier{padding:1rem 1.25rem;border-top:1px solid var(--filet);display:grid;gap:.8rem}
+.total{display:flex;justify-content:space-between;font:400 1.5rem/1 var(--titre);color:var(--encre)}

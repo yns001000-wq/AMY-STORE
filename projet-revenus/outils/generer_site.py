@@ -43,12 +43,6 @@ PAYS = {
 }
 JOURS = (("lun", "Lundi"), ("mar", "Mardi"), ("mer", "Mercredi"), ("jeu", "Jeudi"), ("ven", "Vendredi"), ("sam", "Samedi"), ("dim", "Dimanche"))
 
-# Ambiance graphique par modèle (polices système uniquement : rapide et sans transfert de données)
-STYLES = {
-    "artisan": {"titre": 'system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif', "bg2": "#f4f6f9"},
-    "commande-whatsapp": {"titre": 'Georgia,"Iowan Old Style","Palatino Linotype",serif', "bg2": "#f8f3ec"},
-    "beaute": {"titre": '"Didot","Bodoni MT","Iowan Old Style",Georgia,serif', "bg2": "#f7f2f0"},
-}
 ETAPES_DEFAUT = {
     "artisan": [("Vous appelez ou écrivez", "Décrivez votre besoin, photos à l'appui si possible."),
                 ("Devis clair et gratuit", "Un prix annoncé avant le début des travaux, sans surprise."),
@@ -156,10 +150,62 @@ def chemins_images(fiche: dict) -> list[str]:
     return chemins
 
 
-# ---------------------------------------------------------------- composants
-def entete_section(surtitre: str, titre: str, texte: str = "") -> str:
-    return (f'<div class="titre-section"><div class="surtitre">{e(surtitre)}</div><h2>{e(titre)}</h2>'
-            + (f"<p>{e(texte)}</p>" if texte else "") + "</div>")
+# ---------------------------------------------------------------- couleurs
+THEMES = {"artisan": ("artisan.css", "archivo-latin.woff2"),
+          "commande-whatsapp": ("commande.css", "gloock-latin.woff2"),
+          "beaute": ("beaute.css", "marcellus-latin.woff2")}
+
+
+def _rvb(hexa: str) -> tuple[float, float, float]:
+    return tuple(int(hexa[i:i + 2], 16) / 255 for i in (1, 3, 5))
+
+
+def _hexa(rvb) -> str:
+    return "#" + "".join(f"{max(0, min(255, round(c * 255))):02x}" for c in rvb)
+
+
+def _luminance(hexa: str) -> float:
+    def lin(c):
+        return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+    r, v, b = (lin(c) for c in _rvb(hexa))
+    return 0.2126 * r + 0.7152 * v + 0.0722 * b
+
+
+def contraste(a: str, b: str) -> float:
+    la, lb = sorted((_luminance(a), _luminance(b)), reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
+def _melange(hexa: str, autre: str, t: float) -> str:
+    a, b = _rvb(hexa), _rvb(autre)
+    return _hexa(tuple(x + (y - x) * t for x, y in zip(a, b)))
+
+
+def palette(couleur: str, encre: str) -> dict:
+    """Variantes de la couleur du client garantissant un contraste AA (4,5:1) là où elles sont utilisées."""
+    sur = "#ffffff" if contraste(couleur, "#ffffff") >= 4.5 else "#111111"
+    texte = couleur
+    for i in range(1, 21):  # assombrit jusqu'à être lisible en texte sur blanc
+        if contraste(texte, "#ffffff") >= 4.5:
+            break
+        texte = _melange(couleur, "#000000", i * 0.05)
+    clair = couleur
+    for i in range(1, 21):  # éclaircit jusqu'à être lisible sur le fond sombre (encre)
+        if contraste(clair, encre) >= 4.5:
+            break
+        clair = _melange(couleur, "#ffffff", i * 0.05)
+    return {"accent": couleur, "accent-fonce": _melange(couleur, "#000000", 0.18), "sur-accent": sur,
+            "accent-texte": texte, "accent-clair": clair}
+
+
+ENCRES = {"artisan": "#0f1b2d", "commande-whatsapp": "#231a17", "beaute": "#1b1716"}
+
+
+# ---------------------------------------------------------------- composants communs
+def tete_section(surtitre: str, titre: str, texte: str = "", niveau: str = "h2", ident: str = "") -> str:
+    id_attr = f' id="{ident}"' if ident else ""
+    return (f'<div class="tete-section"><span class="surtitre">{e(surtitre)}</span><{niveau}{id_attr}>{e(titre)}</{niveau}>'
+            + (f'<p class="chapo">{e(texte)}</p>' if texte else "") + "</div>")
 
 
 def etoiles(note: float) -> str:
@@ -167,81 +213,56 @@ def etoiles(note: float) -> str:
     return "★" * pleines + "☆" * (5 - pleines)
 
 
-def initiales(nom: str) -> str:
-    morceaux = [m for m in re.split(r"[\s.-]+", nom) if m]
-    return "".join(m[0] for m in morceaux[:2]).upper() or "?"
+def note_txt(note) -> str:
+    return str(note).replace(".", ",")
 
 
-def bloc_note_hero(fiche: dict) -> str:
+def ligne_note(fiche: dict) -> str:
     avis = fiche.get("avis") or {}
     if avis.get("note") is None or not avis.get("nombre"):
         return ""
-    src = f" {e(avis['source'])}" if avis.get("source") else ""
-    return (f'<div class="note-hero"><span class="etoiles" aria-hidden="true">{etoiles(avis["note"])}</span>'
-            f'<span><strong>{str(avis["note"]).replace(".", ",")}/5</strong> · {int(avis["nombre"])} avis{src}</span></div>')
+    src = f" sur {e(avis['source'])}" if avis.get("source") else ""
+    demo = " (exemple)" if fiche.get("demo") else ""
+    return (f'<p class="note-ligne"><span class="etoiles" aria-hidden="true">{etoiles(avis["note"])}</span> '
+            f'<strong>{note_txt(avis["note"])}/5</strong>, {int(avis["nombre"])} avis{src}{demo}</p>')
 
 
-def section_avis(fiche: dict) -> str:
-    """Bloc d'avis façon widget (note, nombre, cartes). Uniquement des avis réels pour un vrai client."""
+def section_avis(fiche: dict, classe: str = "") -> str:
+    """Avis réels uniquement pour un vrai client ; emplacement vide pour un aperçu ; exemples signalés pour une démo."""
     avis = fiche.get("avis") or {}
     liste = avis.get("liste") or []
     source = avis.get("source", "Google")
+    tete = tete_section("Avis clients", fiche.get("titre_avis", "Ce que disent nos clients"), ident="titre-avis")
     if not liste:
         if not fiche.get("avis_a_venir"):
             return ""
-        squelettes = "".join('<div class="avis-carte squelette" aria-hidden="true"><div class="av-tete"><span class="avatar"></span>'
-                             '<span class="barre" style="width:40%"></span></div><span class="barre"></span><span class="barre"></span>'
-                             '<span class="barre" style="width:70%"></span></div>' for _ in range(3))
-        return (f'<section id="avis"><div class="wrap">{entete_section("Avis clients", "Vos avis Google, mis en avant")}'
-                '<div class="avis-grille"><div class="avis-resume"><div class="avis-note">★</div><p><strong>Vos vrais avis apparaîtront ici</strong></p>'
-                '<p class="petit">Votre note, le nombre d\'avis et vos derniers commentaires Google, recopiés tels quels avec votre accord. '
-                'Aucun avis n\'est inventé.</p></div>'
-                f'<div class="avis-cartes">{squelettes}</div></div></div></section>')
+        return (f'<section class="section {classe}" id="avis" aria-labelledby="titre-avis"><div class="conteneur">{tete}'
+                '<p class="chapo"><strong>Vos vrais avis apparaîtront ici</strong> : votre note, le nombre d\'avis et vos derniers '
+                'commentaires Google, recopiés tels quels avec votre accord. Aucun avis n\'est inventé.</p></div></section>')
     resume = ""
     if avis.get("note") is not None and avis.get("nombre"):
-        boutons = ""
-        if avis.get("lien"):
-            boutons = f'<a class="btn btn-ghost" href="{e(avis["lien"])}" target="_blank" rel="noopener">Voir les avis sur {e(source)}</a>'
-        resume = (f'<div class="avis-resume"><div class="avis-source">Avis {e(source)}</div>'
-                  f'<div class="avis-note">{str(avis["note"]).replace(".", ",")}<small>/5</small></div>'
-                  f'<div class="etoiles grandes" aria-label="{avis["note"]} sur 5">{etoiles(avis["note"])}</div>'
-                  f'<p class="petit">Basé sur {int(avis["nombre"])} avis</p>{boutons}</div>')
-    demo = ('<div class="mention-demo">Démonstration : avis d\'exemple, entreprise fictive. '
-            "Sur votre site, seuls vos vrais avis clients apparaîtront, avec leur source.</div>") if fiche.get("demo") else ""
+        lien = f' <a href="{e(avis["lien"])}" rel="noopener" target="_blank">Voir tous les avis sur {e(source)}</a>' if avis.get("lien") else ""
+        resume = (f'<p class="avis-resume"><span class="note">{note_txt(avis["note"])}/5</span>'
+                  f'<span class="etoiles" aria-hidden="true">{etoiles(avis["note"])}</span> '
+                  f'{int(avis["nombre"])} avis sur {e(source)}.{lien}</p>')
+    demo = ('<p class="mention-demo">Démonstration : avis d\'exemple pour une entreprise fictive. '
+            "Sur votre site, seuls vos vrais avis apparaîtront, avec leur source.</p>") if fiche.get("demo") else ""
     cartes = "".join(
-        f'<blockquote class="avis-carte"><div class="av-tete"><span class="avatar" aria-hidden="true">{e(initiales(a["auteur"]))}</span>'
-        f'<span><strong>{e(a["auteur"])}</strong><br><span class="petit">{e(a.get("date", ""))}</span></span>'
-        f'<span class="av-src">{e(source)}</span></div>'
-        f'<div class="etoiles" aria-label="{int(a.get("note", 5))} sur 5">{etoiles(a.get("note", 5))}</div>'
-        f'<p>{e(a["texte"])}</p></blockquote>'
+        f'<blockquote><span class="etoiles" aria-label="Note : {int(a.get("note", 5))} sur 5">{etoiles(a.get("note", 5))}</span>'
+        f'<p>« {e(a["texte"])} »</p><footer>{e(a["auteur"])}'
+        + (f", {e(a['date'])}" if a.get("date") else "") + f", {e(source)}</footer></blockquote>"
         for a in liste)
-    return (f'<section id="avis"><div class="wrap">{entete_section("Avis clients", fiche.get("titre_avis", "Ils nous ont fait confiance"))}'
-            f'{demo}<div class="avis-grille">{resume}<div class="avis-cartes">{cartes}</div></div></div></section>')
+    return (f'<section class="section {classe}" id="avis" aria-labelledby="titre-avis"><div class="conteneur">{tete}{demo}{resume}'
+            f'<div class="avis-liste">{cartes}</div></div></section>')
 
 
-def section_galerie(fiche: dict, imgs: dict, titre: str, surtitre: str) -> str:
-    galerie = (fiche.get("images") or {}).get("galerie") or []
-    if not galerie:
-        return ""
-    figs = "".join(
-        f'<figure><img src="{e(imgs[g["src"]])}" alt="{e(g.get("legende") or fiche["metier"])}" loading="lazy" width="900" height="675">'
-        + (f"<figcaption>{e(g['legende'])}</figcaption>" if g.get("legende") else "") + "</figure>"
-        for g in galerie)
-    return f'<section class="alt" id="realisations"><div class="wrap">{entete_section(surtitre, titre)}<div class="galerie">{figs}</div></div></section>'
-
-
-def section_etapes(fiche: dict) -> str:
-    etapes = fiche.get("etapes") or [{"titre": t, "texte": x} for t, x in ETAPES_DEFAUT[fiche["modele"]]]
-    cartes = "".join(f'<div class="etape"><h3>{e(s["titre"])}</h3><p>{e(s["texte"])}</p></div>' for s in etapes)
-    return f'<section id="methode"><div class="wrap">{entete_section("Comment ça se passe", "Simple, du premier contact au résultat")}<div class="etapes">{cartes}</div></div></section>'
-
-
-def section_faq(fiche: dict) -> str:
+def section_faq(fiche: dict, classe: str = "") -> str:
     faq = fiche.get("faq") or []
     if not faq:
         return ""
-    items = "".join(f'<details class="faq"><summary>{e(q["q"])}</summary><p>{e(q["r"])}</p></details>' for q in faq)
-    return f'<section class="alt" id="faq"><div class="wrap" style="max-width:820px">{entete_section("Questions fréquentes", "Vous vous demandez peut-être…")}{items}</div></section>'
+    items = "".join(f"<details><summary>{e(q['q'])}</summary><p>{e(q['r'])}</p></details>" for q in faq)
+    return (f'<section class="section {classe}" id="faq" aria-labelledby="titre-faq"><div class="conteneur" style="max-width:52rem">'
+            f'{tete_section("Questions fréquentes", "Avant de nous contacter", ident="titre-faq")}<div class="faq">{items}</div></div></section>')
 
 
 def tableau_horaires(fiche: dict) -> str:
@@ -250,137 +271,198 @@ def tableau_horaires(fiche: dict) -> str:
         lignes = []
         for code, nom in JOURS:
             h = semaine.get(code, "")
-            texte = " · ".join(p.replace(":", "h").replace("-", " – ") for p in h.split(",")) if h else "Fermé"
+            texte = ", ".join(p.replace(":", "h").replace("-", " à ") for p in h.split(",")) if h else "Fermé"
             lignes.append(f'<tr data-jour="{code}"><td>{nom}</td><td>{e(texte)}</td></tr>')
-        return '<table class="horaires">' + "".join(lignes) + "</table>"
+        return '<table class="horaires"><caption class="cache">Horaires d\'ouverture</caption>' + "".join(lignes) + "</table>"
     horaires = fiche.get("horaires") or []
     if horaires:
-        return '<table class="horaires">' + "".join(f"<tr><td>{e(j)}</td><td>{e(h)}</td></tr>" for j, h in horaires) + "</table>"
-    return f'<p>Sur rendez-vous : <a href="tel:{e(chiffres(fiche["telephone"]))}">{e(fiche["telephone"])}</a></p>'
+        return '<table class="horaires"><caption class="cache">Horaires</caption>' + "".join(f"<tr><td>{e(j)}</td><td>{e(h)}</td></tr>" for j, h in horaires) + "</table>"
+    return '<p>Sur rendez-vous.</p>'
 
 
-def section_infos(fiche: dict, titre_zone: str) -> str:
-    zone = e(fiche.get("zone", fiche["ville"]))
-    communes = fiche.get("communes") or []
-    chips = ('<ul class="chips">' + "".join(f"<li>{e(c)}</li>" for c in communes) + "</ul>") if communes else ""
-    carte = ""
-    if fiche.get("adresse"):
-        q = quote(f"{fiche['adresse']}, {fiche['ville']}")
-        carte = f'<p style="margin-top:16px"><a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&query={q}" target="_blank" rel="noopener">{ICO_PIN} Itinéraire</a></p>'
-    return (f'<section id="infos"><div class="wrap deux"><div>{entete_section("Où nous trouver", titre_zone)}'
-            f'<p style="font-size:17px">{zone}</p>{chips}{carte}</div>'
-            f'<div>{entete_section("Horaires", "Quand nous joindre")}{tableau_horaires(fiche)}</div></div></section>')
+def statut_ouverture(fiche: dict) -> str:
+    return '<span class="statut" data-ouverture hidden></span>' if fiche.get("horaires_semaine") else ""
 
 
-def section_confiance(fiche: dict) -> str:
-    atouts = fiche.get("atouts") or []
-    if not atouts:
+def lien_itineraire(fiche: dict) -> str:
+    if not fiche.get("adresse"):
         return ""
-    items = "".join(f'<li><span class="ic">{ICO_CHECK}</span>{e(a)}</li>' for a in atouts)
-    return f'<div class="confiance"><div class="wrap"><ul>{items}</ul></div></div>'
+    q = quote(f"{fiche['adresse']}, {fiche['ville']}")
+    return (f'<p style="margin-top:1.25rem"><a class="btn btn--ligne" href="https://www.google.com/maps/search/?api=1&amp;query={q}" '
+            f'target="_blank" rel="noopener">{ICO_PIN} Itinéraire</a></p>')
 
 
-def formulaire(fiche: dict, champs_extra: str = "", bouton: str = "Envoyer ma demande") -> str:
-    if fiche.get("demo"):
-        attrs = 'name="demo" onsubmit="alert(\'Site de démonstration : formulaire désactivé.\');return false;"'
+def section_infos(fiche: dict, titre_zone: str, classe: str = "") -> str:
+    communes = fiche.get("communes") or []
+    liste = ('<ul class="communes">' + "".join(f"<li>{e(c)}</li>" for c in communes) + "</ul>") if communes else ""
+    return (f'<section class="section {classe}" id="infos" aria-labelledby="titre-infos"><div class="conteneur deux">'
+            f'<div>{tete_section("Où nous trouver", titre_zone, ident="titre-infos")}<p>{e(fiche.get("zone", fiche["ville"]))}</p>{liste}{lien_itineraire(fiche)}</div>'
+            f'<div>{tete_section("Horaires", "Quand nous joindre")}{tableau_horaires(fiche)}</div></div></section>')
+
+
+def formulaire(fiche: dict, titre_bouton: str = "Envoyer ma demande") -> str:
+    """Formulaire Netlify. Démo : désactivé avec un message clair (aucune donnée envoyée)."""
+    if fiche.get("demo") or fiche.get("_apercu"):
+        quoi = "Aperçu non publié" if fiche.get("_apercu") else "Site de démonstration"
+        attrs = f'name="demo" data-demo="{quoi} : le formulaire est désactivé, aucune donnée n\u2019a été envoyée."'
     else:
         attrs = 'name="contact" method="POST" action="/merci" data-netlify="true" netlify-honeypot="site_web"'
-    return (f'<form class="contact" {attrs}><input type="hidden" name="form-name" value="contact">'
-            '<p class="hp"><label>Ne pas remplir : <input name="site_web" tabindex="-1" autocomplete="off"></label></p>'
-            '<div><label for="f-nom">Nom</label><input id="f-nom" name="nom" required autocomplete="name"></div>'
-            '<div><label for="f-tel">Téléphone</label><input id="f-tel" name="telephone" type="tel" required autocomplete="tel"></div>'
-            f'{champs_extra}<div><label for="f-msg">Votre message</label><textarea id="f-msg" name="message" required></textarea></div>'
-            '<p class="petit">Vos informations servent uniquement à répondre à votre demande. Voir les <a href="mentions-legales.html">mentions légales</a>.</p>'
-            f'<button class="btn btn-main" type="submit">{e(bouton)}</button></form>')
-
-
-def section_contact(fiche: dict, titre: str, texte: str, extra: str = "", bouton: str = "Envoyer ma demande") -> str:
-    tel = e(fiche["telephone"])
-    coord = [f'<p><strong>Téléphone :</strong> <a href="tel:{e(chiffres(fiche["telephone"]))}">{tel}</a></p>']
-    if fiche.get("email"):
-        coord.append(f'<p><strong>Email :</strong> <a href="mailto:{e(fiche["email"])}">{e(fiche["email"])}</a></p>')
-    if fiche.get("adresse"):
-        coord.append(f'<p><strong>Adresse :</strong> {e(fiche["adresse"])}</p>')
-    if fiche.get("delai_reponse"):
-        coord.append(f'<p class="petit">{e(fiche["delai_reponse"])}</p>')
-    return (f'<section class="alt" id="contact"><div class="wrap deux"><div>{entete_section("Contact", titre, texte)}'
-            f'<div class="coord">{"".join(coord)}</div></div>{formulaire(fiche, extra, bouton)}</div></section>')
+    return (f'<form class="form" {attrs} novalidate><input type="hidden" name="form-name" value="contact">'
+            '<p class="piege"><label for="site_web">Ne pas remplir</label><input id="site_web" name="site_web" tabindex="-1" autocomplete="off"></p>'
+            '<div class="champ"><label for="f-nom">Nom</label><input id="f-nom" name="nom" autocomplete="name" required aria-describedby="e-nom"><p class="erreur" id="e-nom"></p></div>'
+            '<div class="champ"><label for="f-tel">Téléphone</label><input id="f-tel" name="telephone" type="tel" autocomplete="tel" required aria-describedby="e-tel"><p class="erreur" id="e-tel"></p></div>'
+            '<div class="champ"><label for="f-msg">Votre besoin</label><textarea id="f-msg" name="message" required aria-describedby="e-msg"></textarea><p class="erreur" id="e-msg"></p></div>'
+            '<p class="petit">Vos informations servent uniquement à répondre à votre demande. <a href="mentions-legales.html">Mentions légales et données personnelles</a>.</p>'
+            '<p class="retour" role="alert"></p>'
+            f'<button class="btn" type="submit">{e(titre_bouton)}</button></form>')
 
 
 def pied(fiche: dict) -> str:
     reseaux = fiche.get("reseaux") or {}
-    liens = " · ".join(f'<a href="{e(u)}" target="_blank" rel="noopener">{e(n.capitalize())}</a>' for n, u in reseaux.items() if u)
-    return (f'<footer class="bas"><div class="wrap"><div><h3>{e(fiche["nom"])}</h3><p>{e(fiche["metier"])} — {e(fiche["ville"])}</p>'
-            + (f"<p>{liens}</p>" if liens else "") + "</div>"
-            f'<div><h3>Contact</h3><p><a href="tel:{e(chiffres(fiche["telephone"]))}">{e(fiche["telephone"])}</a></p>'
-            + (f'<p><a href="mailto:{e(fiche["email"])}">{e(fiche["email"])}</a></p>' if fiche.get("email") else "") + "</div>"
-            f'<div><h3>Informations</h3><p><a href="mentions-legales.html">Mentions légales</a></p><p>© {_dt.date.today().year} {e(fiche["nom"])}</p></div>'
+    liens = "".join(f'<li><a href="{e(u)}" rel="noopener" target="_blank">{e(n.capitalize())}</a></li>' for n, u in reseaux.items() if u)
+    tel = e(fiche["telephone"])
+    tel_html = f'<li><a href="tel:{e(chiffres(fiche["telephone"]))}">{tel}</a></li>' if chiffres(fiche["telephone"]) else ""
+    mail = f'<li><a href="mailto:{e(fiche["email"])}">{e(fiche["email"])}</a></li>' if fiche.get("email") else ""
+    return (f'<footer class="pied"><div class="conteneur"><div><p class="marque" style="color:#fff">{e(fiche["nom"])}</p>'
+            f'<p style="margin-top:.5rem">{e(fiche["metier"])}, {e(fiche["ville"])}</p></div>'
+            + (f'<div><h2>Contact</h2><ul>{tel_html}{mail}{liens}</ul></div>' if tel_html or mail or liens else "")
+            + f'<div><h2>Informations</h2><ul><li><a href="mentions-legales.html">Mentions légales</a></li><li>© {_dt.date.today().year} {e(fiche["nom"])}</li></ul></div>'
             "</div></footer>")
 
 
+SCRIPT_COMMUN = """<script>(function(){
+  var b = document.querySelector('.btn-menu'), n = document.getElementById('nav');
+  if (b && n){ b.addEventListener('click', function(){ var o = n.classList.toggle('ouvert'); b.setAttribute('aria-expanded', o); });
+    n.addEventListener('click', function(e){ if (e.target.closest('a')){ n.classList.remove('ouvert'); b.setAttribute('aria-expanded', 'false'); } });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && n.classList.contains('ouvert')){ n.classList.remove('ouvert'); b.setAttribute('aria-expanded', 'false'); b.focus(); } }); }
+  var f = document.querySelector('form.form'); if (!f) return;
+  var regles = {nom:'Indiquez votre nom.', telephone:'Indiquez un numéro de téléphone valide.', message:'Décrivez votre besoin en quelques mots.'};
+  function ok(c){ var v = c.value.trim(), m = '';
+    if (!v) m = regles[c.name]; else if (c.name === 'telephone' && !/^[+0-9 ().-]{8,20}$/.test(v)) m = regles.telephone;
+    var z = document.getElementById(c.getAttribute('aria-describedby')); if (z) z.textContent = m; c.setAttribute('aria-invalid', m ? 'true' : 'false'); return !m; }
+  f.addEventListener('submit', function(e){ var r = f.querySelector('.retour'), premier = null; r.textContent = '';
+    ['nom','telephone','message'].forEach(function(n){ var c = f.elements[n]; if (c && !ok(c) && !premier) premier = c; });
+    if (premier){ e.preventDefault(); premier.focus(); return; }
+    if (f.hasAttribute('data-demo')){ e.preventDefault(); r.textContent = f.getAttribute('data-demo'); } });
+})();</script>"""
+
+
 def script_ouverture(fiche: dict) -> str:
-    """Badge « Ouvert / Fermé maintenant » et surlignage du jour (heure du navigateur du visiteur)."""
+    """Statut « Ouvert / Fermé » et jour surligné, calculés avec l'heure du visiteur."""
     if not fiche.get("horaires_semaine"):
         return ""
     return """<script>(function(){
-  var H = %s, codes = ["dim","lun","mar","mer","jeu","ven","sam"], now = new Date(), code = codes[now.getDay()];
-  var row = document.querySelector('tr[data-jour="' + code + '"]'); if (row) row.className = "aujourdhui";
-  var m = now.getHours() * 60 + now.getMinutes(), ouvert = false;
-  (H[code] || "").split(",").forEach(function(p){ if(!p) return; var t = p.split("-"), a = t[0].split(":"), b = t[1].split(":");
-    if (m >= +a[0]*60 + +a[1] && m < +b[0]*60 + +b[1]) ouvert = true; });
-  document.querySelectorAll("[data-ouverture]").forEach(function(el){
-    el.textContent = ouvert ? "Ouvert maintenant" : "Fermé pour le moment"; el.className = "pill " + (ouvert ? "ouvert" : "ferme"); el.hidden = false; });
+  var H = %s, codes = ["dim","lun","mar","mer","jeu","ven","sam"], d = new Date(), c = codes[d.getDay()];
+  var l = document.querySelector('tr[data-jour="' + c + '"]'); if (l) l.className = "aujourdhui";
+  var m = d.getHours() * 60 + d.getMinutes(), o = false;
+  (H[c] || "").split(",").forEach(function(p){ if (!p) return; var t = p.split("-"), a = t[0].split(":"), b = t[1].split(":");
+    if (m >= +a[0] * 60 + +a[1] && m < +b[0] * 60 + +b[1]) o = true; });
+  document.querySelectorAll("[data-ouverture]").forEach(function(el){ el.textContent = o ? "Ouvert en ce moment" : "Fermé en ce moment"; el.className = "statut " + (o ? "ouvert" : "ferme"); el.hidden = false; });
 })();</script>""" % json_sur(fiche["horaires_semaine"])
 
 
-# ---------------------------------------------------------------- pages
-def page(fiche: dict, imgs: dict, apercu: bool, corps: str, menu: list[tuple[str, str]], cta_entete: str,
-         barre: str, scripts: str = "") -> str:
-    style = STYLES[fiche["modele"]]
-    css = (MODELES / "commun.css").read_text(encoding="utf-8")
+def lien_wa(fiche: dict, texte: str) -> str:
+    return f"https://wa.me/{fiche['whatsapp']}?text=" + quote(texte, safe="")
+
+
+TAILLES_DEFAUT = "(min-width: 52rem) 50vw, 100vw"
+
+
+def img_tag(imgs: dict, chemin: str, alt: str, classe_lazy: bool = True, largeur: int = 900, hauteur: int = 675,
+            tailles: str = TAILLES_DEFAUT) -> str:
+    charge = ' loading="lazy" decoding="async"' if classe_lazy else ' fetchpriority="high"'
+    srcset = imgs.get(chemin + "|srcset")
+    jeu = f' srcset="{e(srcset)}" sizes="{e(tailles)}"' if srcset else ""
+    return f'<img src="{e(imgs[chemin])}"{jeu} alt="{e(alt)}" width="{largeur}" height="{hauteur}"{charge}>'
+
+
+def optimiser_image(source: Path, dossier_img: Path) -> tuple[str, str] | None:
+    """Convertit une photo en WebP (720 et 1440 px de large au plus). Nécessite Pillow ; sinon None (copie simple)."""
+    try:
+        from PIL import Image, ImageOps
+    except ImportError:
+        return None
+    variantes = []
+    with Image.open(source) as brute:
+        im = ImageOps.exif_transpose(brute).convert("RGB")
+        for largeur in (720, 1440):
+            if largeur > im.width and variantes:
+                break
+            cible = min(largeur, im.width)
+            nom = f"{source.stem}-{cible}.webp"
+            im.resize((cible, round(im.height * cible / im.width)), Image.LANCZOS).save(dossier_img / nom, "WEBP", quality=78, method=4)
+            variantes.append((nom, cible))
+    return "img/" + variantes[0][0], ", ".join(f"img/{n} {w}w" for n, w in variantes)
+
+
+# ---------------------------------------------------------------- page
+def favicon(nom: str, pal: dict) -> str:
+    """Icône d'onglet : initiale du client sur sa couleur (SVG intégré, aucun fichier à fournir)."""
+    lettre = html.escape((re.sub(r"[^\w]", "", nom) or "?")[0].upper())
+    svg = (f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='{pal['accent']}'/>"
+           f"<text x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='700' text-anchor='middle' fill='{pal['sur-accent']}'>{lettre}</text></svg>")
+    return "data:image/svg+xml," + quote(svg, safe="/:=' ,")
+
+
+def page(fiche: dict, apercu: bool, corps: str, menu: list[tuple[str, str]], cta_entete: str, barre: str, scripts: str = "", imgs: dict | None = None) -> str:
+    modele = fiche["modele"]
+    css = (MODELES / "themes" / "base.css").read_text(encoding="utf-8") + (MODELES / "themes" / THEMES[modele][0]).read_text(encoding="utf-8")
+    pal = palette(fiche.get("couleur", "#1f5fbf"), ENCRES[modele])
+    variables = ":root{" + ";".join(f"--{k}:{v}" for k, v in pal.items()) + "}"
     pays = fiche.get("pays", "FR")
+    titre_page = f"{fiche['nom']}, {fiche['metier'].lower()} à {fiche['ville']}"
     meta = fiche.get("meta_description") or f"{fiche['nom']}, {fiche['metier'].lower()} à {fiche['ville']}. {fiche['accroche']}"
     jsonld = {"@context": "https://schema.org", "@type": fiche.get("type_schema", "LocalBusiness"), "name": fiche["nom"],
-              "description": fiche["description"], "telephone": fiche["telephone"], "areaServed": fiche.get("zone", fiche["ville"]),
+              "description": fiche["description"], "areaServed": fiche.get("zone", fiche["ville"]),
               "address": {"@type": "PostalAddress", "addressLocality": fiche["ville"], "addressCountry": pays}}
+    if chiffres(fiche["telephone"]):
+        jsonld["telephone"] = fiche["telephone"]
     if fiche.get("email"):
         jsonld["email"] = fiche["email"]
     avis = fiche.get("avis") or {}
     if avis.get("note") is not None and avis.get("nombre") and not fiche.get("demo"):
         jsonld["aggregateRating"] = {"@type": "AggregateRating", "ratingValue": avis["note"], "reviewCount": avis["nombre"]}
-    if (fiche.get("images") or {}).get("hero"):
+    if imgs and (fiche.get("images") or {}).get("hero"):
         jsonld["image"] = imgs[fiche["images"]["hero"]]
-    nav = "".join(f'<a href="#{a}">{e(t)}</a>' for a, t in menu)
+    nav = "".join(f'<li><a href="#{a}">{e(t)}</a></li>' for a, t in menu)
+    police = THEMES[modele][1]
+    bandeau = ""
+    if apercu:
+        bandeau = f'<aside class="bandeau-info" aria-label="Information sur cette page"><p>Aperçu de proposition préparé pour {e(fiche["nom"])} : non publié, non contractuel. Textes et visuels à valider ensemble.</p></aside>'
+    elif fiche.get("demo"):
+        bandeau = '<aside class="bandeau-info" aria-label="Information sur cette page"><p>Site de démonstration réalisé par Mysite : entreprise, avis et coordonnées fictifs.</p></aside>'
     return f"""<!DOCTYPE html>
 <html lang="fr-{pays}">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{e(fiche['nom'])} — {e(fiche['metier'])} à {e(fiche['ville'])}</title>
+<title>{e(titre_page)}</title>
 <meta name="description" content="{e(meta[:300])}">
 {'<meta name="robots" content="noindex, nofollow">' if apercu else ''}
-<meta property="og:title" content="{e(fiche['nom'])} — {e(fiche['metier'])} à {e(fiche['ville'])}">
+<meta property="og:title" content="{e(titre_page)}">
 <meta property="og:description" content="{e(meta[:300])}">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="{fiche.get('couleur', '#1f5fbf')}">
+<meta name="theme-color" content="{pal['accent']}">
+<link rel="icon" href="{favicon(fiche['nom'], pal)}">
+<link rel="preload" href="polices/{police}" as="font" type="font/woff2" crossorigin>
 <script type="application/ld+json">{json_sur(jsonld)}</script>
-<style>{css}
-:root{{--brand:{fiche.get('couleur', '#1f5fbf')};--titre:{style['titre']};--bg2:{style['bg2']}}}</style>
+<style>{css}{variables}</style>
 </head>
-<body>
-{('<div class="apercu">Aperçu de proposition réalisé pour ' + e(fiche['nom']) + ' — non publié, non contractuel. Textes et visuels à valider ensemble.</div>') if apercu else ''}
-{'<div class="apercu">Site de démonstration réalisé par Mysite — entreprise, avis et coordonnées fictifs.</div>' if fiche.get('demo') and not apercu else ''}
-{('<div class="bandeau">' + e(fiche['bandeau']) + '</div>') if fiche.get('bandeau') else ''}
-<header class="top"><div class="wrap">
-  <a class="logo" href="#">{e(fiche['nom'])}<small>{e(fiche['metier'])} · {e(fiche['ville'])}</small></a>
-  <nav class="menu" aria-label="Menu principal">{nav}</nav>
+<body class="{'a-barre' if barre else ''}">
+<a class="evitement" href="#contenu">Aller au contenu</a>
+{bandeau}
+<header class="entete"><div class="conteneur">
+  <a class="marque" href="#contenu">{e(fiche['nom'])}<small>{e(fiche['metier'])}, {e(fiche['ville'])}</small></a>
+  <nav class="nav" id="nav" aria-label="Navigation principale"><ul>{nav}</ul></nav>
   {cta_entete}
+  <button class="btn-menu" type="button" aria-expanded="false" aria-controls="nav"><span class="cache">Menu</span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 </div></header>
-<main>
+<main id="contenu">
 {corps}
 </main>
 {pied(fiche)}
-<div class="barre-mobile">{barre}</div>
+{('<div class="barre-mobile" role="region" aria-label="Actions rapides">' + barre + '</div>') if barre else ''}
+{SCRIPT_COMMUN}
 {script_ouverture(fiche)}
 {scripts}
 </body>
@@ -388,171 +470,179 @@ def page(fiche: dict, imgs: dict, apercu: bool, corps: str, menu: list[tuple[str
 """
 
 
-def hero(fiche: dict, imgs: dict, boutons: str, kicker_extra: str = "") -> str:
-    """Haut de page moderne : texte à gauche, grande photo arrondie à droite avec badge flottant."""
-    h = (fiche.get("images") or {}).get("hero")
-    ouverture = '<span class="pill" data-ouverture hidden></span>' if fiche.get("horaires_semaine") else ""
-    titre = fiche.get("titre") or f"{fiche['metier']} à {fiche['ville']}"
-    avis = fiche.get("avis") or {}
-    badge = ""
-    if avis.get("note") is not None and avis.get("nombre"):
-        badge = (f'<div class="flottant"><span class="etoiles">★</span><span><strong>{str(avis["note"]).replace(".", ",")}/5</strong>'
-                 f'<br><span class="petit">{int(avis["nombre"])} avis {e(avis.get("source", ""))}</span></span></div>')
-    elif fiche.get("atouts"):
-        badge = f'<div class="flottant"><span class="etoiles">✓</span><span><strong>{e(fiche["atouts"][0])}</strong></span></div>'
-    visuel = (f'<div class="visuel"><img src="{e(imgs[h])}" alt="{e(fiche["nom"])}" width="900" height="700" fetchpriority="high">{badge}</div>'
-              if h else "")
-    return (f'<section class="hero2{" sans-photo" if not h else ""}"><div class="wrap"><div class="txt"><div class="kicker">{ouverture}{kicker_extra}'
-            f'<span class="pill">{ICO_PIN} {e(fiche.get("zone_courte") or fiche["ville"])}</span></div>'
-            f'<h1>{e(titre)}</h1><p class="lead">{e(fiche["accroche"])}</p><div class="cta">{boutons}</div>{bloc_note_hero(fiche)}</div>'
-            f'{visuel}</div></section>')
-
-
-def bande_cta(fiche: dict, titre: str, texte: str, boutons: str) -> str:
-    return f'<section class="cta-final"><div class="wrap"><h2>{e(titre)}</h2><p>{e(texte)}</p><div class="cta">{boutons}</div></div></section>'
-
-
-def lien_wa(fiche: dict, texte: str) -> str:
-    return f"https://wa.me/{fiche['whatsapp']}?text=" + quote(texte, safe="")
-
-
-def corps_artisan(fiche: dict, imgs: dict) -> tuple[str, list, str, str, str]:
-    tel_lien = e(chiffres(fiche["telephone"]))
+# ---------------------------------------------------------------- ARTISAN
+def corps_artisan(fiche: dict, imgs: dict):
+    tel = chiffres(fiche["telephone"])
+    lien_tel = f"tel:{tel}" if tel else "#contact"  # sans numéro (aperçu), le bouton mène au formulaire
+    a_tel = bool(re.search(r"\d", fiche["telephone"]))
+    libelle = f"Appeler le {e(fiche['telephone'])}" if a_tel else "Appeler"
     wa = fiche.get("whatsapp")
-    libelle = f"Appeler le {e(fiche['telephone'])}" if re.search(r"\d", fiche["telephone"]) else "Appeler"
-    boutons = f'<a class="btn btn-main" href="tel:{tel_lien}">{ICO_TEL} {libelle}</a>'
-    if wa:
-        boutons += f'<a class="btn btn-wa" href="{e(lien_wa(fiche, "Bonjour, je souhaite un devis pour : "))}" target="_blank" rel="noopener">WhatsApp</a>'
-    boutons += '<a class="btn btn-light" href="#contact">Devis gratuit</a>'
-    services = "".join(
-        f'<div class="card"><h3>{e(s["titre"])}</h3><p>{e(s.get("texte", ""))}</p>'
-        + (f'<div class="prix">{e(s["prix"])}</div>' if s.get("prix") else "") + "</div>"
-        for s in fiche.get("services") or [])
-    corps = (hero(fiche, imgs, boutons) + section_confiance(fiche)
-             + (f'<section id="services"><div class="wrap">{entete_section("Nos services", "Ce que nous faisons pour vous", fiche.get("intro_services", ""))}<div class="grid">{services}</div></div></section>' if services else "")
-             + section_galerie(fiche, imgs, "Quelques réalisations", "Réalisations")
-             + section_etapes(fiche) + section_avis(fiche)
-             + f'<section class="alt"><div class="wrap deux"><div>{entete_section("Qui sommes-nous ?", fiche.get("titre_apropos", "Un artisan près de chez vous"))}<p style="font-size:17px">{e(fiche["description"])}</p></div>'
-             + f'<div>{entete_section(*fiche.get("bloc_appel", ("Urgence ?", "Appelez directement")))}<p><a class="btn btn-main" href="tel:{tel_lien}">{ICO_TEL} {e(fiche["telephone"])}</a></p><p class="petit">{e(fiche.get("delai_reponse", ""))}</p></div></div></section>'
-             + section_infos(fiche, "Zone d'intervention") + section_faq(fiche)
-             + bande_cta(fiche, "Un problème ? Une question ?", "Appelez maintenant ou demandez votre devis : réponse rapide.",
-                         f'<a class="btn btn-light" href="tel:{tel_lien}">{ICO_TEL} {libelle}</a><a class="btn btn-ghost-clair" href="#contact">Demander un devis</a>')
-             + section_contact(fiche, "Demandez votre devis gratuit", "Décrivez votre besoin : réponse rapide, sans engagement.", bouton="Recevoir mon devis"))
-    menu = [("services", "Services"), ("realisations", "Réalisations"), ("avis", "Avis"), ("infos", "Zone"), ("contact", "Contact")]
-    entete = f'<a class="btn btn-main" href="tel:{tel_lien}">{ICO_TEL} Appeler</a>'
-    barre = f'<a class="btn btn-main" href="tel:{tel_lien}">{ICO_TEL} Appeler</a>' + (
-        f'<a class="btn btn-wa" href="{e(lien_wa(fiche, "Bonjour, je souhaite un devis pour : "))}" target="_blank" rel="noopener">WhatsApp</a>' if wa
-        else '<a class="btn btn-ghost" href="#contact">Devis</a>')
+    lien_devis = lien_wa(fiche, "Bonjour, je souhaite un devis pour : ") if wa else ""
+    h = (fiche.get("images") or {}).get("hero")
+    actions = (f'<a class="btn btn--appel" href="{e(lien_tel)}">{ICO_TEL} {libelle}</a><a class="btn btn--ligne" href="#contact">Demander un devis</a>'
+               if tel else '<a class="btn btn--appel" href="#contact">Demander un devis</a>')
+    appel = f"{ICO_TEL} Appeler" if tel else "Nous contacter"
+    accueil = (f'<section class="accueil" aria-labelledby="titre-accueil"><div class="conteneur"><div>'
+               f'<p class="lieu"><span>{ICO_PIN} {e(fiche.get("zone_courte") or fiche["ville"])}</span>{statut_ouverture(fiche)}</p>'
+               f'<h1 id="titre-accueil">{e(fiche.get("titre") or fiche["metier"] + " à " + fiche["ville"])}</h1>'
+               f'<p class="chapo">{e(fiche["accroche"])}</p><div class="actions">{actions}</div>{ligne_note(fiche)}'
+               + (f'<p class="petit">{e(fiche["bandeau"])}</p>' if fiche.get("bandeau") else "") + "</div>"
+               + (f'<div class="photo-accueil">{img_tag(imgs, h, fiche["nom"] + ", " + fiche["metier"], False, 900, 675)}</div>' if h else "")
+               + "</div></section>")
+    atouts = fiche.get("atouts") or []
+    bande = (f'<div class="atouts"><div class="conteneur"><ul>' + "".join(f"<li>{ICO_CHECK}{e(a)}</li>" for a in atouts) + "</ul></div></div>") if atouts else ""
+    services = "".join(f'<div class="service"><h3>{e(s["titre"])}</h3><p>{e(s.get("texte", ""))}</p>'
+                       + (f'<span class="prix">{e(s["prix"])}</span>' if s.get("prix") else "<span></span>") + "</div>"
+                       for s in fiche.get("services") or [])
+    sec_services = (f'<section class="section" id="services" aria-labelledby="titre-services"><div class="conteneur">'
+                    f'{tete_section("Services", fiche.get("titre_services", "Ce que nous faisons"), fiche.get("intro_services", ""), ident="titre-services")}'
+                    f'<div class="services">{services}</div></div></section>') if services else ""
+    galerie = (fiche.get("images") or {}).get("galerie") or []
+    sec_real = (f'<section class="section gris" id="realisations" aria-labelledby="titre-real"><div class="conteneur">'
+                f'{tete_section(fiche.get("libelle_realisations", "Réalisations"), fiche.get("titre_realisations", "Des chantiers récents"), ident="titre-real")}<div class="realisations">'
+                + "".join(f'<figure>{img_tag(imgs, g["src"], g.get("legende") or fiche["metier"], True, 600, 600, "(min-width: 52rem) 25vw, 50vw")}'
+                          + (f'<figcaption>{e(g["legende"])}</figcaption>' if g.get("legende") else "") + "</figure>" for g in galerie)
+                + "</div></div></section>") if galerie else ""
+    etapes = fiche.get("etapes") or [{"titre": t, "texte": x} for t, x in ETAPES_DEFAUT["artisan"]]
+    sec_etapes = (f'<section class="section" id="methode" aria-labelledby="titre-methode"><div class="conteneur">'
+                  f'{tete_section("Comment ça se passe", "Trois étapes, sans surprise", ident="titre-methode")}<ol class="etapes">'
+                  + "".join(f'<li><h3>{e(s["titre"])}</h3><p>{e(s["texte"])}</p></li>' for s in etapes) + "</ol></div></section>")
+    apropos = (f'<section class="section gris" id="apropos" aria-labelledby="titre-apropos"><div class="conteneur" style="max-width:52rem">'
+               f'{tete_section("Qui sommes-nous", fiche.get("titre_apropos", "Un artisan près de chez vous"), ident="titre-apropos")}<p>{e(fiche["description"])}</p></div></section>')
+    contact = (f'<section class="section contact" id="contact" aria-labelledby="titre-contact"><div class="conteneur"><div>'
+               f'<span class="surtitre">Contact</span><h2 id="titre-contact">{e(fiche.get("titre_contact", "Un besoin, une urgence ?"))}</h2>'
+               + (f'<a class="tel-geant" href="{e(lien_tel)}">{e(fiche["telephone"])}</a>' if a_tel else "")
+               + '<div class="infos-contact">'
+               + (f'<p>{e(fiche["delai_reponse"])}</p>' if fiche.get("delai_reponse") else "")
+               + (f'<p>Email : <a href="mailto:{e(fiche["email"])}">{e(fiche["email"])}</a></p>' if fiche.get("email") else "")
+               + (f'<p><a href="{e(lien_devis)}" rel="noopener" target="_blank">{e(fiche.get("texte_whatsapp", "Envoyer une photo du problème sur WhatsApp"))}</a></p>' if wa else "")
+               + f'</div></div>{formulaire(fiche, "Recevoir mon devis")}</div></section>')
+    corps = (accueil + bande + sec_services + sec_real + sec_etapes + section_avis(fiche) + apropos
+             + section_infos(fiche, fiche.get("titre_zone", "Zone d'intervention")) + section_faq(fiche, "gris") + contact)
+    menu = [(a, t) for a, t, ok in [("services", "Services", sec_services), ("realisations", fiche.get("libelle_realisations", "Réalisations"), sec_real),
+                                     ("avis", "Avis", "id=\"avis\"" in corps), ("infos", "Zone et horaires", True)] if ok]
+    entete = f'<a class="btn" href="{e(lien_tel)}">{appel}</a>'
+    barre = f'<a class="btn" href="{e(lien_tel)}">{appel}</a>' + (
+        f'<a class="btn btn--wa" href="{e(lien_devis)}" rel="noopener" target="_blank">WhatsApp</a>' if wa else '<a class="btn btn--ligne" href="#contact">Devis</a>')
     return corps, menu, entete, barre, ""
 
 
-def corps_beaute(fiche: dict, imgs: dict) -> tuple[str, list, str, str, str]:
-    resa = fiche.get("reservation_url") or (lien_wa(fiche, "Bonjour, je souhaite prendre rendez-vous pour : ") if fiche.get("whatsapp") else f"tel:{chiffres(fiche['telephone'])}")
+# ---------------------------------------------------------------- BEAUTÉ
+def corps_beaute(fiche: dict, imgs: dict):
+    resa = (fiche.get("reservation_url")
+            or (lien_wa(fiche, "Bonjour, je souhaite prendre rendez-vous pour : ") if fiche.get("whatsapp") else "")
+            or (f"tel:{chiffres(fiche['telephone'])}" if chiffres(fiche["telephone"]) else "#infos"))  # aperçu sans contact : accès et horaires
     cible = ' target="_blank" rel="noopener"' if resa.startswith("http") else ""
-    boutons = f'<a class="btn btn-main" href="{e(resa)}"{cible}>Prendre rendez-vous</a><a class="btn btn-light" href="#tarifs">Voir les tarifs</a>'
+    tel = chiffres(fiche["telephone"])
+    h = (fiche.get("images") or {}).get("hero")
+    accueil = (f'<section class="accueil" aria-labelledby="titre-accueil">'
+               + (f'<div class="photo-accueil">{img_tag(imgs, h, "Intérieur du salon " + fiche["nom"], False, 900, 1000)}</div>' if h else "")
+               + f'<div class="texte"><p class="lieu"><span>{ICO_PIN} {e(fiche.get("zone_courte") or fiche["ville"])}</span>{statut_ouverture(fiche)}</p>'
+               f'<h1 id="titre-accueil">{e(fiche.get("titre") or fiche["metier"] + " à " + fiche["ville"])}</h1><p class="chapo">{e(fiche["accroche"])}</p>'
+               f'<div class="actions"><a class="btn" href="{e(resa)}"{cible}>Prendre rendez-vous</a><a class="btn btn--ligne" href="#tarifs">Voir les tarifs</a></div>'
+               f'{ligne_note(fiche)}</div></section>')
+    atouts = fiche.get("atouts") or []
+    bande = (f'<div class="atouts"><div class="conteneur"><ul>' + "".join(f"<li>{ICO_CHECK}{e(a)}</li>" for a in atouts) + "</ul></div></div>") if atouts else ""
     cats = []
     for c in fiche["prestations"]:
         lignes = "".join(
-            f'<tr><td><strong>{e(p["nom"])}</strong>' + (f'<br><span class="petit">{e(p["desc"])}</span>' if p.get("desc") else "")
-            + f'</td><td class="petit" style="white-space:nowrap">{e(p.get("duree", ""))}</td><td style="text-align:right;font-weight:700;white-space:nowrap">{e(p["prix"]) if isinstance(p.get("prix"), str) else euros(p.get("prix", 0))}</td></tr>'
-            for p in c.get("liste", []))
-        cats.append(f'<div class="card" style="padding:8px 8px 4px"><h3 style="padding:14px 14px 4px">{e(c["categorie"])}</h3><table class="horaires" style="border:none">{lignes}</table></div>')
-    tarifs = (f'<section id="tarifs"><div class="wrap">{entete_section("Prestations & tarifs", "Des prix clairs, affichés", fiche.get("intro_tarifs", ""))}'
-              f'<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">{"".join(cats)}</div>'
-              f'<p style="margin-top:24px"><a class="btn btn-main" href="{e(resa)}"{cible}>Réserver mon créneau</a></p></div></section>')
-    corps = (hero(fiche, imgs, boutons) + section_confiance(fiche) + tarifs
-             + section_galerie(fiche, imgs, "L'ambiance du salon", "En images")
-             + section_avis(fiche) + section_etapes(fiche)
-             + f'<section class="alt"><div class="wrap" style="max-width:820px">{entete_section("À propos", fiche.get("titre_apropos", "Une équipe à votre écoute"))}<p style="font-size:17px">{e(fiche["description"])}</p></div></section>'
-             + section_infos(fiche, "Le salon") + section_faq(fiche)
-             + bande_cta(fiche, "Envie de vous faire plaisir ?", "Réservez en quelques secondes.", f'<a class="btn btn-light" href="{e(resa)}"{cible}>Prendre rendez-vous</a><a class="btn btn-ghost-clair" href="tel:{e(chiffres(fiche["telephone"]))}">{ICO_TEL} Appeler</a>'))
-    menu = [("tarifs", "Tarifs"), ("realisations", "Galerie"), ("avis", "Avis"), ("infos", "Infos")]
-    entete = f'<a class="btn btn-main" href="{e(resa)}"{cible}>Réserver</a>'
-    barre = f'<a class="btn btn-light" href="tel:{e(chiffres(fiche["telephone"]))}">{ICO_TEL} Appeler</a><a class="btn btn-main" href="{e(resa)}"{cible}>Réserver</a>'
+            f'<li><div class="ligne"><span class="nom">{e(p["nom"])}</span><span class="points" aria-hidden="true"></span>'
+            f'<span class="prix">{e(p["prix"]) if isinstance(p.get("prix"), str) else euros(p.get("prix", 0))}</span></div>'
+            + (f'<p class="detail">{e(p.get("duree", ""))}{" · " if p.get("duree") and p.get("desc") else ""}{e(p.get("desc", ""))}</p>' if p.get("duree") or p.get("desc") else "")
+            + "</li>" for p in c.get("liste", []))
+        cats.append(f'<div><h3>{e(c["categorie"])}</h3><ul>{lignes}</ul></div>')
+    tarifs = (f'<section class="section" id="tarifs" aria-labelledby="titre-tarifs"><div class="conteneur">'
+              f'{tete_section("Prestations & tarifs", "Nos tarifs", fiche.get("intro_tarifs", "Prix affichés, durées indiquées. Le diagnostic est fait avec vous avant chaque couleur."), ident="titre-tarifs")}'
+              f'<div class="tarifs">{"".join(cats)}</div>'
+              f'<p style="margin-top:2.5rem"><a class="btn" href="{e(resa)}"{cible}>Réserver mon créneau</a></p></div></section>')
+    galerie = (fiche.get("images") or {}).get("galerie") or []
+    sec_gal = (f'<section class="section gris" id="galerie" aria-labelledby="titre-galerie"><div class="conteneur">'
+               f'{tete_section("Le salon", "En images", ident="titre-galerie")}<div class="galerie">'
+               + "".join(f'<figure>{img_tag(imgs, g["src"], g.get("legende") or "Le salon", True, 700, 700, "(min-width: 40rem) 60vw, 100vw")}'
+                         + (f'<figcaption>{e(g["legende"])}</figcaption>' if g.get("legende") else "") + "</figure>" for g in galerie[:3])
+               + "</div></div></section>") if galerie else ""
+    apropos = (f'<section class="section" id="apropos" aria-labelledby="titre-apropos"><div class="conteneur" style="max-width:48rem">'
+               f'{tete_section("À propos", fiche.get("titre_apropos", "Une équipe à votre écoute"), ident="titre-apropos")}<p>{e(fiche["description"])}</p></div></section>')
+    reserver = (f'<section class="section reserver" aria-labelledby="titre-reserver"><div class="conteneur"><h2 id="titre-reserver">Réservez votre moment</h2>'
+                f'<p>En ligne en quelques secondes, ou par téléphone.</p><div class="actions"><a class="btn" href="{e(resa)}"{cible}>Prendre rendez-vous</a>'
+                + (f'<a class="btn btn--ligne" href="tel:{e(tel)}">{ICO_TEL} {e(fiche["telephone"])}</a>' if tel else "") + "</div></div></section>")
+    corps = (accueil + bande + tarifs + sec_gal + section_avis(fiche) + apropos
+             + section_infos(fiche, "Le salon", "gris") + section_faq(fiche) + reserver)
+    menu = [(a, t) for a, t, ok in [("tarifs", "Tarifs", True), ("galerie", "Le salon", sec_gal), ("avis", "Avis", "id=\"avis\"" in corps), ("infos", "Accès et horaires", True)] if ok]
+    entete = f'<a class="btn" href="{e(resa)}"{cible}>Réserver</a>'
+    barre = (f'<a class="btn btn--ligne" href="tel:{e(tel)}">{ICO_TEL} Appeler</a>' if tel else "") + f'<a class="btn" href="{e(resa)}"{cible}>Réserver</a>'
     return corps, menu, entete, barre, ""
 
 
-def corps_commande(fiche: dict, imgs: dict) -> tuple[str, list, str, str, str]:
-    boutons = '<a class="btn btn-main" href="#carte">Voir la carte et commander</a>'
-    if fiche.get("reseaux", {}).get("instagram"):
-        boutons += f'<a class="btn btn-light" href="{e(fiche["reseaux"]["instagram"])}" target="_blank" rel="noopener">Instagram</a>'
+# ---------------------------------------------------------------- COMMANDE (métiers de bouche)
+def corps_commande(fiche: dict, imgs: dict):
+    h = (fiche.get("images") or {}).get("hero")
+    actions = '<a class="btn" href="#carte">Voir la carte et commander</a>'
+    if (fiche.get("reseaux") or {}).get("instagram"):
+        actions += f'<a class="btn btn--ligne" href="{e(fiche["reseaux"]["instagram"])}" rel="noopener" target="_blank">Instagram</a>'
+    accueil = (f'<section class="accueil" aria-labelledby="titre-accueil"><div class="conteneur"><div>'
+               f'<span class="surtitre">{e(fiche["metier"])}, {e(fiche["ville"])}</span>'
+               f'<h1 id="titre-accueil">{e(fiche.get("titre") or fiche["accroche"])}</h1><p class="chapo">{e(fiche["accroche"] if fiche.get("titre") else fiche["description"])}</p>'
+               f'<div class="actions">{actions}</div>{ligne_note(fiche)}<p style="margin-top:1rem">{statut_ouverture(fiche)}</p></div>'
+               + (f'<div class="photo-accueil">{img_tag(imgs, h, fiche["nom"] + " : une création de la maison", False, 1000, 800)}</div>' if h else "")
+               + "</div></section>")
+    pratique = [("Délai", fiche.get("delai_commande", "")), ("Retrait et livraison", fiche.get("mode_retrait", "")), ("Paiement", fiche.get("paiement", "Au retrait ou à la livraison. Aucun paiement en ligne."))]
+    bande = ('<div class="pratique"><div class="conteneur"><dl>' + "".join(f"<div><dt>{e(t)}</dt><dd>{e(v)}</dd></div>" for t, v in pratique if v)
+             + "</dl></div></div>")
     categories: dict[str, list] = {}
-    for i, p in enumerate(fiche["produits"]):
-        categories.setdefault(p.get("categorie", "La carte"), []).append((i, p))
-    onglets = "".join(f'<a class="pill-cat" href="#cat-{k}">{e(c)}</a>' for k, c in enumerate(categories)) if len(categories) > 1 else ""
+    for p in fiche["produits"]:
+        categories.setdefault(p.get("categorie", "La carte"), []).append(p)
+    onglets = ('<ul class="categories" aria-label="Catégories">' + "".join(f'<li><a href="#cat-{k}">{e(c)}</a></li>' for k, c in enumerate(categories)) + "</ul>") if len(categories) > 1 else ""
     blocs = []
     for k, (cat, prods) in enumerate(categories.items()):
-        cartes = []
-        for i, p in prods:
-            img = (f'<div class="pimg"><img src="{e(imgs[p["image"]])}" alt="{e(p["nom"])}" loading="lazy" width="900" height="675">'
-                   + (f'<span class="badge">{e(p["badge"])}</span>' if p.get("badge") else "") + "</div>") if p.get("image") else ""
+        items = []
+        for p in prods:
+            visuel = (f'<div class="visuel">{img_tag(imgs, p["image"], p["nom"], True, 800, 600, "(min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw")}'
+                      + (f'<span class="badge">{e(p["badge"])}</span>' if p.get("badge") else "") + "</div>") if p.get("image") else ""
             opts = "".join(f"<option>{e(o)}</option>" for o in p.get("options") or [])
-            select = f'<select aria-label="Option pour {e(p["nom"])}">{opts}</select>' if opts else ""
-            cartes.append(f'<article class="produit" data-produit data-nom="{e(p["nom"])}" data-prix="{float(p["prix"]):.2f}">{img}'
-                          f'<div class="pcorps"><h3>{e(p["nom"])}</h3><p>{e(p.get("desc", ""))}</p>{select}'
-                          f'<div class="pbas"><span class="pprix">{euros(float(p["prix"]))}</span><button class="btn btn-main btn-add" type="button">Ajouter</button></div></div></article>')
-        blocs.append(f'<h3 class="cat" id="cat-{k}">{e(cat)}</h3><div class="produits">{"".join(cartes)}</div>')
-    infos_cmd = "".join(f"<li>{e(x)}</li>" for x in [fiche.get("delai_commande", ""), fiche.get("mode_retrait", ""), fiche.get("allergenes", "")] if x)
-    carte = (f'<section id="carte"><div class="wrap">{entete_section("La carte", fiche.get("titre_carte", "Faites-vous plaisir"), "Ajoutez vos produits au panier, puis envoyez la commande sur WhatsApp en un geste.")}'
-             + (f'<nav class="onglets">{onglets}</nav>' if onglets else "") + "".join(blocs)
-             + (f'<ul class="infos-cmd">{infos_cmd}</ul>' if infos_cmd else "") + "</div></section>")
-    corps = (hero(fiche, imgs, boutons) + section_confiance(fiche) + carte + section_etapes(fiche) + section_avis(fiche)
-             + section_galerie(fiche, imgs, "Nos créations", "En images")
-             + f'<section class="alt"><div class="wrap" style="max-width:820px">{entete_section("Notre histoire", fiche.get("titre_apropos", "Fait maison, avec amour"))}<p style="font-size:17px">{e(fiche["description"])}</p></div></section>'
-             + section_infos(fiche, "Retrait et livraison") + section_faq(fiche)
-             + bande_cta(fiche, "Une envie gourmande ?", "Composez votre commande en deux minutes.", '<a class="btn btn-light" href="#carte">Voir la carte</a>'))
-    menu = [("carte", "La carte"), ("avis", "Avis"), ("infos", "Infos pratiques"), ("faq", "FAQ")]
-    entete = '<a class="btn btn-main" href="#carte">Commander</a>'
-    barre = (f'<button class="btn btn-wa" id="ouvrirPanier" type="button" disabled>{ICO_PANIER} <span id="panierResume">Panier vide</span></button>')
-    style = """<style>
-.onglets{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 8px;position:sticky;top:64px;z-index:5;background:var(--bg);padding:10px 0}
-.pill-cat{border:1px solid var(--line);border-radius:999px;padding:8px 16px;text-decoration:none;color:var(--ink);font-weight:600;font-size:14px;background:#fff}
-.pill-cat:hover{border-color:var(--brand);color:var(--brand)}
-h3.cat{font-size:24px;margin:28px 0 14px;scroll-margin-top:130px}
-.produits{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
-.produit{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow)}
-.pimg{position:relative;aspect-ratio:4/3;background:#eee}.pimg img{width:100%;height:100%;object-fit:cover}
-.badge{position:absolute;top:12px;left:12px;background:var(--brand);color:var(--brand-ink);font-size:12px;font-weight:700;border-radius:999px;padding:5px 10px}
-.pcorps{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1}.pcorps h3{margin:0;font-size:19px}.pcorps p{margin:0;color:var(--soft);font-size:15px;flex:1}
-.pcorps select{padding:10px;border-radius:10px;border:1px solid #d6d0c4;font:inherit}
-.pbas{display:flex;justify-content:space-between;align-items:center;gap:8px}.pprix{font-weight:800;font-size:20px}.btn-add{padding:10px 18px;font-size:15px}
-.infos-cmd{margin:28px 0 0;padding:16px 20px 16px 36px;background:var(--bg2);border-radius:12px;color:var(--soft)}
-.panier{position:fixed;inset:0;z-index:60;display:none}.panier.ouvert{display:block}
-.panier .fond{position:absolute;inset:0;background:rgba(0,0,0,.45)}
-.panier .tiroir{position:absolute;right:0;top:0;bottom:0;width:min(440px,100%);background:#fff;display:flex;flex-direction:column;box-shadow:-10px 0 30px rgba(0,0,0,.2)}
-.tiroir header{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--line)}.tiroir header h2{margin:0;font-size:22px}
-.tiroir .lignes{flex:1;overflow:auto;padding:8px 20px;margin:0;list-style:none}
-.tiroir .lignes li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
-.qte{display:flex;align-items:center;gap:8px}.qte button{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;font-size:18px;cursor:pointer}
-.tiroir .pied{padding:16px 20px calc(16px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);display:grid;gap:10px}
-.tiroir .pied label{font-weight:600;font-size:14px}.tiroir .pied input,.tiroir .pied select{width:100%;padding:11px;border:1px solid #cfd3da;border-radius:10px;font:inherit}
-.total{display:flex;justify-content:space-between;font-size:20px;font-weight:800}
-.fermer{border:none;background:none;font-size:26px;cursor:pointer}
-.panier-flottant{position:fixed;right:24px;bottom:24px;z-index:45;display:none}@media(min-width:760px){.panier-flottant:not([disabled]){display:inline-flex}}
-</style>"""
+            select = f'<label class="cache" for="opt-{k}-{len(items)}">Format pour {e(p["nom"])}</label><select id="opt-{k}-{len(items)}">{opts}</select>' if opts else ""
+            items.append(f'<article class="produit" data-produit data-nom="{e(p["nom"])}" data-prix="{float(p["prix"]):.2f}">{visuel}'
+                         f'<h4>{e(p["nom"])}</h4><p>{e(p.get("desc", ""))}</p>{select}'
+                         f'<div class="ligne"><span class="prix">{euros(float(p["prix"]))}</span>'
+                         f'<button class="btn btn-ajout" type="button" aria-label="Ajouter {e(p["nom"])} au panier">Ajouter</button></div></article>')
+        blocs.append(f'<h3 class="cat" id="cat-{k}">{e(cat)}</h3><div class="produits">{"".join(items)}</div>')
+    precisions = [x for x in [fiche.get("allergenes", "")] if x]
+    carte = (f'<section class="section" id="carte" aria-labelledby="titre-carte"><div class="conteneur">'
+             f'{tete_section("La carte", fiche.get("titre_carte", "Choisissez, nous préparons"), "Ajoutez vos produits au panier : la commande part sur WhatsApp, déjà rédigée.", ident="titre-carte")}'
+             + onglets + "".join(blocs)
+             + (f'<ul class="precisions">' + "".join(f"<li>{e(x)}</li>" for x in precisions) + "</ul>" if precisions else "") + "</div></section>")
+    etapes = fiche.get("etapes") or [{"titre": t, "texte": x} for t, x in ETAPES_DEFAUT["commande-whatsapp"]]
+    sec_etapes = (f'<section class="section gris" id="commander" aria-labelledby="titre-commander"><div class="conteneur">'
+                  f'{tete_section("Commander", "Comment ça marche", ident="titre-commander")}<ol class="etapes">'
+                  + "".join(f'<li><h3>{e(s["titre"])}</h3><p>{e(s["texte"])}</p></li>' for s in etapes) + "</ol></div></section>")
+    histoire = (f'<section class="section gris" id="histoire" aria-labelledby="titre-histoire"><div class="conteneur" style="max-width:48rem">'
+                f'{tete_section("La maison", fiche.get("titre_apropos", "Fait maison, chaque jour"), ident="titre-histoire")}<p>{e(fiche["description"])}</p></div></section>')
+    corps = accueil + bande + carte + sec_etapes + section_avis(fiche) + histoire + section_infos(fiche, "Retrait et livraison") + section_faq(fiche, "gris")
+    menu = [(a, t) for a, t, ok in [("carte", "La carte", True), ("avis", "Avis", "id=\"avis\"" in corps), ("infos", "Infos pratiques", True), ("faq", "Questions", "id=\"faq\"" in corps)] if ok]
+    entete = '<a class="btn" href="#carte">Commander</a>'
+    barre = f'<button class="btn btn--wa" id="ouvrirPanier" type="button" disabled>{ICO_PANIER} <span id="panierResume">Panier vide</span></button>'
     modes = fiche.get("modes") or ["Retrait"]
-    panier = f"""<button class="btn btn-wa panier-flottant" id="ouvrirPanier2" type="button" disabled>{ICO_PANIER} <span id="panierResume2">Panier vide</span></button>
-<div class="panier" id="panier" aria-hidden="true"><div class="fond" data-fermer></div><aside class="tiroir" role="dialog" aria-label="Votre panier">
-<header><h2>Votre commande</h2><button class="fermer" type="button" data-fermer aria-label="Fermer">×</button></header>
+    panier = f"""<button class="btn btn--wa panier-bouton" id="ouvrirPanier2" type="button" disabled>{ICO_PANIER} <span id="panierResume2">Panier vide</span></button>
+<div class="panier" id="panier"><div class="fond" data-fermer></div><div class="tiroir" role="dialog" aria-modal="true" aria-labelledby="titre-panier">
+<header><h2 id="titre-panier">Votre commande</h2><button class="fermer" type="button" data-fermer aria-label="Fermer le panier">×</button></header>
 <ul class="lignes" id="lignes"></ul>
-<div class="pied"><div class="total"><span>Total</span><span id="total">0 €</span></div>
-<div><label for="c-nom">Votre prénom</label><input id="c-nom" autocomplete="given-name"></div>
-<div><label for="c-mode">Retrait ou livraison</label><select id="c-mode">{"".join(f"<option>{e(m)}</option>" for m in modes)}</select></div>
-<div><label for="c-date">Pour quand ?</label><input id="c-date" placeholder="ex. samedi 14h"></div>
-<a class="btn btn-wa" id="envoyer" href="#" target="_blank" rel="noopener">Envoyer la commande sur WhatsApp</a>
-<p class="petit" style="margin:0">Aucun paiement en ligne : la commande est confirmée par message, puis réglée selon les modalités convenues.</p></div>
-</aside></div>"""
+<div class="pied-panier"><p class="total"><span>Total</span><span id="total">0 €</span></p>
+<div class="champ"><label for="c-nom">Votre prénom</label><input id="c-nom" autocomplete="given-name"></div>
+<div class="champ"><label for="c-mode">Retrait ou livraison</label><select id="c-mode">{"".join(f"<option>{e(m)}</option>" for m in modes)}</select></div>
+<div class="champ"><label for="c-date">Pour quand ?</label><input id="c-date" placeholder="Samedi 14h"></div>
+<a class="btn btn--wa" id="envoyer" href="#" target="_blank" rel="noopener">Envoyer la commande sur WhatsApp</a>
+<p class="petit">Aucun paiement en ligne : la commande est confirmée par message, puis réglée selon les modalités convenues.</p></div>
+</div></div>"""
     script = """<script>(function(){
-  var WA = %s, NOM = %s, panier = [];
-  function eur(n){ return n.toFixed(2).replace('.', ',').replace(',00','') + ' €'; }
-  function total(){ return panier.reduce(function(s,i){ return s + i.prix * i.qte; }, 0); }
+  var WA = %s, NOM = %s, panier = [], dernierFocus = null;
+  function eur(n){ return n.toFixed(2).replace('.', ',').replace(',00', '') + ' €'; }
+  function total(){ return panier.reduce(function(s, i){ return s + i.prix * i.qte; }, 0); }
   function message(){
     var l = ['Bonjour ' + NOM + ', je souhaite commander :'];
     panier.forEach(function(i){ l.push('- ' + i.qte + ' × ' + i.nom + (i.option ? ' (' + i.option + ')' : '') + ' — ' + eur(i.prix * i.qte)); });
     l.push('Total : ' + eur(total()));
     var n = document.getElementById('c-nom').value.trim(), m = document.getElementById('c-mode').value, d = document.getElementById('c-date').value.trim();
-    l.push('Mode : ' + m + (d ? ' — ' + d : ''));
-    if (n) l.push('Prénom : ' + n);
+    l.push('Mode : ' + m + (d ? ' — ' + d : '')); if (n) l.push('Prénom : ' + n);
     l.push('Merci de me confirmer la disponibilité.');
     return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(l.join('\\n'));
   }
@@ -561,37 +651,40 @@ h3.cat{font-size:24px;margin:28px 0 14px;scroll-margin-top:130px}
     panier.forEach(function(it, i){
       var li = document.createElement('li'), t = document.createElement('span'), q = document.createElement('span');
       t.textContent = it.nom + (it.option ? ' (' + it.option + ')' : '') + ' — ' + eur(it.prix * it.qte); q.className = 'qte';
-      [['−',-1],['+',1]].forEach(function(b, j){
+      [['−', -1], ['+', 1]].forEach(function(b, j){
         var bt = document.createElement('button'); bt.type = 'button'; bt.textContent = b[0];
         bt.setAttribute('aria-label', (b[1] > 0 ? 'Ajouter un ' : 'Retirer un ') + it.nom);
         bt.onclick = function(){ it.qte += b[1]; if (it.qte <= 0) panier.splice(i, 1); rendre(); };
-        q.appendChild(bt); if (j === 0) { var s = document.createElement('strong'); s.textContent = it.qte; q.appendChild(s); }
+        q.appendChild(bt); if (j === 0){ var s = document.createElement('strong'); s.textContent = it.qte; q.appendChild(s); }
       });
       li.appendChild(t); li.appendChild(q); ul.appendChild(li);
     });
-    var nb = panier.reduce(function(s,i){ return s + i.qte; }, 0), txt = nb ? nb + ' article' + (nb > 1 ? 's' : '') + ' · ' + eur(total()) : 'Panier vide';
-    ['panierResume','panierResume2'].forEach(function(id){ document.getElementById(id).textContent = txt; });
-    ['ouvrirPanier','ouvrirPanier2'].forEach(function(id){ document.getElementById(id).disabled = !nb; });
+    var nb = panier.reduce(function(s, i){ return s + i.qte; }, 0), txt = nb ? nb + ' article' + (nb > 1 ? 's' : '') + ' · ' + eur(total()) : 'Panier vide';
+    ['panierResume', 'panierResume2'].forEach(function(id){ document.getElementById(id).textContent = txt; });
+    ['ouvrirPanier', 'ouvrirPanier2'].forEach(function(id){ document.getElementById(id).disabled = !nb; });
     document.getElementById('total').textContent = eur(total());
     var env = document.getElementById('envoyer');
-    if (!nb) { fermer(); env.href = '#'; } else { env.href = message(); }
+    if (!nb){ fermer(); env.href = '#'; } else { env.href = message(); }
   }
-  function ouvrir(){ var p = document.getElementById('panier'); p.classList.add('ouvert'); p.setAttribute('aria-hidden','false'); }
-  function fermer(){ var p = document.getElementById('panier'); p.classList.remove('ouvert'); p.setAttribute('aria-hidden','true'); }
-  ['ouvrirPanier','ouvrirPanier2'].forEach(function(id){ document.getElementById(id).onclick = ouvrir; });
+  function ouvrir(){ dernierFocus = document.activeElement; document.getElementById('panier').classList.add('ouvert'); document.querySelector('.tiroir .fermer').focus(); }
+  function fermer(){ var p = document.getElementById('panier'); if (!p.classList.contains('ouvert')) return; p.classList.remove('ouvert'); if (dernierFocus) dernierFocus.focus(); }
+  ['ouvrirPanier', 'ouvrirPanier2'].forEach(function(id){ document.getElementById(id).onclick = ouvrir; });
   document.querySelectorAll('[data-fermer]').forEach(function(b){ b.onclick = fermer; });
-  ['c-nom','c-mode','c-date'].forEach(function(id){ document.getElementById(id).addEventListener('input', function(){ if (panier.length) document.getElementById('envoyer').href = message(); }); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') fermer(); });
+  ['c-nom', 'c-mode', 'c-date'].forEach(function(id){ document.getElementById(id).addEventListener('input', function(){ if (panier.length) document.getElementById('envoyer').href = message(); }); });
   document.querySelectorAll('[data-produit]').forEach(function(c){
-    c.querySelector('.btn-add').addEventListener('click', function(){
+    c.querySelector('.btn-ajout').addEventListener('click', function(){
       var s = c.querySelector('select'), o = s ? s.value : '', nom = c.getAttribute('data-nom'), prix = parseFloat(c.getAttribute('data-prix'));
       var f = panier.find(function(i){ return i.nom === nom && i.option === o; });
       if (f) f.qte++; else panier.push({nom: nom, option: o, prix: prix, qte: 1});
-      rendre(); this.textContent = 'Ajouté ✓'; var b = this; setTimeout(function(){ b.textContent = 'Ajouter'; }, 1200);
+      rendre(); var b = this; b.textContent = 'Ajouté'; setTimeout(function(){ b.textContent = 'Ajouter'; }, 1200);
     });
   });
   rendre();
 })();</script>""" % (json_sur(fiche["whatsapp"]), json_sur(fiche["nom"]))
-    return corps, menu, entete, barre, style + panier + script
+    return corps, menu, entete, barre, panier + script
+
+
 
 
 CONSTRUCTEURS = {"artisan": corps_artisan, "beaute": corps_beaute, "commande-whatsapp": corps_commande}
@@ -647,6 +740,8 @@ def generer(fiche: dict, sortie: Path, apercu: bool = False, base: Path | None =
     avertissements = valider(fiche, base)
     dossier = sortie / (fiche["slug"] + ("-apercu" if apercu else ""))
     dossier.mkdir(parents=True, exist_ok=True)
+    if (dossier / "img").is_dir():  # dossier entièrement généré : on repart de zéro pour ne pas garder d'anciennes photos
+        shutil.rmtree(dossier / "img")
     imgs = {}
     for chemin in chemins_images(fiche):
         if re.match(r"https?://", chemin):
@@ -654,12 +749,23 @@ def generer(fiche: dict, sortie: Path, apercu: bool = False, base: Path | None =
             continue
         source = base / chemin
         (dossier / "img").mkdir(exist_ok=True)
-        shutil.copyfile(source, dossier / "img" / source.name)
-        imgs[chemin] = "img/" + source.name
+        optimisee = optimiser_image(source, dossier / "img")
+        if optimisee:
+            imgs[chemin], imgs[chemin + "|srcset"] = optimisee
+        else:
+            shutil.copyfile(source, dossier / "img" / source.name)
+            imgs[chemin] = "img/" + source.name
+            if not any("Pillow" in a for a in avertissements):
+                avertissements.append("Photos copiées sans optimisation : installez Pillow (pip install Pillow) pour des images WebP légères.")
     if fiche.get("demo") and avertissements:
         avertissements = [a for a in avertissements if not a.startswith("Mentions légales")]
+    (dossier / "polices").mkdir(exist_ok=True)
+    police = THEMES[fiche["modele"]][1]
+    shutil.copyfile(MODELES / "polices" / police, dossier / "polices" / police)
+    if apercu:
+        fiche = {**fiche, "_apercu": True}  # formulaire désactivé : l'aperçu n'est pas en ligne
     corps, menu, entete, barre, scripts = CONSTRUCTEURS[fiche["modele"]](fiche, imgs)
-    (dossier / "index.html").write_text(page(fiche, imgs, apercu, corps, menu, entete, barre, scripts), encoding="utf-8")
+    (dossier / "index.html").write_text(page(fiche, apercu, corps, menu, entete, barre, scripts, imgs), encoding="utf-8")
     (dossier / "mentions-legales.html").write_text(page_mentions(fiche), encoding="utf-8")
     (dossier / "merci.html").write_text(page_merci(fiche), encoding="utf-8")
     if apercu:
