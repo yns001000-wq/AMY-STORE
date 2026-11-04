@@ -132,6 +132,11 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
   - accès vérifié : les prospects ne sont lisibles qu'au niveau propriétaire.
 - **Limite** : l'IA réelle du cockpit n'a pas pu être appelée depuis cet environnement. Le premier clic dans votre navigateur vous demandera l'autorisation d'utiliser Claude.
 
+### 04/11/2026 — Cockpit, version 5 : constellation 3D
+- Nouvelle scène 3D (Three.js) sur « Aujourd'hui » : les prospects sont placés sur des sphères concentriques selon leur étape (le centre correspond à la signature). Couleur = statut, taille = score, pulsation = action due. Survol pour lire, clic pour ouvrir la fiche, légende utilisable comme filtre.
+- Cartes chiffrées inclinables en 3D. Les animations sont désactivées si le système demande de les réduire.
+- Testé dans un navigateur avec 120 prospects fictifs : survol, clic, filtre, inclinaison ; aucune erreur, aucun débordement à 400 px ; thèmes clair et sombre.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`

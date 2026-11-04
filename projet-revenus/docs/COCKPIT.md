@@ -36,6 +36,15 @@
 
 **Limite :** c'est un outil d'aide, pas une plateforme agréée de facturation électronique. Depuis le 01/09/2026, vous devez pouvoir **recevoir** des factures électroniques. À partir du 01/09/2027, vos factures entre entreprises devront être **émises** via une plateforme agréée : il faudra en choisir une d'ici là (il en existe des gratuites).
 
+## Constellation 3D (ajoutée le 04/11/2026)
+Sur la vue « Aujourd'hui », une scène 3D affiche chaque prospect sous forme d'un point lumineux :
+- **distance au centre** = étape : plus un point est proche du centre, plus le prospect est près de signer (de l'extérieur vers l'intérieur : à contacter, contacté, a répondu, rendez-vous, devis, gagné ; les dossiers perdus restent en périphérie, en gris) ;
+- **couleur** = statut ; **taille** = score de priorité ; **pulsation** = action due ; **point pâle** = numéro inconnu ;
+- glisser pour faire tourner, survoler pour lire le nom, le score et le numéro, cliquer pour ouvrir la fiche ;
+- la légende sert aussi de filtre : cliquez sur une étape pour l'afficher ou la masquer.
+
+La scène ne s'anime que lorsqu'elle est visible, et reste immobile si votre système demande de réduire les animations. Sans WebGL, la légende chiffrée reste affichée. Les cartes chiffrées s'inclinent légèrement en 3D sous la souris. Bibliothèque : Three.js r128 (licence MIT), chargée depuis cdnjs.
+
 ## Studio site (ajouté le 04/11/2026)
 Dans chaque fiche prospect, le bouton **« ✦ Générer le site »** crée en un clic une maquette complète :
 - **modèle adapté au métier** : artisan, beauté, ou commande WhatsApp pour une pâtisserie qui a un numéro de portable ;

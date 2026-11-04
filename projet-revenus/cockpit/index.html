@@ -200,6 +200,38 @@ label.btn{position:relative}label.btn:focus-within{outline:2px solid var(--accen
 .st-charge{position:absolute;top:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:12px;z-index:1}
 body.studio-ouvert{overflow:hidden}
 .liens-num{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;width:100%}
+
+/* ---------- Observatoire 3D (même look dans les deux thèmes, choix délibéré) ---------- */
+:root{--espace:#060a14; --espace-2:#0f1830; --espace-ink:#e6ecff; --espace-soft:#9aa6c8; --espace-ligne:#1f2a48; --espace-bleu:#8db2ff}
+.observatoire{position:relative;overflow:hidden;border-radius:var(--r);background:radial-gradient(120% 95% at 28% 18%,var(--espace-2),var(--espace) 72%);color:var(--espace-ink);border:1px solid var(--espace-ligne);margin-bottom:18px;box-shadow:var(--ombre)}
+.observatoire::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--espace-bleu) 45%,transparent),transparent) top/100% 1px no-repeat}
+.obs-tete{display:flex;justify-content:space-between;gap:10px 24px;flex-wrap:wrap;padding:18px 20px 0}
+.obs-sur{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--espace-bleu)}
+.obs-tete h2{margin:4px 0 0;font-size:17px;font-weight:600;max-width:36ch;text-wrap:balance;color:var(--espace-ink)}
+.obs-aide{margin:0;font-size:12px;color:var(--espace-soft);max-width:38ch;align-self:end}
+.obs-corps{display:grid;grid-template-columns:minmax(0,1fr) 236px;gap:8px;align-items:stretch}
+@media (max-width:760px){.obs-corps{grid-template-columns:minmax(0,1fr)}}
+.obs-zone{position:relative;height:360px;min-width:0}
+@media (max-width:760px){.obs-zone{height:300px}}
+.obs-zone canvas{width:100%;height:100%;display:block;cursor:grab;touch-action:pan-y}
+.obs-bulle{position:absolute;z-index:2;pointer-events:none;display:grid;gap:2px;background:color-mix(in srgb,var(--espace) 90%,transparent);border:1px solid var(--espace-ligne);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--espace-soft);max-width:260px;backdrop-filter:blur(6px)}
+.obs-bulle b{color:var(--espace-ink);font-size:13px}
+.obs-repli{position:absolute;left:20px;right:20px;bottom:20px;margin:0;color:var(--espace-soft);font-size:13px}
+.obs-legende{display:flex;flex-direction:column;gap:3px;padding:8px 16px 18px 0;justify-content:center}
+@media (max-width:760px){.obs-legende{flex-direction:row;flex-wrap:wrap;padding:0 16px 16px}}
+.etoile-l{display:flex;align-items:center;gap:8px;background:transparent;border:1px solid transparent;border-radius:9px;padding:5px 8px;color:var(--espace-ink);cursor:pointer;font-size:13px;text-align:left}
+.etoile-l:hover{border-color:var(--espace-ligne);background:color-mix(in srgb,var(--espace-ink) 4%,transparent)}
+.etoile-l:focus-visible{outline:2px solid var(--espace-bleu);outline-offset:1px}
+.etoile-l i{width:9px;height:9px;border-radius:50%;flex:none}
+.etoile-l span{flex:1}
+.etoile-l b{font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums;color:var(--espace-soft)}
+.etoile-l[aria-pressed="false"]{opacity:.45}.etoile-l[aria-pressed="false"] span{text-decoration:line-through}
+/* cartes chiffrées inclinables */
+.kpi{position:relative;transform:perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .3s ease,box-shadow .3s ease}
+.kpi.incline{transition:transform .08s linear;box-shadow:0 20px 40px -20px color-mix(in srgb,var(--ink) 40%,transparent)}
+.kpi::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--accent) 16%,transparent),transparent 65%)}
+.kpi.incline::after{opacity:1}
+@media (prefers-reduced-motion:reduce){.kpi{transform:none!important;transition:none}}
 </style>
 
 <div class="app">
@@ -235,6 +267,13 @@ body.studio-ouvert{overflow:hidden}
         <h1 id="titre-jour">Bonjour</h1>
         <p class="sous">Votre machine de prospection : priorités calculées, relances planifiées, et l'IA pour vous préparer.</p>
         <div class="kpis" id="kpis"></div>
+        <section class="observatoire" aria-labelledby="obs-titre">
+          <div class="obs-tete"><div><span class="obs-sur">Constellation des prospects</span><h2 id="obs-titre">Plus un point est proche du centre, plus le prospect est près de signer.</h2></div>
+            <p class="obs-aide">Glissez pour faire tourner, survolez pour lire, cliquez pour ouvrir la fiche. Taille = score de priorité ; un point qui pulse a une action due ; un point pâle n'a pas encore de numéro.</p></div>
+          <div class="obs-corps"><div class="obs-zone" id="const-zone"><canvas id="const-canvas" role="img" aria-label="Constellation des prospects"></canvas>
+            <div class="obs-bulle" id="const-bulle" hidden aria-hidden="true"></div><p class="obs-repli" id="const-repli" hidden>La vue 3D n'est pas disponible sur cet appareil. La légende reste à jour.</p></div>
+            <div class="obs-legende" id="const-legende" role="group" aria-label="Afficher ou masquer une étape"></div></div>
+        </section>
         <div class="grille">
           <div class="carte ia-bloc">
             <div class="ia-titre"><span class="badge-ia">✦ IA</span><h2 style="margin:0">Briefing du jour</h2></div>
@@ -344,6 +383,7 @@ body.studio-ouvert{overflow:hidden}
 <section class="studio" id="studio" hidden role="dialog" aria-modal="true" aria-labelledby="st-titre"><header class="st-tete"><div><h2 id="st-titre">Studio</h2><p class="note" id="st-sous"></p></div><div class="st-outils"><div class="onglets st-taille" role="group" aria-label="Taille de l'aperçu"><button type="button" id="st-mobile" aria-pressed="true">Mobile</button><button type="button" id="st-ordinateur" aria-pressed="false">Ordinateur</button></div><span class="note" id="st-sauve" aria-live="polite"></span><button class="btn petit" id="st-annuler" type="button" disabled>Annuler la dernière modification</button><button class="btn petit" id="st-telecharger" type="button">Télécharger la maquette</button><button class="btn petit p" id="st-fermer" type="button">Fermer</button></div></header><div class="st-corps"><div class="st-panneau"><form class="carte ia-bloc" id="st-form"><div class="ia-titre"><span class="badge-ia">✦ IA</span><h3>Demandez une modification</h3></div><label class="cache" for="st-demande">Ce que vous voulez changer</label><textarea id="st-demande" rows="3" placeholder="Ex. : un bleu plus foncé, ajoute un service de ramonage, texte plus chaleureux, enlève la FAQ"></textarea><div class="st-sugg" id="st-sugg"></div><p style="margin:0"><button class="btn ia" id="st-go" type="submit">✦ Appliquer</button></p><p class="st-statut" id="st-statut" role="status" hidden></p></form><div class="carte" id="st-reglages"><h3 style="margin-top:0">Réglages</h3><div class="st-champs"><label>Nom de l'entreprise<input data-c="nom" type="input"></label><label>Titre principal<input data-c="titre" type="input"></label><label>Accroche<textarea data-c="accroche" rows="3"></textarea></label><label>Téléphone<input data-c="telephone" type="tel"></label><label>Email<input data-c="email" type="email"></label><label>Couleur principale<input data-c="couleur" type="color"></label><label>Modèle<select id="st-modele"><option value="artisan">Artisan et services</option><option value="beaute">Beauté et bien-être</option><option value="commande-whatsapp">Commande WhatsApp (métiers de bouche)</option></select></label><label>Présentation<textarea data-c="description" rows="3"></textarea></label></div><h3>Sections affichées</h3><div class="st-sections"><label><input type="checkbox" data-m="atouts">Bande d'atouts</label><label><input type="checkbox" data-m="galerie">Photos</label><label><input type="checkbox" data-m="avis">Avis</label><label><input type="checkbox" data-m="etapes">Étapes</label><label><input type="checkbox" data-m="apropos">Présentation</label><label><input type="checkbox" data-m="faq">Questions</label></div><h3>Photos</h3><p style="display:flex;gap:6px;flex-wrap:wrap;margin:0"><label class="btn petit">Remplacer la photo principale<input type="file" id="st-hero" accept="image/*" class="cache-fichier"></label><label class="btn petit">Ajouter à la galerie<input type="file" id="st-ajout" accept="image/*" multiple class="cache-fichier"></label></p><ul class="st-galerie" id="st-galerie"></ul><p class="note">Avis, prix et horaires restent signalés comme exemples sur la maquette. Avant toute mise en ligne, remplacez-les par les vraies informations du client.</p></div></div><div class="st-vue mobile" id="st-vue"><div class="st-charge" id="st-charge" hidden>Mise à jour de l'aperçu…</div><iframe id="st-cadre" title="Aperçu de la maquette du site" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"></iframe></div></div></section>
 <div class="toast" id="toast" hidden></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (function(){
 "use strict";
@@ -433,6 +473,7 @@ function rendreJour(){
   var ts = $("segments"); ts.textContent = "";
   Object.keys(seg).sort().forEach(function(n){ var s = seg[n]; ts.appendChild(el("tr",{style:"cursor:default"},[el("td",{text:n}),el("td",{cls:"num",text:String(s.n)}),el("td",{cls:"num",text:String(s.c)}),el("td",{cls:"num",text:pct(s.r,s.c)}),el("td",{cls:"num",text:String(s.g)})])); });
   if (!Object.keys(seg).length) ts.appendChild(el("tr",null,[el("td",{colspan:"5",cls:"vide",text:"Les segments apparaîtront avec vos prospects."})]));
+  majConstellation();
 }
 
 function rendrePipeline(){
@@ -1408,8 +1449,126 @@ function liensNumero(p){ var q = encodeURIComponent(p.entreprise + " " + (p.vill
 })();
 
 window.__cockpit = {S:S, ST:ST, ouvrir:ouvrir, fermer:fermer, ouvrirStudio:ouvrirStudio}; // poignée de test (page privée)
+
+/* ================= CONSTELLATION 3D (Three.js) ================= */
+/* Chaque prospect est un point. Coquilles concentriques = étapes du pipeline : plus c'est proche du centre, plus c'est proche de la signature.
+   Couleur = statut ; taille = score de priorité ; pulsation = action due ; point atténué = numéro inconnu. */
+var CONST = {pret:false, filtre:{}, sig:"", ids:[], survol:-1, tourne:true, actif:false};
+var ETAPES_3D = [["gagne",0.38,"#5fd39a","Gagné"],["devis",0.72,"#ef7a45","Devis envoyé"],["rdv",1.04,"#f4b45a","Rendez-vous"],["repondu",1.36,"#4fd1c5","A répondu"],
+  ["contacte",1.68,"#b9a8ff","Contacté"],["nouveau",2.02,"#8db2ff","À contacter"],["clos",2.36,"#5b6478","Perdu, refus, sans réponse"]];
+function etape3d(p){ return (p.statut === "perdu" || p.statut === "refus" || p.statut === "sans_reponse") ? "clos" : p.statut; }
+function hash3d(s){ var h = 2166136261; for (var i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967295; }
+var MOINS_MOUV = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function initConstellation(){
+  var zone = $("const-zone"), cv = $("const-canvas");
+  if (!window.THREE || !cv){ $("const-repli").hidden = false; return; }
+  var r; try { r = new THREE.WebGLRenderer({canvas:cv, antialias:true, alpha:true, powerPreference:"low-power"}); } catch(e){ r = null; }
+  if (!r){ $("const-repli").hidden = false; return; }
+  var scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(42, 2, 0.1, 100), monde = new THREE.Group();
+  cam.position.set(0, 0.9, 6.4); cam.lookAt(0, 0, 0); scene.add(monde);
+  r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  // coquilles filaires (une par étape active) et sol en grille
+  ETAPES_3D.forEach(function(e){ if (e[0] === "clos") return;
+    var g = new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(e[1], e[1] > 1.5 ? 2 : 1));
+    monde.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({color:e[2], transparent:true, opacity:0.07, depthWrite:false}))); });
+  var sol = new THREE.GridHelper(14, 28, 0x2a3a66, 0x182340); sol.position.y = -2.7; sol.material.transparent = true; sol.material.opacity = 0.55; scene.add(sol);
+  // poussière d'étoiles
+  var nE = 420, pe = new Float32Array(nE*3); for (var i = 0; i < nE; i++){ var u = Math.random()*2-1, a = Math.random()*Math.PI*2, R = 7 + Math.random()*5, s = Math.sqrt(1-u*u);
+    pe[i*3] = R*s*Math.cos(a); pe[i*3+1] = R*u; pe[i*3+2] = R*s*Math.sin(a); }
+  var ge = new THREE.BufferGeometry(); ge.setAttribute("position", new THREE.BufferAttribute(pe, 3));
+  scene.add(new THREE.Points(ge, new THREE.PointsMaterial({color:0x9fb4ff, size:0.03, transparent:true, opacity:0.55, depthWrite:false})));
+  // points des prospects : shader lumineux, taille et alpha par point
+  var mat = new THREE.ShaderMaterial({transparent:true, depthWrite:false, blending:THREE.AdditiveBlending,
+    uniforms:{t:{value:0}, dpr:{value:r.getPixelRatio()}, survol:{value:-1}},
+    vertexShader:"attribute float taille; attribute float alpha; attribute float pulse; attribute vec3 teinte; attribute float idx; uniform float t; uniform float dpr; uniform float survol; varying vec3 vC; varying float vA;"
+      + "void main(){ vC = teinte; vA = alpha; vec4 mv = modelViewMatrix * vec4(position,1.0); float s = taille * (1.0 + 0.45*pulse*(0.5+0.5*sin(t*3.2 + idx)));"
+      + " if (abs(idx - survol) < 0.5) { s *= 1.9; vA = 1.0; } gl_PointSize = s * dpr * (6.0 / -mv.z); gl_Position = projectionMatrix * mv; }",
+    fragmentShader:"varying vec3 vC; varying float vA; void main(){ float d = length(gl_PointCoord - vec2(0.5)); if (d > 0.5) discard;"
+      + " float halo = smoothstep(0.5, 0.0, d); float coeur = smoothstep(0.16, 0.0, d); gl_FragColor = vec4(vC * halo + vec3(coeur*0.7), halo * vA); }"});
+  var geo = new THREE.BufferGeometry(), pts = new THREE.Points(geo, mat); monde.add(pts);
+  CONST.r = r; CONST.scene = scene; CONST.cam = cam; CONST.monde = monde; CONST.geo = geo; CONST.mat = mat; CONST.pts = pts; CONST.pret = true;
+  CONST.ray = new THREE.Raycaster(); CONST.ray.params.Points.threshold = 0.09; CONST.souris = new THREE.Vector2();
+
+  // taille du canevas
+  function taille(){ var w = zone.clientWidth, h = zone.clientHeight; if (!w || !h) return; r.setSize(w, h, false); cam.aspect = w / h; cam.position.z = w < 520 ? 7.6 : 6.4; cam.updateProjectionMatrix(); dessiner(); }
+  if (window.ResizeObserver) new ResizeObserver(taille).observe(zone); else window.addEventListener("resize", taille);
+  // rotation : glisser pour tourner, inertie douce
+  var vx = 0, vy = 0, glisse = null, bouge = 0;
+  cv.addEventListener("pointerdown", function(e){ glisse = {x:e.clientX, y:e.clientY}; bouge = 0; CONST.tourne = false; try { cv.setPointerCapture(e.pointerId); } catch(_){} });
+  cv.addEventListener("pointermove", function(e){ var b = cv.getBoundingClientRect();
+    CONST.souris.set((e.clientX - b.left) / b.width * 2 - 1, -((e.clientY - b.top) / b.height) * 2 + 1); CONST.posX = e.clientX - b.left; CONST.posY = e.clientY - b.top;
+    if (glisse){ var dx = e.clientX - glisse.x, dy = e.clientY - glisse.y; bouge += Math.abs(dx) + Math.abs(dy); glisse = {x:e.clientX, y:e.clientY};
+      vy = dx * 0.006; vx = dy * 0.004; monde.rotation.y += vy; monde.rotation.x = Math.max(-0.9, Math.min(0.9, monde.rotation.x + vx)); }
+    survoler(); if (!CONST.actif || MOINS_MOUV) dessiner(); });
+  cv.addEventListener("pointerup", function(){ var clic = glisse && bouge < 6; glisse = null; if (!MOINS_MOUV) setTimeout(function(){ CONST.tourne = true; }, 2500);
+    if (clic && CONST.survol >= 0) ouvrir(CONST.ids[CONST.survol]); });
+  cv.addEventListener("pointerleave", function(){ CONST.survol = -1; mat.uniforms.survol.value = -1; $("const-bulle").hidden = true; cv.style.cursor = "grab"; if (MOINS_MOUV) dessiner(); });
+  // n'anime que lorsque la vue est à l'écran
+  var t0 = performance.now();
+  function boucle(){ if (!CONST.actif) return; requestAnimationFrame(boucle);
+    if (!glisse){ if (CONST.tourne) monde.rotation.y += 0.0016; else { monde.rotation.y += vy; vy *= 0.94; } }
+    mat.uniforms.t.value = (performance.now() - t0) / 1000; r.render(scene, cam); }
+  function dessiner(){ r.render(scene, cam); }
+  CONST.dessiner = dessiner;
+  if (window.IntersectionObserver) new IntersectionObserver(function(es){ var vis = es[0].isIntersecting && !document.hidden;
+    if (vis && !CONST.actif && !MOINS_MOUV){ CONST.actif = true; boucle(); } else if (!vis) CONST.actif = false; if (MOINS_MOUV) dessiner(); }).observe(zone);
+  document.addEventListener("visibilitychange", function(){ if (document.hidden) CONST.actif = false; });
+  taille(); majConstellation(true);
+}
+
+function survoler(){ if (!CONST.pret || !CONST.ids.length) return;
+  CONST.ray.setFromCamera(CONST.souris, CONST.cam); var hits = CONST.ray.intersectObject(CONST.pts);
+  hits = hits.filter(function(h){ return CONST.visibles[h.index]; });
+  var i = hits.length ? hits[0].index : -1; CONST.survol = i; CONST.mat.uniforms.survol.value = i; $("const-canvas").style.cursor = i >= 0 ? "pointer" : "grab";
+  var b = $("const-bulle"); if (i < 0){ b.hidden = true; return; }
+  var p = S.pros.find(function(x){ return x.id === CONST.ids[i]; }); if (!p){ b.hidden = true; return; }
+  b.textContent = ""; b.appendChild(el("b",{text:p.entreprise})); b.appendChild(el("span",{text:(p.metier||"") + " · " + (p.ville||"")}));
+  b.appendChild(el("span",{text:(LIB[p.statut]||p.statut) + " · score " + score(p).v + (p.telephone ? " · " + p.telephone : " · numéro à trouver")}));
+  b.hidden = false; var z = $("const-zone"), x = Math.min(CONST.posX + 14, z.clientWidth - b.offsetWidth - 8), y = Math.max(8, CONST.posY - b.offsetHeight - 10);
+  b.style.left = x + "px"; b.style.top = y + "px"; }
+
+function majConstellation(force){
+  var pros = S.pros.filter(function(p){ return p.statut !== "ne_pas_contacter"; });
+  // légende (fonctionne même sans WebGL)
+  var cpt = {}; pros.forEach(function(p){ var e = etape3d(p); cpt[e] = (cpt[e]||0) + 1; });
+  var lg = $("const-legende"); if (lg){ lg.textContent = "";
+    ETAPES_3D.slice().reverse().forEach(function(e){ var off = !!CONST.filtre[e[0]];
+      var b = el("button",{type:"button",cls:"etoile-l","aria-pressed":String(!off),onclick:function(){ CONST.filtre[e[0]] = !CONST.filtre[e[0]]; majConstellation(true); }},
+        [el("i",{style:"background:" + e[2] + ";box-shadow:0 0 10px " + e[2]}), el("span",{text:e[3]}), el("b",{text:String(cpt[e[0]]||0)})]);
+      lg.appendChild(b); }); }
+  var cv = $("const-canvas"); if (cv) cv.setAttribute("aria-label", "Constellation de " + pros.length + " prospects : " + ETAPES_3D.map(function(e){ return (cpt[e[0]]||0) + " " + e[3].toLowerCase(); }).join(", ") + ".");
+  if (!CONST.pret) return;
+  var sig = JSON.stringify(pros.map(function(p){ return [p.id, p.statut, score(p).v, !!p.telephone, echu(p)]; })) + JSON.stringify(CONST.filtre);
+  if (!force && sig === CONST.sig) return; CONST.sig = sig;
+  var n = pros.length, pos = new Float32Array(n*3), col = new Float32Array(n*3), tai = new Float32Array(n), alp = new Float32Array(n), pul = new Float32Array(n), idx = new Float32Array(n);
+  var parEtape = {}; pros.forEach(function(p){ (parEtape[etape3d(p)] = parEtape[etape3d(p)] || []).push(p); });
+  CONST.ids = []; CONST.visibles = []; var k = 0, c = new THREE.Color();
+  ETAPES_3D.forEach(function(e){ var L = parEtape[e[0]] || [], m = L.length;
+    L.forEach(function(p, j){ // sphère de Fibonacci + léger décalage stable par prospect
+      var y = 1 - (j + 0.5) / m * 2, rr = Math.sqrt(1 - y*y), th = j * 2.399963 + hash3d(p.id) * 0.6, R = e[1] * (0.94 + hash3d(p.id + "r") * 0.12);
+      if (m === 1){ y = 0; rr = 1; }
+      pos[k*3] = R * rr * Math.cos(th); pos[k*3+1] = R * y * 0.92; pos[k*3+2] = R * rr * Math.sin(th);
+      c.set(e[2]); col[k*3] = c.r; col[k*3+1] = c.g; col[k*3+2] = c.b;
+      var vis = !CONST.filtre[e[0]]; CONST.visibles[k] = vis;
+      tai[k] = (e[0] === "clos" ? 5 : 7) + score(p).v * 0.13; alp[k] = !vis ? 0.04 : e[0] === "clos" ? 0.35 : p.telephone ? 1 : 0.5;
+      pul[k] = (!MOINS_MOUV && vis && echu(p)) ? 1 : 0; idx[k] = k; CONST.ids.push(p.id); k++; }); });
+  var g = CONST.geo; g.setAttribute("position", new THREE.BufferAttribute(pos, 3)); g.setAttribute("teinte", new THREE.BufferAttribute(col, 3));
+  g.setAttribute("taille", new THREE.BufferAttribute(tai, 1)); g.setAttribute("alpha", new THREE.BufferAttribute(alp, 1)); g.setAttribute("pulse", new THREE.BufferAttribute(pul, 1)); g.setAttribute("idx", new THREE.BufferAttribute(idx, 1));
+  g.computeBoundingSphere(); if (CONST.dessiner) CONST.dessiner();
+}
+
+/* Cartes chiffrées : légère inclinaison 3D qui suit le pointeur (souris uniquement, mouvement réduit respecté). */
+(function(){ if (MOINS_MOUV || !(window.matchMedia && window.matchMedia("(hover:hover) and (pointer:fine)").matches)) return;
+  document.addEventListener("pointermove", function(e){ var k = e.target.closest && e.target.closest(".kpi"); if (!k) return; var b = k.getBoundingClientRect();
+    var x = (e.clientX - b.left) / b.width, y = (e.clientY - b.top) / b.height;
+    k.style.setProperty("--ry", ((x - 0.5) * 9).toFixed(2) + "deg"); k.style.setProperty("--rx", ((0.5 - y) * 7).toFixed(2) + "deg");
+    k.style.setProperty("--mx", (x*100).toFixed(1) + "%"); k.style.setProperty("--my", (y*100).toFixed(1) + "%"); k.classList.add("incline"); });
+  document.addEventListener("pointerout", function(e){ var k = e.target.closest && e.target.closest(".kpi"); if (k && !k.contains(e.relatedTarget)){ k.classList.remove("incline"); k.style.removeProperty("--rx"); k.style.removeProperty("--ry"); } });
+})();
+
 /* ---------- démarrage ---------- */
-route(); rendreTout();
+route(); rendreTout(); initConstellation();
 var minuteur = setTimeout(function(){ if (!S.charge) etat("Vos données ne répondent pas encore. Vérifiez votre connexion ; la page se mettra à jour d'elle-même."); }, 10000);
 claude.use("db").then(function(db){
   if (!db){ clearTimeout(minuteur); etat("Les données ne sont pas accessibles dans cette vue. Ouvrez le cockpit depuis votre compte Claude."); $("acces").textContent = "Accès aux données indisponible"; return; }
