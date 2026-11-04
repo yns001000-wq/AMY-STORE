@@ -56,3 +56,9 @@ h3{font-size:1.15rem;font-weight:700}
 .contact .infos-contact p+p{margin-top:.35rem}
 .contact .infos-contact a{color:#fff}
 .contact .form{background:#fff;color:var(--texte);padding:1.75rem;border-radius:var(--rayon)}
+/* Qui sommes-nous avec photo */
+.apropos{display:grid;gap:2.5rem;align-items:center}
+@media (min-width:52rem){.apropos{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.apropos figure{margin:0}
+.apropos img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--rayon)}
+.apropos figcaption{font-size:.85rem;color:var(--gris);margin-top:.5rem}

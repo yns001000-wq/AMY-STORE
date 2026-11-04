@@ -36,6 +36,25 @@
 
 **Limite :** c'est un outil d'aide, pas une plateforme agréée de facturation électronique. Depuis le 01/09/2026, vous devez pouvoir **recevoir** des factures électroniques. À partir du 01/09/2027, vos factures entre entreprises devront être **émises** via une plateforme agréée : il faudra en choisir une d'ici là (il en existe des gratuites).
 
+## Studio site (ajouté le 04/11/2026)
+Dans chaque fiche prospect, le bouton **« ✦ Générer le site »** crée en un clic une maquette complète :
+- **modèle adapté au métier** : artisan, beauté, ou commande WhatsApp pour une pâtisserie qui a un numéro de portable ;
+- **photos** adaptées au métier ;
+- **contenus d'exemple** : avis, prix, horaires et questions, chacun signalé en petit sur la page.
+
+Claude personnalise ensuite les textes pour ce prospect : titre, accroche, présentation, services et couleur.
+
+Le **Studio** s'ouvre en plein écran, avec l'aperçu en direct en version **mobile** ou **ordinateur** :
+- **« Demandez une modification »** : écrivez ce que vous voulez (« un bleu plus foncé », « ajoute un service de ramonage », « enlève la FAQ ») et Claude modifie la maquette. Seuls les champs connus, aux bons formats, sont acceptés : une réponse inutilisable est refusée et signalée. Une maquette reste une maquette : les exemples restent signalés ;
+- **Réglages** directs : nom, titre, accroche, téléphone, email, couleur, modèle, présentation et sections affichées ;
+- **Photos** : remplacer la photo principale ou ajouter vos propres photos, qui sont stockées dans le cockpit ;
+- **Annuler la dernière modification**, jusqu'à 20 retours en arrière ;
+- **Télécharger la maquette** : un seul fichier HTML autonome (thème, police et photos intégrés), qui s'ouvre partout. Il est vérifié avec la même QA que les démos (7 largeurs, axe : 0 violation).
+
+Chaque maquette est enregistrée automatiquement (collection `sites`, accès réservé au propriétaire). Elle compte comme « aperçu prêt » dans le score de priorité.
+
+**Numéro manquant** : la fiche propose des liens déjà remplis (Pages Jaunes, recherche web, Facebook, Instagram, annuaire officiel). Pour trouver directement des prospects **avec** numéro, voir `outils/prospects_osm.py` dans LEGAL.md et PROGRESS.md.
+
 ## Ce qui est automatique
 - **Score de priorité (0 à 100)**, calculé sans IA et expliqué sur chaque fiche :
   - statut : devis +45, RDV +40, a répondu +35, contacté +10 ;
@@ -59,6 +78,7 @@
 - **Limite :** l'accès « seulement sur ordinateur » ne peut pas être imposé techniquement. Le cockpit est accessible partout où **votre** compte Claude est connecté. Pour le protéger, sécurisez votre compte (mot de passe solide et validation en deux étapes sur l'adresse email ou le compte Google qui sert à vous connecter) et déconnectez Claude des appareils partagés.
 
 ## Pour Claude (maintenance)
+- Studio : le rendu est une version JavaScript de `outils/generer_site.py`. Elle utilise les mêmes thèmes, importés comme fichiers du cockpit (`theme-*.css`, polices, photos WebP, aux adresses `/_blob/…` listées dans l'objet `STU`). Si un thème change, réimportez `base.css` + le thème sous forme d'un seul fichier, puis mettez à jour son adresse dans `STU.css`.
 - **Code de la page :** `cockpit/index.html`. Pour le republier sans perdre les données, publiez-le sur la même URL.
 - **Collections :**
   - `prospects/p<SIREN>` : champs identiques au CSV, plus `journal` (liste `{d, t}`), `apercu_url`, `tentatives` et `modifie_le` ;

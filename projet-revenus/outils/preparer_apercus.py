@@ -29,11 +29,13 @@ import generer_site  # noqa: E402
 SORTIE = crm.RACINE / "sorties" / "apercus"
 TEL_DEFAUT = "Votre numéro"
 
-ARTISAN_IMG = {"hero": "images-demo/plomberie-robinet.jpg", "galerie": [
-    {"src": "images-demo/plomberie-salle-de-bain.jpg", "legende": "Exemple de réalisation"},
-    {"src": "images-demo/plomberie-douche.jpg", "legende": "Exemple de réalisation"},
-    {"src": "images-demo/plomberie-tuyaux.jpg", "legende": "Exemple de réalisation"},
-    {"src": "images-demo/plomberie-cuisine.jpg", "legende": "Exemple de réalisation"}]}
+ARTISAN_IMG = {"hero": "images-demo/plomberie-lavabo.jpg",
+               "apropos": {"src": "images-demo/plomberie-intervention.jpg", "legende": "Votre photo ici", "credit": "Photo : ocean yamaha, CC BY 2.0"},
+               "galerie": [
+    {"src": "images-demo/plomberie-salle-de-bain-hotel.jpg", "legende": "Exemple de réalisation"},
+    {"src": "images-demo/plomberie-douche-mosaique.jpg", "legende": "Exemple de réalisation"},
+    {"src": "images-demo/plomberie-robinet-cuisine.jpg", "legende": "Exemple de réalisation"},
+    {"src": "images-demo/plomberie-mitigeur.jpg", "legende": "Exemple de réalisation"}]}
 BEAUTE_IMG = {"hero": "images-demo/beaute-salon.jpg", "galerie": [
     {"src": "images-demo/beaute-bac.jpg", "legende": "Vos photos ici"}, {"src": "images-demo/beaute-vernis.jpg", "legende": "Vos photos ici"},
     {"src": "images-demo/beaute-ongles.jpg", "legende": "Vos photos ici"}]}
@@ -98,6 +100,91 @@ ACCROCHES = {
 }
 
 
+# ---------------------------------------------------------------- contenus d'exemple des maquettes
+# Les maquettes montrent au prospect un site « plein » : avis, prix, horaires et questions d'exemple.
+# Tout est signalé sur la page (bandeau + petites mentions), jamais indexé, et le générateur
+# refuse de produire la version finale tant que la fiche porte « maquette » (voir generer_site.generer).
+FAMILLE = {"Plombier": "artisan", "Chauffagiste": "artisan", "Électricien": "artisan", "Peintre": "artisan",
+           "Traiteur": "bouche", "Pâtisserie": "bouche", "Coiffure": "beaute", "Soins de beauté": "beaute"}
+PRIX_EXEMPLE = {
+    "Plombier": ["À partir de 90 €", "Sur devis", "À partir de 150 €", "Sur devis"],
+    "Chauffagiste": ["Sur devis", "À partir de 120 €", "Sur devis", "Sur devis"],
+    "Électricien": ["À partir de 80 €", "Sur devis", "À partir de 60 €", "Sur devis"],
+    "Peintre": ["À partir de 25 €/m²", "Sur devis", "Inclus au devis", "À partir de 20 €/m²"],
+    "Traiteur": ["À partir de 18 €/pers.", "À partir de 14 €", "Sur devis", "Selon la distance"],
+    "Pâtisserie": ["À partir de 28 €", "À partir de 4 €", "Sur devis", "Retrait offert"],
+}
+TARIFS_EXEMPLE = {  # (durée, prix) dans l'ordre des prestations de METIERS
+    "Coiffure": [("1 h", 45), ("1 h 30", 60), ("2 h 30", "dès 95 €"), ("30 min", 25)],
+    "Soins de beauté": [("1 h", 55), ("20 min", "dès 10 €"), ("45 min", 30), ("1 h", 35)],
+}
+HORAIRES_EXEMPLE = {
+    "artisan": {"lun": "08:00-18:00", "mar": "08:00-18:00", "mer": "08:00-18:00", "jeu": "08:00-18:00", "ven": "08:00-18:00", "sam": "09:00-12:00", "dim": ""},
+    "beaute": {"lun": "", "mar": "09:30-19:00", "mer": "09:30-19:00", "jeu": "09:30-19:00", "ven": "09:30-19:00", "sam": "09:00-17:00", "dim": ""},
+    "bouche": {"lun": "", "mar": "", "mer": "10:00-19:00", "jeu": "10:00-19:00", "ven": "10:00-19:00", "sam": "09:00-19:00", "dim": "09:00-13:00"},
+}
+ATOUTS_EXEMPLE = {
+    "artisan": ["Devis gratuit", "Prix annoncé avant les travaux", "Intervention rapide", "Chantier laissé propre"],
+    "beaute": ["Tarifs affichés", "Réservation simple", "Conseils personnalisés", "Produits professionnels"],
+    "bouche": ["Fait maison", "Sur commande", "Retrait ou livraison", "Menus sur mesure"],
+}
+FAQ_EXEMPLE = {
+    "artisan": [("Le devis est-il gratuit ?", "Oui, le devis est gratuit et sans engagement. Le prix est annoncé avant le début des travaux."),
+                ("Intervenez-vous en urgence ?", "Selon les disponibilités, nous intervenons le jour même pour les urgences."),
+                ("Quels moyens de paiement acceptez-vous ?", "Carte bancaire, virement ou chèque, à la fin de l'intervention.")],
+    "beaute": [("Faut-il réserver ?", "La réservation est conseillée, surtout le samedi. Nous prenons aussi les clients sans rendez-vous selon les disponibilités."),
+               ("Puis-je annuler un rendez-vous ?", "Oui, merci de prévenir au moins 24 h à l'avance."),
+               ("Quels moyens de paiement acceptez-vous ?", "Carte bancaire et espèces.")],
+    "bouche": [("Combien de temps à l'avance faut-il commander ?", "Idéalement 48 h à l'avance, davantage pour les grands événements."),
+               ("Proposez-vous la livraison ?", "Oui, dans le secteur, à l'heure convenue. Le retrait sur place est aussi possible."),
+               ("Pouvez-vous adapter le menu ?", "Oui : allergies, régimes particuliers ou envies, nous construisons le menu avec vous.")],
+}
+AVIS_EXEMPLE = {
+    "Plombier": [("Sophie L.", "Fuite sous l'évier réparée le jour même. Ponctuel, propre, et le prix annoncé a été respecté."),
+                 ("Karim B.", "Remplacement du chauffe-eau rondement mené, avec des explications claires à la fin."),
+                 ("Claire M.", "Très bon conseil pour notre douche à l'italienne. Travail soigné, je recommande.")],
+    "Chauffagiste": [("Julien R.", "Entretien de la chaudière fait rapidement, attestation remise sur place. Sérieux."),
+                     ("Nadia K.", "Panne de chauffage en plein hiver : intervention dès le lendemain, problème réglé."),
+                     ("Marc D.", "Pompe à chaleur bien installée et réglée, devis clair et respecté.")],
+    "Électricien": [("Laura P.", "Tableau électrique remis aux normes proprement, rien à redire."),
+                    ("Thomas G.", "Dépannage rapide après une coupure, explications claires et prix correct."),
+                    ("Inès F.", "Pose de luminaires et de prises dans toute la maison, travail très propre.")],
+    "Peintre": [("Camille R.", "Salon et couloir repeints en trois jours, finitions impeccables et chantier propre."),
+                ("Olivier T.", "Ravalement de façade réussi, bons conseils sur les teintes."),
+                ("Sarah B.", "Ponctuel, soigneux, et le devis a été respecté au centime près.")],
+    "Traiteur": [("Amélie V.", "Buffet pour 40 personnes : tout était délicieux et joliment présenté."),
+                 ("Youssef M.", "Plateaux repas livrés à l'heure pour notre réunion, très bons retours de l'équipe."),
+                 ("Hélène D.", "Menu de mariage sur mesure, à l'écoute du début à la fin. Merci !")],
+    "Pâtisserie": [("Nadia R.", "Le gâteau d'anniversaire était magnifique et délicieux. Commande très simple."),
+                   ("Thomas G.", "Les tartes du week-end sont devenues un rituel à la maison."),
+                   ("Élodie P.", "Gâteau de baptême parfait, tout le monde a demandé l'adresse !")],
+    "Coiffure": [("Julie D.", "Balayage exactement comme je le voulais, et de très bons conseils pour l'entretien."),
+                 ("Marc H.", "Coupe nette et rapide, accueil sympathique."),
+                 ("Aïcha B.", "Enfin un salon qui prend le temps d'écouter. Je reviendrai.")],
+    "Soins de beauté": [("Amandine V.", "Soin du visage très relaxant, peau éclatante. Je recommande."),
+                        ("Léa M.", "Semi-permanent qui tient trois semaines, travail minutieux."),
+                        ("Sonia K.", "Accueil chaleureux, cabine propre et prix affichés.")],
+}
+
+
+def contenu_exemple(fiche: dict, metier: str) -> None:
+    """Remplit la maquette avec des contenus d'exemple réalistes, tous signalés comme tels sur la page."""
+    fam = FAMILLE[metier]
+    fiche["maquette"] = True
+    fiche.pop("avis_a_venir", None)
+    fiche["avis"] = {"note": 4.8, "nombre": 27, "source": "Google",
+                     "liste": [{"auteur": a, "texte": x, "note": 5} for a, x in AVIS_EXEMPLE[metier]]}
+    fiche["horaires_semaine"] = HORAIRES_EXEMPLE[fam]
+    fiche["atouts"] = ATOUTS_EXEMPLE[fam]
+    fiche["faq"] = [{"q": q, "r": r} for q, r in FAQ_EXEMPLE[fam]]
+    if metier in PRIX_EXEMPLE:
+        for s, prix in zip(fiche.get("services", []), PRIX_EXEMPLE[metier]):
+            s["prix"] = prix
+    if metier in TARIFS_EXEMPLE:
+        for p, (duree, prix) in zip(fiche["prestations"][0]["liste"], TARIFS_EXEMPLE[metier]):
+            p["duree"], p["prix"] = duree, prix
+
+
 def slugifier(texte: str) -> str:
     t = unicodedata.normalize("NFKD", texte).encode("ascii", "ignore").decode().lower()
     return re.sub(r"[^a-z0-9]+", "-", t).strip("-")[:50] or "prospect"
@@ -124,7 +211,7 @@ def fiche_pour(prospect: dict) -> dict | None:
         "description": f"{nom}, {metier.lower()} à {ville}. Ce texte sera remplacé par votre présentation : votre parcours, votre façon de travailler et ce que vos clients apprécient.",
         "telephone": prospect.get("telephone") or TEL_DEFAUT, "couleur": couleur,
         "images": images, "numero_entreprise": prospect.get("siren", ""),
-        "avis_a_venir": True,  # emplacement des VRAIS avis Google du prospect, jamais d'avis inventés
+        "avis_a_venir": True,  # remplacé par des avis d'exemple signalés (contenu_exemple)
     }
     if modele == "artisan":
         fiche["services"] = [{"titre": t, "texte": x} for t, x in contenu]
@@ -133,6 +220,7 @@ def fiche_pour(prospect: dict) -> dict | None:
             fiche["titre"] = f"{metier} à {ville}"
     else:
         fiche["prestations"] = [{"categorie": c, "liste": [{"nom": n, "duree": d, "prix": p} for n, d, p in lst]} for c, lst in contenu]
+    contenu_exemple(fiche, metier)
     if not fiche["images"]:
         fiche.pop("images")
     return fiche

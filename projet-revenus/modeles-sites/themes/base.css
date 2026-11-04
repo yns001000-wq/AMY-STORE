@@ -94,6 +94,10 @@ p{margin:0}
 /* barre d'action mobile */
 .barre-mobile{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;gap:.5rem;padding:.6rem max(.75rem,env(safe-area-inset-left,0px)) calc(.6rem + env(safe-area-inset-bottom,0px));background:var(--fond);border-top:1px solid var(--filet)}
 .barre-mobile .btn{flex:1;min-height:2.9rem;padding:.5rem}
+/* Barre masquée tant que les boutons du haut de page sont visibles : elle ne recouvre jamais la photo d'accueil */
+.barre-mobile{transition:transform .25s ease,visibility .25s}
+.barre-mobile.repliee{transform:translateY(110%);visibility:hidden}
+@media (prefers-reduced-motion:reduce){.barre-mobile{transition:none}}
 @media (min-width:48rem){.barre-mobile{display:none}}
 body.a-barre{padding-bottom:4.5rem}
 @media (min-width:48rem){body.a-barre{padding-bottom:0}}
@@ -101,3 +105,6 @@ body.a-barre{padding-bottom:4.5rem}
 .communes{display:flex;flex-wrap:wrap;gap:.4rem .9rem;list-style:none;margin:1rem 0 0;padding:0;color:var(--texte);font-weight:600}
 .communes li::after{content:"·";margin-left:.9rem;color:var(--filet)}
 .communes li:last-child::after{content:""}
+/* Contenu d'exemple d'une maquette : signalé en petit, mais lisible (contraste AA) */
+.mention-exemple{font-size:.8rem;color:var(--gris);margin:.75rem 0 1.25rem;font-style:italic}
+.contact .mention-exemple,.reserver .mention-exemple{color:inherit}

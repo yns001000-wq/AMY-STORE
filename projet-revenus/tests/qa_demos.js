@@ -16,6 +16,8 @@ async function defiler(p) {
   await p.evaluate(async () => {
     for (let y = 0; y < document.body.scrollHeight; y += 400) { scrollTo(0, y); await new Promise((r) => setTimeout(r, 40)); }
     scrollTo(0, 0);
+    // on force ensuite le chargement de toutes les images pour vérifier qu'aucune n'est cassée
+    await Promise.all([...document.images].map((i) => { i.loading = 'eager'; return i.complete ? 0 : new Promise((r) => { i.onload = i.onerror = r; setTimeout(r, 5000); }); }));
   });
   await p.waitForLoadState('networkidle');
 }

@@ -5,7 +5,7 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
 ## Indicateurs réels
 | Indicateur | Valeur | Commentaire |
 |---|---|---|
-| Prospects contactés | **0** | 40 prospects trouvés et 6 aperçus prêts ; aucun contact sans votre accord |
+| Prospects contactés | **0** | 185 prospects (dont 145 avec numéro) et 6 maquettes prêtes ; aucun contact sans votre accord |
 | Ventes | **0** | — |
 | Chiffre d'affaires | **0 €** | — |
 | Dépenses engagées | **0 €** | Aucun budget approuvé |
@@ -105,6 +105,32 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
   - Lighthouse sur les démos : 97 à 100 en performance sur mobile, 100 sur ordinateur, et 100 en accessibilité, bonnes pratiques et référencement ;
   - QA du site de l'agence conforme ;
   - 30 tests unitaires OK.
+
+### 04/11/2026 (suite) — Maquettes pleines, numéros sans Google Maps, Studio site
+- **Plomberie** :
+  - la barre d'appel mobile ne recouvre plus la photo ; elle apparaît seulement après les boutons du haut ;
+  - nouvelles photos plus haut de gamme et plus parlantes (lavabo en pierre, salle de bain d'hôtel, douche en mosaïque, plombier en intervention) ;
+  - nouvelle section « Qui sommes-nous » avec photo.
+- **Maquettes** : avis, prix, horaires et questions d'exemple, chacun signalé en petit. Le générateur **refuse** de produire un site final à partir d'une maquette. Les 6 aperçus ont été régénérés.
+- **Numéros** :
+  - aucun annuaire public n'a de numéro pour les 40 entreprises créées depuis 2025, d'où l'absence de résultat sur Google Maps ;
+  - nouvel outil `outils/prospects_osm.py` : il trouve dans OpenStreetMap les artisans et commerces qui ont un **téléphone et pas de site web**. Il en a trouvé 787 dans le Rhône, la Loire et l'Isère ;
+  - **145 nouveaux prospects avec numéro** (25 au plus par métier) sont ajoutés au suivi et au cockpit, avec leur source ;
+  - à vérifier avant l'appel : OpenStreetMap peut ignorer un site existant.
+- **Cockpit, version 4 : Studio site** :
+  - génération en un clic depuis la fiche, personnalisée par l'IA ;
+  - modifications demandées en langage naturel ;
+  - réglages, photos personnelles, annulation, téléchargement d'un fichier HTML autonome ;
+  - liens d'annuaires quand le numéro manque.
+- **Preuves** :
+  - QA démos et maquettes conforme (axe : 0 violation) ;
+  - QA du site de l'agence conforme ;
+  - panier vérifié ;
+  - 31 tests unitaires OK ;
+  - Studio testé de bout en bout dans un navigateur avec une IA simulée : génération, personnalisation, modification, refus d'une réponse invalide, annulation, envoi de photo, téléchargement (le fichier téléchargé passe la QA), Échap ;
+  - aucune régression sur les 8 vues du cockpit à 400 et 1366 px ;
+  - accès vérifié : les prospects ne sont lisibles qu'au niveau propriétaire.
+- **Limite** : l'IA réelle du cockpit n'a pas pu être appelée depuis cet environnement. Le premier clic dans votre navigateur vous demandera l'autorisation d'utiliser Claude.
 
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)

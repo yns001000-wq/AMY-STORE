@@ -56,23 +56,28 @@
     }
   ],
   "images": {
-    "hero": "images-demo/plomberie-robinet.jpg",
+    "hero": "images-demo/plomberie-lavabo.jpg",
+    "apropos": {
+      "src": "images-demo/plomberie-intervention.jpg",
+      "legende": "Intervention sous évier",
+      "credit": "Photo : ocean yamaha, CC BY 2.0"
+    },
     "galerie": [
       {
-        "src": "images-demo/plomberie-salle-de-bain.jpg",
-        "legende": "Meuble vasque posé"
+        "src": "images-demo/plomberie-salle-de-bain-hotel.jpg",
+        "legende": "Salle de bain rénovée, vasque sur plan en granit"
       },
       {
-        "src": "images-demo/plomberie-douche.jpg",
-        "legende": "Douche à l'italienne"
+        "src": "images-demo/plomberie-douche-mosaique.jpg",
+        "legende": "Douche à l'italienne, mosaïque et colonne"
       },
       {
-        "src": "images-demo/plomberie-tuyaux.jpg",
-        "legende": "Réseau multicouche"
+        "src": "images-demo/plomberie-robinet-cuisine.jpg",
+        "legende": "Mitigeur de cuisine à douchette"
       },
       {
-        "src": "images-demo/plomberie-cuisine.jpg",
-        "legende": "Robinetterie cuisine"
+        "src": "images-demo/plomberie-mitigeur.jpg",
+        "legende": "Mitigeur thermostatique de baignoire"
       }
     ]
   },

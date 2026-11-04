@@ -31,7 +31,9 @@ def documents(lignes: list[dict]) -> dict[str, dict]:
         doc = {k: r.get(k, "") for k in CHAMPS}
         doc["statut"] = doc["statut"] or "nouveau"
         doc["cree_le"] = r.get("date_ajout", "")
-        doc["journal"] = [{"d": r.get("date_ajout", ""), "t": "Trouvé dans le répertoire officiel des entreprises"}]
+        origine = ("Trouvé sur OpenStreetMap (téléphone public, aucun site web)" if r.get("source", "").startswith("OpenStreetMap")
+                   else "Trouvé dans le répertoire officiel des entreprises")
+        doc["journal"] = [{"d": r.get("date_ajout", ""), "t": origine}]
         docs["p" + (r.get("siren") or r.get("id", "0"))] = doc
     return docs
 

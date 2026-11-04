@@ -15,6 +15,7 @@ sys.path.insert(0, str(RACINE / "outils"))
 
 import crm  # noqa: E402
 import generer_site  # noqa: E402
+import prospects_osm  # noqa: E402
 import rapport  # noqa: E402
 import trouver_prospects  # noqa: E402
 import preparer_apercus  # noqa: E402
@@ -406,14 +407,48 @@ class TestApercus(unittest.TestCase):
         self.assertEqual(code, 0)
         page = (d / "out" / "test-chauffage-lyon-apercu" / "index.html").read_text(encoding="utf-8")
         self.assertIn("noindex", page)
-        self.assertIn("Vos vrais avis apparaîtront ici", page)
-        self.assertNotIn("avis-carte\"><div", page)  # aucune carte d'avis rédigée
-        self.assertNotIn("<blockquote", page)
+        # maquette : contenus d'exemple présents mais signalés, jamais déclarés aux moteurs
+        page = __import__("html").unescape(page)
+        self.assertIn("Avis d'exemple pour la maquette", page)
+        self.assertIn("Horaires d'exemple", page)
+        self.assertIn("Prix indicatifs d'exemple", page)
+        self.assertIn("sont des exemples à remplacer", page)
+        self.assertNotIn("aggregateRating", page)
+        fiche = json.loads(next((d / "out" / "fiches").glob("*.json")).read_text(encoding="utf-8"))
+        with self.assertRaises(generer_site.FicheInvalide):  # pas de version finale avec du contenu d'exemple
+            generer_site.generer(fiche, d / "final")
         self.assertNotIn('href="tel:"', page)  # aucun bouton d'appel factice sans numéro
         self.assertIn("Test Chauffage", page)
         lus = crm.lire(d, "prospects.csv")
         self.assertEqual([l["apercu"] for l in lus], ["oui", "", ""])
         self.assertFalse((d / "out" / "salon-x-lyon-apercu").exists())
+
+
+
+class TestProspectsOSM(unittest.TestCase):
+    def test_telephone_sans_site_et_completion(self):
+        d = Path(tempfile.mkdtemp())
+        ecrire_csv(d, "prospects.csv", [
+            {"id": "1", "entreprise": "SARL Plomberie Dupont", "metier": "Plombier", "ville": "Lyon", "statut": "nouveau"},
+            {"id": "2", "entreprise": "Salon Refus", "metier": "Coiffure", "ville": "Lyon", "statut": "ne_pas_contacter"}])
+        osm = {"elements": [
+            {"type": "node", "id": 1, "tags": {"craft": "plumber", "name": "Plomberie Dupont", "phone": "+33 4 72 00 00 01", "addr:city": "Lyon"}},
+            {"type": "node", "id": 2, "tags": {"shop": "hairdresser", "name": "Salon Refus", "phone": "0472000002"}},
+            {"type": "node", "id": 3, "tags": {"shop": "hairdresser", "name": "Coiff Neuf", "contact:phone": "06.00.00.00.03", "addr:city": "Bron"}},
+            {"type": "node", "id": 4, "tags": {"shop": "beauty", "name": "Avec Site", "phone": "0472000004", "website": "https://x.fr"}},
+            {"type": "node", "id": 5, "tags": {"shop": "bakery", "name": "Hors cible", "phone": "0472000005"}},
+            {"type": "node", "id": 6, "tags": {"craft": "painter", "name": "Sans Tel"}}]}
+        (d / "osm.json").write_text(json.dumps(osm), encoding="utf-8")
+        prospects_osm.main(["--departements", "69", "--json", str(d / "osm.json"), "--completer", "--ajouter", "--fichier", str(d / "prospects.csv")])
+        lignes = {l["entreprise"]: l for l in crm.lire(d, "prospects.csv")}
+        self.assertEqual(lignes["SARL Plomberie Dupont"]["telephone"], "04 72 00 00 01")
+        self.assertEqual(lignes["Salon Refus"]["telephone"], "")  # refus respecté
+        self.assertEqual(lignes["Coiff Neuf"]["telephone"], "06 00 00 00 03")
+        self.assertEqual(lignes["Coiff Neuf"]["source"], "OpenStreetMap (ODbL)")
+        self.assertNotIn("Avec Site", lignes)
+        self.assertNotIn("Hors cible", lignes)
+        self.assertNotIn("Sans Tel", lignes)
+        self.assertEqual(len(lignes), 3)
 
 
 if __name__ == "__main__":

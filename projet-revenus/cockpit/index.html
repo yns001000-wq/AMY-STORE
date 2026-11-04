@@ -169,6 +169,37 @@ td.num,.mono{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular
 #checklist input{margin-top:3px;accent-color:var(--accent);width:16px;height:16px;flex:none}
 .modele h3{margin:0 0 6px;font-size:14px}
 @media (prefers-reduced-motion:no-preference){.tiroir{animation:entre .2s ease-out}@keyframes entre{from{transform:translateX(24px);opacity:.6}}}
+
+/* ---------- Studio site ---------- */
+.cache{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.studio{position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.st-tete{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line);background:var(--surface)}
+.st-tete h2{margin:0;font-size:16px}.st-tete p{margin:0}
+.st-outils{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.st-taille{margin:0;flex:none}.st-taille button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--ombre)}
+.st-corps{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr)}
+@media (max-width:900px){.st-corps{grid-template-columns:minmax(0,1fr);overflow:auto}.st-vue{min-height:85vh}.st-panneau{border-right:none!important;overflow:visible}}
+.st-panneau{overflow:auto;padding:14px;display:flex;flex-direction:column;gap:14px;border-right:1px solid var(--line)}
+.st-panneau h3{margin:14px 0 6px;font-size:14px}.st-panneau .ia-titre h3{margin:0}
+.st-champs{display:grid;gap:8px}
+.st-champs label{display:grid;gap:3px;font-size:12px;color:var(--soft);font-weight:600}
+.st-champs input,.st-champs textarea,.st-champs select,#st-demande{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:7px 9px;color:var(--ink)}
+.st-champs input[type=color]{height:36px;padding:2px 4px}
+.st-sugg{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.st-statut{font-size:13px;margin:8px 0 0}.st-statut.pense{color:var(--soft)}.st-statut.ok{color:var(--ok)}
+.st-sections{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:13px}.st-sections label{display:flex;gap:6px;align-items:center}
+.st-galerie{list-style:none;margin:8px 0;padding:0;display:grid;gap:6px}
+.st-galerie li{display:flex;align-items:center;gap:8px;font-size:12px}
+.st-galerie img{width:56px;height:42px;object-fit:cover;border-radius:6px;flex:none}
+.st-galerie span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cache-fichier{position:absolute;width:1px;height:1px;opacity:0}
+label.btn{position:relative}label.btn:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+.st-vue{position:relative;min-height:0;display:flex;justify-content:center;background:var(--surface-2);padding:16px;overflow:auto}
+.st-vue iframe{border:0;background:#fff;width:100%;height:100%;min-height:70vh;box-shadow:var(--ombre);border-radius:10px}
+.st-vue.mobile iframe{width:390px;max-width:100%}
+.st-charge{position:absolute;top:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:12px;z-index:1}
+body.studio-ouvert{overflow:hidden}
+.liens-num{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;width:100%}
 </style>
 
 <div class="app">
@@ -310,6 +341,7 @@ td.num,.mono{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular
 
 <div class="voile" id="voile" hidden></div>
 <aside class="tiroir" id="tiroir" hidden aria-label="Fiche prospect"></aside>
+<section class="studio" id="studio" hidden role="dialog" aria-modal="true" aria-labelledby="st-titre"><header class="st-tete"><div><h2 id="st-titre">Studio</h2><p class="note" id="st-sous"></p></div><div class="st-outils"><div class="onglets st-taille" role="group" aria-label="Taille de l'aperçu"><button type="button" id="st-mobile" aria-pressed="true">Mobile</button><button type="button" id="st-ordinateur" aria-pressed="false">Ordinateur</button></div><span class="note" id="st-sauve" aria-live="polite"></span><button class="btn petit" id="st-annuler" type="button" disabled>Annuler la dernière modification</button><button class="btn petit" id="st-telecharger" type="button">Télécharger la maquette</button><button class="btn petit p" id="st-fermer" type="button">Fermer</button></div></header><div class="st-corps"><div class="st-panneau"><form class="carte ia-bloc" id="st-form"><div class="ia-titre"><span class="badge-ia">✦ IA</span><h3>Demandez une modification</h3></div><label class="cache" for="st-demande">Ce que vous voulez changer</label><textarea id="st-demande" rows="3" placeholder="Ex. : un bleu plus foncé, ajoute un service de ramonage, texte plus chaleureux, enlève la FAQ"></textarea><div class="st-sugg" id="st-sugg"></div><p style="margin:0"><button class="btn ia" id="st-go" type="submit">✦ Appliquer</button></p><p class="st-statut" id="st-statut" role="status" hidden></p></form><div class="carte" id="st-reglages"><h3 style="margin-top:0">Réglages</h3><div class="st-champs"><label>Nom de l'entreprise<input data-c="nom" type="input"></label><label>Titre principal<input data-c="titre" type="input"></label><label>Accroche<textarea data-c="accroche" rows="3"></textarea></label><label>Téléphone<input data-c="telephone" type="tel"></label><label>Email<input data-c="email" type="email"></label><label>Couleur principale<input data-c="couleur" type="color"></label><label>Modèle<select id="st-modele"><option value="artisan">Artisan et services</option><option value="beaute">Beauté et bien-être</option><option value="commande-whatsapp">Commande WhatsApp (métiers de bouche)</option></select></label><label>Présentation<textarea data-c="description" rows="3"></textarea></label></div><h3>Sections affichées</h3><div class="st-sections"><label><input type="checkbox" data-m="atouts">Bande d'atouts</label><label><input type="checkbox" data-m="galerie">Photos</label><label><input type="checkbox" data-m="avis">Avis</label><label><input type="checkbox" data-m="etapes">Étapes</label><label><input type="checkbox" data-m="apropos">Présentation</label><label><input type="checkbox" data-m="faq">Questions</label></div><h3>Photos</h3><p style="display:flex;gap:6px;flex-wrap:wrap;margin:0"><label class="btn petit">Remplacer la photo principale<input type="file" id="st-hero" accept="image/*" class="cache-fichier"></label><label class="btn petit">Ajouter à la galerie<input type="file" id="st-ajout" accept="image/*" multiple class="cache-fichier"></label></p><ul class="st-galerie" id="st-galerie"></ul><p class="note">Avis, prix et horaires restent signalés comme exemples sur la maquette. Avant toute mise en ligne, remplacez-les par les vraies informations du client.</p></div></div><div class="st-vue mobile" id="st-vue"><div class="st-charge" id="st-charge" hidden>Mise à jour de l'aperçu…</div><iframe id="st-cadre" title="Aperçu de la maquette du site" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"></iframe></div></div></section>
 <div class="toast" id="toast" hidden></div>
 
 <script>
@@ -350,7 +382,7 @@ function score(p){
   else if (p.statut === "repondu"){ s += 35; r.push("a répondu"); }
   else if (p.statut === "contacte"){ s += 10; r.push("déjà contacté"); }
   if (p.telephone){ s += 20; r.push("numéro connu"); }
-  if (p.apercu_url){ s += 15; r.push("aperçu prêt"); }
+  if (p.apercu_url || (S.sites && S.sites[p.id])){ s += 15; r.push("aperçu prêt"); }
   if (/non trouvé|non/i.test(p.site_existant || "")){ s += 10; r.push("pas de site"); }
   if (echu(p)){ s += 10; r.push("action due"); }
   var cree = (p.notes || "").match(/Créé le (\d{4}-\d{2}-\d{2})/);
@@ -529,7 +561,7 @@ function rendreFiche(){
   var c = el("div",{cls:"corps"}); t.appendChild(c);
   var tel = el("div",{cls:"tel"},[el("span",{cls:"mono",text:p.telephone || "Numéro à trouver"})]);
   if (p.telephone){ tel.appendChild(el("button",{cls:"btn petit",type:"button",text:"Copier",onclick:function(){ copier(p.telephone,"Numéro"); }})); tel.appendChild(el("a",{cls:"btn p petit",href:"tel:" + p.telephone.replace(/[^0-9+]/g,""),text:"Appeler"})); }
-  else tel.appendChild(el("a",{cls:"btn petit",href:"https://www.google.com/maps/search/" + encodeURIComponent(p.entreprise + " " + (p.ville||"")),target:"_blank",rel:"noopener",text:"Chercher sur Google Maps"}));
+  else tel.appendChild(liensNumero(p));
   c.appendChild(tel);
   // IA
   var ia = el("div",{cls:"carte ia-bloc ia-zone"},[el("div",{cls:"ia-titre"},[el("span",{cls:"badge-ia",text:"✦ IA"}),el("h2",{style:"margin:0",text:"Copilote de vente"})])]);
@@ -547,6 +579,14 @@ function rendreFiche(){
     ia.appendChild(el("p",{cls:"note",style:"margin:6px 0 0",text:"Claude s'appuie sur cette fiche. Vous relisez et envoyez vous-même ; rien ne part automatiquement."}));
   } else ia.appendChild(el("p",{cls:"note",text:"L'IA n'est pas disponible dans cette vue. Les messages types restent utilisables."}));
   c.appendChild(ia);
+  // site du prospect (Studio)
+  var sd = S.sites && S.sites[p.id], bs = el("div",{cls:"actions"});
+  if (sd) bs.appendChild(el("button",{cls:"btn p",type:"button",text:"Ouvrir le Studio",onclick:function(ev){ ouvrirStudio(p.id, sd.fiche, ev.currentTarget); }}));
+  var bg = el("button",{cls:"btn " + (sd ? "petit" : "ia"),type:"button",text: sd ? "Repartir de zéro" : "✦ Générer le site",onclick:function(ev){ var b = ev.currentTarget;
+    if (sd && !b.dataset.ok){ b.dataset.ok = "1"; b.textContent = "Confirmer : remplacer la maquette ?"; return; } genererSite(p, b); }});
+  bs.appendChild(bg);
+  c.appendChild(el("div",{cls:"carte"},[el("h2",{style:"margin-top:0",text:"Site du prospect"}),
+    el("p",{cls:"note",style:"margin:0 0 10px",text: sd ? "Maquette enregistrée le " + dateFr((sd.maj||"").slice(0,10)) + ". Ouvrez le Studio pour la voir, la retoucher avec l'IA ou la télécharger." : "Un clic : maquette complète adaptée à son métier (avis, prix et horaires d'exemple signalés), puis personnalisée par l'IA."}), bs]));
   // résultat
   c.appendChild(el("div",null,[el("h2",{text:"Noter le résultat"}),(function(){ var a = el("div",{cls:"actions"}); ACTIONS.forEach(function(x){ a.appendChild(el("button",{cls:"btn petit " + x[1],type:"button",text:x[0],onclick:function(){ action(p, x); }})); }); return a; })(), el("div",{id:"zone-action",style:"margin-top:8px"})]));
   // champs
@@ -961,6 +1001,413 @@ $("b-livre").addEventListener("click", function(){ if (!S.downloads){ toast("Exp
   var csv = ["date;facture;client;nature;montant;mode"].concat((S.livre||[]).map(function(r){ return [r.date, r.numero, r.client, r.nature, String(r.montant).replace(".", ","), r.mode].map(function(v){ return '"' + String(v||"").replace(/"/g,'""') + '"'; }).join(";"); })).join("\r\n");
   S.downloads.save({filename:"livre-des-recettes-" + aujourdhui() + ".csv", data:"\ufeff" + csv}).then(function(){ toast("Export prêt"); }, function(){ toast("Export annulé"); }); });
 
+/* ================= STUDIO SITE : génération et retouche par l'IA ================= */
+/* Version navigateur de outils/generer_site.py (mêmes thèmes, mêmes règles de maquette).  */
+var STU = {
+  css: {"artisan":"/_blob/1003a6621aad1f90871f22db6dfad83e", "commande-whatsapp":"/_blob/ab5effad03d4cea6a2a674048e6f975e", "beaute":"/_blob/5d1db8a24d24dd3c893fe74094544e80"},
+  police: {"archivo-latin.woff2":"/_blob/e92deef4dd0b664db9da45010dcc918f", "gloock-latin.woff2":"/_blob/bc5dc4dce790bddffccb4f6baaa09b21", "marcellus-latin.woff2":"/_blob/3a1e9faaf0818d1c52ad6202eff05a26"},
+  policeModele: {"artisan":"archivo-latin.woff2", "commande-whatsapp":"gloock-latin.woff2", "beaute":"marcellus-latin.woff2"},
+  encre: {"artisan":"#0f1b2d", "commande-whatsapp":"#231a17", "beaute":"#1b1716"},
+  photos: {
+    "plomberie-lavabo": ["/_blob/22808889e6601f45ee4392e232a1b0c6", "Lavabo en pierre sombre et mitigeur chromé"],
+    "plomberie-salle-de-bain": ["/_blob/91d29dd78e47a239291a9b02fb2cf7fb", "Salle de bain d'hôtel, vasque sur plan en granit"],
+    "plomberie-douche": ["/_blob/ace529f53df9280f82ec8e0201a36f7e", "Douche à l'italienne en mosaïque"],
+    "plomberie-cuisine": ["/_blob/10ca32c17907e87089875b6becfd654f", "Mitigeur de cuisine à douchette"],
+    "plomberie-mitigeur": ["/_blob/d9f9f53778419d4a5b03a2483ced3dc6", "Mitigeur thermostatique de baignoire"],
+    "plomberie-intervention": ["/_blob/f9c510fb6976cd1b57632d28d5c6cf0f", "Plombier en intervention sous un évier (photo : ocean yamaha, CC BY 2.0)"],
+    "beaute-salon": ["/_blob/d10e722405ce881b13b6fd3752ac9078", "Salon de coiffure lumineux, fauteuils en cuir"],
+    "beaute-bac": ["/_blob/5174e74550160525e12f86606a4ccecf", "Bac à shampoing"],
+    "beaute-vernis": ["/_blob/07e072a20606a7df217fde8a684d7a59", "Palette de vernis à ongles"],
+    "beaute-ongles": ["/_blob/e01ca4aa3a7ef57b59c577545f90c48f", "Pose de gel sur les ongles"],
+    "patisserie-hero": ["/_blob/d08a5a68452a3b00daa6242a25b9e6a2", "Gâteau aux fraises et chantilly"],
+    "patisserie-fraisier": ["/_blob/727be77cb376d4d8b11e98582a0561ea", "Part de fraisier"],
+    "patisserie-chocolat": ["/_blob/fe12fb59f2bf55c723ef17ec3c4a7a12", "Gâteau au chocolat et fruits rouges"],
+    "patisserie-citron": ["/_blob/bc2a88ec883695da9baf31ac1c3ea6bc", "Tarte au citron meringuée"],
+    "patisserie-cookies": ["/_blob/c05220199fa863ba9bc68fb8d216b074", "Pile de cookies"]
+  }
+};
+var JOURS_S = [["lun","Lundi"],["mar","Mardi"],["mer","Mercredi"],["jeu","Jeudi"],["ven","Vendredi"],["sam","Samedi"],["dim","Dimanche"]];
+var FAMILLE_S = {"Plombier":"artisan","Chauffagiste":"artisan","Électricien":"artisan","Peintre":"artisan","Traiteur":"bouche","Pâtisserie":"bouche","Coiffure":"beaute","Soins de beauté":"beaute"};
+function familleDe(m){ if (FAMILLE_S[m]) return FAMILLE_S[m]; m = (m||"").toLowerCase();
+  if (/coif|beaut|esth|ongl|barb|spa|maquill|cil/.test(m)) return "beaute";
+  if (/trait|p[aâ]tiss|boulang|chocolat|cuisin|restau|food|glac/.test(m)) return "bouche"; return "artisan"; }
+var CONTENU_S = {
+  "Plombier": {services:[["Dépannage et fuites","Robinetterie, WC, évacuations, recherche de fuite.","À partir de 90 €"],["Salle de bain","Douche, baignoire, meubles vasques, rénovation.","Sur devis"],["Chauffe-eau","Remplacement et entretien.","À partir de 150 €"],["Installation neuve","Raccordements et réseaux d'eau.","Sur devis"]],
+    accroche:"Dépannage, installation et rénovation de plomberie à {ville} et alentours.", couleur:"#1d5fd1",
+    avis:[["Sophie L.","Fuite sous l'évier réparée le jour même. Ponctuel, propre, et le prix annoncé a été respecté."],["Karim B.","Remplacement du chauffe-eau rondement mené, avec des explications claires à la fin."],["Claire M.","Très bon conseil pour notre douche à l'italienne. Travail soigné, je recommande."]]},
+  "Chauffagiste": {services:[["Chaudières et pompes à chaleur","Installation, remplacement, mise en service.","Sur devis"],["Entretien annuel","Contrôle, nettoyage et attestation d'entretien.","À partir de 120 €"],["Radiateurs et planchers chauffants","Pose, équilibrage, désembouage.","Sur devis"],["Climatisation","Installation et entretien.","Sur devis"]],
+    accroche:"Installation, entretien et dépannage de votre chauffage à {ville} et alentours.", couleur:"#c2410c",
+    avis:[["Julien R.","Entretien de la chaudière fait rapidement, attestation remise sur place. Sérieux."],["Nadia K.","Panne de chauffage en plein hiver : intervention dès le lendemain, problème réglé."],["Marc D.","Pompe à chaleur bien installée et réglée, devis clair et respecté."]]},
+  "Électricien": {services:[["Dépannage électrique","Pannes, disjonctions, remise en service.","À partir de 80 €"],["Rénovation et mise aux normes","Tableau, prises, circuits.","Sur devis"],["Éclairage","Intérieur, extérieur, LED.","À partir de 60 €"],["Bornes et équipements","Borne de recharge, VMC, chauffage électrique.","Sur devis"]],
+    accroche:"Dépannage, rénovation et mise aux normes électriques à {ville} et alentours.", couleur:"#a16207",
+    avis:[["Laura P.","Tableau électrique remis aux normes proprement, rien à redire."],["Thomas G.","Dépannage rapide après une coupure, explications claires et prix correct."],["Inès F.","Pose de luminaires et de prises dans toute la maison, travail très propre."]]},
+  "Peintre": {services:[["Peinture intérieure","Murs, plafonds, boiseries, finitions soignées.","À partir de 25 €/m²"],["Façades","Ravalement, nettoyage, peinture extérieure.","Sur devis"],["Préparation des supports","Enduits, rebouchage, ponçage.","Inclus au devis"],["Revêtements","Papiers peints, toile de verre.","À partir de 20 €/m²"]],
+    accroche:"Peinture intérieure et extérieure, finitions soignées, à {ville} et alentours.", couleur:"#0f766e",
+    avis:[["Camille R.","Salon et couloir repeints en trois jours, finitions impeccables et chantier propre."],["Olivier T.","Ravalement de façade réussi, bons conseils sur les teintes."],["Sarah B.","Ponctuel, soigneux, et le devis a été respecté au centime près."]]},
+  "Traiteur": {services:[["Buffets et repas","Pour vos fêtes, mariages et anniversaires.","À partir de 18 €/pers."],["Plateaux repas","Pour les entreprises et réunions.","À partir de 14 €"],["Événements","Menus sur mesure selon votre budget.","Sur devis"],["Livraison","Dans votre secteur, à l'heure convenue.","Selon la distance"]],
+    accroche:"Buffets, plateaux repas et menus pour vos événements, à {ville} et alentours.", couleur:"#9a3412",
+    avis:[["Amélie V.","Buffet pour 40 personnes : tout était délicieux et joliment présenté."],["Youssef M.","Plateaux repas livrés à l'heure pour notre réunion, très bons retours de l'équipe."],["Hélène D.","Menu de mariage sur mesure, à l'écoute du début à la fin. Merci !"]]},
+  "Pâtisserie": {produits:[["Gâteaux de fête","Fraisier","Génoise, crème mousseline vanille, fraises fraîches.",32,["6 parts","8 parts","10 parts"],"patisserie-fraisier","Le plus commandé"],["Gâteaux de fête","Layer cake chocolat","Trois étages, ganache chocolat noir, fruits rouges.",38,["8 parts","12 parts"],"patisserie-chocolat",""],["Douceurs","Tarte citron meringuée","Pâte sablée, crème citron, meringue italienne.",24,["6 parts","8 parts"],"patisserie-citron",""],["Douceurs","Boîte de 12 cookies","Chocolat, noisette et caramel beurre salé.",15,[],"patisserie-cookies","Nouveau"]],
+    services:[["Gâteaux de fête","Anniversaires, baptêmes, mariages.","À partir de 28 €"],["Douceurs du quotidien","Tartes, entremets, biscuits.","À partir de 4 €"],["Sur mesure","Personnalisation selon votre thème.","Sur devis"],["Commande facile","Retrait ou livraison selon disponibilité.","Retrait offert"]],
+    accroche:"Gâteaux de fête et douceurs sur commande, à {ville}.", couleur:"#b0466b",
+    avis:[["Nadia R.","Le gâteau d'anniversaire était magnifique et délicieux. Commande très simple."],["Thomas G.","Les tartes du week-end sont devenues un rituel à la maison."],["Élodie P.","Gâteau de baptême parfait, tout le monde a demandé l'adresse !"]]},
+  "Coiffure": {tarifs:[["Coiffure",[["Coupe + brushing","1 h",45],["Couleur","1 h 30",60],["Balayage","2 h 30","dès 95 €"],["Coupe homme","30 min",25]]]],
+    accroche:"Coupe, couleur et soins à {ville}. Tarifs affichés, rendez-vous en un geste.", couleur:"#8a5a44",
+    avis:[["Julie D.","Balayage exactement comme je le voulais, et de très bons conseils pour l'entretien."],["Marc H.","Coupe nette et rapide, accueil sympathique."],["Aïcha B.","Enfin un salon qui prend le temps d'écouter. Je reviendrai."]]},
+  "Soins de beauté": {tarifs:[["Soins",[["Soin du visage","1 h",55],["Épilations","20 min","dès 10 €"],["Manucure","45 min",30],["Semi-permanent","1 h",35]]]],
+    accroche:"Soins et beauté à {ville}. Tarifs affichés, rendez-vous en un geste.", couleur:"#9d4e6a",
+    avis:[["Amandine V.","Soin du visage très relaxant, peau éclatante. Je recommande."],["Léa M.","Semi-permanent qui tient trois semaines, travail minutieux."],["Sonia K.","Accueil chaleureux, cabine propre et prix affichés."]]}
+};
+var COMMUN_S = {
+  artisan: {horaires:{lun:"08:00-18:00",mar:"08:00-18:00",mer:"08:00-18:00",jeu:"08:00-18:00",ven:"08:00-18:00",sam:"09:00-12:00",dim:""},
+    atouts:["Devis gratuit","Prix annoncé avant les travaux","Intervention rapide","Chantier laissé propre"],
+    faq:[["Le devis est-il gratuit ?","Oui, le devis est gratuit et sans engagement. Le prix est annoncé avant le début des travaux."],["Intervenez-vous en urgence ?","Selon les disponibilités, nous intervenons le jour même pour les urgences."],["Quels moyens de paiement acceptez-vous ?","Carte bancaire, virement ou chèque, à la fin de l'intervention."]],
+    etapes:[["Vous appelez ou écrivez","Décrivez votre besoin, photos à l'appui si possible."],["Devis clair et gratuit","Un prix annoncé avant le début des travaux, sans surprise."],["Intervention soignée","Travail propre, chantier rangé, explications à la fin."]]},
+  beaute: {horaires:{lun:"",mar:"09:30-19:00",mer:"09:30-19:00",jeu:"09:30-19:00",ven:"09:30-19:00",sam:"09:00-17:00",dim:""},
+    atouts:["Tarifs affichés","Réservation simple","Conseils personnalisés","Produits professionnels"],
+    faq:[["Faut-il réserver ?","La réservation est conseillée, surtout le samedi. Nous prenons aussi les clients sans rendez-vous selon les disponibilités."],["Puis-je annuler un rendez-vous ?","Oui, merci de prévenir au moins 24 h à l'avance."],["Quels moyens de paiement acceptez-vous ?","Carte bancaire et espèces."]]},
+  bouche: {horaires:{lun:"",mar:"",mer:"10:00-19:00",jeu:"10:00-19:00",ven:"10:00-19:00",sam:"09:00-19:00",dim:"09:00-13:00"},
+    atouts:["Fait maison","Sur commande","Retrait ou livraison","Menus sur mesure"],
+    faq:[["Combien de temps à l'avance faut-il commander ?","Idéalement 48 h à l'avance, davantage pour les grands événements."],["Proposez-vous la livraison ?","Oui, dans le secteur, à l'heure convenue. Le retrait sur place est aussi possible."],["Pouvez-vous adapter le menu ?","Oui : allergies, régimes particuliers ou envies, nous construisons le menu avec vous."]],
+    etapes:[["Vous nous contactez","Date, nombre de personnes, envies : quelques mots suffisent."],["Une proposition claire","Un menu et un prix annoncés avant de commander."],["Prêt à l'heure convenue","Retrait ou livraison, selon ce qui vous arrange."]]}
+};
+var IMAGES_S = {
+  plomberie: {hero:"plomberie-lavabo", apropos:["plomberie-intervention","Votre photo ici","Photo : ocean yamaha, CC BY 2.0"], galerie:["plomberie-salle-de-bain","plomberie-douche","plomberie-cuisine","plomberie-mitigeur"]},
+  beaute: {hero:"beaute-salon", galerie:["beaute-bac","beaute-vernis","beaute-ongles"]},
+  bouche: {hero:"patisserie-hero", galerie:["patisserie-fraisier","patisserie-chocolat","patisserie-citron","patisserie-cookies"]}
+};
+
+function hS(v){ return String(v == null ? "" : v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;"); }
+function chiffresS(t){ return String(t||"").replace(/\D/g,""); }
+function eurS(n){ return (typeof n === "string") ? n : (Math.round(n*100)/100).toFixed(2).replace(".", ",").replace(",00","") + " €"; }
+function slugS(t){ return String(t||"site").normalize("NFKD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,50) || "site"; }
+function photoS(cle){ return STU.photos[cle] ? STU.photos[cle][0] : cle; }
+
+/* ----- couleurs : contraste AA garanti (même calcul que le générateur Python) ----- */
+function rvbS(x){ return [1,3,5].map(function(i){ return parseInt(x.slice(i,i+2),16)/255; }); }
+function hexS(c){ return "#" + c.map(function(v){ return ("0" + Math.max(0,Math.min(255,Math.round(v*255))).toString(16)).slice(-2); }).join(""); }
+function lumS(x){ var c = rvbS(x).map(function(v){ return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); }); return 0.2126*c[0] + 0.7152*c[1] + 0.0722*c[2]; }
+function contrasteS(a,b){ var l = [lumS(a), lumS(b)].sort(function(x,y){ return y-x; }); return (l[0]+0.05)/(l[1]+0.05); }
+function melS(a,b,t){ var x = rvbS(a), y = rvbS(b); return hexS(x.map(function(v,i){ return v + (y[i]-v)*t; })); }
+function paletteS(c, encre){ if (!/^#[0-9a-f]{6}$/i.test(c)) c = "#1f5fbf"; c = c.toLowerCase();
+  var sur = contrasteS(c,"#ffffff") >= 4.5 ? "#ffffff" : "#111111", texte = c, clair = c, i;
+  for (i = 1; i <= 20 && contrasteS(texte,"#f2f3f5") < 4.5; i++) texte = melS(c,"#000000",i*0.05);
+  for (i = 1; i <= 20 && contrasteS(clair,encre) < 4.5; i++) clair = melS(c,"#ffffff",i*0.05);
+  return {"accent":c, "accent-fonce":melS(c,"#000000",0.18), "sur-accent":sur, "accent-texte":texte, "accent-clair":clair}; }
+
+/* ----- fiche de départ, à partir d'un prospect ----- */
+function ficheDepuisProspect(p){
+  var met = p.metier || "Artisan", fam = familleDe(met), c = CONTENU_S[met] || {}, k = COMMUN_S[fam];
+  var ville = p.ville || "votre ville", tel = p.telephone || "";
+  var mobile = /^0[67]/.test(chiffresS(tel)) || /^\+?33[67]/.test(chiffresS(tel));
+  var modele = fam === "beaute" ? "beaute" : (met === "Pâtisserie" && mobile ? "commande-whatsapp" : "artisan");
+  var f = {modele:modele, maquette:true, pays:p.pays||"FR", nom:(p.entreprise||"Votre entreprise").replace(/\s*\([^)]*\)/g,"").replace(/^(sarl|sas|sasu|eurl)\s+/i,""),
+    metier:met, ville:ville, zone:ville + " et alentours (zone à préciser).", telephone:tel || "Votre numéro", email:p.email||"",
+    titre: modele === "artisan" ? met + " à " + ville : "", accroche:(c.accroche || "Votre activité présentée clairement, joignable en un geste depuis un téléphone.").replace("{ville}", ville),
+    description: (p.entreprise||"") + ", " + met.toLowerCase() + " à " + ville + ". Ce texte sera remplacé par votre présentation : votre parcours, votre façon de travailler et ce que vos clients apprécient.",
+    couleur: c.couleur || "#1f5fbf", atouts:k.atouts.slice(), horaires_semaine:Object.assign({}, k.horaires),
+    faq:k.faq.map(function(x){ return {q:x[0], r:x[1]}; }),
+    avis:{note:4.8, nombre:27, source:"Google", liste:(c.avis || CONTENU_S["Plombier"].avis).map(function(a){ return {auteur:a[0], texte:a[1], note:5}; })}, images:{}};
+  if (mobile) f.whatsapp = "33" + chiffresS(tel).replace(/^33/,"").replace(/^0/,"");
+  if (modele === "beaute") f.prestations = (c.tarifs || CONTENU_S["Coiffure"].tarifs).map(function(cat){ return {categorie:cat[0], liste:cat[1].map(function(x){ return {nom:x[0], duree:x[1], prix:x[2]}; })}; });
+  else if (modele === "commande-whatsapp"){ f.produits = c.produits.map(function(x){ return {categorie:x[0], nom:x[1], desc:x[2], prix:x[3], options:x[4], image:photoS(x[5]), badge:x[6]}; });
+    f.titre = "Des gâteaux faits maison, commandés en 2 minutes"; f.modes = ["Retrait", "Livraison (secteur proche)"];
+    f.delai_commande = "Commande au plus tard 48 h à l'avance."; f.mode_retrait = "Retrait sur place ou livraison dans le secteur."; }
+  else { f.services = (c.services || [["Dépannage","Interventions rapides dans votre secteur.","Sur devis"],["Installation","Travaux neufs, conseils et devis clair.","Sur devis"],["Rénovation","Remise à neuf et mise aux normes.","Sur devis"],["Entretien","Contrôles réguliers et suivi.","Sur devis"]]).map(function(x){ return {titre:x[0], texte:x[1], prix:x[2]}; });
+    f.etapes = (fam === "bouche" ? COMMUN_S.bouche.etapes : COMMUN_S.artisan.etapes).map(function(x){ return {titre:x[0], texte:x[1]}; }); }
+  if (fam === "bouche" && modele === "artisan") Object.assign(f, {libelle_realisations:"Créations", titre_realisations:"Nos dernières créations", titre_contact:"Une date, un événement, une envie ?", texte_whatsapp:"Nous écrire sur WhatsApp", titre_zone:"Secteur de livraison", titre_apropos:"Fait maison, près de chez vous"});
+  var jeu = (met === "Plombier" || met === "Chauffagiste") ? IMAGES_S.plomberie : fam === "beaute" ? IMAGES_S.beaute : fam === "bouche" ? IMAGES_S.bouche : null;
+  if (jeu){ f.images.hero = photoS(jeu.hero);
+    f.images.galerie = jeu.galerie.map(function(g){ return {src:photoS(g), legende: fam === "beaute" ? "Vos photos ici" : fam === "bouche" ? "Vos créations ici" : "Exemple de réalisation"}; });
+    if (jeu.apropos) f.images.apropos = {src:photoS(jeu.apropos[0]), legende:jeu.apropos[1], credit:jeu.apropos[2]}; }
+  return f;
+}
+
+/* ----- rendu HTML (mêmes classes que les thèmes) ----- */
+var ICO_S = function(d){ return '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>'; };
+var I_TEL = ICO_S('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>');
+var I_PIN = ICO_S('<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>');
+var I_PAN = ICO_S('<path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="17" cy="20" r="1"/>');
+var I_OK = ICO_S('<path d="M5 12.5l4.5 4.5L19 7.5"/>');
+function masqueS(f, s){ return (f.masquer || []).indexOf(s) >= 0; }
+function etoilesS(n){ var p = Math.round(n); return "★★★★★".slice(0,p) + "☆☆☆☆☆".slice(0,5-p); }
+function noteS(n){ return String(n).replace(".", ","); }
+function teteS(sur, titre, texte, id){ return '<div class="tete-section"><span class="surtitre">' + hS(sur) + '</span><h2' + (id ? ' id="' + id + '"' : '') + '>' + hS(titre) + '</h2>' + (texte ? '<p class="chapo">' + hS(texte) + '</p>' : '') + '</div>'; }
+function mentionS(t){ return '<p class="mention-exemple">' + hS(t) + '</p>'; }
+function imgS(src, alt, lazy){ return '<img src="' + hS(src) + '" alt="' + hS(alt) + '" width="900" height="675"' + (lazy ? ' loading="lazy" decoding="async"' : '') + '>'; }
+function ligneNoteS(f){ var a = f.avis || {}; if (masqueS(f,"avis") || a.note == null || !a.nombre) return "";
+  return '<p class="note-ligne"><span class="etoiles" aria-hidden="true">' + etoilesS(a.note) + '</span> <strong>' + noteS(a.note) + '/5</strong>, ' + (+a.nombre) + ' avis sur ' + hS(a.source||"Google") + (f.maquette ? ' (exemple)' : '') + '</p>'; }
+function statutS(f){ return f.horaires_semaine ? '<span class="statut" data-ouverture hidden></span>' : ''; }
+function avisS(f, cls){ var a = f.avis || {}, l = a.liste || []; if (!l.length || masqueS(f,"avis")) return "";
+  var res = (a.note != null && a.nombre) ? '<p class="avis-resume"><span class="note">' + noteS(a.note) + '/5</span><span class="etoiles" aria-hidden="true">' + etoilesS(a.note) + '</span> ' + (+a.nombre) + ' avis sur ' + hS(a.source||"Google") + '.</p>' : '';
+  return '<section class="section ' + (cls||"") + '" id="avis" aria-labelledby="titre-avis"><div class="conteneur">' + teteS("Avis clients", f.titre_avis || "Ce que disent nos clients", "", "titre-avis")
+    + (f.maquette ? mentionS("Avis d'exemple pour la maquette : vos vrais avis Google les remplaceront.") : '') + res + '<div class="avis-liste">'
+    + l.map(function(x){ var n = Math.max(1, Math.min(5, +x.note || 5)); return '<blockquote><span class="etoiles" aria-label="Note : ' + n + ' sur 5">' + etoilesS(n) + '</span><p>« ' + hS(x.texte) + ' »</p><footer>' + hS(x.auteur) + ', ' + hS(a.source||"Google") + '</footer></blockquote>'; }).join("") + '</div></div></section>'; }
+function faqS(f, cls){ var q = f.faq || []; if (!q.length || masqueS(f,"faq")) return "";
+  return '<section class="section ' + (cls||"") + '" id="faq" aria-labelledby="titre-faq"><div class="conteneur" style="max-width:52rem">' + teteS("Questions fréquentes","Avant de nous contacter","","titre-faq")
+    + (f.maquette ? mentionS("Questions et réponses d'exemple, à valider ensemble.") : '') + '<div class="faq">' + q.map(function(x){ return '<details><summary>' + hS(x.q) + '</summary><p>' + hS(x.r) + '</p></details>'; }).join("") + '</div></div></section>'; }
+function horairesS(f){ var s = f.horaires_semaine; if (!s) return '<p>Sur rendez-vous.</p>';
+  return '<table class="horaires"><caption class="cache">Horaires d\'ouverture</caption>' + JOURS_S.map(function(j){ var h = s[j[0]] || "";
+    var t = h ? h.split(",").map(function(p){ return p.replace(/:/g,"h").replace("-"," à "); }).join(", ") : "Fermé"; return '<tr data-jour="' + j[0] + '"><td>' + j[1] + '</td><td>' + hS(t) + '</td></tr>'; }).join("") + '</table>'; }
+function infosS(f, titreZone, cls){ var com = (f.communes||[]).length ? '<ul class="communes">' + f.communes.map(function(c){ return '<li>' + hS(c) + '</li>'; }).join("") + '</ul>' : '';
+  var iti = f.adresse ? '<p style="margin-top:1.25rem"><a class="btn btn--ligne" href="https://www.google.com/maps/search/?api=1&amp;query=' + encodeURIComponent(f.adresse + ", " + f.ville) + '" target="_blank" rel="noopener">' + I_PIN + ' Itinéraire</a></p>' : '';
+  return '<section class="section ' + (cls||"") + '" id="infos" aria-labelledby="titre-infos"><div class="conteneur deux"><div>' + teteS("Où nous trouver", titreZone, "", "titre-infos") + '<p>' + hS(f.zone || f.ville) + '</p>' + com + iti + '</div>'
+    + '<div>' + teteS("Horaires","Quand nous joindre") + horairesS(f) + (f.maquette ? mentionS("Horaires d'exemple, à remplacer par les vôtres.") : '') + '</div></div></section>'; }
+function formS(bouton){ return '<form class="form" name="demo" data-demo="Maquette non publiée : le formulaire est désactivé, aucune donnée n’a été envoyée." novalidate>'
+  + '<div class="champ"><label for="f-nom">Nom</label><input id="f-nom" name="nom" autocomplete="name" required aria-describedby="e-nom"><p class="erreur" id="e-nom"></p></div>'
+  + '<div class="champ"><label for="f-tel">Téléphone</label><input id="f-tel" name="telephone" type="tel" autocomplete="tel" required aria-describedby="e-tel"><p class="erreur" id="e-tel"></p></div>'
+  + '<div class="champ"><label for="f-msg">Votre besoin</label><textarea id="f-msg" name="message" required aria-describedby="e-msg"></textarea><p class="erreur" id="e-msg"></p></div>'
+  + '<p class="petit">Vos informations servent uniquement à répondre à votre demande.</p><p class="retour" role="alert"></p><button class="btn" type="submit">' + hS(bouton) + '</button></form>'; }
+function lienWaS(f, t){ return "https://wa.me/" + f.whatsapp + "?text=" + encodeURIComponent(t); }
+function piedS(f){ var tel = chiffresS(f.telephone), l = [];
+  if (tel) l.push('<li><a href="tel:' + tel + '">' + hS(f.telephone) + '</a></li>'); if (f.email) l.push('<li><a href="mailto:' + hS(f.email) + '">' + hS(f.email) + '</a></li>');
+  return '<footer class="pied"><div class="conteneur"><div><p class="marque" style="color:#fff">' + hS(f.nom) + '</p><p style="margin-top:.5rem">' + hS(f.metier) + ', ' + hS(f.ville) + '</p></div>'
+    + (l.length ? '<div><h2>Contact</h2><ul>' + l.join("") + '</ul></div>' : '') + '<div><h2>Informations</h2><ul><li>Mentions légales (à compléter)</li><li>© ' + new Date().getFullYear() + ' ' + hS(f.nom) + '</li></ul></div></div></footer>'; }
+function galerieS(f){ return ((f.images||{}).galerie||[]).filter(function(g){ return g && g.src; }); }
+
+function corpsArtisanS(f){
+  var tel = chiffresS(f.telephone), lienTel = tel ? "tel:" + tel : "#contact", appel = tel ? I_TEL + " Appeler" : "Nous contacter", wa = f.whatsapp, h = (f.images||{}).hero;
+  var actions = tel ? '<a class="btn btn--appel" href="' + lienTel + '">' + I_TEL + ' Appeler le ' + hS(f.telephone) + '</a><a class="btn btn--ligne" href="#contact">Demander un devis</a>' : '<a class="btn btn--appel" href="#contact">Demander un devis</a>';
+  var acc = '<section class="accueil" aria-labelledby="titre-accueil"><div class="conteneur"><div><p class="lieu"><span>' + I_PIN + ' ' + hS(f.zone_courte || f.ville) + '</span>' + statutS(f) + '</p><h1 id="titre-accueil">' + hS(f.titre || f.metier + " à " + f.ville) + '</h1><p class="chapo">' + hS(f.accroche) + '</p><div class="actions">' + actions + '</div>' + ligneNoteS(f) + '</div>'
+    + (h ? '<div class="photo-accueil">' + imgS(h, f.nom + ", " + f.metier, false) + '</div>' : '') + '</div></section>';
+  var bande = (f.atouts||[]).length && !masqueS(f,"atouts") ? '<div class="atouts"><div class="conteneur"><ul>' + f.atouts.map(function(a){ return '<li>' + I_OK + hS(a) + '</li>'; }).join("") + '</ul></div></div>' : '';
+  var serv = (f.services||[]).map(function(s){ return '<div class="service"><h3>' + hS(s.titre) + '</h3><p>' + hS(s.texte||"") + '</p>' + (s.prix ? '<span class="prix">' + hS(s.prix) + '</span>' : '<span></span>') + '</div>'; }).join("");
+  var secServ = serv ? '<section class="section" id="services" aria-labelledby="titre-services"><div class="conteneur">' + teteS("Services", f.titre_services || "Ce que nous faisons", f.intro_services || "", "titre-services") + '<div class="services">' + serv + '</div>' + (f.maquette ? mentionS("Prix indicatifs d'exemple, à remplacer par les vôtres.") : '') + '</div></section>' : '';
+  var gal = galerieS(f), secReal = gal.length && !masqueS(f,"galerie") ? '<section class="section gris" id="realisations" aria-labelledby="titre-real"><div class="conteneur">' + teteS(f.libelle_realisations || "Réalisations", f.titre_realisations || "Des chantiers récents", "", "titre-real") + '<div class="realisations">'
+    + gal.map(function(g){ return '<figure>' + imgS(g.src, g.legende || f.metier, true) + (g.legende ? '<figcaption>' + hS(g.legende) + '</figcaption>' : '') + '</figure>'; }).join("") + '</div></div></section>' : '';
+  var et = (f.etapes||[]), secEt = et.length && !masqueS(f,"etapes") ? '<section class="section" id="methode" aria-labelledby="titre-methode"><div class="conteneur">' + teteS("Comment ça se passe", "Trois étapes, sans surprise", "", "titre-methode") + '<ol class="etapes">' + et.map(function(s){ return '<li><h3>' + hS(s.titre) + '</h3><p>' + hS(s.texte) + '</p></li>'; }).join("") + '</ol></div></section>' : '';
+  var ph = (f.images||{}).apropos || {}, txt = teteS("Qui sommes-nous", f.titre_apropos || "Un artisan près de chez vous", "", "titre-apropos") + '<p>' + hS(f.description) + '</p>';
+  var apropos = masqueS(f,"apropos") ? '' : ph.src ? '<section class="section gris" id="apropos" aria-labelledby="titre-apropos"><div class="conteneur apropos"><div>' + txt + '</div><figure>' + imgS(ph.src, ph.legende || f.metier, true) + '<figcaption>' + hS([ph.legende, ph.credit].filter(Boolean).join(" · ")) + '</figcaption></figure></div></section>'
+    : '<section class="section gris" id="apropos" aria-labelledby="titre-apropos"><div class="conteneur" style="max-width:52rem">' + txt + '</div></section>';
+  var contact = '<section class="section contact" id="contact" aria-labelledby="titre-contact"><div class="conteneur"><div><span class="surtitre">Contact</span><h2 id="titre-contact">' + hS(f.titre_contact || "Un besoin, une urgence ?") + '</h2>'
+    + (tel ? '<a class="tel-geant" href="' + lienTel + '">' + hS(f.telephone) + '</a>' : '') + '<div class="infos-contact">' + (f.email ? '<p>Email : <a href="mailto:' + hS(f.email) + '">' + hS(f.email) + '</a></p>' : '')
+    + (wa ? '<p><a href="' + hS(lienWaS(f, "Bonjour, je souhaite un devis pour : ")) + '" rel="noopener" target="_blank">' + hS(f.texte_whatsapp || "Envoyer une photo du problème sur WhatsApp") + '</a></p>' : '') + '</div></div>' + formS("Recevoir mon devis") + '</div></section>';
+  var corps = acc + bande + secServ + secReal + secEt + avisS(f) + apropos + infosS(f, f.titre_zone || "Zone d'intervention") + faqS(f, "gris") + contact;
+  var menu = [["services","Services",secServ],["realisations",f.libelle_realisations || "Réalisations",secReal],["avis","Avis",corps.indexOf('id="avis"') >= 0],["infos","Zone et horaires",true]].filter(function(x){ return x[2]; });
+  return {corps:corps, menu:menu, entete:'<a class="btn" href="' + lienTel + '">' + appel + '</a>',
+    barre:'<a class="btn" href="' + lienTel + '">' + appel + '</a>' + (wa ? '<a class="btn btn--wa" href="' + hS(lienWaS(f, "Bonjour, je souhaite un devis pour : ")) + '" rel="noopener" target="_blank">WhatsApp</a>' : '<a class="btn btn--ligne" href="#contact">Devis</a>'), scripts:""};
+}
+
+function corpsBeauteS(f){
+  var tel = chiffresS(f.telephone), resa = f.reservation_url || (f.whatsapp ? lienWaS(f, "Bonjour, je souhaite prendre rendez-vous pour : ") : "") || (tel ? "tel:" + tel : "#infos");
+  var cible = /^http/.test(resa) ? ' target="_blank" rel="noopener"' : '', h = (f.images||{}).hero;
+  var acc = '<section class="accueil" aria-labelledby="titre-accueil">' + (h ? '<div class="photo-accueil">' + imgS(h, "Intérieur du salon " + f.nom, false) + '</div>' : '')
+    + '<div class="texte"><p class="lieu"><span>' + I_PIN + ' ' + hS(f.zone_courte || f.ville) + '</span>' + statutS(f) + '</p><h1 id="titre-accueil">' + hS(f.titre || f.metier + " à " + f.ville) + '</h1><p class="chapo">' + hS(f.accroche) + '</p>'
+    + '<div class="actions"><a class="btn" href="' + hS(resa) + '"' + cible + '>Prendre rendez-vous</a><a class="btn btn--ligne" href="#tarifs">Voir les tarifs</a></div>' + ligneNoteS(f) + '</div></section>';
+  var bande = (f.atouts||[]).length && !masqueS(f,"atouts") ? '<div class="atouts"><div class="conteneur"><ul>' + f.atouts.map(function(a){ return '<li>' + I_OK + hS(a) + '</li>'; }).join("") + '</ul></div></div>' : '';
+  var cats = (f.prestations||[]).map(function(c){ return '<div><h3>' + hS(c.categorie) + '</h3><ul>' + (c.liste||[]).map(function(p){ var d = [p.duree, p.desc].filter(Boolean).join(" · ");
+    return '<li><div class="ligne"><span class="nom">' + hS(p.nom) + '</span><span class="points" aria-hidden="true"></span><span class="prix">' + hS(eurS(p.prix)) + '</span></div>' + (d ? '<p class="detail">' + hS(d) + '</p>' : '') + '</li>'; }).join("") + '</ul></div>'; }).join("");
+  var tarifs = '<section class="section" id="tarifs" aria-labelledby="titre-tarifs"><div class="conteneur">' + teteS("Prestations & tarifs", "Nos tarifs", f.intro_tarifs || "Prix affichés, durées indiquées.", "titre-tarifs") + '<div class="tarifs">' + cats + '</div>'
+    + (f.maquette ? mentionS("Prix et durées d'exemple, à remplacer par les vôtres.") : '') + '<p style="margin-top:2.5rem"><a class="btn" href="' + hS(resa) + '"' + cible + '>Réserver mon créneau</a></p></div></section>';
+  var gal = galerieS(f).slice(0,3), secGal = gal.length && !masqueS(f,"galerie") ? '<section class="section gris" id="galerie" aria-labelledby="titre-galerie"><div class="conteneur">' + teteS("Le salon","En images","","titre-galerie") + '<div class="galerie">'
+    + gal.map(function(g){ return '<figure>' + imgS(g.src, g.legende || "Le salon", true) + (g.legende ? '<figcaption>' + hS(g.legende) + '</figcaption>' : '') + '</figure>'; }).join("") + '</div></div></section>' : '';
+  var apropos = masqueS(f,"apropos") ? '' : '<section class="section" id="apropos" aria-labelledby="titre-apropos"><div class="conteneur" style="max-width:48rem">' + teteS("À propos", f.titre_apropos || "Une équipe à votre écoute", "", "titre-apropos") + '<p>' + hS(f.description) + '</p></div></section>';
+  var reserver = '<section class="section reserver" aria-labelledby="titre-reserver"><div class="conteneur"><h2 id="titre-reserver">Réservez votre moment</h2><p>En ligne en quelques secondes, ou par téléphone.</p><div class="actions"><a class="btn" href="' + hS(resa) + '"' + cible + '>Prendre rendez-vous</a>'
+    + (tel ? '<a class="btn btn--ligne" href="tel:' + tel + '">' + I_TEL + ' ' + hS(f.telephone) + '</a>' : '') + '</div></div></section>';
+  var corps = acc + bande + tarifs + secGal + avisS(f) + apropos + infosS(f, "Le salon", "gris") + faqS(f) + reserver;
+  var menu = [["tarifs","Tarifs",true],["galerie","Le salon",secGal],["avis","Avis",corps.indexOf('id="avis"') >= 0],["infos","Accès et horaires",true]].filter(function(x){ return x[2]; });
+  return {corps:corps, menu:menu, entete:'<a class="btn" href="' + hS(resa) + '"' + cible + '>Réserver</a>', barre:(tel ? '<a class="btn btn--ligne" href="tel:' + tel + '">' + I_TEL + ' Appeler</a>' : '') + '<a class="btn" href="' + hS(resa) + '"' + cible + '>Réserver</a>', scripts:""};
+}
+
+function corpsCommandeS(f){
+  var h = (f.images||{}).hero;
+  var acc = '<section class="accueil" aria-labelledby="titre-accueil"><div class="conteneur"><div><span class="surtitre">' + hS(f.metier) + ', ' + hS(f.ville) + '</span><h1 id="titre-accueil">' + hS(f.titre || f.accroche) + '</h1><p class="chapo">' + hS(f.titre ? f.accroche : f.description) + '</p>'
+    + '<div class="actions"><a class="btn" href="#carte">Voir la carte et commander</a></div>' + ligneNoteS(f) + '<p style="margin-top:1rem">' + statutS(f) + '</p></div>' + (h ? '<div class="photo-accueil">' + imgS(h, f.nom + " : une création de la maison", false) + '</div>' : '') + '</div></section>';
+  var prat = [["Délai", f.delai_commande], ["Retrait et livraison", f.mode_retrait], ["Paiement", f.paiement || "Au retrait ou à la livraison. Aucun paiement en ligne."]].filter(function(x){ return x[1]; });
+  var bande = '<div class="pratique"><div class="conteneur"><dl>' + prat.map(function(x){ return '<div><dt>' + hS(x[0]) + '</dt><dd>' + hS(x[1]) + '</dd></div>'; }).join("") + '</dl></div></div>';
+  var cats = {}, ordre = []; (f.produits||[]).forEach(function(p){ var c = p.categorie || "La carte"; if (!cats[c]){ cats[c] = []; ordre.push(c); } cats[c].push(p); });
+  var ong = ordre.length > 1 ? '<ul class="categories" aria-label="Catégories">' + ordre.map(function(c,k){ return '<li><a href="#cat-' + k + '">' + hS(c) + '</a></li>'; }).join("") + '</ul>' : '';
+  var blocs = ordre.map(function(c,k){ return '<h3 class="cat" id="cat-' + k + '">' + hS(c) + '</h3><div class="produits">' + cats[c].map(function(p,i){
+    var opts = (p.options||[]).map(function(o){ return '<option>' + hS(o) + '</option>'; }).join("");
+    return '<article class="produit" data-produit data-nom="' + hS(p.nom) + '" data-prix="' + (+p.prix||0).toFixed(2) + '">' + (p.image ? '<div class="visuel">' + imgS(p.image, p.nom, true) + (p.badge ? '<span class="badge">' + hS(p.badge) + '</span>' : '') + '</div>' : '')
+      + '<h4>' + hS(p.nom) + '</h4><p>' + hS(p.desc||"") + '</p>' + (opts ? '<label class="cache" for="opt-' + k + '-' + i + '">Format pour ' + hS(p.nom) + '</label><select id="opt-' + k + '-' + i + '">' + opts + '</select>' : '')
+      + '<div class="ligne"><span class="prix">' + eurS(+p.prix||0) + '</span><button class="btn btn-ajout" type="button" aria-label="Ajouter ' + hS(p.nom) + ' au panier">Ajouter</button></div></article>'; }).join("") + '</div>'; }).join("");
+  var carte = '<section class="section" id="carte" aria-labelledby="titre-carte"><div class="conteneur">' + teteS("La carte", f.titre_carte || "Choisissez, nous préparons", "Ajoutez vos produits au panier : la commande part sur WhatsApp, déjà rédigée.", "titre-carte") + ong + blocs
+    + (f.maquette ? mentionS("Produits et prix d'exemple, à remplacer par les vôtres.") : '') + '</div></section>';
+  var et = COMMUN_S.bouche.etapes, secEt = '<section class="section gris" id="commander" aria-labelledby="titre-commander"><div class="conteneur">' + teteS("Commander","Comment ça marche","","titre-commander") + '<ol class="etapes">'
+    + [["Choisissez","Ajoutez vos produits au panier."],["Envoyez","La commande part sur WhatsApp, déjà rédigée."],["Récupérez","Nous confirmons l'heure de retrait ou de livraison."]].map(function(s){ return '<li><h3>' + hS(s[0]) + '</h3><p>' + hS(s[1]) + '</p></li>'; }).join("") + '</ol></div></section>';
+  var hist = masqueS(f,"apropos") ? '' : '<section class="section gris" id="histoire" aria-labelledby="titre-histoire"><div class="conteneur" style="max-width:48rem">' + teteS("La maison", f.titre_apropos || "Fait maison, chaque jour", "", "titre-histoire") + '<p>' + hS(f.description) + '</p></div></section>';
+  var corps = acc + bande + carte + secEt + avisS(f) + hist + infosS(f, "Retrait et livraison") + faqS(f, "gris");
+  var menu = [["carte","La carte",true],["avis","Avis",corps.indexOf('id="avis"') >= 0],["infos","Infos pratiques",true]].filter(function(x){ return x[2]; });
+  var panier = '<button class="btn btn--wa panier-bouton" id="ouvrirPanier2" type="button" disabled>' + I_PAN + ' <span id="panierResume2">Panier vide</span></button><div class="panier" id="panier"><div class="fond" data-fermer></div><div class="tiroir" role="dialog" aria-modal="true" aria-labelledby="titre-panier"><header><h2 id="titre-panier">Votre commande</h2><button class="fermer" type="button" data-fermer aria-label="Fermer le panier">×</button></header><ul class="lignes" id="lignes"></ul><div class="pied-panier"><p class="total"><span>Total</span><span id="total">0 €</span></p>'
+    + '<div class="champ"><label for="c-nom">Votre prénom</label><input id="c-nom" autocomplete="given-name"></div><div class="champ"><label for="c-mode">Retrait ou livraison</label><select id="c-mode">' + (f.modes||["Retrait"]).map(function(m){ return '<option>' + hS(m) + '</option>'; }).join("") + '</select></div><div class="champ"><label for="c-date">Pour quand ?</label><input id="c-date" placeholder="Samedi 14h"></div>'
+    + '<a class="btn btn--wa" id="envoyer" href="#" target="_blank" rel="noopener">Envoyer la commande sur WhatsApp</a><p class="petit">Aucun paiement en ligne.</p></div></div></div>';
+  var js = "<script>(function(){var WA=" + JSON.stringify(String(f.whatsapp||"")).replace(/</g,"\\u003c") + ",NOM=" + JSON.stringify(f.nom).replace(/</g,"\\u003c") + ",P=[],df=null;function eur(n){return n.toFixed(2).replace('.',',').replace(',00','')+' €';}function tot(){return P.reduce(function(s,i){return s+i.prix*i.qte;},0);}"
+    + "function msg(){var l=['Bonjour '+NOM+', je souhaite commander :'];P.forEach(function(i){l.push('- '+i.qte+' × '+i.nom+(i.o?' ('+i.o+')':'')+' — '+eur(i.prix*i.qte));});l.push('Total : '+eur(tot()));var n=document.getElementById('c-nom').value.trim(),d=document.getElementById('c-date').value.trim();l.push('Mode : '+document.getElementById('c-mode').value+(d?' — '+d:''));if(n)l.push('Prénom : '+n);return 'https://wa.me/'+WA+'?text='+encodeURIComponent(l.join('\\n'));}"
+    + "function r(){var ul=document.getElementById('lignes');ul.textContent='';P.forEach(function(it,i){var li=document.createElement('li'),t=document.createElement('span'),q=document.createElement('span');t.textContent=it.nom+(it.o?' ('+it.o+')':'')+' — '+eur(it.prix*it.qte);q.className='qte';[['−',-1],['+',1]].forEach(function(b,j){var bt=document.createElement('button');bt.type='button';bt.textContent=b[0];bt.setAttribute('aria-label',(b[1]>0?'Ajouter un ':'Retirer un ')+it.nom);bt.onclick=function(){it.qte+=b[1];if(it.qte<=0)P.splice(i,1);r();};q.appendChild(bt);if(!j){var s=document.createElement('strong');s.textContent=it.qte;q.appendChild(s);}});li.appendChild(t);li.appendChild(q);ul.appendChild(li);});"
+    + "var nb=P.reduce(function(s,i){return s+i.qte;},0),tx=nb?nb+' article'+(nb>1?'s':'')+' · '+eur(tot()):'Panier vide';['panierResume','panierResume2'].forEach(function(id){document.getElementById(id).textContent=tx;});['ouvrirPanier','ouvrirPanier2'].forEach(function(id){document.getElementById(id).disabled=!nb;});document.getElementById('total').textContent=eur(tot());var e=document.getElementById('envoyer');if(!nb){f();e.href='#';}else e.href=msg();}"
+    + "function o(){df=document.activeElement;document.getElementById('panier').classList.add('ouvert');document.querySelector('.tiroir .fermer').focus();}function f(){var p=document.getElementById('panier');if(!p.classList.contains('ouvert'))return;p.classList.remove('ouvert');if(df)df.focus();}"
+    + "['ouvrirPanier','ouvrirPanier2'].forEach(function(id){document.getElementById(id).onclick=o;});document.querySelectorAll('[data-fermer]').forEach(function(b){b.onclick=f;});document.addEventListener('keydown',function(e){if(e.key==='Escape')f();});"
+    + "document.querySelectorAll('[data-produit]').forEach(function(c){c.querySelector('.btn-ajout').addEventListener('click',function(){var s=c.querySelector('select'),op=s?s.value:'',nom=c.getAttribute('data-nom'),px=parseFloat(c.getAttribute('data-prix'));var x=P.find(function(i){return i.nom===nom&&i.o===op;});if(x)x.qte++;else P.push({nom:nom,o:op,prix:px,qte:1});r();});});r();})();<\/script>";
+  return {corps:corps, menu:menu, entete:'<a class="btn" href="#carte">Commander</a>', barre:'<button class="btn btn--wa" id="ouvrirPanier" type="button" disabled>' + I_PAN + ' <span id="panierResume">Panier vide</span></button>', scripts:panier + js};
+}
+
+var SCRIPT_S = "<script>(function(){\n  var b = document.querySelector('.btn-menu'), n = document.getElementById('nav');\n  if (b && n){ b.addEventListener('click', function(){ var o = n.classList.toggle('ouvert'); b.setAttribute('aria-expanded', o); });\n    n.addEventListener('click', function(e){ if (e.target.closest('a')){ n.classList.remove('ouvert'); b.setAttribute('aria-expanded', 'false'); } });\n    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && n.classList.contains('ouvert')){ n.classList.remove('ouvert'); b.setAttribute('aria-expanded', 'false'); b.focus(); } }); }\n  var barre = document.querySelector('.barre-mobile'), haut = document.querySelector('.accueil .actions');\n  if (barre && haut && 'IntersectionObserver' in window){\n    new IntersectionObserver(function(es){ barre.classList.toggle('repliee', es[0].isIntersecting || es[0].boundingClientRect.top > 0); }).observe(haut); }\n  var f = document.querySelector('form.form'); if (!f) return;\n  var regles = {nom:'Indiquez votre nom.', telephone:'Indiquez un num\u00e9ro de t\u00e9l\u00e9phone valide.', message:'D\u00e9crivez votre besoin en quelques mots.'};\n  function ok(c){ var v = c.value.trim(), m = '';\n    if (!v) m = regles[c.name]; else if (c.name === 'telephone' && !/^[+0-9 ().-]{8,20}$/.test(v)) m = regles.telephone;\n    var z = document.getElementById(c.getAttribute('aria-describedby')); if (z) z.textContent = m; c.setAttribute('aria-invalid', m ? 'true' : 'false'); return !m; }\n  f.addEventListener('submit', function(e){ var r = f.querySelector('.retour'), premier = null; r.textContent = '';\n    ['nom','telephone','message'].forEach(function(n){ var c = f.elements[n]; if (c && !ok(c) && !premier) premier = c; });\n    if (premier){ e.preventDefault(); premier.focus(); return; }\n    if (f.hasAttribute('data-demo')){ e.preventDefault(); r.textContent = f.getAttribute('data-demo'); } });\n})();<\/script><script>(function(){var H=window.__H;if(!H)return;var c=['dim','lun','mar','mer','jeu','ven','sam'],d=new Date(),j=c[d.getDay()],l=document.querySelector('tr[data-jour=\"'+j+'\"]');if(l)l.className='aujourdhui';var m=d.getHours()*60+d.getMinutes(),o=false;(H[j]||'').split(',').forEach(function(p){if(!p)return;var t=p.split('-'),a=t[0].split(':'),z=t[1].split(':');if(m>=+a[0]*60+ +a[1]&&m<+z[0]*60+ +z[1])o=true;});document.querySelectorAll('[data-ouverture]').forEach(function(x){x.textContent=o?'Ouvert en ce moment':'Ferm\u00e9 en ce moment';x.className='statut '+(o?'ouvert':'ferme');x.hidden=false;});})();<\/script>";
+
+/* Assemble la page. css = texte du thème, police = URL de la police (blob ou data:). */
+function pageS(f, css, police){
+  var mod = f.modele, r = mod === "beaute" ? corpsBeauteS(f) : mod === "commande-whatsapp" ? corpsCommandeS(f) : corpsArtisanS(f);
+  var pal = paletteS(f.couleur, STU.encre[mod]), vars = ":root{" + Object.keys(pal).map(function(k){ return "--" + k + ":" + pal[k]; }).join(";") + "}";
+  css = css.replace(/url\("polices\/[^"]+"\)/g, 'url("' + police + '")');
+  var titre = f.nom + ", " + String(f.metier).toLowerCase() + " à " + f.ville;
+  var nav = r.menu.map(function(m){ return '<li><a href="#' + m[0] + '">' + hS(m[1]) + '</a></li>'; }).join("");
+  return '<!DOCTYPE html><html lang="fr-' + hS(f.pays||"FR") + '"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>' + hS(titre) + '</title><meta name="description" content="' + hS((titre + ". " + f.accroche).slice(0,300)) + '"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="' + pal.accent + '">'
+    + '<style>' + css + vars + '</style></head><body class="a-barre"><a class="evitement" href="#contenu">Aller au contenu</a>'
+    + '<aside class="bandeau-info" aria-label="Information sur cette page"><p>Maquette préparée pour ' + hS(f.nom) + ' : non publiée, non contractuelle.' + (f.maquette ? ' Avis, prix, horaires et photos sont des exemples à remplacer par les vôtres.' : '') + '</p></aside>'
+    + '<header class="entete"><div class="conteneur"><a class="marque" href="#contenu">' + hS(f.nom) + '<small>' + hS(f.metier) + ', ' + hS(f.ville) + '</small></a><nav class="nav" id="nav" aria-label="Navigation principale"><ul>' + nav + '</ul></nav>' + r.entete
+    + '<button class="btn-menu" type="button" aria-expanded="false" aria-controls="nav"><span class="cache">Menu</span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></header>'
+    + '<main id="contenu">' + r.corps + '</main>' + piedS(f) + '<div class="barre-mobile" role="region" aria-label="Actions rapides">' + r.barre + '</div>'
+    + '<script>window.__H=' + JSON.stringify(f.horaires_semaine || null).replace(/</g,"\\u003c") + ';<\/script>' + SCRIPT_S + r.scripts + '</body></html>';
+}
+
+
+/* ----- Studio : état, aperçu, IA, photos, téléchargement ----- */
+var ST = {id:null, f:null, histo:[], vue:"mobile", css:{}, data:{}, timer:null, retour:null, ctrl:null};
+var SECTIONS_S = [["atouts","Bande d'atouts"],["galerie","Photos / réalisations"],["avis","Avis"],["etapes","Étapes"],["apropos","Présentation"],["faq","Questions fréquentes"]];
+var TEXTES_S = ["nom","titre","accroche","description","zone","telephone","email","titre_apropos","titre_services","intro_services","titre_contact","titre_realisations","libelle_realisations","titre_avis","intro_tarifs","titre_carte","delai_commande","mode_retrait","paiement","titre_zone"];
+var SUGG_S = ["Rends le titre plus percutant","Couleur plus chic et sobre","Ajoute un service d'urgence 7j/7","Ton plus chaleureux et proche","Raccourcis tous les textes","Mets la photo la plus élégante en premier"];
+
+function texteCourt(v, n){ return String(v == null ? "" : v).replace(/[\u0000-\u001f]/g, " ").trim().slice(0, n || 400); }
+function listeObj(a, cles, max){ if (!Array.isArray(a)) return null; return a.slice(0, max || 8).map(function(x){ var o = {}; cles.forEach(function(k){ if (x && x[k] != null) o[k] = typeof x[k] === "number" ? x[k] : texteCourt(x[k], 300); }); return o; }).filter(function(o){ return Object.keys(o).length; }); }
+/* Applique une réponse de l'IA champ par champ : seuls les champs connus, aux bons formats, sont acceptés. */
+function appliquerIA(f, m){
+  var n = JSON.parse(JSON.stringify(f)), faits = [];
+  if (!m || typeof m !== "object") return {f:n, faits:faits};
+  TEXTES_S.forEach(function(k){ if (typeof m[k] === "string" && m[k].trim()){ n[k] = texteCourt(m[k], k === "description" ? 900 : 300); faits.push(k); } });
+  if (typeof m.couleur === "string" && /^#[0-9a-f]{6}$/i.test(m.couleur)){ n.couleur = m.couleur.toLowerCase(); faits.push("couleur"); }
+  if (Array.isArray(m.atouts)){ n.atouts = m.atouts.slice(0,6).map(function(x){ return texteCourt(x, 60); }).filter(Boolean); faits.push("atouts"); }
+  var s = listeObj(m.services, ["titre","texte","prix"]); if (s && s.length){ n.services = s; faits.push("services"); }
+  var e = listeObj(m.etapes, ["titre","texte"], 4); if (e && e.length){ n.etapes = e; faits.push("étapes"); }
+  var q = listeObj(m.faq, ["q","r"]); if (q && q.length){ n.faq = q; faits.push("questions"); }
+  if (m.avis && Array.isArray(m.avis.liste || m.avis)){ var l = listeObj(m.avis.liste || m.avis, ["auteur","texte","note"], 6); if (l.length){ n.avis = Object.assign({}, n.avis || {note:4.8, nombre:27, source:"Google"}, {liste:l}); faits.push("avis d'exemple"); } }
+  if (Array.isArray(m.prestations)){ var pr = m.prestations.slice(0,6).map(function(c){ return {categorie:texteCourt(c.categorie, 60), liste:listeObj(c.liste, ["nom","duree","prix","desc"], 10) || []}; }).filter(function(c){ return c.categorie && c.liste.length; }); if (pr.length){ n.prestations = pr; faits.push("tarifs"); } }
+  if (Array.isArray(m.produits) && n.modele === "commande-whatsapp"){ var anc = n.produits || [];
+    var po = m.produits.slice(0,16).map(function(x, i){ var o = {categorie:texteCourt(x.categorie||"La carte",60), nom:texteCourt(x.nom,80), desc:texteCourt(x.desc,200), prix:Math.max(0, +x.prix || 0), options:Array.isArray(x.options) ? x.options.slice(0,6).map(function(v){ return texteCourt(v,40); }) : [], badge:texteCourt(x.badge||"",30)};
+      var meme = anc.find(function(a){ return a.nom === o.nom; }) || anc[i]; if (meme && meme.image) o.image = meme.image; return o; }).filter(function(o){ return o.nom; });
+    if (po.length){ n.produits = po; faits.push("carte"); } }
+  if (m.horaires_semaine && typeof m.horaires_semaine === "object"){ var h = {}, ok = true;
+    JOURS_S.forEach(function(j){ var v = String(m.horaires_semaine[j[0]] == null ? "" : m.horaires_semaine[j[0]]).replace(/\s/g,""); if (v && !/^\d\d:\d\d-\d\d:\d\d(,\d\d:\d\d-\d\d:\d\d)*$/.test(v)) ok = false; h[j[0]] = v; });
+    if (ok){ n.horaires_semaine = h; faits.push("horaires"); } }
+  if (Array.isArray(m.masquer)){ n.masquer = m.masquer.filter(function(x){ return SECTIONS_S.some(function(s){ return s[0] === x; }); }); faits.push("sections affichées"); }
+  if (typeof m.photo_principale === "string" && STU.photos[m.photo_principale]){ n.images = Object.assign({}, n.images, {hero:photoS(m.photo_principale)}); faits.push("photo principale"); }
+  if (Array.isArray(m.galerie)){ var g = m.galerie.filter(function(k){ return STU.photos[k]; }).slice(0,6).map(function(k){ return {src:photoS(k), legende:STU.photos[k][1].replace(/ \(photo.*\)$/,"")}; }); if (g.length){ n.images = Object.assign({}, n.images, {galerie:g}); faits.push("galerie"); } }
+  n.maquette = true; // une maquette reste une maquette : les contenus d'exemple restent signalés
+  return {f:n, faits:faits};
+}
+
+function promptIA(f, consigne, p){
+  var copie = JSON.parse(JSON.stringify(f)); delete copie.images; (copie.produits||[]).forEach(function(x){ delete x.image; });
+  return CONTEXTE + "\n\nTu es le directeur artistique et le rédacteur de Mysite. Tu modifies la MAQUETTE de site d'un prospect (non publiée, montrée au prospect pour qu'il se projette)."
+    + "\nProspect : " + (p ? resumeProspect(p) : f.nom + ", " + f.metier + " à " + f.ville)
+    + "\n\nFiche actuelle du site (JSON) :\n" + JSON.stringify(copie)
+    + "\n\nPhotos disponibles (clés utilisables pour photo_principale ou galerie) :\n" + Object.keys(STU.photos).map(function(k){ return "- " + k + " : " + STU.photos[k][1]; }).join("\n")
+    + "\nSections masquables : " + SECTIONS_S.map(function(s){ return s[0]; }).join(", ")
+    + "\n\nDemande : " + consigne
+    + "\n\nRègles : français impeccable, vouvoiement, phrases courtes et concrètes, aucun texte creux. N'invente aucun fait vérifiable présenté comme vrai sur l'entreprise réelle (pas de label, certification, assurance, récompense, année de création, nombre de clients ni statistique). Les avis restent des avis d'exemple plausibles (prénom + initiale), le site les signale déjà comme exemples. Prix d'exemple réalistes pour le métier et la région. Couleurs : teinte sobre et élégante adaptée au métier, au format #rrggbb."
+    + "\nRéponds UNIQUEMENT avec un objet JSON : {\"modifications\": {seulement les champs à changer, mêmes noms et mêmes formats que la fiche ; un tableau remplace entièrement l'ancien ; champs possibles en plus : photo_principale, galerie (liste de clés), masquer (liste de sections)}, \"explication\": \"une phrase sur ce que tu as changé\"}";
+}
+
+function iaModifier(consigne, statut){
+  if (!S.sample){ toast("L'IA n'est pas disponible dans cette vue"); return Promise.resolve(); }
+  var p = S.pros.find(function(x){ return x.id === ST.id; });
+  if (ST.ctrl) ST.ctrl.abort(); ST.ctrl = new AbortController();
+  statut.hidden = false; statut.className = "st-statut pense"; statut.textContent = "Claude travaille sur votre maquette…";
+  $("st-go").disabled = true;
+  return S.sample.json(promptIA(ST.f, consigne, p), {modelTier:"default", cache:false, signal:ST.ctrl.signal}).then(function(r){
+    var res = appliquerIA(ST.f, r && r.modifications);
+    $("st-go").disabled = false;
+    if (!res.faits.length){ statut.className = "st-statut"; statut.textContent = (r && r.explication) ? r.explication + " (aucun changement applicable)" : "Aucun changement applicable. Reformulez la demande."; return; }
+    changer(res.f); statut.className = "st-statut ok"; statut.textContent = (r.explication ? r.explication + " " : "") + "Modifié : " + res.faits.join(", ") + ".";
+  }, function(e){ $("st-go").disabled = false; statut.className = "st-statut"; statut.textContent = erreurIA(e); });
+}
+
+function changer(nf, sansHisto){ if (!sansHisto){ ST.histo.push(JSON.stringify(ST.f)); if (ST.histo.length > 20) ST.histo.shift(); } ST.f = nf; $("st-annuler").disabled = !ST.histo.length; remplirReglages(); apercuStudio(); sauverSite(); }
+function sauverSite(){ clearTimeout(ST.timer); var id = ST.id, f = ST.f;
+  ST.timer = setTimeout(function(){ if (!S.db || !id) return; S.db.collection("sites").doc(id).set({fiche:f, maj:new Date().toISOString()}).then(function(){ $("st-sauve").textContent = "Enregistré"; }, erreurEcriture); }, 700);
+  $("st-sauve").textContent = "Enregistrement…"; }
+
+function cssTheme(mod){ if (ST.css[mod]) return Promise.resolve(ST.css[mod]);
+  return fetch(STU.css[mod]).then(function(r){ if (!r.ok) throw new Error("css"); return r.text(); }).then(function(t){ ST.css[mod] = t; return t; }); }
+function enDataURL(url){ if (ST.data[url]) return Promise.resolve(ST.data[url]);
+  return fetch(url).then(function(r){ if (!r.ok) throw new Error("img"); return r.blob(); }).then(function(b){ return new Promise(function(ok){ var fr = new FileReader(); fr.onload = function(){ ST.data[url] = fr.result; ok(fr.result); }; fr.onerror = function(){ ok(url); }; fr.readAsDataURL(b); }); }, function(){ return url; }); }
+function urlsFiche(f){ var u = [], im = f.images || {}; if (im.hero) u.push(im.hero); (im.galerie||[]).forEach(function(g){ if (g.src) u.push(g.src); }); if (im.apropos && im.apropos.src) u.push(im.apropos.src);
+  (f.produits||[]).forEach(function(p){ if (p.image) u.push(p.image); }); return u.filter(function(x, i){ return /^\/_blob\//.test(x) && u.indexOf(x) === i; }); }
+/* Page autonome : thème, police et photos intégrés (aucune dépendance réseau). */
+function pageAutonome(f){ var police = STU.police[STU.policeModele[f.modele]], urls = urlsFiche(f);
+  return Promise.all([cssTheme(f.modele), enDataURL(police)].concat(urls.map(enDataURL))).then(function(r){
+    var html = pageS(f, r[0], r[1]); urls.forEach(function(u, i){ html = html.split(u).join(r[i+2]); }); return html; }); }
+function apercuStudio(){ var f = ST.f; if (!f) return; $("st-charge").hidden = false;
+  pageAutonome(f).then(function(html){ if (ST.f !== f) return; var fr = $("st-cadre"), y = 0;
+    try { y = fr.contentWindow.scrollY || 0; } catch(e){}
+    fr.onload = function(){ try { fr.contentWindow.scrollTo(0, y); } catch(e){} $("st-charge").hidden = true; }; fr.srcdoc = html; },
+    function(){ $("st-charge").hidden = true; toast("Le thème du site ne se charge pas. Vérifiez la connexion."); }); }
+
+function remplirReglages(){ var f = ST.f, z = $("st-reglages"); if (!f) return;
+  z.querySelectorAll("[data-c]").forEach(function(i){ var k = i.dataset.c; if (document.activeElement !== i) i.value = f[k] == null ? "" : f[k]; });
+  z.querySelectorAll("[data-m]").forEach(function(c){ c.checked = (f.masquer||[]).indexOf(c.dataset.m) < 0; });
+  $("st-modele").value = f.modele; var g = $("st-galerie"); g.textContent = "";
+  ((f.images||{}).galerie||[]).forEach(function(x, i){ g.appendChild(el("li",null,[el("img",{src:x.src, alt:""}), el("span",{text:x.legende||"Photo " + (i+1)}),
+    el("button",{cls:"btn petit",type:"button","aria-label":"Retirer la photo " + (i+1),text:"Retirer",onclick:function(){ var n = JSON.parse(JSON.stringify(ST.f)); n.images.galerie.splice(i,1); changer(n); }})])); });
+  if (!g.children.length) g.appendChild(el("li",{cls:"note",text:"Aucune photo dans la galerie."}));
+}
+
+function changerModele(m){ var n = JSON.parse(JSON.stringify(ST.f)), base = ficheDepuisProspect(Object.assign({}, S.pros.find(function(x){ return x.id === ST.id; }) || {}, {metier: m === "beaute" ? (familleDe(n.metier) === "beaute" ? n.metier : "Coiffure") : m === "commande-whatsapp" ? "Pâtisserie" : n.metier, telephone:n.telephone}));
+  if (m === "commande-whatsapp" && !n.whatsapp){ toast("Le modèle commande WhatsApp demande un numéro de portable (06 ou 07)"); $("st-modele").value = n.modele; return; }
+  n.modele = m; if (m === "beaute" && !n.prestations) n.prestations = base.prestations; if (m === "commande-whatsapp" && !n.produits){ ["produits","modes","delai_commande","mode_retrait"].forEach(function(k){ n[k] = base[k]; }); }
+  if (m === "artisan" && !n.services){ n.services = base.services || ficheDepuisProspect({metier:"Artisan", ville:n.ville}).services; n.etapes = base.etapes || COMMUN_S.artisan.etapes.map(function(x){ return {titre:x[0], texte:x[1]}; }); }
+  changer(n); }
+
+function envoyerPhoto(fichiers, ou){ if (!S.assets){ toast("L'envoi de photos n'est pas disponible dans cette vue"); return; }
+  var liste = Array.prototype.slice.call(fichiers || []).filter(function(x){ return /^image\//.test(x.type); }).slice(0, 6); if (!liste.length) return;
+  $("st-charge").hidden = false; toast("Envoi de " + liste.length + " photo(s)…");
+  Promise.all(liste.map(function(x){ return S.assets.upload(x); })).then(function(rs){ var n = JSON.parse(JSON.stringify(ST.f)); n.images = n.images || {};
+    if (ou === "hero") n.images.hero = rs[0].url; else n.images.galerie = (n.images.galerie || []).concat(rs.map(function(r){ return {src:r.url, legende:""}; })).slice(0, 8);
+    changer(n); toast("Photo ajoutée"); }, function(){ $("st-charge").hidden = true; toast("Envoi impossible (format ou taille). Essayez une photo JPEG ou WebP de moins de 20 Mo."); }); }
+
+function telechargerSite(){ if (!S.downloads){ toast("Téléchargement indisponible dans cette vue"); return; }
+  pageAutonome(ST.f).then(function(html){ return S.downloads.save({filename:slugS(ST.f.nom) + "-maquette.html", data:html}); })
+    .then(function(){ toast("Maquette téléchargée : un seul fichier, à ouvrir dans n'importe quel navigateur"); }, function(e){ if (!(e && e.code === "cancelled")) toast("Téléchargement annulé"); }); }
+
+function ouvrirStudio(id, f, retour){ ST.id = id; ST.f = f; ST.histo = []; ST.retour = retour || document.activeElement;
+  var p = S.pros.find(function(x){ return x.id === id; }) || {};
+  $("st-titre").textContent = "Studio : " + (f.nom || p.entreprise || "site"); $("st-sous").textContent = (f.metier||"") + " · " + (f.ville||"") + " · maquette non publiée";
+  $("st-annuler").disabled = true; $("st-statut").hidden = true; $("studio").hidden = false; document.body.classList.add("studio-ouvert");
+  remplirReglages(); apercuStudio(); setTimeout(function(){ $("st-demande").focus(); }, 50); }
+function fermerStudio(){ if (ST.ctrl) ST.ctrl.abort(); $("studio").hidden = true; document.body.classList.remove("studio-ouvert"); var r = ST.retour; ST.id = null; ST.f = null; if (r && r.focus) r.focus(); }
+
+/* Bouton « Générer le site » d'une fiche prospect : maquette immédiate, puis personnalisation par l'IA. */
+function genererSite(p, bouton){ var f = ficheDepuisProspect(p);
+  if (S.db) S.db.collection("sites").doc(p.id).set({fiche:f, maj:new Date().toISOString()}).catch(erreurEcriture);
+  ecrire(p.id, {journal:journal(p, "Maquette de site générée dans le Studio")}, "Maquette créée");
+  ouvrirStudio(p.id, f, bouton);
+  if (S.sample) iaModifier("Personnalise cette maquette pour ce prospect : un titre accrocheur et précis, une accroche, une présentation chaleureuse (sans faits inventés), des " + (f.modele === "beaute" ? "prestations et tarifs" : f.modele === "commande-whatsapp" ? "produits" : "services") + " adaptés à son métier et à sa ville, 3 avis d'exemple variés et 3 questions fréquentes utiles. Choisis une couleur élégante adaptée au métier.", $("st-statut"));
+}
+function liensNumero(p){ var q = encodeURIComponent(p.entreprise + " " + (p.ville||"")), l = [
+    ["Pages Jaunes","https://www.pagesjaunes.fr/annuaire/chercherlespros?quoiqui=" + encodeURIComponent(p.entreprise) + "&ou=" + encodeURIComponent(p.ville||"")],
+    ["Recherche web","https://duckduckgo.com/?q=" + q + "+t%C3%A9l%C3%A9phone"],["Facebook","https://www.facebook.com/search/top?q=" + q],["Instagram","https://www.instagram.com/explore/search/keyword/?q=" + q]];
+  if (p.siren) l.push(["Annuaire officiel","https://annuaire-entreprises.data.gouv.fr/entreprise/" + p.siren]);
+  return el("div",{cls:"liens-num"},[el("span",{cls:"note",text:"Trouver le numéro :"})].concat(l.map(function(x){ return el("a",{cls:"btn petit",href:x[1],target:"_blank",rel:"noopener",text:x[0]}); }))); }
+
+(function(){ /* branchements de l'écran Studio */
+  var z = $("st-reglages");
+  z.addEventListener("change", function(e){ var t = e.target; if (!ST.f) return;
+    if (t.dataset.c){ var n = JSON.parse(JSON.stringify(ST.f)), v = t.value; if (t.dataset.c === "couleur" && !/^#[0-9a-f]{6}$/i.test(v)) return; n[t.dataset.c] = v;
+      if (t.dataset.c === "telephone"){ var c = chiffresS(v); if (/^0[67]\d{8}$/.test(c)) n.whatsapp = "33" + c.slice(1); else if (n.modele !== "commande-whatsapp") delete n.whatsapp; } changer(n); }
+    else if (t.dataset.m){ var m = JSON.parse(JSON.stringify(ST.f)), s = (m.masquer||[]).filter(function(x){ return x !== t.dataset.m; }); if (!t.checked) s.push(t.dataset.m); m.masquer = s; changer(m); }
+    else if (t.id === "st-modele") changerModele(t.value);
+    else if (t.id === "st-hero") { envoyerPhoto(t.files, "hero"); t.value = ""; }
+    else if (t.id === "st-ajout") { envoyerPhoto(t.files, "galerie"); t.value = ""; } });
+  $("st-form").addEventListener("submit", function(e){ e.preventDefault(); var v = $("st-demande").value.trim(); if (!v){ toast("Écrivez ce que vous voulez changer"); return; } iaModifier(v, $("st-statut")).then(function(){ $("st-demande").value = ""; }); });
+  $("st-demande").addEventListener("keydown", function(e){ if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); $("st-form").requestSubmit(); } });
+  var sg = $("st-sugg"); SUGG_S.forEach(function(t){ sg.appendChild(el("button",{cls:"btn petit",type:"button",text:t,onclick:function(){ $("st-demande").value = t; $("st-demande").focus(); }})); });
+  $("st-annuler").addEventListener("click", function(){ if (!ST.histo.length) return; changer(JSON.parse(ST.histo.pop()), true); toast("Dernière modification annulée"); });
+  $("st-telecharger").addEventListener("click", telechargerSite);
+  $("st-fermer").addEventListener("click", fermerStudio);
+  ["mobile","ordinateur"].forEach(function(v){ $("st-" + v).addEventListener("click", function(){ ST.vue = v; $("st-vue").className = "st-vue " + v; $("st-mobile").setAttribute("aria-pressed", v === "mobile"); $("st-ordinateur").setAttribute("aria-pressed", v === "ordinateur"); }); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !$("studio").hidden){ e.stopImmediatePropagation(); fermerStudio(); } }, true);
+})();
+
+window.__cockpit = {S:S, ST:ST, ouvrir:ouvrir, fermer:fermer, ouvrirStudio:ouvrirStudio}; // poignée de test (page privée)
 /* ---------- démarrage ---------- */
 route(); rendreTout();
 var minuteur = setTimeout(function(){ if (!S.charge) etat("Vos données ne répondent pas encore. Vérifiez votre connexion ; la page se mettra à jour d'elle-même."); }, 10000);
@@ -972,6 +1419,9 @@ claude.use("db").then(function(db){
     function(e){ clearTimeout(minuteur); etat(e && e.code === "revoked" ? "Accès retiré." : "Vos prospects ne peuvent pas être chargés pour le moment."); });
   db.collection("documents").onSnapshot(function(s){ S.docs = s.docs.map(function(d){ var o = Object.assign({}, d.data()); o.id = d.id; o.client = o.client || {}; return o; }); rendreTout(); }, function(){});
   db.collection("config").onSnapshot(function(s){ s.docs.forEach(function(d){ if (d.id === "entreprise") S.ent = d.data() || {}; if (d.id === "compteurs") S.compt = d.data() || {}; if (d.id === "checklist") S.check = d.data() || {}; }); rendreTout(); }, function(){});
+  db.collection("sites").onSnapshot(function(s){ var avant = S.ouvert ? !!(S.sites && S.sites[S.ouvert]) : null; S.sites = {};
+    s.docs.forEach(function(d){ var o = d.data() || {}; if (o.fiche) S.sites[d.id] = {fiche:o.fiche, maj:o.maj || ""}; });
+    if (S.ouvert && avant !== !!S.sites[S.ouvert]) rendreFiche(); rendreTout(); }, function(){});
   db.collection("ventes").onSnapshot(function(s){ S.ventes = s.docs.map(function(d){ var o = Object.assign({}, d.data()); o.id = d.id; return o; }); rendreTout(); }, function(){});
 });
 claude.use("user").then(function(u){ var a = $("acces");
@@ -981,6 +1431,7 @@ claude.use("user").then(function(u){ var a = $("acces");
 claude.use("sample").then(function(s){ S.sample = s;
   if (!s){ $("b-briefing").disabled = true; $("b-chat").disabled = true; $("chat-note").textContent = "L'IA n'est pas disponible dans cette vue."; }
   if (S.ouvert) rendreFiche(); });
+claude.use("assets").then(function(a){ S.assets = a; });
 claude.use("downloads").then(function(d){ S.downloads = d; $("b-export").hidden = !d; });
 })();
 </script>

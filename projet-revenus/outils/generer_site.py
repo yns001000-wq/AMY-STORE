@@ -146,6 +146,8 @@ def chemins_images(fiche: dict) -> list[str]:
     imgs = fiche.get("images") or {}
     chemins = [imgs["hero"]] if imgs.get("hero") else []
     chemins += [g["src"] for g in imgs.get("galerie", []) if g.get("src")]
+    if (imgs.get("apropos") or {}).get("src"):
+        chemins.append(imgs["apropos"]["src"])
     chemins += [p["image"] for p in fiche.get("produits", []) if p.get("image")]
     return chemins
 
@@ -185,8 +187,8 @@ def palette(couleur: str, encre: str) -> dict:
     """Variantes de la couleur du client garantissant un contraste AA (4,5:1) là où elles sont utilisées."""
     sur = "#ffffff" if contraste(couleur, "#ffffff") >= 4.5 else "#111111"
     texte = couleur
-    for i in range(1, 21):  # assombrit jusqu'à être lisible en texte sur blanc
-        if contraste(texte, "#ffffff") >= 4.5:
+    for i in range(1, 21):  # assombrit jusqu'à être lisible en texte sur blanc et sur fond gris
+        if contraste(texte, "#f2f3f5") >= 4.5:  # lisible sur blanc ET sur les fonds gris des thèmes
             break
         texte = _melange(couleur, "#000000", i * 0.05)
     clair = couleur
@@ -222,7 +224,7 @@ def ligne_note(fiche: dict) -> str:
     if avis.get("note") is None or not avis.get("nombre"):
         return ""
     src = f" sur {e(avis['source'])}" if avis.get("source") else ""
-    demo = " (exemple)" if fiche.get("demo") else ""
+    demo = " (exemple)" if fiche.get("demo") or fiche.get("maquette") else ""
     return (f'<p class="note-ligne"><span class="etoiles" aria-hidden="true">{etoiles(avis["note"])}</span> '
             f'<strong>{note_txt(avis["note"])}/5</strong>, {int(avis["nombre"])} avis{src}{demo}</p>')
 
@@ -247,6 +249,8 @@ def section_avis(fiche: dict, classe: str = "") -> str:
                   f'{int(avis["nombre"])} avis sur {e(source)}.{lien}</p>')
     demo = ('<p class="mention-demo">Démonstration : avis d\'exemple pour une entreprise fictive. '
             "Sur votre site, seuls vos vrais avis apparaîtront, avec leur source.</p>") if fiche.get("demo") else ""
+    if fiche.get("maquette"):
+        demo = mention_exemple("Avis d'exemple pour la maquette : vos vrais avis Google les remplaceront.")
     cartes = "".join(
         f'<blockquote><span class="etoiles" aria-label="Note : {int(a.get("note", 5))} sur 5">{etoiles(a.get("note", 5))}</span>'
         f'<p>« {e(a["texte"])} »</p><footer>{e(a["auteur"])}'
@@ -256,13 +260,20 @@ def section_avis(fiche: dict, classe: str = "") -> str:
             f'<div class="avis-liste">{cartes}</div></div></section>')
 
 
+def mention_exemple(texte: str) -> str:
+    """Petite mention lisible signalant un contenu d'exemple dans une maquette."""
+    return f'<p class="mention-exemple">{e(texte)}</p>'
+
+
 def section_faq(fiche: dict, classe: str = "") -> str:
     faq = fiche.get("faq") or []
     if not faq:
         return ""
     items = "".join(f"<details><summary>{e(q['q'])}</summary><p>{e(q['r'])}</p></details>" for q in faq)
     return (f'<section class="section {classe}" id="faq" aria-labelledby="titre-faq"><div class="conteneur" style="max-width:52rem">'
-            f'{tete_section("Questions fréquentes", "Avant de nous contacter", ident="titre-faq")}<div class="faq">{items}</div></div></section>')
+            f'{tete_section("Questions fréquentes", "Avant de nous contacter", ident="titre-faq")}'
+            + (mention_exemple("Questions et réponses d'exemple, à valider ensemble.") if fiche.get("maquette") else "")
+            + f'<div class="faq">{items}</div></div></section>')
 
 
 def tableau_horaires(fiche: dict) -> str:
@@ -297,7 +308,9 @@ def section_infos(fiche: dict, titre_zone: str, classe: str = "") -> str:
     liste = ('<ul class="communes">' + "".join(f"<li>{e(c)}</li>" for c in communes) + "</ul>") if communes else ""
     return (f'<section class="section {classe}" id="infos" aria-labelledby="titre-infos"><div class="conteneur deux">'
             f'<div>{tete_section("Où nous trouver", titre_zone, ident="titre-infos")}<p>{e(fiche.get("zone", fiche["ville"]))}</p>{liste}{lien_itineraire(fiche)}</div>'
-            f'<div>{tete_section("Horaires", "Quand nous joindre")}{tableau_horaires(fiche)}</div></div></section>')
+            f'<div>{tete_section("Horaires", "Quand nous joindre")}{tableau_horaires(fiche)}'
+            + (mention_exemple("Horaires d'exemple, à remplacer par les vôtres.") if fiche.get("maquette") else "")
+            + '</div></div></section>')
 
 
 def formulaire(fiche: dict, titre_bouton: str = "Envoyer ma demande") -> str:
@@ -335,6 +348,9 @@ SCRIPT_COMMUN = """<script>(function(){
   if (b && n){ b.addEventListener('click', function(){ var o = n.classList.toggle('ouvert'); b.setAttribute('aria-expanded', o); });
     n.addEventListener('click', function(e){ if (e.target.closest('a')){ n.classList.remove('ouvert'); b.setAttribute('aria-expanded', 'false'); } });
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && n.classList.contains('ouvert')){ n.classList.remove('ouvert'); b.setAttribute('aria-expanded', 'false'); b.focus(); } }); }
+  var barre = document.querySelector('.barre-mobile'), haut = document.querySelector('.accueil .actions');
+  if (barre && haut && 'IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ barre.classList.toggle('repliee', es[0].isIntersecting || es[0].boundingClientRect.top > 0); }).observe(haut); }
   var f = document.querySelector('form.form'); if (!f) return;
   var regles = {nom:'Indiquez votre nom.', telephone:'Indiquez un numéro de téléphone valide.', message:'Décrivez votre besoin en quelques mots.'};
   function ok(c){ var v = c.value.trim(), m = '';
@@ -420,7 +436,7 @@ def page(fiche: dict, apercu: bool, corps: str, menu: list[tuple[str, str]], cta
     if fiche.get("email"):
         jsonld["email"] = fiche["email"]
     avis = fiche.get("avis") or {}
-    if avis.get("note") is not None and avis.get("nombre") and not fiche.get("demo"):
+    if avis.get("note") is not None and avis.get("nombre") and not (fiche.get("demo") or fiche.get("maquette") or apercu):
         jsonld["aggregateRating"] = {"@type": "AggregateRating", "ratingValue": avis["note"], "reviewCount": avis["nombre"]}
     if imgs and (fiche.get("images") or {}).get("hero"):
         jsonld["image"] = imgs[fiche["images"]["hero"]]
@@ -428,7 +444,9 @@ def page(fiche: dict, apercu: bool, corps: str, menu: list[tuple[str, str]], cta
     police = THEMES[modele][1]
     bandeau = ""
     if apercu:
-        bandeau = f'<aside class="bandeau-info" aria-label="Information sur cette page"><p>Aperçu de proposition préparé pour {e(fiche["nom"])} : non publié, non contractuel. Textes et visuels à valider ensemble.</p></aside>'
+        bandeau = (f'<aside class="bandeau-info" aria-label="Information sur cette page"><p>Maquette préparée pour {e(fiche["nom"])} : non publiée, non contractuelle. '
+                   + ("Avis, prix, horaires et photos sont des exemples à remplacer par les vôtres." if fiche.get("maquette") else "Textes et visuels à valider ensemble.")
+                   + '</p></aside>')
     elif fiche.get("demo"):
         bandeau = '<aside class="bandeau-info" aria-label="Information sur cette page"><p>Site de démonstration réalisé par Mysite : entreprise, avis et coordonnées fictifs.</p></aside>'
     return f"""<!DOCTYPE html>
@@ -496,7 +514,9 @@ def corps_artisan(fiche: dict, imgs: dict):
                        for s in fiche.get("services") or [])
     sec_services = (f'<section class="section" id="services" aria-labelledby="titre-services"><div class="conteneur">'
                     f'{tete_section("Services", fiche.get("titre_services", "Ce que nous faisons"), fiche.get("intro_services", ""), ident="titre-services")}'
-                    f'<div class="services">{services}</div></div></section>') if services else ""
+                    f'<div class="services">{services}</div>'
+                    + (mention_exemple("Prix indicatifs d'exemple, à remplacer par les vôtres.") if fiche.get("maquette") else "")
+                    + '</div></section>') if services else ""
     galerie = (fiche.get("images") or {}).get("galerie") or []
     sec_real = (f'<section class="section gris" id="realisations" aria-labelledby="titre-real"><div class="conteneur">'
                 f'{tete_section(fiche.get("libelle_realisations", "Réalisations"), fiche.get("titre_realisations", "Des chantiers récents"), ident="titre-real")}<div class="realisations">'
@@ -507,8 +527,16 @@ def corps_artisan(fiche: dict, imgs: dict):
     sec_etapes = (f'<section class="section" id="methode" aria-labelledby="titre-methode"><div class="conteneur">'
                   f'{tete_section("Comment ça se passe", "Trois étapes, sans surprise", ident="titre-methode")}<ol class="etapes">'
                   + "".join(f'<li><h3>{e(s["titre"])}</h3><p>{e(s["texte"])}</p></li>' for s in etapes) + "</ol></div></section>")
-    apropos = (f'<section class="section gris" id="apropos" aria-labelledby="titre-apropos"><div class="conteneur" style="max-width:52rem">'
-               f'{tete_section("Qui sommes-nous", fiche.get("titre_apropos", "Un artisan près de chez vous"), ident="titre-apropos")}<p>{e(fiche["description"])}</p></div></section>')
+    ph = (fiche.get("images") or {}).get("apropos") or {}
+    texte_apropos = f'{tete_section("Qui sommes-nous", fiche.get("titre_apropos", "Un artisan près de chez vous"), ident="titre-apropos")}<p>{e(fiche["description"])}</p>'
+    if ph.get("src"):
+        legende = " · ".join(x for x in (ph.get("legende"), ph.get("credit")) if x)
+        apropos = (f'<section class="section gris" id="apropos" aria-labelledby="titre-apropos"><div class="conteneur apropos"><div>{texte_apropos}</div>'
+                   f'<figure>{img_tag(imgs, ph["src"], ph.get("legende") or fiche["metier"] + " au travail", True, 900, 675)}'
+                   + (f'<figcaption>{e(legende)}</figcaption>' if legende else "") + '</figure></div></section>')
+    else:
+        apropos = (f'<section class="section gris" id="apropos" aria-labelledby="titre-apropos"><div class="conteneur" style="max-width:52rem">'
+                   f'{texte_apropos}</div></section>')
     contact = (f'<section class="section contact" id="contact" aria-labelledby="titre-contact"><div class="conteneur"><div>'
                f'<span class="surtitre">Contact</span><h2 id="titre-contact">{e(fiche.get("titre_contact", "Un besoin, une urgence ?"))}</h2>'
                + (f'<a class="tel-geant" href="{e(lien_tel)}">{e(fiche["telephone"])}</a>' if a_tel else "")
@@ -554,7 +582,8 @@ def corps_beaute(fiche: dict, imgs: dict):
     tarifs = (f'<section class="section" id="tarifs" aria-labelledby="titre-tarifs"><div class="conteneur">'
               f'{tete_section("Prestations & tarifs", "Nos tarifs", fiche.get("intro_tarifs", "Prix affichés, durées indiquées. Le diagnostic est fait avec vous avant chaque couleur."), ident="titre-tarifs")}'
               f'<div class="tarifs">{"".join(cats)}</div>'
-              f'<p style="margin-top:2.5rem"><a class="btn" href="{e(resa)}"{cible}>Réserver mon créneau</a></p></div></section>')
+              + (mention_exemple("Prix et durées d'exemple, à remplacer par les vôtres.") if fiche.get("maquette") else "")
+              + f'<p style="margin-top:2.5rem"><a class="btn" href="{e(resa)}"{cible}>Réserver mon créneau</a></p></div></section>')
     galerie = (fiche.get("images") or {}).get("galerie") or []
     sec_gal = (f'<section class="section gris" id="galerie" aria-labelledby="titre-galerie"><div class="conteneur">'
                f'{tete_section("Le salon", "En images", ident="titre-galerie")}<div class="galerie">'
@@ -699,8 +728,11 @@ def page_mentions(fiche: dict) -> str:
     identifiant = str(fiche.get("numero_entreprise") or fiche.get("siret") or "").strip()
     identifiant = e(identifiant) if identifiant else A_COMPLETER
     credits = ""
-    if fiche.get("demo"):
-        credits = "<h2>Crédits photos</h2><p>Photos de démonstration sous licence CC0 (domaine public), issues de Wikimedia Commons. Détail : modeles-sites/images-demo/CREDITS.md.</p>"
+    imgs_f = fiche.get("images") or {}
+    attributions = [x["credit"] for x in [imgs_f.get("apropos") or {}] + list(imgs_f.get("galerie") or []) if x.get("credit")]
+    if fiche.get("demo") or attributions:
+        credits = ("<h2>Crédits photos</h2><p>" + ("Photos d'illustration libres de droits (CC0 : Wikimedia Commons, StockSnap, Rawpixel). " if fiche.get("demo") else "")
+                   + " ".join(e(a) + "." for a in attributions) + "</p>")
     return f"""<!DOCTYPE html>
 <html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mentions légales — {e(fiche['nom'])}</title>
@@ -738,6 +770,9 @@ def generer(fiche: dict, sortie: Path, apercu: bool = False, base: Path | None =
     """Génère le site. `base` = dossier de référence des chemins d'images (défaut : modeles-sites/)."""
     base = base or MODELES
     avertissements = valider(fiche, base)
+    if fiche.get("maquette") and not apercu and not fiche.get("demo"):
+        raise FicheInvalide("Cette fiche est une maquette : avis, prix et horaires sont des exemples. Remplacez-les par les vraies "
+                            "informations du client et retirez « maquette » avant de générer la version finale.")
     dossier = sortie / (fiche["slug"] + ("-apercu" if apercu else ""))
     dossier.mkdir(parents=True, exist_ok=True)
     if (dossier / "img").is_dir():  # dossier entièrement généré : on repart de zéro pour ne pas garder d'anciennes photos

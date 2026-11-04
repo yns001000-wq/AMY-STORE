@@ -109,6 +109,10 @@ p{margin:0}
 /* barre d'action mobile */
 .barre-mobile{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;gap:.5rem;padding:.6rem max(.75rem,env(safe-area-inset-left,0px)) calc(.6rem + env(safe-area-inset-bottom,0px));background:var(--fond);border-top:1px solid var(--filet)}
 .barre-mobile .btn{flex:1;min-height:2.9rem;padding:.5rem}
+/* Barre masquée tant que les boutons du haut de page sont visibles : elle ne recouvre jamais la photo d'accueil */
+.barre-mobile{transition:transform .25s ease,visibility .25s}
+.barre-mobile.repliee{transform:translateY(110%);visibility:hidden}
+@media (prefers-reduced-motion:reduce){.barre-mobile{transition:none}}
 @media (min-width:48rem){.barre-mobile{display:none}}
 body.a-barre{padding-bottom:4.5rem}
 @media (min-width:48rem){body.a-barre{padding-bottom:0}}
@@ -116,6 +120,9 @@ body.a-barre{padding-bottom:4.5rem}
 .communes{display:flex;flex-wrap:wrap;gap:.4rem .9rem;list-style:none;margin:1rem 0 0;padding:0;color:var(--texte);font-weight:600}
 .communes li::after{content:"·";margin-left:.9rem;color:var(--filet)}
 .communes li:last-child::after{content:""}
+/* Contenu d'exemple d'une maquette : signalé en petit, mais lisible (contraste AA) */
+.mention-exemple{font-size:.8rem;color:var(--gris);margin:.75rem 0 1.25rem;font-style:italic}
+.contact .mention-exemple,.reserver .mention-exemple{color:inherit}
 /* Thème BEAUTÉ — « salon calme » : lumineux, aéré, élégant. Titres Marcellus, encre presque noire,
    accent couleur du client. Signature : la grille de tarifs façon carte de salon, avec points de conduite. */
 @font-face{font-family:"Marcellus";src:url("polices/marcellus-latin.woff2") format("woff2");font-weight:400;font-display:swap}
@@ -193,6 +200,9 @@ h3{font-size:1.25rem;font-weight:400;letter-spacing:.02em}
   if (b && n){ b.addEventListener('click', function(){ var o = n.classList.toggle('ouvert'); b.setAttribute('aria-expanded', o); });
     n.addEventListener('click', function(e){ if (e.target.closest('a')){ n.classList.remove('ouvert'); b.setAttribute('aria-expanded', 'false'); } });
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && n.classList.contains('ouvert')){ n.classList.remove('ouvert'); b.setAttribute('aria-expanded', 'false'); b.focus(); } }); }
+  var barre = document.querySelector('.barre-mobile'), haut = document.querySelector('.accueil .actions');
+  if (barre && haut && 'IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ barre.classList.toggle('repliee', es[0].isIntersecting || es[0].boundingClientRect.top > 0); }).observe(haut); }
   var f = document.querySelector('form.form'); if (!f) return;
   var regles = {nom:'Indiquez votre nom.', telephone:'Indiquez un numéro de téléphone valide.', message:'Décrivez votre besoin en quelques mots.'};
   function ok(c){ var v = c.value.trim(), m = '';

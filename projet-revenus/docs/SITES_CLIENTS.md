@@ -16,7 +16,7 @@ Règles communes :
 Les styles se trouvent dans `modeles-sites/themes/` : `base.css`, commun aux trois modèles, plus un fichier par modèle. Ils sont intégrés dans la page lors de la génération.
 
 ## Ce que le générateur fait automatiquement
-- **Couleur du client** (`couleur`) : le générateur calcule des variantes dont le contraste respecte le niveau AA (4,5:1). Ces variantes servent aux textes sur fond blanc, aux boutons et aux bandes sombres. Une couleur trop claire reste donc lisible.
+- **Couleur du client** (`couleur`) : le générateur calcule des variantes dont le contraste respecte le niveau AA (4,5:1), sur fond blanc comme sur les fonds gris des thèmes. Ces variantes servent aux textes sur fond blanc, aux boutons et aux bandes sombres. Une couleur trop claire reste donc lisible.
 - **Photos** : conversion en WebP, en 720 et 1440 px, avec `srcset`. Cette étape demande Pillow (`pip install Pillow`). Sans Pillow, les photos sont copiées telles quelles et un avertissement s'affiche.
 - **Favicon** : l'initiale du client sur sa couleur.
 - **Statut « Ouvert / Fermé »** calculé à partir des horaires, avec le jour courant surligné.
@@ -33,6 +33,17 @@ Les styles se trouvent dans `modeles-sites/themes/` : `base.css`, commun aux tro
 | `libelle_realisations`, `titre_realisations`, `titre_contact`, `texte_whatsapp`, `titre_zone`, `titre_apropos`, `etapes` | Textes du modèle artisan, à adapter quand il sert à un autre métier (traiteur par exemple) |
 | `reservation_url` | Lien de réservation en ligne (beauté). Sinon WhatsApp, puis le téléphone |
 | `modes`, `delai_commande`, `mode_retrait`, `paiement`, `allergenes` | Panier et informations pratiques (commande) |
+
+## Maquettes pour les prospects
+`outils/preparer_apercus.py` et le Studio du cockpit produisent des **maquettes** : le site est « plein » pour que le prospect se projette. Les avis, les prix, les horaires et les questions sont des **exemples**, et chaque bloc le signale par une petite mention lisible. Le bandeau du haut le rappelle aussi.
+
+Garde-fous :
+- une fiche marquée `maquette` ne peut **pas** produire de site final (`generer_site.py` refuse sans l'option `--apercu`) ;
+- les maquettes ne sont jamais indexées par les moteurs de recherche ;
+- la note d'exemple n'est jamais déclarée aux moteurs de recherche (`aggregateRating`) ;
+- le formulaire d'une maquette est désactivé.
+
+Photos de plomberie (novembre 2026) : lavabo en pierre sombre, salle de bain d'hôtel, douche en mosaïque, robinetterie, et un plombier en intervention pour « Qui sommes-nous ». Crédits dans `modeles-sites/images-demo/CREDITS.md` ; une photo est sous CC BY 2.0, son crédit est affiché sous la photo.
 
 ## Contrôle qualité
 Les sites doivent être servis en HTTP, car le mode `file://` bloque les polices :

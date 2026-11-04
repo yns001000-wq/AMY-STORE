@@ -1,6 +1,6 @@
 # Crédits des images de démonstration
 
-Toutes ces photos sont publiées sous licence **CC0** (domaine public) sur Wikimedia Commons : usage commercial autorisé, attribution non obligatoire. Nous les citons tout de même par transparence. Elles ne servent qu'aux **démos fictives** : pour un vrai client, on utilise **ses propres photos** (plus crédibles et plus efficaces).
+Ces photos sont sous licence **CC0** (domaine public : Wikimedia Commons, StockSnap, Rawpixel), sauf une sous **CC BY 2.0**, dont l'attribution est obligatoire. Elle figure ci-dessous et dans les mentions légales des démos. Les autres sont citées par transparence. Elles ne servent qu'aux **démos fictives** : pour un vrai client, on utilise **ses propres photos** (plus crédibles et plus efficaces).
 
 | Fichier | Œuvre originale | Auteur | Licence |
 |---|---|---|---|
@@ -13,8 +13,9 @@ Toutes ces photos sont publiées sous licence **CC0** (domaine public) sur Wikim
 | patisserie-cookies.jpg | [Cookie stack.jpg](https://commons.wikimedia.org/wiki/File:Cookie_stack.jpg) | Lisa Fotios | CC0 |
 | patisserie-fraisier.jpg | [Strawberry cream cake - Rawlab 2025-08-31.jpg](https://commons.wikimedia.org/wiki/File:Strawberry_cream_cake_-_Rawlab_2025-08-31.jpg) | Andy Li | CC0 |
 | patisserie-hero.jpg | [Strawberry layer cake.jpg](https://commons.wikimedia.org/wiki/File:Strawberry_layer_cake.jpg) | Dennis Sylvester Hurd | CC0 |
-| plomberie-cuisine.jpg | [Kitchen Faucet 2.jpg](https://commons.wikimedia.org/wiki/File:Kitchen_Faucet_2.jpg) | Stilfehler | CC0 |
-| plomberie-douche.jpg | [Italian Shower tap.JPG](https://commons.wikimedia.org/wiki/File:Italian_Shower_tap.JPG) | Miguel Andrade | CC0 |
-| plomberie-robinet.jpg | [Tap-gb0fe5d2cc 1920.jpg](https://commons.wikimedia.org/wiki/File:Tap-gb0fe5d2cc_1920.jpg) | Vien Hoang | CC0 |
-| plomberie-salle-de-bain.jpg | [Bathroom vanity cabinet including sink and drawers.jpg](https://commons.wikimedia.org/wiki/File:Bathroom_vanity_cabinet_including_sink_and_drawers.jpg) | Tomwsulcer | CC0 |
-| plomberie-tuyaux.jpg | [PEX pipes and valves in basement ceiling for exterior water spigot.jpg](https://commons.wikimedia.org/wiki/File:PEX_pipes_and_valves_in_basement_ceiling_for_exterior_water_spigot.jpg) | Tomwsulcer | CC0 |
+| plomberie-lavabo.jpg | [Bathroom Sink](https://stocksnap.io/photo/bathroom-sink-D3901L7G93) (StockSnap) | Dan Watson | CC0 |
+| plomberie-salle-de-bain-hotel.jpg | [Modern Bathroom](https://stocksnap.io/photo/modern-bathroom-SX2H0BU5EG) (StockSnap) | Travel Adventures | CC0 |
+| plomberie-douche-mosaique.jpg | [Shower room design](https://www.rawpixel.com/image/5902607/photo-image-public-domain-blue-room) (Rawpixel) | non indiqué | CC0 |
+| plomberie-robinet-cuisine.jpg | [Sink Faucet](https://stocksnap.io/photo/sink-faucet-XVEZZZGCXA) (StockSnap) | Fernando Arcos | CC0 |
+| plomberie-mitigeur.jpg | [Bathtub faucet](https://www.rawpixel.com/image/5911850/image-public-domain-house-home) (Rawpixel) | non indiqué | CC0 |
+| plomberie-intervention.jpg | [Plumber at work 2010 USA.jpg](https://commons.wikimedia.org/wiki/File:Plumber_at_work_2010_USA.jpg) (Wikimedia Commons) | ocean yamaha | **CC BY 2.0** (attribution obligatoire) |
