@@ -137,5 +137,12 @@
   "numero_entreprise": "Exemple fictif",
   "adresse_editeur": "Exemple fictif",
   "responsable_publication": "Exemple fictif",
-  "hebergeur": "Exemple fictif"
+  "hebergeur": "Exemple fictif",
+  "tarifs_depannage": {
+    "taux_horaire": "55 € TTC / heure",
+    "deplacement": "30 € TTC (Villeurbanne et 15 km)",
+    "majorations": "+50 % après 19 h et le dimanche",
+    "forfaits": "Débouchage simple : 90 € TTC",
+    "devis": "Gratuit, avant toute intervention"
+  }
 }

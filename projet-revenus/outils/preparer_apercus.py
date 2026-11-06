@@ -177,6 +177,10 @@ def contenu_exemple(fiche: dict, metier: str) -> None:
     fiche["horaires_semaine"] = HORAIRES_EXEMPLE[fam]
     fiche["atouts"] = ATOUTS_EXEMPLE[fam]
     fiche["faq"] = [{"q": q, "r": r} for q, r in FAQ_EXEMPLE[fam]]
+    if metier in ("Plombier", "Chauffagiste", "Électricien"):
+        fiche["tarifs_depannage"] = {"taux_horaire": "55 € TTC / heure", "deplacement": "30 € TTC dans le secteur", "majorations": "+50 % le soir et le dimanche",
+                                     "devis": "Gratuit, avant toute intervention"}
+    fiche["delai_reponse"] = "Réponse sous 2 h en journée (exemple)" if fam != "bouche" else "Réponse sous 24 h (exemple)"
     if metier in PRIX_EXEMPLE:
         for s, prix in zip(fiche.get("services", []), PRIX_EXEMPLE[metier]):
             s["prix"] = prix

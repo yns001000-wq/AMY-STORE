@@ -34,6 +34,20 @@ Les styles se trouvent dans `modeles-sites/themes/` : `base.css`, commun aux tro
 | `reservation_url` | Lien de réservation en ligne (beauté). Sinon WhatsApp, puis le téléphone |
 | `modes`, `delai_commande`, `mode_retrait`, `paiement`, `allergenes` | Panier et informations pratiques (commande) |
 
+## Champs ajoutés après l'étude des concurrents
+| Champ | Effet |
+|---|---|
+| `delai_reponse` | Promesse de réponse sous les boutons d'accueil et sous le formulaire |
+| `tarifs_depannage` | `taux_horaire`, `deplacement`, `forfaits`, `majorations`, `devis` : bloc « Tarifs de dépannage », avec la mention de l'arrêté du 24 janvier 2017 |
+| `qualifications` | Liste des qualifications **réelles** (RGE, Qualibat…), jamais affichée sur une maquette |
+| `avant_apres` | Paires `{avant, apres, legende}` de **vraies** photos de chantier |
+| `domaine` | Site final : adresse canonique, `robots.txt` et `sitemap.xml` |
+
+## Images générées par IA
+- `outils/generer_images.py` crée des illustrations avec l'API d'OpenAI. Sans accord explicite sur un plafond de dépense (`--confirmer-depense`), il n'affiche qu'une estimation. Chaque dépense est notée dans `crm/donnees/depenses.csv`.
+- **Sur une maquette**, ces images peuvent servir partout : le bandeau précise que les photos sont des exemples.
+- **Sur un site final**, une image IA ne peut servir que d'illustration d'accueil. Elle reçoit le texte alternatif « Illustration : … » et une mention dans les mentions légales. Le générateur **refuse** une image IA utilisée comme réalisation, produit, avant/après ou photo d'équipe.
+
 ## Maquettes pour les prospects
 `outils/preparer_apercus.py` et le Studio du cockpit produisent des **maquettes** : le site est « plein » pour que le prospect se projette. Les avis, les prix, les horaires et les questions sont des **exemples**, et chaque bloc le signale par une petite mention lisible. Le bandeau du haut le rappelle aussi.
 

@@ -425,6 +425,43 @@ class TestApercus(unittest.TestCase):
 
 
 
+
+class TestConversion(unittest.TestCase):
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+
+    def test_blocs_conversion_et_seo_local(self):
+        f = fiche_artisan(demo=False, domaine="https://plomberie-martin.fr", qualifications=["Qualibat RGE"], communes=["Villeurbanne", "Bron"])
+        dossier, _ = generer_site.generer(f, self.tmp)
+        page = (dossier / "index.html").read_text(encoding="utf-8")
+        self.assertIn("Nos tarifs de dépannage", page)
+        self.assertIn("arrêté du 24 janvier 2017", page)
+        self.assertIn('name="commune"', page)
+        self.assertIn("Qualibat RGE", page)
+        self.assertIn('"openingHoursSpecification"', page)
+        self.assertIn('"areaServed": [{"@type": "City"', page)
+        self.assertIn('rel="canonical" href="https://plomberie-martin.fr/"', page)
+        self.assertIn("Sitemap: https://plomberie-martin.fr/sitemap.xml", (dossier / "robots.txt").read_text(encoding="utf-8"))
+        self.assertTrue((dossier / "sitemap.xml").exists())
+
+    def test_qualifications_jamais_sur_une_maquette(self):
+        f = fiche_artisan(qualifications=["RGE"], maquette=True)
+        dossier, _ = generer_site.generer(f, self.tmp, apercu=True)
+        self.assertNotIn('class="qualifs"', (dossier / "index.html").read_text(encoding="utf-8"))
+
+    def test_image_ia_interdite_comme_realisation(self):
+        ia = Path(tempfile.mkdtemp()); (ia / "images-ia").mkdir()
+        src = generer_site.MODELES / "images-demo" / "plomberie-lavabo.jpg"
+        (ia / "images-ia" / "ia-plombier-accueil.webp").write_bytes(src.read_bytes())
+        f = fiche_artisan(demo=False, images={"hero": "images-ia/ia-plombier-accueil.webp", "galerie": [{"src": "images-ia/ia-plombier-accueil.webp"}]})
+        with self.assertRaises(generer_site.FicheInvalide):
+            generer_site.generer(f, self.tmp, base=ia)
+        f["images"] = {"hero": "images-ia/ia-plombier-accueil.webp"}
+        dossier, _ = generer_site.generer(f, self.tmp, base=ia)
+        self.assertIn('alt="Illustration : ', (dossier / "index.html").read_text(encoding="utf-8"))
+        self.assertIn("générées par intelligence artificielle", (dossier / "mentions-legales.html").read_text(encoding="utf-8"))
+
+
 class TestProspectsOSM(unittest.TestCase):
     def test_telephone_sans_site_et_completion(self):
         d = Path(tempfile.mkdtemp())

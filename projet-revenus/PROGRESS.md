@@ -137,6 +137,22 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
 - Cartes chiffrées inclinables en 3D. Les animations sont désactivées si le système demande de les réduire.
 - Testé dans un navigateur avec 120 prospects fictifs : survol, clic, filtre, inclinaison ; aucune erreur, aucun débordement à 400 px ; thèmes clair et sombre.
 
+### 06/11/2026 — Sites inspirés des concurrents, outil d'images IA
+- Étude des concurrents (docs/CONVERSION.md, sources dans SOURCES.md). Repris dans les modèles et le Studio :
+  - formulaire en 4 champs ;
+  - promesse de délai de réponse ;
+  - tarifs de dépannage affichés (arrêté du 24 janvier 2017) ;
+  - qualifications réelles et galerie avant/après réelle ;
+  - données structurées enrichies, adresse canonique et sitemap pour le site final.
+- Nouvel outil `outils/generer_images.py` (API d'OpenAI) : estimation sans dépense par défaut, plafond obligatoire, dépenses notées, images IA jamais présentées comme des réalisations (règle appliquée par le générateur).
+- **En attente de votre part** : clé d'API OpenAI et accord sur le budget. **Aucune image n'a été générée, 0 € dépensé.**
+- Preuves :
+  - 34 tests unitaires OK ;
+  - QA démos et 6 maquettes conforme (axe : 0 violation) ;
+  - Lighthouse plombier : 100 dans les 4 catégories, sur mobile et ordinateur ;
+  - Studio, 3D et cockpit retestés dans un navigateur ;
+  - cockpit publié en version 6.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`

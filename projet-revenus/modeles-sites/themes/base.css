@@ -108,3 +108,20 @@ body.a-barre{padding-bottom:4.5rem}
 /* Contenu d'exemple d'une maquette : signalé en petit, mais lisible (contraste AA) */
 .mention-exemple{font-size:.8rem;color:var(--gris);margin:.75rem 0 1.25rem;font-style:italic}
 .contact .mention-exemple,.reserver .mention-exemple{color:inherit}
+/* Blocs « conversion » : promesse de réponse, qualifications, tarifs de dépannage, avant/après */
+.promesse,.promesse-form{display:flex;align-items:center;gap:.45rem;margin:1rem 0 0;font-weight:600;color:var(--encre)}
+.promesse .ico,.promesse-form .ico{color:var(--accent-texte)}
+.promesse-form{font-weight:500;font-size:.92rem;color:var(--gris)}
+.facultatif{font-weight:400;color:var(--gris)}
+.qualifs{list-style:none;display:flex;flex-wrap:wrap;gap:.4rem 1rem;margin:1rem 0 0;padding:0;font-weight:600;font-size:.92rem}
+.qualifs li{display:flex;align-items:center;gap:.35rem}.qualifs .ico{color:var(--accent-texte)}
+.grille-tarifs{display:grid;gap:0;margin:0;border-top:2px solid var(--encre);grid-template-columns:minmax(0,1fr)}
+@media (min-width:40rem){.grille-tarifs{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:2.5rem}}
+.grille-tarifs div{display:flex;justify-content:space-between;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--filet)}
+.grille-tarifs dt{color:var(--gris)}.grille-tarifs dd{margin:0;font-weight:700;color:var(--encre);text-align:right}
+.aa-liste{display:grid;gap:2rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:52rem){.aa-liste{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.aa{margin:0}.aa-duo{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+.aa-duo div{position:relative}.aa-duo img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--rayon)}
+.aa-duo span{position:absolute;left:.5rem;top:.5rem;background:#fff;color:var(--encre);font-size:.78rem;font-weight:700;padding:.2rem .5rem;border-radius:2px}
+.aa figcaption{margin-top:.5rem;font-size:.9rem;color:var(--gris)}

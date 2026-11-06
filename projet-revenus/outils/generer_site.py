@@ -67,6 +67,7 @@ ICO_TEL = _ico('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 
 ICO_PIN = _ico('<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>')
 ICO_PANIER = _ico('<path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="17" cy="20" r="1"/>')
 ICO_CHECK = _ico('<path d="M5 12.5l4.5 4.5L19 7.5"/>')
+ICO_HORLOGE = _ico('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>')
 
 class FicheInvalide(ValueError):
     """Erreur de contenu dans la fiche JSON."""
@@ -148,6 +149,8 @@ def chemins_images(fiche: dict) -> list[str]:
     chemins += [g["src"] for g in imgs.get("galerie", []) if g.get("src")]
     if (imgs.get("apropos") or {}).get("src"):
         chemins.append(imgs["apropos"]["src"])
+    for p in fiche.get("avant_apres") or []:
+        chemins += [x for x in (p.get("avant"), p.get("apres")) if x]
     chemins += [p["image"] for p in fiche.get("produits", []) if p.get("image")]
     return chemins
 
@@ -324,10 +327,12 @@ def formulaire(fiche: dict, titre_bouton: str = "Envoyer ma demande") -> str:
             '<p class="piege"><label for="site_web">Ne pas remplir</label><input id="site_web" name="site_web" tabindex="-1" autocomplete="off"></p>'
             '<div class="champ"><label for="f-nom">Nom</label><input id="f-nom" name="nom" autocomplete="name" required aria-describedby="e-nom"><p class="erreur" id="e-nom"></p></div>'
             '<div class="champ"><label for="f-tel">Téléphone</label><input id="f-tel" name="telephone" type="tel" autocomplete="tel" required aria-describedby="e-tel"><p class="erreur" id="e-tel"></p></div>'
+            '<div class="champ"><label for="f-ville">Commune <span class="facultatif">(facultatif)</span></label><input id="f-ville" name="commune" autocomplete="address-level2"></div>'
             '<div class="champ"><label for="f-msg">Votre besoin</label><textarea id="f-msg" name="message" required aria-describedby="e-msg"></textarea><p class="erreur" id="e-msg"></p></div>'
             '<p class="petit">Vos informations servent uniquement à répondre à votre demande. <a href="mentions-legales.html">Mentions légales et données personnelles</a>.</p>'
             '<p class="retour" role="alert"></p>'
-            f'<button class="btn" type="submit">{e(titre_bouton)}</button></form>')
+            f'<button class="btn" type="submit">{e(titre_bouton)}</button>'
+            + (f'<p class="promesse-form">{ICO_HORLOGE} {e(fiche["delai_reponse"])}</p>' if fiche.get("delai_reponse") else "") + '</form>')
 
 
 def pied(fiche: dict) -> str:
@@ -386,6 +391,8 @@ TAILLES_DEFAUT = "(min-width: 52rem) 50vw, 100vw"
 
 def img_tag(imgs: dict, chemin: str, alt: str, classe_lazy: bool = True, largeur: int = 900, hauteur: int = 675,
             tailles: str = TAILLES_DEFAUT) -> str:
+    if est_ia(chemin) and not alt.startswith("Illustration"):
+        alt = "Illustration : " + alt
     charge = ' loading="lazy" decoding="async"' if classe_lazy else ' fetchpriority="high"'
     srcset = imgs.get(chemin + "|srcset")
     jeu = f' srcset="{e(srcset)}" sizes="{e(tailles)}"' if srcset else ""
@@ -409,6 +416,76 @@ def optimiser_image(source: Path, dossier_img: Path) -> tuple[str, str] | None:
             im.resize((cible, round(im.height * cible / im.width)), Image.LANCZOS).save(dossier_img / nom, "WEBP", quality=78, method=4)
             variantes.append((nom, cible))
     return "img/" + variantes[0][0], ", ".join(f"img/{n} {w}w" for n, w in variantes)
+
+
+# ---------------------------------------------------------------- blocs « conversion » (étude des concurrents, nov. 2026)
+JOURS_SCHEMA = {"lun": "Monday", "mar": "Tuesday", "mer": "Wednesday", "jeu": "Thursday", "ven": "Friday", "sam": "Saturday", "dim": "Sunday"}
+
+
+def est_ia(chemin: str) -> bool:
+    """Image générée par IA (dossier images-ia ou nom ia-…) : illustration, jamais une réalisation."""
+    return "images-ia/" in chemin or Path(chemin).name.startswith("ia-")
+
+
+def qualifications(fiche: dict) -> str:
+    """Qualifications RÉELLES du client (RGE, Qualibat…), jamais pour une maquette."""
+    q = [x for x in fiche.get("qualifications") or [] if str(x).strip()]
+    if not q or fiche.get("maquette"):
+        return ""
+    return '<ul class="qualifs" aria-label="Qualifications">' + "".join(f"<li>{ICO_CHECK}{e(x)}</li>" for x in q) + "</ul>"
+
+
+def section_depannage(fiche: dict) -> str:
+    """Tarifs de dépannage : affichage exigé pour les prestations de dépannage, réparation et entretien
+    du bâtiment et de l'équipement de la maison (arrêté du 24 janvier 2017)."""
+    t = fiche.get("tarifs_depannage") or {}
+    lignes = [(lib, t.get(k)) for k, lib in (("taux_horaire", "Taux horaire"), ("deplacement", "Déplacement"),
+                                              ("forfaits", "Forfaits"), ("majorations", "Soirs, week-ends et jours fériés"), ("devis", "Devis"))]
+    lignes = [(lib, v) for lib, v in lignes if v]
+    if not lignes:
+        return ""
+    dl = "".join(f"<div><dt>{e(lib)}</dt><dd>{e(v)}</dd></div>" for lib, v in lignes)
+    return (f'<section class="section depannage" id="tarifs-depannage" aria-labelledby="titre-depannage"><div class="conteneur">'
+            f'{tete_section("Tarifs", "Nos tarifs de dépannage", "Prix TTC, annoncés avant toute intervention.", ident="titre-depannage")}'
+            f'<dl class="grille-tarifs">{dl}</dl>'
+            + (mention_exemple("Tarifs d'exemple, à remplacer par les vôtres.") if fiche.get("maquette") else
+               '<p class="petit">Information sur les prix conforme à l\u2019arrêté du 24 janvier 2017 relatif aux prestations de dépannage, de réparation et d\u2019entretien.</p>')
+            + "</div></section>")
+
+
+def section_avant_apres(fiche: dict, imgs: dict) -> str:
+    """Avant / après : uniquement des photos réelles de chantiers du client."""
+    paires = [p for p in fiche.get("avant_apres") or [] if p.get("avant") and p.get("apres")]
+    if not paires:
+        return ""
+    figs = "".join(
+        f'<figure class="aa"><div class="aa-duo"><div>{img_tag(imgs, p["avant"], "Avant : " + (p.get("legende") or "chantier"), True, 600, 450, "(min-width: 52rem) 25vw, 50vw")}<span>Avant</span></div>'
+        f'<div>{img_tag(imgs, p["apres"], "Après : " + (p.get("legende") or "chantier"), True, 600, 450, "(min-width: 52rem) 25vw, 50vw")}<span>Après</span></div></div>'
+        + (f'<figcaption>{e(p["legende"])}</figcaption>' if p.get("legende") else "") + "</figure>" for p in paires[:4])
+    return (f'<section class="section" id="avant-apres" aria-labelledby="titre-aa"><div class="conteneur">'
+            f'{tete_section("Avant / après", "La différence, en photos", ident="titre-aa")}<div class="aa-liste">{figs}</div></div></section>')
+
+
+def jsonld_local(fiche: dict) -> dict:
+    """Données structurées utiles au référencement local : horaires, zone desservie, services, réseaux."""
+    d: dict = {}
+    sem = fiche.get("horaires_semaine") or {}
+    spec = []
+    for code, jour in JOURS_SCHEMA.items():
+        for plage in filter(None, (sem.get(code) or "").split(",")):
+            debut, fin = plage.split("-")
+            spec.append({"@type": "OpeningHoursSpecification", "dayOfWeek": jour, "opens": debut, "closes": fin})
+    if spec:
+        d["openingHoursSpecification"] = spec
+    if fiche.get("communes"):
+        d["areaServed"] = [{"@type": "City", "name": c} for c in fiche["communes"]]
+    noms = [x["titre"] for x in fiche.get("services") or []] + [p["nom"] for c in fiche.get("prestations") or [] for p in c.get("liste", [])]
+    if noms and not fiche.get("maquette"):
+        d["makesOffer"] = [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": n}} for n in noms[:12]]
+    reseaux = [u for u in (fiche.get("reseaux") or {}).values() if u and not u.rstrip("/").endswith(".com")]
+    if reseaux:
+        d["sameAs"] = reseaux
+    return d
 
 
 # ---------------------------------------------------------------- page
@@ -440,6 +517,9 @@ def page(fiche: dict, apercu: bool, corps: str, menu: list[tuple[str, str]], cta
         jsonld["aggregateRating"] = {"@type": "AggregateRating", "ratingValue": avis["note"], "reviewCount": avis["nombre"]}
     if imgs and (fiche.get("images") or {}).get("hero"):
         jsonld["image"] = imgs[fiche["images"]["hero"]]
+    jsonld.update(jsonld_local(fiche))
+    if fiche.get("domaine") and not apercu:
+        jsonld["url"] = fiche["domaine"].rstrip("/") + "/"
     nav = "".join(f'<li><a href="#{a}">{e(t)}</a></li>' for a, t in menu)
     police = THEMES[modele][1]
     bandeau = ""
@@ -457,6 +537,7 @@ def page(fiche: dict, apercu: bool, corps: str, menu: list[tuple[str, str]], cta
 <title>{e(titre_page)}</title>
 <meta name="description" content="{e(meta[:300])}">
 {'<meta name="robots" content="noindex, nofollow">' if apercu else ''}
+{f'<link rel="canonical" href="{e(fiche["domaine"].rstrip("/"))}/">' if fiche.get("domaine") and not apercu else ''}
 <meta property="og:title" content="{e(titre_page)}">
 <meta property="og:description" content="{e(meta[:300])}">
 <meta property="og:type" content="website">
@@ -503,7 +584,9 @@ def corps_artisan(fiche: dict, imgs: dict):
     accueil = (f'<section class="accueil" aria-labelledby="titre-accueil"><div class="conteneur"><div>'
                f'<p class="lieu"><span>{ICO_PIN} {e(fiche.get("zone_courte") or fiche["ville"])}</span>{statut_ouverture(fiche)}</p>'
                f'<h1 id="titre-accueil">{e(fiche.get("titre") or fiche["metier"] + " à " + fiche["ville"])}</h1>'
-               f'<p class="chapo">{e(fiche["accroche"])}</p><div class="actions">{actions}</div>{ligne_note(fiche)}'
+               f'<p class="chapo">{e(fiche["accroche"])}</p><div class="actions">{actions}</div>'
+               + (f'<p class="promesse">{ICO_HORLOGE} {e(fiche["delai_reponse"])}</p>' if fiche.get("delai_reponse") else "")
+               + ligne_note(fiche) + qualifications(fiche)
                + (f'<p class="petit">{e(fiche["bandeau"])}</p>' if fiche.get("bandeau") else "") + "</div>"
                + (f'<div class="photo-accueil">{img_tag(imgs, h, fiche["nom"] + ", " + fiche["metier"], False, 900, 675)}</div>' if h else "")
                + "</div></section>")
@@ -523,6 +606,8 @@ def corps_artisan(fiche: dict, imgs: dict):
                 + "".join(f'<figure>{img_tag(imgs, g["src"], g.get("legende") or fiche["metier"], True, 600, 600, "(min-width: 52rem) 25vw, 50vw")}'
                           + (f'<figcaption>{e(g["legende"])}</figcaption>' if g.get("legende") else "") + "</figure>" for g in galerie)
                 + "</div></div></section>") if galerie else ""
+    sec_depannage = section_depannage(fiche)
+    sec_aa = section_avant_apres(fiche, imgs)
     etapes = fiche.get("etapes") or [{"titre": t, "texte": x} for t, x in ETAPES_DEFAUT["artisan"]]
     sec_etapes = (f'<section class="section" id="methode" aria-labelledby="titre-methode"><div class="conteneur">'
                   f'{tete_section("Comment ça se passe", "Trois étapes, sans surprise", ident="titre-methode")}<ol class="etapes">'
@@ -541,11 +626,10 @@ def corps_artisan(fiche: dict, imgs: dict):
                f'<span class="surtitre">Contact</span><h2 id="titre-contact">{e(fiche.get("titre_contact", "Un besoin, une urgence ?"))}</h2>'
                + (f'<a class="tel-geant" href="{e(lien_tel)}">{e(fiche["telephone"])}</a>' if a_tel else "")
                + '<div class="infos-contact">'
-               + (f'<p>{e(fiche["delai_reponse"])}</p>' if fiche.get("delai_reponse") else "")
                + (f'<p>Email : <a href="mailto:{e(fiche["email"])}">{e(fiche["email"])}</a></p>' if fiche.get("email") else "")
                + (f'<p><a href="{e(lien_devis)}" rel="noopener" target="_blank">{e(fiche.get("texte_whatsapp", "Envoyer une photo du problème sur WhatsApp"))}</a></p>' if wa else "")
                + f'</div></div>{formulaire(fiche, "Recevoir mon devis")}</div></section>')
-    corps = (accueil + bande + sec_services + sec_real + sec_etapes + section_avis(fiche) + apropos
+    corps = (accueil + bande + sec_services + sec_depannage + sec_aa + sec_real + sec_etapes + section_avis(fiche) + apropos
              + section_infos(fiche, fiche.get("titre_zone", "Zone d'intervention")) + section_faq(fiche, "gris") + contact)
     menu = [(a, t) for a, t, ok in [("services", "Services", sec_services), ("realisations", fiche.get("libelle_realisations", "Réalisations"), sec_real),
                                      ("avis", "Avis", "id=\"avis\"" in corps), ("infos", "Zone et horaires", True)] if ok]
@@ -730,6 +814,9 @@ def page_mentions(fiche: dict) -> str:
     credits = ""
     imgs_f = fiche.get("images") or {}
     attributions = [x["credit"] for x in [imgs_f.get("apropos") or {}] + list(imgs_f.get("galerie") or []) if x.get("credit")]
+    tous = chemins_images(fiche)
+    if any(est_ia(x) for x in tous):
+        attributions.append("Certaines images d'illustration de ce site ont été générées par intelligence artificielle")
     if fiche.get("demo") or attributions:
         credits = ("<h2>Crédits photos</h2><p>" + ("Photos d'illustration libres de droits (CC0 : Wikimedia Commons, StockSnap, Rawpixel). " if fiche.get("demo") else "")
                    + " ".join(e(a) + "." for a in attributions) + "</p>")
@@ -770,6 +857,14 @@ def generer(fiche: dict, sortie: Path, apercu: bool = False, base: Path | None =
     """Génère le site. `base` = dossier de référence des chemins d'images (défaut : modeles-sites/)."""
     base = base or MODELES
     avertissements = valider(fiche, base)
+    if not apercu and not fiche.get("demo"):
+        im = fiche.get("images") or {}
+        interdites = [x for x in [g.get("src", "") for g in im.get("galerie") or []] + [(im.get("apropos") or {}).get("src", "")]
+                      + [p.get("image", "") for p in fiche.get("produits") or []]
+                      + [v for p in fiche.get("avant_apres") or [] for v in (p.get("avant", ""), p.get("apres", ""))] if x and est_ia(x)]
+        if interdites:
+            raise FicheInvalide("Images générées par IA utilisées comme réalisations, produits ou photo d'équipe : " + ", ".join(interdites)
+                                + ". Sur un site final, une image IA ne peut servir que d'illustration d'accueil ; le reste doit être de vraies photos du client.")
     if fiche.get("maquette") and not apercu and not fiche.get("demo"):
         raise FicheInvalide("Cette fiche est une maquette : avis, prix et horaires sont des exemples. Remplacez-les par les vraies "
                             "informations du client et retirez « maquette » avant de générer la version finale.")
@@ -805,6 +900,11 @@ def generer(fiche: dict, sortie: Path, apercu: bool = False, base: Path | None =
     (dossier / "merci.html").write_text(page_merci(fiche), encoding="utf-8")
     if apercu:
         (dossier / "robots.txt").write_text("User-agent: *\nDisallow: /\n", encoding="utf-8")
+    elif fiche.get("domaine") and not fiche.get("demo"):
+        url = fiche["domaine"].rstrip("/")
+        (dossier / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {url}/sitemap.xml\n", encoding="utf-8")
+        (dossier / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+                                             f"<url><loc>{e(url)}/</loc><lastmod>{_dt.date.today().isoformat()}</lastmod></url></urlset>\n", encoding="utf-8")
     return dossier, avertissements
 
 

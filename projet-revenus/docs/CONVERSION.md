@@ -37,3 +37,30 @@ _Synthèse du 03/11/2026. Les sources sont surtout des agences et des éditeurs 
 - independant.io, site internet de salon de coiffure — https://independant.io/site-internet-salon-coiffure/
 - Faux avis en ligne : état du droit en 2026 — https://consultation.avocat.fr/blog/etienne-bucher/article-2981104-faux-avis-en-ligne-etat-du-droit-et-des-risques-en-2026.html
 - Photos de démonstration : Wikimedia Commons, licence CC0 — voir `modeles-sites/images-demo/CREDITS.md`
+
+## Étude des concurrents (6 novembre 2026)
+Ce sont des micro-entrepreneurs et de petites agences qui vendent des sites vitrines aux artisans. Pages lues : Kacz Web (« Site internet pour plombier chauffagiste »), une offre ComeUp « site premium d'artisan plombier, 19 pages », un article de Kolonell sur les demandes de devis en ligne. Liens dans SOURCES.md. **Tous leurs chiffres de conversion sont des affirmations de vendeurs, sans source vérifiable.**
+
+**Ce qu'ils mettent sur les sites livrés :**
+- bouton d'appel dès le premier écran mobile, numéro répété en bas de page ;
+- **tarifs de dépannage affichés**, présentés comme une obligation (arrêté du 24 janvier 2017) : taux horaire TTC, déplacement, forfaits, coût éventuel du devis ;
+- qualifications (RGE, QualiPAC, Qualibat) : « seulement ce que vous détenez » ;
+- formulaire de **4 champs** : nom, téléphone, commune, besoin ;
+- avis avec lien vers la fiche Google, galerie avant/après, WhatsApp, prise de rendez-vous ;
+- référencement local : pages par service et par ville voisine, données structurées LocalBusiness, sitemap.
+
+**Leurs offres :**
+- 690 € payés une fois, 1 à 3 pages, en 1 à 2 semaines, avec 2 mois d'accompagnement, puis 22 €/mois facultatif ;
+- environ 48 $ sur une plateforme de freelances, pour 19 pages en 3 jours (service affiché comme indisponible) ;
+- 380 € à 1 220 € environ chez une agence étrangère.
+
+**Ce que nous avons repris (modèles et Studio) :**
+- formulaire en 4 champs, avec la commune facultative ;
+- promesse de délai de réponse sous les boutons et sous le formulaire ;
+- bloc « Tarifs de dépannage » pour les plombiers, chauffagistes et électriciens ;
+- qualifications réelles uniquement, jamais sur une maquette ;
+- galerie avant/après, réservée aux vraies photos ;
+- données structurées enrichies (horaires, communes desservies, services, réseaux), adresse canonique, `sitemap.xml` et `robots.txt` pour le site final.
+
+**Non repris pour l'instant :** les pages « par ville ». Copiées d'un modèle, elles sont pénalisées par Google comme pages satellites. À proposer en option uniquement avec un vrai contenu propre à chaque page.
+

@@ -6,13 +6,14 @@
 <title>Atelier Nova, coiffure &amp; beauté des mains à Liège</title>
 <meta name="description" content="Atelier Nova, coiffure &amp; beauté des mains à Liège. Coupe, couleur, soins et manucure dans un salon lumineux. Tarifs affichés, réservation en quelques secondes.">
 
+
 <meta property="og:title" content="Atelier Nova, coiffure &amp; beauté des mains à Liège">
 <meta property="og:description" content="Atelier Nova, coiffure &amp; beauté des mains à Liège. Coupe, couleur, soins et manucure dans un salon lumineux. Tarifs affichés, réservation en quelques secondes.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#8a5a44">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%238a5a44'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='700' text-anchor='middle' fill='%23ffffff'%3EA%3C/text%3E%3C/svg%3E">
 <link rel="preload" href="polices/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "LocalBusiness", "name": "Atelier Nova", "description": "Atelier Nova, c'est une équipe de trois passionnées qui prennent le temps de vous conseiller. Produits professionnels, ambiance détendue, et un vrai diagnostic avant chaque couleur. (Entreprise fictive de démonstration.)", "areaServed": "Rue fictive 12, 4000 Liège. À 5 minutes à pied de la place Saint-Lambert.", "address": {"@type": "PostalAddress", "addressLocality": "Liège", "addressCountry": "BE"}, "telephone": "+32 470 00 00 00", "image": "img/beaute-salon-720.webp"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "LocalBusiness", "name": "Atelier Nova", "description": "Atelier Nova, c'est une équipe de trois passionnées qui prennent le temps de vous conseiller. Produits professionnels, ambiance détendue, et un vrai diagnostic avant chaque couleur. (Entreprise fictive de démonstration.)", "areaServed": "Rue fictive 12, 4000 Liège. À 5 minutes à pied de la place Saint-Lambert.", "address": {"@type": "PostalAddress", "addressLocality": "Liège", "addressCountry": "BE"}, "telephone": "+32 470 00 00 00", "image": "img/beaute-salon-720.webp", "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday", "opens": "09:30", "closes": "18:30"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "09:30", "closes": "18:30"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "09:30", "closes": "20:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:30", "closes": "18:30"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "17:00"}], "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Coupe + brushing"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Couleur racines + brushing"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Balayage + soin + brushing"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Brushing"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Coupe homme"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Coupe + barbe"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Coupe enfant (−12 ans)"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Manucure classique"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Semi-permanent mains"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Pose gel complète"}}]}</script>
 <style>/* Base commune aux sites clients : réinitialisation, accessibilité, en-tête, formulaires, pied de page.
    Chaque métier ajoute son propre thème (artisan.css, commande.css, beaute.css). */
 *,*::before,*::after{box-sizing:border-box}
@@ -123,6 +124,23 @@ body.a-barre{padding-bottom:4.5rem}
 /* Contenu d'exemple d'une maquette : signalé en petit, mais lisible (contraste AA) */
 .mention-exemple{font-size:.8rem;color:var(--gris);margin:.75rem 0 1.25rem;font-style:italic}
 .contact .mention-exemple,.reserver .mention-exemple{color:inherit}
+/* Blocs « conversion » : promesse de réponse, qualifications, tarifs de dépannage, avant/après */
+.promesse,.promesse-form{display:flex;align-items:center;gap:.45rem;margin:1rem 0 0;font-weight:600;color:var(--encre)}
+.promesse .ico,.promesse-form .ico{color:var(--accent-texte)}
+.promesse-form{font-weight:500;font-size:.92rem;color:var(--gris)}
+.facultatif{font-weight:400;color:var(--gris)}
+.qualifs{list-style:none;display:flex;flex-wrap:wrap;gap:.4rem 1rem;margin:1rem 0 0;padding:0;font-weight:600;font-size:.92rem}
+.qualifs li{display:flex;align-items:center;gap:.35rem}.qualifs .ico{color:var(--accent-texte)}
+.grille-tarifs{display:grid;gap:0;margin:0;border-top:2px solid var(--encre);grid-template-columns:minmax(0,1fr)}
+@media (min-width:40rem){.grille-tarifs{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:2.5rem}}
+.grille-tarifs div{display:flex;justify-content:space-between;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--filet)}
+.grille-tarifs dt{color:var(--gris)}.grille-tarifs dd{margin:0;font-weight:700;color:var(--encre);text-align:right}
+.aa-liste{display:grid;gap:2rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:52rem){.aa-liste{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.aa{margin:0}.aa-duo{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+.aa-duo div{position:relative}.aa-duo img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--rayon)}
+.aa-duo span{position:absolute;left:.5rem;top:.5rem;background:#fff;color:var(--encre);font-size:.78rem;font-weight:700;padding:.2rem .5rem;border-radius:2px}
+.aa figcaption{margin-top:.5rem;font-size:.9rem;color:var(--gris)}
 /* Thème BEAUTÉ — « salon calme » : lumineux, aéré, élégant. Titres Marcellus, encre presque noire,
    accent couleur du client. Signature : la grille de tarifs façon carte de salon, avec points de conduite. */
 @font-face{font-family:"Marcellus";src:url("polices/marcellus-latin.woff2") format("woff2");font-weight:400;font-display:swap}

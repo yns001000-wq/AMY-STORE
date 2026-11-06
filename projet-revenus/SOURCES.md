@@ -52,3 +52,13 @@
 - [S] Accès à l'API Zefix sur demande d'identifiants (wrapper communautaire) — https://github.com/jschwendener/zefix-php
 - [O] impots.gouv.fr, obligations TVA des micro-entrepreneurs — https://www.impots.gouv.fr/portail/professionnel/questions/je-suis-micro-entrepreneur-ou-la-tete-dune-micro-entreprise-ai-je-des
 - [S] Copeps, TVA intracommunautaire et micro-entreprise (numéro auprès du SIE, autoliquidation) — https://copeps.fr/actualites/micro-entreprise-et-tva-intracommunautaire/
+
+## Concurrence et images IA (6 novembre 2026)
+| Source | Utilisé pour | Fiabilité |
+|---|---|---|
+| https://kacz-web.fr/site-vitrine/plombier-chauffagiste | Blocs d'un site de plombier, offre à 690 €, tarifs de dépannage | Page de vendeur |
+| https://comeup.com/fr/service/537600/ | Offre « 19 pages en 3 jours » (pages services et villes, LocalBusiness) | Page de vendeur |
+| https://kolonell.com/fr/blog/site-web-artisan-btp-devis-en-ligne-2026 | Avant/après, formulaire de devis, WhatsApp | Vendeur, chiffres non vérifiables |
+| https://developers.openai.com/api/docs/pricing | Modèles d'images OpenAI (gpt-image-2…) et tarifs par jeton | Officiel |
+| https://wavespeed.ai/blog/posts/gpt-image-2-pricing-2026/ et https://costgoat.com/pricing/openai-images | Estimation par image (environ 0,04 $ en qualité moyenne, 0,17 $ en haute qualité, au format paysage) | Secondaire, à revérifier |
+

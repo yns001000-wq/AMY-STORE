@@ -24,7 +24,7 @@ Activité choisie : **création de sites vitrines à prix fixe pour artisans, co
 | `SOURCES.md` | Sources consultées, avec leur niveau de fiabilité |
 | `site-src/` → `site/` | Site de l'agence (source, puis version construite par `outils/construire_site.py`) et démos fictives. Voir `docs/SITE_AGENCE.md` |
 | `modeles-sites/` | Thèmes des 3 modèles (artisan, commande WhatsApp, beauté), polices hébergées, fiches d'exemple, photos de démo sous licence CC0. Voir `docs/SITES_CLIENTS.md` |
-| `outils/` | `trouver_prospects.py` (répertoire officiel), `prospects_osm.py` (prospects **avec téléphone** via OpenStreetMap), `generer_site.py`, `preparer_apercus.py`, `rapport.py` (Python, aucune dépendance obligatoire) |
+| `outils/` | `trouver_prospects.py` (répertoire officiel), `prospects_osm.py` (prospects **avec téléphone** via OpenStreetMap), `generer_site.py`, `generer_images.py` (illustrations IA, avec accord sur le budget), `preparer_apercus.py`, `rapport.py` (Python, aucune dépendance obligatoire) |
 | `cockpit/` | Code du Cockpit privé (voir `docs/COCKPIT.md`) : prospects, actions du jour, ventes, messages |
 | `crm/` | Suivi : modèles CSV, statuts, données fictives de test. **Vos vraies données vont dans `crm/donnees/`, jamais publié** |
 | `marketing/` | Messages de prospection, publicités préparées, calendrier, visuels |
