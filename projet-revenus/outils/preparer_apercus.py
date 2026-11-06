@@ -69,6 +69,14 @@ METIERS = {
                                           ("Douceurs du quotidien", "Tartes, entremets, biscuits."),
                                           ("Sur mesure", "Personnalisation selon votre thème."),
                                           ("Commande facile", "Retrait ou livraison selon disponibilité.")], BOUCHE_IMG),
+    "Snack": ("artisan", "#c2410c", [("Tacos et burgers", "Faits minute, viandes et sauces au choix."),
+                                     ("Assiettes et menus", "Assiette kebab, menus avec frites et boisson."),
+                                     ("À emporter", "Commande prête à l'heure, sans attente."),
+                                     ("Livraison", "Dans le secteur, selon disponibilité.")], {}),
+    "Restaurant": ("artisan", "#7c2d12", [("Formule du midi", "Entrée et plat ou plat et dessert, renouvelée chaque semaine."),
+                                          ("Carte du soir", "Cuisine de saison, produits frais."),
+                                          ("Groupes et événements", "Repas d'affaires, anniversaires, privatisation."),
+                                          ("À emporter", "Une partie de la carte, prête à l'heure convenue.")], {}),
     "Coiffure": ("beaute", "#8a5a44", [("Coiffure", [("Coupe + brushing", "", "Tarif à préciser"), ("Couleur", "", "Tarif à préciser"),
                                                     ("Balayage", "", "Tarif à préciser"), ("Coupe homme", "", "Tarif à préciser")])], BEAUTE_IMG),
     "Soins de beauté": ("beaute", "#9d4e6a", [("Soins", [("Soin du visage", "", "Tarif à préciser"), ("Épilations", "", "Tarif à préciser"),
@@ -87,6 +95,16 @@ BOUCHE_TEXTES = {
 }
 
 
+TEXTES_METIER = {
+    "Restaurant": {"cta_secondaire": "Réserver une table", "bouton_formulaire": "Envoyer ma demande", "libelle_realisations": "En images",
+                   "titre_realisations": "La maison en images", "titre_contact": "Une table, un groupe, un événement ?", "titre_zone": "Nous trouver"},
+    "Snack": {"cta_secondaire": "Commander", "bouton_formulaire": "Envoyer ma commande", "libelle_realisations": "En images",
+              "titre_realisations": "Fait minute, servi généreux", "titre_contact": "Une commande, une question ?", "titre_zone": "Secteur de livraison"},
+}
+ATOUTS_METIER = {"Restaurant": ["Cuisine maison", "Produits de saison", "Formule du midi", "Groupes bienvenus"],
+                 "Snack": ["Fait minute", "À emporter", "Livraison possible", "Prix doux"]}
+
+
 # Accroches de proposition, sans affirmation invérifiable (à valider avec le prospect)
 ACCROCHES = {
     "Plombier": "Dépannage, installation et rénovation de plomberie à {ville} et alentours.",
@@ -95,6 +113,8 @@ ACCROCHES = {
     "Peintre": "Peinture intérieure et extérieure, finitions soignées, à {ville} et alentours.",
     "Traiteur": "Buffets, plateaux repas et menus pour vos événements, à {ville} et alentours.",
     "Pâtisserie": "Gâteaux de fête et douceurs sur commande, à {ville}.",
+    "Snack": "Tacos, burgers et assiettes faits minute à {ville}. Commandez sur WhatsApp, c'est prêt à l'heure.",
+    "Restaurant": "Cuisine de saison et accueil chaleureux à {ville}. Réservez votre table en un appel.",
     "Coiffure": "Coupe, couleur et soins à {ville}. Tarifs affichés, rendez-vous en un geste.",
     "Soins de beauté": "Soins et beauté à {ville}. Tarifs affichés, rendez-vous en un geste.",
 }
@@ -104,7 +124,7 @@ ACCROCHES = {
 # Les maquettes montrent au prospect un site « plein » : avis, prix, horaires et questions d'exemple.
 # Tout est signalé sur la page (bandeau + petites mentions), jamais indexé, et le générateur
 # refuse de produire la version finale tant que la fiche porte « maquette » (voir generer_site.generer).
-FAMILLE = {"Plombier": "artisan", "Chauffagiste": "artisan", "Électricien": "artisan", "Peintre": "artisan",
+FAMILLE = {"Snack": "bouche", "Restaurant": "bouche", "Plombier": "artisan", "Chauffagiste": "artisan", "Électricien": "artisan", "Peintre": "artisan",
            "Traiteur": "bouche", "Pâtisserie": "bouche", "Coiffure": "beaute", "Soins de beauté": "beaute"}
 PRIX_EXEMPLE = {
     "Plombier": ["À partir de 90 €", "Sur devis", "À partir de 150 €", "Sur devis"],
@@ -112,6 +132,8 @@ PRIX_EXEMPLE = {
     "Électricien": ["À partir de 80 €", "Sur devis", "À partir de 60 €", "Sur devis"],
     "Peintre": ["À partir de 25 €/m²", "Sur devis", "Inclus au devis", "À partir de 20 €/m²"],
     "Traiteur": ["À partir de 18 €/pers.", "À partir de 14 €", "Sur devis", "Selon la distance"],
+    "Snack": ["Tacos dès 7,50 €", "Menu dès 10 €", "Retrait gratuit", "Selon la distance"],
+    "Restaurant": ["Formule 16,90 €", "Plats dès 15 €", "Sur devis", "Prix de la carte"],
     "Pâtisserie": ["À partir de 28 €", "À partir de 4 €", "Sur devis", "Retrait offert"],
 }
 TARIFS_EXEMPLE = {  # (durée, prix) dans l'ordre des prestations de METIERS
@@ -158,6 +180,12 @@ AVIS_EXEMPLE = {
     "Pâtisserie": [("Nadia R.", "Le gâteau d'anniversaire était magnifique et délicieux. Commande très simple."),
                    ("Thomas G.", "Les tartes du week-end sont devenues un rituel à la maison."),
                    ("Élodie P.", "Gâteau de baptême parfait, tout le monde a demandé l'adresse !")],
+    "Snack": [("Yanis B.", "Le meilleur tacos du coin, bien garni et prêt en 10 minutes."),
+              ("Sarah M.", "Commande sur WhatsApp super pratique, burger maison excellent."),
+              ("Mehdi K.", "Accueil sympa, portions généreuses et prix corrects.")],
+    "Restaurant": [("Claire V.", "Formule du midi excellente et service rapide, parfait pour une pause déjeuner."),
+                   ("Antoine R.", "Cuisine de saison, plats bien présentés, on reviendra."),
+                   ("Nadia S.", "Repas d'anniversaire réussi, équipe aux petits soins.")],
     "Coiffure": [("Julie D.", "Balayage exactement comme je le voulais, et de très bons conseils pour l'entretien."),
                  ("Marc H.", "Coupe nette et rapide, accueil sympathique."),
                  ("Aïcha B.", "Enfin un salon qui prend le temps d'écouter. Je reviendrai.")],
@@ -175,7 +203,7 @@ def contenu_exemple(fiche: dict, metier: str) -> None:
     fiche["avis"] = {"note": 4.8, "nombre": 27, "source": "Google",
                      "liste": [{"auteur": a, "texte": x, "note": 5} for a, x in AVIS_EXEMPLE[metier]]}
     fiche["horaires_semaine"] = HORAIRES_EXEMPLE[fam]
-    fiche["atouts"] = ATOUTS_EXEMPLE[fam]
+    fiche["atouts"] = ATOUTS_METIER.get(metier, ATOUTS_EXEMPLE[fam])
     fiche["faq"] = [{"q": q, "r": r} for q, r in FAQ_EXEMPLE[fam]]
     if metier in ("Plombier", "Chauffagiste", "Électricien"):
         fiche["tarifs_depannage"] = {"taux_horaire": "55 € TTC / heure", "deplacement": "30 € TTC dans le secteur", "majorations": "+50 % le soir et le dimanche",
@@ -236,10 +264,29 @@ def fiche_pour(prospect: dict) -> dict | None:
         "images": images, "numero_entreprise": prospect.get("siren", ""),
         "avis_a_venir": True,  # remplacé par des avis d'exemple signalés (contenu_exemple)
     }
-    if modele == "artisan":
+    tel = re.sub(r"\D", "", prospect.get("telephone") or "")
+    if metier == "Snack" and re.fullmatch(r"0[67]\d{8}", tel):
+        modele = fiche["modele"] = "commande-whatsapp"
+        fiche["whatsapp"] = "33" + tel[1:]
+        ia = images_ia("Snack")
+        img = {"tacos": ia.get("hero"), "burger": next((g["src"] for g in ia.get("galerie", []) if "burger" in g["src"]), None),
+               "assiette": next((g["src"] for g in ia.get("galerie", []) if "assiette" in g["src"]), None)}
+        fiche["produits"] = [p for p in [
+            {"categorie": "Tacos", "nom": "Tacos M", "desc": "Une viande au choix, frites, sauce fromagère.", "prix": 7.5, "options": ["Poulet", "Viande hachée", "Cordon bleu"], "image": img["tacos"], "badge": "Le plus commandé"},
+            {"categorie": "Tacos", "nom": "Tacos L", "desc": "Deux viandes au choix, frites, sauce fromagère.", "prix": 9.5, "options": ["Poulet", "Viande hachée", "Cordon bleu"]},
+            {"categorie": "Burgers et assiettes", "nom": "Burger maison", "desc": "Steak haché, cheddar, oignons caramélisés, frites.", "prix": 9.9, "image": img["burger"]},
+            {"categorie": "Burgers et assiettes", "nom": "Assiette kebab", "desc": "Viande grillée, salade, tomates, oignons, frites.", "prix": 11, "image": img["assiette"]},
+            {"categorie": "Menus", "nom": "Menu enfant", "desc": "Nuggets ou petit burger, frites, boisson.", "prix": 6.5}] ]
+        for p in fiche["produits"]:
+            if not p.get("image"):
+                p.pop("image", None)
+        fiche.update({"titre": f"Snack à {ville} : commandez, c'est prêt", "modes": ["À emporter", "Livraison (secteur proche)"],
+                      "delai_commande": "Prêt en 10 à 15 minutes selon l'affluence.", "mode_retrait": "À emporter ou livraison dans le secteur."})
+    elif modele == "artisan":
         fiche["services"] = [{"titre": t, "texte": x} for t, x in contenu]
-        if metier in ("Traiteur", "Pâtisserie"):
+        if metier in ("Traiteur", "Pâtisserie", "Snack", "Restaurant"):
             fiche.update(BOUCHE_TEXTES)
+            fiche.update(TEXTES_METIER.get(metier, {}))
             fiche["titre"] = f"{metier} à {ville}"
     else:
         fiche["prestations"] = [{"categorie": c, "liste": [{"nom": n, "duree": d, "prix": p} for n, d, p in lst]} for c, lst in contenu]

@@ -43,15 +43,17 @@ UA = {"User-Agent": "Mysite-prospection/1.0 (outil interne, respect des conditio
 CIBLES = {
     ("craft", "plumber"): "Plombier", ("craft", "hvac"): "Chauffagiste", ("craft", "heating_engineer"): "Chauffagiste",
     ("craft", "electrician"): "Électricien", ("craft", "painter"): "Peintre", ("craft", "caterer"): "Traiteur",
+    ("amenity", "fast_food"): "Snack", ("amenity", "restaurant"): "Restaurant",
     ("shop", "pastry"): "Pâtisserie", ("shop", "hairdresser"): "Coiffure", ("shop", "beauty"): "Soins de beauté",
 }
+PLAFONDS: dict[str, int] = {}  # « --metiers Snack=40,Restaurant=25 » : plafond propre à chaque métier
 SEGMENT = {"Plombier": "A", "Chauffagiste": "A", "Électricien": "A", "Peintre": "A"}
 
 
-def requete(departement: str) -> str:
+def requete(departement: str, metiers: list[str] | None = None) -> str:
     """Une requête par département. Le Rhône est découpé en 69D (Rhône) et 69M (Métropole de Lyon)."""
     code = "^(69|69D|69M)$" if departement == "69" else f"^{departement}$"
-    corps = "".join(f'nwr(area.d)["{cle}"="{val}"]["name"];' for (cle, val) in CIBLES)
+    corps = "".join(f'nwr(area.d)["{cle}"="{val}"]["name"];' for (cle, val), m in CIBLES.items() if not metiers or m in metiers)
     return f'[out:json][timeout:150];area["ref:INSEE"~"{code}"]["admin_level"="6"]->.d;({corps});out center tags;'
 
 
@@ -129,10 +131,17 @@ def main(argv=None) -> int:
     ap.add_argument("--fichier", type=Path, default=crm.DONNEES / "prospects.csv")
     ap.add_argument("--json", type=Path, help="Utiliser une réponse Overpass déjà téléchargée (tests)")
     ap.add_argument("--max-par-metier", type=int, default=0, help="Avec --ajouter : nombre maximum de nouveaux prospects par métier")
+    ap.add_argument("--metiers", default="", help="Limiter à ces métiers, séparés par des virgules (ex. Snack,Restaurant)")
     ap.add_argument("--villes", action="store_true", help="Avec --ajouter : retrouver la commune manquante (Nominatim, 1 requête/s)")
     a = ap.parse_args(argv)
 
     deps = [d.strip().upper() for d in a.departements.split(",") if d.strip()]
+    PLAFONDS.clear()
+    for m in a.metiers.split(","):
+        if "=" in m:
+            nom, n = m.split("=", 1)
+            PLAFONDS[nom.strip()] = int(n)
+    metiers = [m.split("=")[0].strip() for m in a.metiers.split(",") if m.strip()]
     if a.json:
         trouves = extraire(json.loads(a.json.read_text(encoding="utf-8")))
     else:
@@ -140,9 +149,11 @@ def main(argv=None) -> int:
         for d in deps:
             print(f"Département {d} : interrogation d'OpenStreetMap…", flush=True)
             try:
-                trouves += extraire(interroger(requete(d)))
+                trouves += extraire(interroger(requete(d, metiers)))
             except RuntimeError as err:
                 print(f"  Département {d} ignoré pour cette fois : {err}. Relancez plus tard.")
+    if metiers:
+        trouves = [x for x in trouves if x["metier"] in metiers]
     sans_site = [x for x in trouves if not x["site_existant"]]
     print(f"OpenStreetMap : {len(trouves)} entreprise(s) avec téléphone, dont {len(sans_site)} sans site web.")
 
@@ -170,7 +181,8 @@ def main(argv=None) -> int:
         for x in sans_site:
             if cle_nom(x["entreprise"]) in index_nom:
                 continue
-            if a.max_par_metier and par_metier.get(x["metier"], 0) >= a.max_par_metier:
+            plafond = PLAFONDS.get(x["metier"], a.max_par_metier)
+            if plafond and par_metier.get(x["metier"], 0) >= plafond:
                 continue
             par_metier[x["metier"]] = par_metier.get(x["metier"], 0) + 1
             ligne = {c: "" for c in colonnes}

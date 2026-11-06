@@ -39,7 +39,7 @@ METIERS = {
     "43.21A": "Électricien", "43.22A": "Plombier", "43.22B": "Chauffagiste",
     "43.32A": "Menuisier", "43.33Z": "Carreleur / solier", "43.34Z": "Peintre",
     "43.91B": "Couvreur", "81.21Z": "Nettoyage", "81.30Z": "Paysagiste / jardinier",
-    "56.10A": "Restaurant", "56.10C": "Restauration rapide", "56.21Z": "Traiteur",
+    "56.10A": "Restaurant", "56.10C": "Snack", "56.21Z": "Traiteur",
     "10.71C": "Boulangerie-pâtisserie", "10.71D": "Pâtisserie",
     "96.02A": "Coiffure", "96.02B": "Soins de beauté", "96.04Z": "Bien-être",
     "74.20Z": "Photographe", "85.51Z": "Coach sportif",

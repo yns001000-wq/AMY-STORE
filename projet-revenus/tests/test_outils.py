@@ -462,6 +462,22 @@ class TestConversion(unittest.TestCase):
         self.assertIn("générées par intelligence artificielle", (dossier / "mentions-legales.html").read_text(encoding="utf-8"))
 
 
+
+class TestSnackRestaurant(unittest.TestCase):
+    def test_maquettes_snack_et_restaurant(self):
+        snack = preparer_apercus.fiche_pour({"id": "1", "entreprise": "Tacos Avenue", "metier": "Snack", "ville": "Vénissieux", "telephone": "06 11 22 33 44"})
+        self.assertEqual(snack["modele"], "commande-whatsapp")
+        self.assertEqual(snack["whatsapp"], "33611223344")
+        self.assertTrue(any(p["nom"] == "Tacos M" for p in snack["produits"]))
+        resto = preparer_apercus.fiche_pour({"id": "2", "entreprise": "Le Genova", "metier": "Restaurant", "ville": "Lyon", "telephone": "04 72 68 06 67"})
+        self.assertEqual(resto["modele"], "artisan")
+        self.assertEqual(resto["cta_secondaire"], "Réserver une table")
+        d = Path(tempfile.mkdtemp())
+        for f in (snack, resto):
+            dossier, _ = generer_site.generer(f, d, apercu=True, base=generer_site.MODELES)
+            self.assertIn("Maquette préparée", (dossier / "index.html").read_text(encoding="utf-8"))
+
+
 class TestProspectsOSM(unittest.TestCase):
     def test_telephone_sans_site_et_completion(self):
         d = Path(tempfile.mkdtemp())

@@ -69,6 +69,14 @@ SUJETS = {
                    ("vitrine", "A refined pastry display with tarts, éclairs and entremets in neat rows, warm light."),
                    ("geste", "A pastry chef's hands piping cream rosettes on a cake, focus on the piping bag and cream."),
                    ("boite", "A box of assorted macarons and small pastries on a light table, top view, gift presentation.")],
+    "Snack": [("accueil", "A generous French tacos cut in half showing grilled chicken, melted cheese sauce and fries inside, on kraft paper with a side of fries, warm street-food lighting."),
+              ("burger", "A gourmet smash burger with melted cheddar, caramelised onions and a brioche bun, crispy fries in a paper cone, dark wooden table."),
+              ("assiette", "A kebab plate with sliced grilled meat, fresh salad, tomatoes, onions, white sauce and fries, appetising and clean presentation."),
+              ("comptoir", "A clean modern snack bar counter with a menu board without readable text, warm lights, takeaway bags ready, no people.")],
+    "Restaurant": [("accueil", "A warm French bistro dining room in the evening, wooden tables set with glasses, soft pendant lights, no people."),
+                   ("plat", "A refined plated main course in a French bistro: seared fish on vegetables with a light sauce, white plate, natural light."),
+                   ("geste", "A chef's hands plating a dish with tweezers in a professional kitchen, steam and warm light, face not visible."),
+                   ("terrasse", "A sunny restaurant terrace in a French town square with set tables and plants, inviting atmosphere, no people.")],
     "Coiffure": [("accueil", "A bright modern hair salon interior with wooden floor, round mirrors, plants and cognac leather chairs, no people."),
                  ("geste", "A hairdresser's hands blow-drying long glossy brown hair, client seen from behind, soft salon light."),
                  ("couleur", "Close-up of a colourist's brush applying balayage on hair sections with foils, seen from behind."),
@@ -103,17 +111,57 @@ def estimer(cmds: list[dict]) -> float:
     return round(sum(PRIX[c["qualite"]] for c in cmds), 3)
 
 
-def appeler(c: dict) -> bytes:
+# Tarifs officiels par million de jetons (page de tarifs OpenAI, nov. 2026) : coût RÉEL calculé avec l'usage renvoyé.
+PRIX_JETONS = {"image_sortie": 30.0, "texte_entree": 5.0, "image_entree": 8.0}
+
+
+def cout_reel(usage: dict) -> float:
+    if not usage:
+        return 0.0
+    det_in = usage.get("input_tokens_details") or {}
+    det_out = usage.get("output_tokens_details") or {}
+    return round((det_out.get("image_tokens", usage.get("output_tokens", 0)) * PRIX_JETONS["image_sortie"]
+                  + det_in.get("text_tokens", 0) * PRIX_JETONS["texte_entree"]
+                  + det_in.get("image_tokens", 0) * PRIX_JETONS["image_entree"]) / 1e6, 4)
+
+
+def appeler(c: dict) -> tuple[bytes, float]:
     cle = os.environ.get("OPENAI_API_KEY") or "cle-ajoutee-par-le-proxy"
-    corps = json.dumps({"model": MODELE, "prompt": c["prompt"], "size": TAILLE, "quality": c["qualite"], "n": 1}).encode()
+    # Mode « stream » : OpenAI envoie des données pendant la génération, ce qui évite qu'un proxy coupe une
+    # connexion restée silencieuse (erreur 502 constatée sur les images en haute qualité).
+    corps = json.dumps({"model": MODELE, "prompt": c["prompt"], "size": TAILLE, "quality": c["qualite"], "n": 1,
+                        "stream": True, "partial_images": 1}).encode()
     req = urllib.request.Request(API, data=corps, headers={"Authorization": f"Bearer {cle}", "Content-Type": "application/json"})
-    try:
-        with urllib.request.urlopen(req, timeout=240) as r:
-            d = json.load(r)
-    except urllib.error.HTTPError as err:
-        detail = err.read().decode("utf-8", "replace")[:300]
-        raise SystemExit(f"OpenAI a refusé la demande ({err.code}) : {detail}")
-    return base64.b64decode(d["data"][0]["b64_json"])
+    import time
+    for essai in range(3):  # pannes passagères (5xx) : deux nouvelles tentatives
+        try:
+            final = None
+            with urllib.request.urlopen(req, timeout=300) as r:
+                for ligne in r:
+                    ligne = ligne.decode("utf-8", "replace").strip()
+                    if not ligne.startswith("data:"):
+                        continue
+                    ev = json.loads(ligne[5:].strip() or "{}")
+                    if ev.get("type", "").endswith("completed"):
+                        final = ev
+                    elif ev.get("type") == "error" or "error" in ev:
+                        raise SystemExit(f"OpenAI a signalé une erreur : {json.dumps(ev)[:300]}")
+            if not final or not final.get("b64_json"):
+                raise urllib.error.URLError("flux terminé sans image")
+            return base64.b64decode(final["b64_json"]), cout_reel(final.get("usage") or {})
+        except urllib.error.HTTPError as err:
+            detail = err.read().decode("utf-8", "replace")[:300]
+            if err.code >= 500 and essai < 2:
+                print(f"  (panne passagère {err.code}, nouvel essai dans 20 s)", flush=True)
+                time.sleep(20)
+                continue
+            raise SystemExit(f"OpenAI a refusé la demande ({err.code}) : {detail}")
+        except (TimeoutError, urllib.error.URLError) as err:
+            if essai < 2:
+                print(f"  (connexion interrompue : {err}, nouvel essai dans 20 s)", flush=True)
+                time.sleep(20)
+                continue
+            raise SystemExit(f"Connexion à OpenAI impossible : {err}")
 
 
 def enregistrer(c: dict, brut: bytes) -> Path:
@@ -141,7 +189,7 @@ def noter_depense(montant: float, objet: str, accord: float) -> None:
     if not DEPENSES.exists():
         return
     with DEPENSES.open("a", encoding="utf-8", newline="") as f:
-        csv.writer(f).writerow([dt.date.today().isoformat(), "OpenAI API (images)", f"{montant:.3f} USD (estimé)", "non",
+        csv.writer(f).writerow([dt.date.today().isoformat(), "OpenAI API (images)", f"{montant:.4f} USD", "non",
                                 dt.date.today().isoformat(), f"{objet} ; plafond accordé {accord} USD"])
 
 
@@ -165,13 +213,23 @@ def main(argv=None) -> int:
     if total > a.confirmer_depense:
         print(f"REFUS : l'estimation ({total:.2f} $) dépasse le plafond accordé ({a.confirmer_depense:.2f} $). Rien n'a été dépensé.")
         return 2
-    faits = 0
+    deja = [c for c in cmds if any((SORTIE / f"ia-{slug(c['metier'])}-{slug(c['sujet'])}.{x}").exists() for x in ("webp", "png"))]
+    if deja:
+        print(f"{len(deja)} image(s) déjà présente(s), ignorée(s) : rien n'est repayé.")
+        cmds = [c for c in cmds if c not in deja]
+    faits, depense = 0, 0.0
     for c in cmds:
-        chemin = enregistrer(c, appeler(c))
+        if depense + PRIX[c["qualite"]] > a.confirmer_depense:  # garde-fou sur le cumul RÉEL
+            print(f"ARRÊT : la prochaine image dépasserait le plafond ({depense:.3f} $ déjà dépensés sur {a.confirmer_depense:.2f} $).")
+            break
+        brut, cout = appeler(c)
+        cout = cout or PRIX[c["qualite"]]
+        chemin = enregistrer(c, brut)
         faits += 1
-        noter_depense(PRIX[c["qualite"]], f"{c['metier']} / {c['sujet']} ({c['qualite']})", a.confirmer_depense)
-        print(f"  + {chemin.relative_to(RACINE)}")
-    print(f"{faits} image(s) générée(s). Dépense notée dans crm/donnees/depenses.csv. À vérifier visuellement avant usage.")
+        depense += cout
+        noter_depense(cout, f"{c['metier']} / {c['sujet']} ({c['qualite']})", a.confirmer_depense)
+        print(f"  + {chemin.relative_to(RACINE)} ({cout:.3f} $, cumul {depense:.3f} $)", flush=True)
+    print(f"{faits} image(s) générée(s), coût réel {depense:.3f} $ (noté dans crm/donnees/depenses.csv). À vérifier visuellement avant usage.")
     return 0
 
 

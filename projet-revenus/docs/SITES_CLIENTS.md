@@ -34,6 +34,11 @@ Les styles se trouvent dans `modeles-sites/themes/` : `base.css`, commun aux tro
 | `reservation_url` | Lien de réservation en ligne (beauté). Sinon WhatsApp, puis le téléphone |
 | `modes`, `delai_commande`, `mode_retrait`, `paiement`, `allergenes` | Panier et informations pratiques (commande) |
 
+## Snacks et restaurants (06/11/2026)
+- Les **snacks** dont le numéro est un portable reçoivent le modèle « commande WhatsApp » : carte d'exemple (tacos, burger, assiette kebab, menu enfant), prix indicatifs, retrait ou livraison. Les autres reçoivent le modèle artisan, avec les textes des métiers de bouche.
+- Les **restaurants** reçoivent le modèle artisan avec les textes des métiers de bouche : formule du midi, carte du soir, groupes, à emporter.
+- Recherche de prospects : `amenity=fast_food` et `amenity=restaurant` dans OpenStreetMap, codes NAF 56.10C (Snack) et 56.10A (Restaurant) dans le répertoire Sirene.
+
 ## Champs ajoutés après l'étude des concurrents
 | Champ | Effet |
 |---|---|
@@ -44,6 +49,8 @@ Les styles se trouvent dans `modeles-sites/themes/` : `base.css`, commun aux tro
 | `domaine` | Site final : adresse canonique, `robots.txt` et `sitemap.xml` |
 
 ## Images générées par IA
+- Bibliothèque : `modeles-sites/images-ia/` (catalogue dans `catalogue.json`). Elle contient 4 illustrations par métier : plombier, chauffagiste, électricien, peintre, traiteur, pâtisserie, snack, restaurant, coiffure et soins de beauté. Elles sont générées avec gpt-image-2 en qualité moyenne, au format 1536×1024, pour environ 0,044 $ chacune.
+- L'outil travaille en **mode streaming**. Sans lui, le proxy de l'environnement cloud coupait les longues générations (erreur 502). Le **coût réel** de chaque image est calculé à partir de la consommation renvoyée par OpenAI, puis noté. L'outil s'arrête avant de dépasser le plafond accordé, et une image déjà générée n'est jamais regénérée.
 - `outils/generer_images.py` crée des illustrations avec l'API d'OpenAI. Sans accord explicite sur un plafond de dépense (`--confirmer-depense`), il n'affiche qu'une estimation. Chaque dépense est notée dans `crm/donnees/depenses.csv`.
 - **Sur une maquette**, ces images peuvent servir partout : le bandeau précise que les photos sont des exemples.
 - **Sur un site final**, une image IA ne peut servir que d'illustration d'accueil. Elle reçoit le texte alternatif « Illustration : … » et une mention dans les mentions légales. Le générateur **refuse** une image IA utilisée comme réalisation, produit, avant/après ou photo d'équipe.

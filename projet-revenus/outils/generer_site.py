@@ -578,8 +578,9 @@ def corps_artisan(fiche: dict, imgs: dict):
     wa = fiche.get("whatsapp")
     lien_devis = lien_wa(fiche, "Bonjour, je souhaite un devis pour : ") if wa else ""
     h = (fiche.get("images") or {}).get("hero")
-    actions = (f'<a class="btn btn--appel" href="{e(lien_tel)}">{ICO_TEL} {libelle}</a><a class="btn btn--ligne" href="#contact">Demander un devis</a>'
-               if tel else '<a class="btn btn--appel" href="#contact">Demander un devis</a>')
+    cta2 = fiche.get("cta_secondaire", "Demander un devis")
+    actions = (f'<a class="btn btn--appel" href="{e(lien_tel)}">{ICO_TEL} {libelle}</a><a class="btn btn--ligne" href="#contact">{e(cta2)}</a>'
+               if tel else f'<a class="btn btn--appel" href="#contact">{e(cta2)}</a>')
     appel = f"{ICO_TEL} Appeler" if tel else "Nous contacter"
     accueil = (f'<section class="accueil" aria-labelledby="titre-accueil"><div class="conteneur"><div>'
                f'<p class="lieu"><span>{ICO_PIN} {e(fiche.get("zone_courte") or fiche["ville"])}</span>{statut_ouverture(fiche)}</p>'
@@ -628,7 +629,7 @@ def corps_artisan(fiche: dict, imgs: dict):
                + '<div class="infos-contact">'
                + (f'<p>Email : <a href="mailto:{e(fiche["email"])}">{e(fiche["email"])}</a></p>' if fiche.get("email") else "")
                + (f'<p><a href="{e(lien_devis)}" rel="noopener" target="_blank">{e(fiche.get("texte_whatsapp", "Envoyer une photo du problème sur WhatsApp"))}</a></p>' if wa else "")
-               + f'</div></div>{formulaire(fiche, "Recevoir mon devis")}</div></section>')
+               + f'</div></div>{formulaire(fiche, fiche.get("bouton_formulaire", "Recevoir mon devis"))}</div></section>')
     corps = (accueil + bande + sec_services + sec_depannage + sec_aa + sec_real + sec_etapes + section_avis(fiche) + apropos
              + section_infos(fiche, fiche.get("titre_zone", "Zone d'intervention")) + section_faq(fiche, "gris") + contact)
     menu = [(a, t) for a, t, ok in [("services", "Services", sec_services), ("realisations", fiche.get("libelle_realisations", "Réalisations"), sec_real),

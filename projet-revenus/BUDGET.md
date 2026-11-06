@@ -53,6 +53,8 @@ Cela représente environ 20 à 30 h de travail humain par mois.
 
 ## OpenAI : images d'illustration (06/11/2026)
 - Budget approuvé : **plafond de 3 $** (32 images, estimation de 2,52 $).
-- Dépensé : **0 $**. Le compte API n'a pas encore de crédit prépayé, à ajouter par vous dans Settings, puis Billing.
+- Plafond relevé à **3,50 $** à votre demande (06/11/2026), une fois le crédit ajouté.
+- Dépensé (coût réel calculé à partir de la consommation renvoyée par OpenAI) : **1,82 $** pour 40 illustrations et 2 essais.
+- Point à vérifier : 6 tentatives coupées par le proxy, peut-être facturées (au pire environ 1,08 $). Total maximal : environ 2,90 $, sous le plafond.
 - Chaque image générée est notée automatiquement dans `crm/donnees/depenses.csv`.
 

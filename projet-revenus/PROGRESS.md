@@ -156,6 +156,30 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
   - Studio, 3D et cockpit retestés dans un navigateur ;
   - cockpit publié en version 6.
 
+### 06/11/2026 (suite) — 40 illustrations IA, snacks et restaurants
+- Crédit OpenAI ajouté par vous. Le plafond passe à 3,50 $ à votre demande.
+- **40 illustrations générées** (gpt-image-2, qualité moyenne), 4 par métier, pour 10 métiers : plombier, chauffagiste, électricien, peintre, traiteur, pâtisserie, **snack**, **restaurant**, coiffure, soins de beauté. Contrôlées à l'œil : rendu photographique, aucun texte parasite, aucun visage reconnaissable.
+- **Coût réel : 1,82 $** (40 images à 0,044 $, plus 2 essais). Chaque ligne est notée dans `crm/donnees/depenses.csv`.
+- Réserve : 6 tentatives en haute qualité ont été coupées par le proxy (erreur 502) avant toute réponse. On ne peut pas savoir d'ici si OpenAI les a facturées : au pire environ 1,08 $, soit 2,90 $ au total, sous le plafond. **À vérifier dans Usage sur platform.openai.com.**
+- Correctif : l'outil passe en mode streaming, calcule le coût réel, s'arrête avant le plafond et ne regénère jamais une image existante.
+- Utilisation des images :
+  - images d'accueil des 3 démos ;
+  - les 6 maquettes ;
+  - le Studio du cockpit, avec 40 images importées : chaque métier reçoit ses illustrations, et la carte des snacks ses photos de tacos, burger et assiette.
+  - Les « réalisations » des démos restent de vraies photos.
+- **Snacks et restaurants** :
+  - nouveaux métiers dans les modèles, le Studio, la recherche OpenStreetMap et le répertoire Sirene ;
+  - un snack qui a un portable reçoit le modèle « commande WhatsApp » ;
+  - un restaurant reçoit « Réserver une table » ;
+  - **65 nouveaux prospects avec numéro** (40 snacks, 25 restaurants) dans le cockpit, qui en compte 250.
+- Preuves :
+  - 35 tests unitaires OK ;
+  - QA démos, 6 maquettes et 6 rendus du Studio conforme (axe : 0 violation) ;
+  - Lighthouse mobile des démos : 99 en performance et 100 ailleurs ;
+  - QA du site de l'agence conforme ;
+  - Studio, 3D et cockpit retestés ;
+  - cockpit publié en version 7.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`

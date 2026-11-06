@@ -56,7 +56,7 @@
     }
   ],
   "images": {
-    "hero": "images-demo/plomberie-lavabo.jpg",
+    "hero": "images-ia/ia-plombier-accueil.webp",
     "apropos": {
       "src": "images-demo/plomberie-intervention.jpg",
       "legende": "Intervention sous évier",
