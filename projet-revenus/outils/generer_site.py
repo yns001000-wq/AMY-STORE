@@ -391,7 +391,7 @@ TAILLES_DEFAUT = "(min-width: 52rem) 50vw, 100vw"
 
 def img_tag(imgs: dict, chemin: str, alt: str, classe_lazy: bool = True, largeur: int = 900, hauteur: int = 675,
             tailles: str = TAILLES_DEFAUT) -> str:
-    if est_ia(chemin) and not alt.startswith("Illustration"):
+    if imgs.get("|final") and est_ia(chemin) and not alt.startswith("Illustration"):  # site final seulement
         alt = "Illustration : " + alt
     charge = ' loading="lazy" decoding="async"' if classe_lazy else ' fetchpriority="high"'
     srcset = imgs.get(chemin + "|srcset")
@@ -816,10 +816,10 @@ def page_mentions(fiche: dict) -> str:
     imgs_f = fiche.get("images") or {}
     attributions = [x["credit"] for x in [imgs_f.get("apropos") or {}] + list(imgs_f.get("galerie") or []) if x.get("credit")]
     tous = chemins_images(fiche)
-    if any(est_ia(x) for x in tous):
+    if any(est_ia(x) for x in tous) and not (fiche.get("demo") or fiche.get("maquette") or fiche.get("_apercu")):
         attributions.append("Certaines images d'illustration de ce site ont été générées par intelligence artificielle")
     if fiche.get("demo") or attributions:
-        credits = ("<h2>Crédits photos</h2><p>" + ("Photos d'illustration libres de droits (CC0 : Wikimedia Commons, StockSnap, Rawpixel). " if fiche.get("demo") else "")
+        credits = ("<h2>Crédits photos</h2><p>" + ("Photos d'illustration non contractuelles. " if fiche.get("demo") else "")
                    + " ".join(e(a) + "." for a in attributions) + "</p>")
     return f"""<!DOCTYPE html>
 <html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -893,6 +893,7 @@ def generer(fiche: dict, sortie: Path, apercu: bool = False, base: Path | None =
     (dossier / "polices").mkdir(exist_ok=True)
     police = THEMES[fiche["modele"]][1]
     shutil.copyfile(MODELES / "polices" / police, dossier / "polices" / police)
+    imgs["|final"] = not apercu and not fiche.get("demo") and not fiche.get("maquette")
     if apercu:
         fiche = {**fiche, "_apercu": True}  # formulaire désactivé : l'aperçu n'est pas en ligne
     corps, menu, entete, barre, scripts = CONSTRUCTEURS[fiche["modele"]](fiche, imgs)

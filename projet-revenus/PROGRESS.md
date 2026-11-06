@@ -180,6 +180,17 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
   - Studio, 3D et cockpit retestés ;
   - cockpit publié en version 7.
 
+### 06/11/2026 (fin) — Maquettes sans mention d'IA
+- Maquettes, démos et Studio :
+  - plus aucune mention d'IA ;
+  - légendes naturelles (« Douche à l'italienne », « Assiette kebab »…) ;
+  - crédits des démos réduits à « Photos d'illustration non contractuelles ».
+- Conservé :
+  - le bandeau « Maquette… photos à remplacer par les vôtres », destiné au prospect ;
+  - sur un **site final**, la règle « une image IA n'est jamais une réalisation » et la mention discrète dans les mentions légales.
+- Vos 5 maquettes du Studio sont corrigées (légendes ; photos ajoutées aux 2 maquettes de peintre qui n'en avaient pas). Les captures des 6 aperçus sont remplacées.
+- Preuves : 35 tests unitaires OK (dont un test « aucune mention d'IA sur maquette et démo ») ; QA conforme ; Studio, 3D et cockpit retestés ; cockpit publié en version 8.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`

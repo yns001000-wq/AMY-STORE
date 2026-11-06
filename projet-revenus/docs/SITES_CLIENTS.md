@@ -52,7 +52,7 @@ Les styles se trouvent dans `modeles-sites/themes/` : `base.css`, commun aux tro
 - Bibliothèque : `modeles-sites/images-ia/` (catalogue dans `catalogue.json`). Elle contient 4 illustrations par métier : plombier, chauffagiste, électricien, peintre, traiteur, pâtisserie, snack, restaurant, coiffure et soins de beauté. Elles sont générées avec gpt-image-2 en qualité moyenne, au format 1536×1024, pour environ 0,044 $ chacune.
 - L'outil travaille en **mode streaming**. Sans lui, le proxy de l'environnement cloud coupait les longues générations (erreur 502). Le **coût réel** de chaque image est calculé à partir de la consommation renvoyée par OpenAI, puis noté. L'outil s'arrête avant de dépasser le plafond accordé, et une image déjà générée n'est jamais regénérée.
 - `outils/generer_images.py` crée des illustrations avec l'API d'OpenAI. Sans accord explicite sur un plafond de dépense (`--confirmer-depense`), il n'affiche qu'une estimation. Chaque dépense est notée dans `crm/donnees/depenses.csv`.
-- **Sur une maquette**, ces images peuvent servir partout : le bandeau précise que les photos sont des exemples.
+- **Sur une maquette ou une démo**, ces images peuvent servir partout. Elles portent des légendes naturelles, sans aucune mention d'IA, pour que la maquette soit convaincante. Le bandeau, destiné au prospect, précise que les photos sont des exemples à remplacer.
 - **Sur un site final**, une image IA ne peut servir que d'illustration d'accueil. Elle reçoit le texte alternatif « Illustration : … » et une mention dans les mentions légales. Le générateur **refuse** une image IA utilisée comme réalisation, produit, avant/après ou photo d'équipe.
 
 ## Maquettes pour les prospects

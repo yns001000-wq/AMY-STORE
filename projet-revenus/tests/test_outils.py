@@ -460,6 +460,13 @@ class TestConversion(unittest.TestCase):
         dossier, _ = generer_site.generer(f, self.tmp, base=ia)
         self.assertIn('alt="Illustration : ', (dossier / "index.html").read_text(encoding="utf-8"))
         self.assertIn("générées par intelligence artificielle", (dossier / "mentions-legales.html").read_text(encoding="utf-8"))
+        # maquette et démo : aucune mention d'IA (le bandeau précise déjà que les photos sont des exemples)
+        f["images"] = {"hero": "images-ia/ia-plombier-accueil.webp", "galerie": [{"src": "images-ia/ia-plombier-accueil.webp", "legende": "Douche"}]}
+        for g in (dict(f, maquette=True), dict(f, demo=True)):
+            dossier, _ = generer_site.generer(g, self.tmp / str(len(str(g))), apercu=bool(g.get("maquette")), base=ia)
+            tout = (dossier / "index.html").read_text(encoding="utf-8") + (dossier / "mentions-legales.html").read_text(encoding="utf-8")
+            self.assertNotIn("Illustration", tout)
+            self.assertNotIn("intelligence artificielle", tout)
 
 
 

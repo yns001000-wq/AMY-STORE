@@ -217,9 +217,36 @@ def contenu_exemple(fiche: dict, metier: str) -> None:
             p["duree"], p["prix"] = duree, prix
 
 
+# Légendes naturelles des illustrations (la maquette doit être convaincante ; le bandeau précise que les photos sont des exemples)
+LEGENDES_IA = {
+ "plombier-douche": "Douche à l'italienne",
+ "plombier-chauffe-eau": "Remplacement de chauffe-eau",
+ "chauffagiste-pompe": "Pompe à chaleur",
+ "chauffagiste-thermostat": "Thermostat connecté",
+ "electricien-borne": "Borne de recharge",
+ "electricien-eclairage": "Éclairage d'ambiance",
+ "peintre-facade": "Ravalement de façade",
+ "peintre-outils": "Préparation du chantier",
+ "traiteur-plateau": "Plateaux repas",
+ "traiteur-evenement": "Dîner de mariage",
+ "patisserie-vitrine": "La vitrine",
+ "patisserie-boite": "Coffret de macarons",
+ "snack-burger": "Burger maison",
+ "snack-assiette": "Assiette kebab",
+ "snack-comptoir": "Le comptoir",
+ "restaurant-plat": "Plat du jour",
+ "restaurant-terrasse": "La terrasse",
+ "coiffure-couleur": "Balayage",
+ "coiffure-produits": "Soins professionnels",
+ "soins-de-beaute-ongles": "Manucure",
+ "soins-de-beaute-soin": "Soin du visage",
+ "soins-de-beaute-cabine": "Cabine de soins"
+}
+
+
 def images_ia(metier: str) -> dict:
-    """Illustrations générées par IA pour ce métier (outils/generer_images.py), si elles existent.
-    Utilisées sur les maquettes seulement : le générateur les refuse comme réalisations sur un site final."""
+    """Illustrations du métier (outils/generer_images.py), si elles existent. Sur un site final,
+    le générateur les refuse comme réalisations : elles restent des images d'accueil."""
     cat = generer_site.MODELES / "images-ia" / "catalogue.json"
     if not cat.exists():
         return {}
@@ -229,9 +256,9 @@ def images_ia(metier: str) -> dict:
     if "accueil" not in par_sujet:
         return {}
     autres = [v for k, v in par_sujet.items() if k not in ("accueil", "geste")]
-    res = {"hero": par_sujet["accueil"], "galerie": [{"src": v, "legende": "Illustration"} for v in autres]}
+    res = {"hero": par_sujet["accueil"], "galerie": [{"src": v, "legende": LEGENDES_IA.get(Path(v).stem[3:], "")} for v in autres]}
     if "geste" in par_sujet:
-        res["apropos"] = {"src": par_sujet["geste"], "legende": "Illustration, à remplacer par votre photo"}
+        res["apropos"] = {"src": par_sujet["geste"]}
     return res
 
 
