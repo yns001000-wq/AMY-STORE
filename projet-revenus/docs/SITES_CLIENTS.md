@@ -39,6 +39,12 @@ Les styles se trouvent dans `modeles-sites/themes/` : `base.css`, commun aux tro
 - Les **restaurants** reçoivent le modèle artisan avec les textes des métiers de bouche : formule du midi, carte du soir, groupes, à emporter.
 - Recherche de prospects : `amenity=fast_food` et `amenity=restaurant` dans OpenStreetMap, codes NAF 56.10C (Snack) et 56.10A (Restaurant) dans le répertoire Sirene.
 
+## Interactivité (06/11/2026)
+- **Bandeau défilant** sous l'accueil, aux couleurs du client : métier et ville, communes desservies, services, produits ou prestations, numéro. Il se met en pause au survol, au clavier et avec un **bouton Pause** (WCAG 2.2.2). Il est immobile et réparti sur plusieurs lignes si le visiteur demande moins d'animations. Champ `defilant` : liste personnalisée, ou `false` pour le retirer.
+- **Ville animée dans le titre** : la ville passe sur chaque commune desservie (`communes`), fait **un seul tour** puis revient. Toutes les villes partagent la même case, donc aucun décalage de mise en page (CLS nul, Lighthouse 99 à 100).
+- **Apparitions au défilement** : glissade sans transparence, pour que le texte reste toujours lisible ; uniquement sur les navigateurs compatibles.
+- **Effets au survol** : zoom doux sur les photos et les produits, boutons qui se soulèvent ; point « ouvert » qui pulse 3 fois.
+
 ## Champs ajoutés après l'étude des concurrents
 | Champ | Effet |
 |---|---|

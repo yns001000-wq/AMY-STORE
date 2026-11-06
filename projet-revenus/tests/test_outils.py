@@ -55,7 +55,12 @@ class TestGenerateur(unittest.TestCase):
     def test_artisan_contenu(self):
         dossier, _ = generer_site.generer(fiche_artisan(), self.tmp)
         page = self.lire(dossier)
-        self.assertIn("Votre plombier à Villeurbanne", page)
+        self.assertIn('Votre plombier à <span class="insecable"><span class="ville-tourne"><span class="actif">Villeurbanne</span>', page)  # la ville défile entre les communes
+        self.assertIn('<span aria-hidden="true">Bron</span>', page)
+        self.assertIn('<section class="defilant" aria-label="En bref">', page)
+        self.assertIn('aria-label="Mettre le bandeau en pause"', page)
+        self.assertIn("<li>Tél. 06 00 00 00 00</li>", page)
+        self.assertEqual(page.count('<ul aria-hidden="true">'), 1)  # copie décorative ignorée des lecteurs d'écran
         self.assertIn('href="tel:0600000000"', page)
         self.assertIn("À partir de 90 €", page)
         self.assertIn("data-ouverture", page)

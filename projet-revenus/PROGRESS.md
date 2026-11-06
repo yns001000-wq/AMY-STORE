@@ -191,6 +191,23 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
 - Vos 5 maquettes du Studio sont corrigées (légendes ; photos ajoutées aux 2 maquettes de peintre qui n'en avaient pas). Les captures des 6 aperçus sont remplacées.
 - Preuves : 35 tests unitaires OK (dont un test « aucune mention d'IA sur maquette et démo ») ; QA conforme ; Studio, 3D et cockpit retestés ; cockpit publié en version 8.
 
+### 06/11/2026 (soir) — Sites plus interactifs
+- Ajouté aux 3 modèles et au Studio :
+  - bandeau défilant (ville, communes, services ou produits, numéro) avec bouton Pause ;
+  - ville du titre qui passe sur les communes desservies (un tour) ;
+  - apparitions au défilement ;
+  - effets au survol, point « ouvert » qui pulse.
+- Accessibilité et performance :
+  - mouvement réduit respecté (tout est immobile) ;
+  - aucun texte transparent pendant les animations (contraste toujours conforme) ;
+  - décalage de mise en page supprimé (CLS de 0,14 à 0).
+- Preuves :
+  - 35 tests unitaires OK ;
+  - test navigateur des animations (défilement, pause, ville, retour, mouvement réduit, sans débordement) ;
+  - QA des démos, des 6 maquettes et des rendus du Studio conforme (axe : 0 violation) ;
+  - Lighthouse plombier : 99 sur mobile et 100 sur ordinateur en performance, 100 ailleurs ;
+  - cockpit publié en version 10.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`

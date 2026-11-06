@@ -356,6 +356,15 @@ SCRIPT_COMMUN = """<script>(function(){
   var barre = document.querySelector('.barre-mobile'), haut = document.querySelector('.accueil .actions');
   if (barre && haut && 'IntersectionObserver' in window){
     new IntersectionObserver(function(es){ barre.classList.toggle('repliee', es[0].isIntersecting || es[0].boundingClientRect.top > 0); }).observe(haut); }
+  var bouge = !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  document.querySelectorAll('.defilant').forEach(function(d){ var p = d.querySelector('.defilant-pause'); if (!p) return;
+    p.addEventListener('click', function(){ var on = d.classList.toggle('pause'); p.setAttribute('aria-pressed', on ? 'true' : 'false');
+      p.setAttribute('aria-label', on ? 'Relancer le bandeau' : 'Mettre le bandeau en pause'); }); });
+  var vt = document.querySelector('.ville-tourne');
+  if (vt && bouge){ var vs = vt.children, i = 0;
+    var tour = setInterval(function(){ var a = vs[i % vs.length]; i++; var b = vs[i % vs.length];
+      a.classList.remove('actif'); a.setAttribute('aria-hidden', 'true'); b.classList.add('actif'); b.removeAttribute('aria-hidden');
+      if (i >= vs.length) clearInterval(tour); }, 1900); }
   var f = document.querySelector('form.form'); if (!f) return;
   var regles = {nom:'Indiquez votre nom.', telephone:'Indiquez un numéro de téléphone valide.', message:'Décrivez votre besoin en quelques mots.'};
   function ok(c){ var v = c.value.trim(), m = '';
@@ -488,6 +497,56 @@ def jsonld_local(fiche: dict) -> dict:
     return d
 
 
+# ---------------------------------------------------------------- interactivité (bandeau défilant, ville animée)
+ICO_PAUSE = '<svg class="ico i-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'
+ICO_LECTURE = '<svg class="ico i-lecture" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>'
+
+
+def bandeau_defilant(fiche: dict) -> str:
+    """Bandeau défilant (ville, communes, services ou produits, numéro). Pause accessible ; immobile si mouvement réduit."""
+    if fiche.get("defilant") is False:
+        return ""
+    items = list(fiche.get("defilant") or [])
+    if not items:
+        tel = fiche["telephone"] if chiffres(fiche["telephone"]) else ""
+        items = [f'{fiche["metier"]} à {fiche["ville"]}'] + [c for c in fiche.get("communes") or [] if c != fiche["ville"]][:6]
+        if fiche["modele"] == "commande-whatsapp":
+            items += [p["nom"] for p in fiche.get("produits") or []][:5] + ["Commande en 2 minutes sur WhatsApp"]
+        elif fiche["modele"] == "beaute":
+            items += [p["nom"] for c in fiche.get("prestations") or [] for p in c.get("liste", [])][:5] + ["Réservation en quelques secondes"]
+        else:
+            items += [x["titre"] for x in fiche.get("services") or []][:4]
+            if fiche.get("delai_reponse"):
+                items.append(re.sub(r"\s*\(exemple\)", "", fiche["delai_reponse"]))
+        if tel:
+            items.append(f"Tél. {tel}")
+    vus, propres = set(), []
+    for x in items:
+        x = str(x).strip()
+        if x and x.lower() not in vus:
+            vus.add(x.lower()); propres.append(x)
+    if len(propres) < 3:
+        return ""
+    lis = "".join(f"<li>{e(x)}</li>" for x in propres)
+    return ('<section class="defilant" aria-label="En bref"><div class="defilant-fenetre"><div class="defilant-piste">'
+            f'<ul>{lis}</ul><ul aria-hidden="true">{lis}</ul></div></div>'
+            f'<button class="defilant-pause" type="button" aria-pressed="false" aria-label="Mettre le bandeau en pause">{ICO_PAUSE}{ICO_LECTURE}</button></section>')
+
+
+def titre_anime(fiche: dict, titre: str) -> str:
+    """Titre échappé ; la ville peut défiler entre les communes desservies (un seul tour, puis retour à la ville).
+    Toutes les villes occupent la même case (grille) : la place du nom le plus long est réservée, rien ne bouge (CLS nul)."""
+    t = e(titre)
+    autres = [c for c in fiche.get("communes") or [] if c and c != fiche["ville"]][:6]
+    v = e(fiche["ville"])
+    m = re.search(re.escape(v) + r"([,.:;!?]?)", t)
+    if not autres or not m:
+        return t
+    noms = "".join(f'<span{" class=\"actif\"" if i == 0 else " aria-hidden=\"true\""}>{e(c)}</span>' for i, c in enumerate([fiche["ville"]] + autres))
+    bloc = f'<span class="insecable"><span class="ville-tourne">{noms}</span>{m.group(1)}</span>'
+    return t[:m.start()] + bloc + t[m.end():]
+
+
 # ---------------------------------------------------------------- page
 def favicon(nom: str, pal: dict) -> str:
     """Icône d'onglet : initiale du client sur sa couleur (SVG intégré, aucun fichier à fournir)."""
@@ -584,7 +643,7 @@ def corps_artisan(fiche: dict, imgs: dict):
     appel = f"{ICO_TEL} Appeler" if tel else "Nous contacter"
     accueil = (f'<section class="accueil" aria-labelledby="titre-accueil"><div class="conteneur"><div>'
                f'<p class="lieu"><span>{ICO_PIN} {e(fiche.get("zone_courte") or fiche["ville"])}</span>{statut_ouverture(fiche)}</p>'
-               f'<h1 id="titre-accueil">{e(fiche.get("titre") or fiche["metier"] + " à " + fiche["ville"])}</h1>'
+               f'<h1 id="titre-accueil">{titre_anime(fiche, fiche.get("titre") or fiche["metier"] + " à " + fiche["ville"])}</h1>'
                f'<p class="chapo">{e(fiche["accroche"])}</p><div class="actions">{actions}</div>'
                + (f'<p class="promesse">{ICO_HORLOGE} {e(fiche["delai_reponse"])}</p>' if fiche.get("delai_reponse") else "")
                + ligne_note(fiche) + qualifications(fiche)
@@ -630,7 +689,7 @@ def corps_artisan(fiche: dict, imgs: dict):
                + (f'<p>Email : <a href="mailto:{e(fiche["email"])}">{e(fiche["email"])}</a></p>' if fiche.get("email") else "")
                + (f'<p><a href="{e(lien_devis)}" rel="noopener" target="_blank">{e(fiche.get("texte_whatsapp", "Envoyer une photo du problème sur WhatsApp"))}</a></p>' if wa else "")
                + f'</div></div>{formulaire(fiche, fiche.get("bouton_formulaire", "Recevoir mon devis"))}</div></section>')
-    corps = (accueil + bande + sec_services + sec_depannage + sec_aa + sec_real + sec_etapes + section_avis(fiche) + apropos
+    corps = (accueil + bandeau_defilant(fiche) + bande + sec_services + sec_depannage + sec_aa + sec_real + sec_etapes + section_avis(fiche) + apropos
              + section_infos(fiche, fiche.get("titre_zone", "Zone d'intervention")) + section_faq(fiche, "gris") + contact)
     menu = [(a, t) for a, t, ok in [("services", "Services", sec_services), ("realisations", fiche.get("libelle_realisations", "Réalisations"), sec_real),
                                      ("avis", "Avis", "id=\"avis\"" in corps), ("infos", "Zone et horaires", True)] if ok]
@@ -651,7 +710,7 @@ def corps_beaute(fiche: dict, imgs: dict):
     accueil = (f'<section class="accueil" aria-labelledby="titre-accueil">'
                + (f'<div class="photo-accueil">{img_tag(imgs, h, "Intérieur du salon " + fiche["nom"], False, 900, 1000)}</div>' if h else "")
                + f'<div class="texte"><p class="lieu"><span>{ICO_PIN} {e(fiche.get("zone_courte") or fiche["ville"])}</span>{statut_ouverture(fiche)}</p>'
-               f'<h1 id="titre-accueil">{e(fiche.get("titre") or fiche["metier"] + " à " + fiche["ville"])}</h1><p class="chapo">{e(fiche["accroche"])}</p>'
+               f'<h1 id="titre-accueil">{titre_anime(fiche, fiche.get("titre") or fiche["metier"] + " à " + fiche["ville"])}</h1><p class="chapo">{e(fiche["accroche"])}</p>'
                f'<div class="actions"><a class="btn" href="{e(resa)}"{cible}>Prendre rendez-vous</a><a class="btn btn--ligne" href="#tarifs">Voir les tarifs</a></div>'
                f'{ligne_note(fiche)}</div></section>')
     atouts = fiche.get("atouts") or []
@@ -680,7 +739,7 @@ def corps_beaute(fiche: dict, imgs: dict):
     reserver = (f'<section class="section reserver" aria-labelledby="titre-reserver"><div class="conteneur"><h2 id="titre-reserver">Réservez votre moment</h2>'
                 f'<p>En ligne en quelques secondes, ou par téléphone.</p><div class="actions"><a class="btn" href="{e(resa)}"{cible}>Prendre rendez-vous</a>'
                 + (f'<a class="btn btn--ligne" href="tel:{e(tel)}">{ICO_TEL} {e(fiche["telephone"])}</a>' if tel else "") + "</div></div></section>")
-    corps = (accueil + bande + tarifs + sec_gal + section_avis(fiche) + apropos
+    corps = (accueil + bandeau_defilant(fiche) + bande + tarifs + sec_gal + section_avis(fiche) + apropos
              + section_infos(fiche, "Le salon", "gris") + section_faq(fiche) + reserver)
     menu = [(a, t) for a, t, ok in [("tarifs", "Tarifs", True), ("galerie", "Le salon", sec_gal), ("avis", "Avis", "id=\"avis\"" in corps), ("infos", "Accès et horaires", True)] if ok]
     entete = f'<a class="btn" href="{e(resa)}"{cible}>Réserver</a>'
@@ -731,7 +790,7 @@ def corps_commande(fiche: dict, imgs: dict):
                   + "".join(f'<li><h3>{e(s["titre"])}</h3><p>{e(s["texte"])}</p></li>' for s in etapes) + "</ol></div></section>")
     histoire = (f'<section class="section gris" id="histoire" aria-labelledby="titre-histoire"><div class="conteneur" style="max-width:48rem">'
                 f'{tete_section("La maison", fiche.get("titre_apropos", "Fait maison, chaque jour"), ident="titre-histoire")}<p>{e(fiche["description"])}</p></div></section>')
-    corps = accueil + bande + carte + sec_etapes + section_avis(fiche) + histoire + section_infos(fiche, "Retrait et livraison") + section_faq(fiche, "gris")
+    corps = accueil + bandeau_defilant(fiche) + bande + carte + sec_etapes + section_avis(fiche) + histoire + section_infos(fiche, "Retrait et livraison") + section_faq(fiche, "gris")
     menu = [(a, t) for a, t, ok in [("carte", "La carte", True), ("avis", "Avis", "id=\"avis\"" in corps), ("infos", "Infos pratiques", True), ("faq", "Questions", "id=\"faq\"" in corps)] if ok]
     entete = '<a class="btn" href="#carte">Commander</a>'
     barre = f'<button class="btn btn--wa" id="ouvrirPanier" type="button" disabled>{ICO_PANIER} <span id="panierResume">Panier vide</span></button>'
