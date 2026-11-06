@@ -50,3 +50,9 @@
 Cela représente environ 20 à 30 h de travail humain par mois.
 
 **Seuil de rentabilité :** comme il n'y a aucun coût fixe obligatoire, chaque vente est rentable dès la première, hors valeur de votre temps.
+
+## OpenAI : images d'illustration (06/11/2026)
+- Budget approuvé : **plafond de 3 $** (32 images, estimation de 2,52 $).
+- Dépensé : **0 $**. Le compte API n'a pas encore de crédit prépayé, à ajouter par vous dans Settings, puis Billing.
+- Chaque image générée est notée automatiquement dans `crm/donnees/depenses.csv`.
+

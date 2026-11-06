@@ -145,7 +145,10 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
   - qualifications réelles et galerie avant/après réelle ;
   - données structurées enrichies, adresse canonique et sitemap pour le site final.
 - Nouvel outil `outils/generer_images.py` (API d'OpenAI) : estimation sans dépense par défaut, plafond obligatoire, dépenses notées, images IA jamais présentées comme des réalisations (règle appliquée par le générateur).
-- **En attente de votre part** : clé d'API OpenAI et accord sur le budget. **Aucune image n'a été générée, 0 € dépensé.**
+- Clé d'API OpenAI enregistrée de façon sécurisée (jamais écrite dans un fichier), puis vérifiée : accès aux modèles d'images confirmé.
+- Budget approuvé par vous le 06/11/2026 : **plafond de 3 $** pour 32 illustrations (coût estimé 2,52 $).
+- **Génération bloquée** : OpenAI répond « no credits remaining ». Le compte API n'a pas de crédit prépayé. **Aucune image générée, 0 € dépensé.**
+- **À faire par vous** : ajouter du crédit sur platform.openai.com (Settings, puis Billing). Je relance ensuite la même commande, avec le même plafond. Les maquettes utiliseront automatiquement ces illustrations, et le Studio les recevra.
 - Preuves :
   - 34 tests unitaires OK ;
   - QA démos et 6 maquettes conforme (axe : 0 violation) ;

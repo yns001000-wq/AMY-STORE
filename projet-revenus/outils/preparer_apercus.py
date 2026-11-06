@@ -189,6 +189,24 @@ def contenu_exemple(fiche: dict, metier: str) -> None:
             p["duree"], p["prix"] = duree, prix
 
 
+def images_ia(metier: str) -> dict:
+    """Illustrations générées par IA pour ce métier (outils/generer_images.py), si elles existent.
+    Utilisées sur les maquettes seulement : le générateur les refuse comme réalisations sur un site final."""
+    cat = generer_site.MODELES / "images-ia" / "catalogue.json"
+    if not cat.exists():
+        return {}
+    entrees = [e for e in json.loads(cat.read_text(encoding="utf-8")) if e.get("metier") == metier
+               and (generer_site.MODELES / "images-ia" / e["fichier"]).exists()]
+    par_sujet = {e["sujet"]: "images-ia/" + e["fichier"] for e in entrees}
+    if "accueil" not in par_sujet:
+        return {}
+    autres = [v for k, v in par_sujet.items() if k not in ("accueil", "geste")]
+    res = {"hero": par_sujet["accueil"], "galerie": [{"src": v, "legende": "Illustration"} for v in autres]}
+    if "geste" in par_sujet:
+        res["apropos"] = {"src": par_sujet["geste"], "legende": "Illustration, à remplacer par votre photo"}
+    return res
+
+
 def slugifier(texte: str) -> str:
     t = unicodedata.normalize("NFKD", texte).encode("ascii", "ignore").decode().lower()
     return re.sub(r"[^a-z0-9]+", "-", t).strip("-")[:50] or "prospect"
@@ -204,6 +222,7 @@ def fiche_pour(prospect: dict) -> dict | None:
     if metier not in METIERS:
         return None
     modele, couleur, contenu, images = METIERS[metier]
+    images = images_ia(metier) or images
     nom = nettoyer_nom(prospect["entreprise"])
     ville = prospect.get("ville") or "votre ville"
     fiche = {
