@@ -47,6 +47,14 @@ Sur la vue « Aujourd'hui », une carte de France affiche chaque prospect à l'e
 
 La carte est un dessin SVG intégré à la page : aucune bibliothèque ni requête externe (Three.js a été retiré). Elle reste immobile si votre système demande de réduire les animations. Données : contours IGN Admin Express (licence ouverte Etalab 2.0) et centres des communes de geo.api.gouv.fr, préparés avec `outils/carte_cockpit.py`. Les cartes chiffrées s'inclinent toujours légèrement sous la souris.
 
+## Sites sur mesure (07/11/2026)
+Quand un site est fait sur mesure pour un client (hors modèles du Studio), le cockpit l'affiche **tel quel** :
+- dans la fiche, le bloc « Site du prospect » indique « Site sur mesure » et propose **Voir le site** ;
+- le Studio s'ouvre sans panneau de réglages : bascule mobile ou ordinateur, et **Télécharger le site** (un seul fichier HTML, polices et photos intégrées) ;
+- les réglages ne peuvent pas écraser ce site ; « Repartir de zéro » le remplace seulement après confirmation.
+
+Données : document `sites/<id>` avec un champ `html` (la page, dont les images et les polices pointent vers les fichiers du cockpit `/_blob/…`). Premier site concerné : Casa Mozzat.
+
 ## Studio site (ajouté le 04/11/2026)
 Dans chaque fiche prospect, le bouton **« ✦ Générer le site »** crée en un clic une maquette complète :
 - **modèle adapté au métier** : artisan, beauté, ou commande WhatsApp pour une pâtisserie qui a un numéro de portable ;

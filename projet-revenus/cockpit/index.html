@@ -197,6 +197,9 @@ label.btn{position:relative}label.btn:focus-within{outline:2px solid var(--accen
 .st-vue{position:relative;min-height:0;display:flex;justify-content:center;background:var(--surface-2);padding:16px;overflow:auto}
 .st-vue iframe{border:0;background:#fff;width:100%;height:100%;min-height:70vh;box-shadow:var(--ombre);border-radius:10px}
 .st-vue.mobile iframe{width:390px;max-width:100%}
+.studio.sur-mesure .st-panneau,.studio.sur-mesure #st-annuler{display:none}
+.studio.sur-mesure .st-corps{grid-template-columns:minmax(0,1fr)}
+.badge-mesure{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent-ink,#9a3412);background:color-mix(in srgb,var(--accent) 14%,transparent);border-radius:999px;padding:2px 8px;margin-left:6px;vertical-align:middle}
 .st-charge{position:absolute;top:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:12px;z-index:1}
 body.studio-ouvert{overflow:hidden}
 .liens-num{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;width:100%}
@@ -652,12 +655,12 @@ function rendreFiche(){
   c.appendChild(ia);
   // site du prospect (Studio)
   var sd = S.sites && S.sites[p.id], bs = el("div",{cls:"actions"});
-  if (sd) bs.appendChild(el("button",{cls:"btn p",type:"button",text:"Ouvrir le Studio",onclick:function(ev){ ouvrirStudio(p.id, sd.fiche, ev.currentTarget); }}));
+  if (sd) bs.appendChild(el("button",{cls:"btn p",type:"button",text: sd.html ? "Voir le site" : "Ouvrir le Studio",onclick:function(ev){ ouvrirStudio(p.id, sd.fiche, ev.currentTarget, sd.html); }}));
   var bg = el("button",{cls:"btn " + (sd ? "petit" : "ia"),type:"button",text: sd ? "Repartir de zéro" : "✦ Générer le site",onclick:function(ev){ var b = ev.currentTarget;
     if (sd && !b.dataset.ok){ b.dataset.ok = "1"; b.textContent = "Confirmer : remplacer la maquette ?"; return; } genererSite(p, b); }});
   bs.appendChild(bg);
   c.appendChild(el("div",{cls:"carte"},[el("h2",{style:"margin-top:0",text:"Site du prospect"}),
-    el("p",{cls:"note",style:"margin:0 0 10px",text: sd ? "Maquette enregistrée le " + dateFr((sd.maj||"").slice(0,10)) + ". Ouvrez le Studio pour la voir, la retoucher avec l'IA ou la télécharger." : "Un clic : maquette complète adaptée à son métier (avis, prix et horaires d'exemple signalés), puis personnalisée par l'IA."}), bs]));
+    el("p",{cls:"note",style:"margin:0 0 10px",text: sd && sd.html ? "Site sur mesure, enregistré le " + dateFr((sd.maj||"").slice(0,10)) + " : c'est exactement la version préparée pour le client. Affichez-la en mobile ou en ordinateur pour la montrer, ou téléchargez-la." : sd ? "Maquette enregistrée le " + dateFr((sd.maj||"").slice(0,10)) + ". Ouvrez le Studio pour la voir, la retoucher avec l'IA ou la télécharger." : "Un clic : maquette complète adaptée à son métier (avis, prix et horaires d'exemple signalés), puis personnalisée par l'IA."}), bs]));
   // résultat
   c.appendChild(el("div",null,[el("h2",{text:"Noter le résultat"}),(function(){ var a = el("div",{cls:"actions"}); ACTIONS.forEach(function(x){ a.appendChild(el("button",{cls:"btn petit " + x[1],type:"button",text:x[0],onclick:function(){ action(p, x); }})); }); return a; })(), el("div",{id:"zone-action",style:"margin-top:8px"})]));
   // champs
@@ -1510,7 +1513,7 @@ function iaModifier(consigne, statut){
 }
 
 function changer(nf, sansHisto){ if (!sansHisto){ ST.histo.push(JSON.stringify(ST.f)); if (ST.histo.length > 20) ST.histo.shift(); } ST.f = nf; $("st-annuler").disabled = !ST.histo.length; remplirReglages(); apercuStudio(); sauverSite(); }
-function sauverSite(){ clearTimeout(ST.timer); var id = ST.id, f = ST.f;
+function sauverSite(){ clearTimeout(ST.timer); var id = ST.id, f = ST.f; if (ST.html || !f) return;
   ST.timer = setTimeout(function(){ if (!S.db || !id) return; S.db.collection("sites").doc(id).set({fiche:f, maj:new Date().toISOString()}).then(function(){ $("st-sauve").textContent = "Enregistré"; }, erreurEcriture); }, 700);
   $("st-sauve").textContent = "Enregistrement…"; }
 
@@ -1524,7 +1527,7 @@ function urlsFiche(f){ var u = [], im = f.images || {}; if (im.hero) u.push(im.h
 function pageAutonome(f){ var police = STU.police[STU.policeModele[f.modele]], urls = urlsFiche(f);
   return Promise.all([cssTheme(f.modele), enDataURL(police)].concat(urls.map(enDataURL))).then(function(r){
     var html = pageS(f, r[0], r[1]); urls.forEach(function(u, i){ html = html.split(u).join(r[i+2]); }); return html; }); }
-function apercuStudio(){ var f = ST.f; if (!f) return; $("st-charge").hidden = false;
+function apercuStudio(){ var f = ST.f; if (!f || ST.html) return; $("st-charge").hidden = false;
   pageAutonome(f).then(function(html){ if (ST.f !== f) return; var fr = $("st-cadre"), y = 0;
     try { y = fr.contentWindow.scrollY || 0; } catch(e){}
     fr.onload = function(){ try { fr.contentWindow.scrollTo(0, y); } catch(e){} $("st-charge").hidden = true; }; fr.srcdoc = html; },
@@ -1553,15 +1556,28 @@ function envoyerPhoto(fichiers, ou){ if (!S.assets){ toast("L'envoi de photos n'
     changer(n); toast("Photo ajoutée"); }, function(){ $("st-charge").hidden = true; toast("Envoi impossible (format ou taille). Essayez une photo JPEG ou WebP de moins de 20 Mo."); }); }
 
 function telechargerSite(){ if (!S.downloads){ toast("Téléchargement indisponible dans cette vue"); return; }
-  pageAutonome(ST.f).then(function(html){ return S.downloads.save({filename:slugS(ST.f.nom) + "-maquette.html", data:html}); })
+  var p = S.pros.find(function(x){ return x.id === ST.id; }) || {};
+  (ST.html ? pageSurMesure(ST.html, true) : pageAutonome(ST.f)).then(function(html){ return S.downloads.save({filename:slugS(ST.html ? (p.entreprise || "site") : ST.f.nom) + (ST.html ? "-site.html" : "-maquette.html"), data:html}); })
     .then(function(){ toast("Maquette téléchargée : un seul fichier, à ouvrir dans n'importe quel navigateur"); }, function(e){ if (!(e && e.code === "cancelled")) toast("Téléchargement annulé"); }); }
 
-function ouvrirStudio(id, f, retour){ ST.id = id; ST.f = f; ST.histo = []; ST.retour = retour || document.activeElement;
+function ouvrirStudio(id, f, retour, html){ ST.id = id; ST.f = html ? null : f; ST.html = html || ""; ST.histo = []; ST.retour = retour || document.activeElement;
   var p = S.pros.find(function(x){ return x.id === id; }) || {};
-  $("st-titre").textContent = "Studio : " + (f.nom || p.entreprise || "site"); $("st-sous").textContent = (f.metier||"") + " · " + (f.ville||"") + " · maquette non publiée";
+  $("studio").classList.toggle("sur-mesure", !!html);
+  $("st-telecharger").textContent = html ? "Télécharger le site" : "Télécharger la maquette";
+  $("st-titre").textContent = (html ? "Site : " : "Studio : ") + ((f && f.nom) || p.entreprise || "site");
+  $("st-sous").textContent = html ? (p.metier||"") + " · " + (p.ville||"") + " · site sur mesure, non publié" : (f.metier||"") + " · " + (f.ville||"") + " · maquette non publiée";
   $("st-annuler").disabled = true; $("st-statut").hidden = true; $("studio").hidden = false; document.body.classList.add("studio-ouvert");
+  if (html){ apercuSurMesure(); setTimeout(function(){ $("st-fermer").focus(); }, 50); return; }
   remplirReglages(); apercuStudio(); setTimeout(function(){ $("st-demande").focus(); }, 50); }
-function fermerStudio(){ if (ST.ctrl) ST.ctrl.abort(); $("studio").hidden = true; document.body.classList.remove("studio-ouvert"); var r = ST.retour; ST.id = null; ST.f = null; if (r && r.focus) r.focus(); }
+/* Site sur mesure : la page livrée au client, affichée telle quelle. Les polices (et, au téléchargement, les photos) sont intégrées
+   à la page, car l'aperçu isolé ne peut pas les charger depuis le cockpit. */
+function pageSurMesure(html, tout){ var re = tout ? /\/_blob\/[0-9a-f]{32}/g : /url\("(\/_blob\/[0-9a-f]{32})"\)/g, urls = [], m;
+  while ((m = re.exec(html))) { var u = m[1] || m[0]; if (urls.indexOf(u) < 0) urls.push(u); }
+  return Promise.all(urls.map(enDataURL)).then(function(r){ urls.forEach(function(u, i){ html = html.split(u).join(r[i]); }); return html; }); }
+function apercuSurMesure(){ var h = ST.html; $("st-charge").hidden = false;
+  pageSurMesure(h, false).then(function(page){ if (ST.html !== h) return; var fr = $("st-cadre"); fr.onload = function(){ $("st-charge").hidden = true; }; fr.srcdoc = page; },
+    function(){ $("st-charge").hidden = true; toast("Le site ne se charge pas. Vérifiez la connexion."); }); }
+function fermerStudio(){ if (ST.ctrl) ST.ctrl.abort(); $("studio").hidden = true; $("studio").classList.remove("sur-mesure"); document.body.classList.remove("studio-ouvert"); var r = ST.retour; ST.id = null; ST.f = null; ST.html = ""; if (r && r.focus) r.focus(); }
 
 /* Bouton « Générer le site » d'une fiche prospect : maquette immédiate, puis personnalisation par l'IA. */
 function genererSite(p, bouton){ var f = ficheDepuisProspect(p);
@@ -1795,7 +1811,7 @@ claude.use("db").then(function(db){
   db.collection("documents").onSnapshot(function(s){ S.docs = s.docs.map(function(d){ var o = Object.assign({}, d.data()); o.id = d.id; o.client = o.client || {}; return o; }); rendreTout(); }, function(){});
   db.collection("config").onSnapshot(function(s){ s.docs.forEach(function(d){ if (d.id === "entreprise") S.ent = d.data() || {}; if (d.id === "compteurs") S.compt = d.data() || {}; if (d.id === "checklist") S.check = d.data() || {}; }); rendreTout(); }, function(){});
   db.collection("sites").onSnapshot(function(s){ var avant = S.ouvert ? !!(S.sites && S.sites[S.ouvert]) : null; S.sites = {};
-    s.docs.forEach(function(d){ var o = d.data() || {}; if (o.fiche) S.sites[d.id] = {fiche:o.fiche, maj:o.maj || ""}; });
+    s.docs.forEach(function(d){ var o = d.data() || {}; if (o.fiche || o.html) S.sites[d.id] = {fiche:o.fiche || null, maj:o.maj || "", html:o.html || ""}; });
     if (S.ouvert && avant !== !!S.sites[S.ouvert]) rendreFiche(); rendreTout(); }, function(){});
   db.collection("ventes").onSnapshot(function(s){ S.ventes = s.docs.map(function(d){ var o = Object.assign({}, d.data()); o.id = d.id; return o; }); rendreTout(); }, function(){});
 });

@@ -234,6 +234,11 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
 - Preuves : QA de 320 à 1920 px conforme, axe : 0 violation ; Lighthouse 96 en performance sur mobile, 100 sur ordinateur, et 100 en accessibilité, bonnes pratiques et référencement.
 - À valider par la cliente : prix, livraison (non affichée), domaine (dépense), hébergement, mise à jour de la fiche Google.
 
+### 07/11/2026 — Cockpit, version 13 : le vrai site de Casa Mozzat dans le cockpit
+- La maquette du Studio (refaite avec les modèles) ne ressemblait pas au site livré. Nouveau mode « site sur mesure » : la fiche de Casa Mozzat affiche maintenant **exactement** le site livré, en mobile et en ordinateur, téléchargeable en un fichier.
+- 19 fichiers envoyés au cockpit (photos, polices, capture). Les liens internes défilent correctement dans l'aperçu.
+- Preuves : test navigateur (polices et 27 images chargées, aucun débordement, liens internes, retour au Studio normal à la fermeture) ; Studio, carte et cockpit retestés sans régression ; cockpit publié en version 13.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`
