@@ -36,14 +36,16 @@
 
 **Limite :** c'est un outil d'aide, pas une plateforme agréée de facturation électronique. Depuis le 01/09/2026, vous devez pouvoir **recevoir** des factures électroniques. À partir du 01/09/2027, vos factures entre entreprises devront être **émises** via une plateforme agréée : il faudra en choisir une d'ici là (il en existe des gratuites).
 
-## Constellation 3D (ajoutée le 04/11/2026)
-Sur la vue « Aujourd'hui », une scène 3D affiche chaque prospect sous forme d'un point lumineux :
-- **distance au centre** = étape : plus un point est proche du centre, plus le prospect est près de signer (de l'extérieur vers l'intérieur : à contacter, contacté, a répondu, rendez-vous, devis, gagné ; les dossiers perdus restent en périphérie, en gris) ;
-- **couleur** = statut ; **taille** = score de priorité ; **pulsation** = action due ; **point pâle** = numéro inconnu ;
-- glisser pour faire tourner, survoler pour lire le nom, le score et le numéro, cliquer pour ouvrir la fiche ;
-- la légende sert aussi de filtre : cliquez sur une étape pour l'afficher ou la masquer.
+## Carte de France des prospects (07/11/2026, remplace la constellation 3D)
+Sur la vue « Aujourd'hui », une carte de France affiche chaque prospect à l'emplacement de sa commune :
+- **placement** : centre de la commune d'après le code postal ; à défaut, d'après le nom de la ville (seulement s'il est unique en France) ; à défaut, centre du département. Les prospects d'une même commune s'enroulent en spirale autour de ce centre. Les prospects impossibles à placer sont comptés sous la légende (« hors carte ») ;
+- **couleur** = étape ; **taille** = score de priorité ; **anneau qui pulse** = action due ; **point pâle** = numéro inconnu ;
+- **départements** teintés selon le nombre de prospects actifs ;
+- survoler un point pour lire le nom, le statut, le score et le numéro, cliquer pour ouvrir la fiche ; survoler un département pour voir ses chiffres, cliquer pour zoomer ;
+- boutons **France**, **Mes prospects** (cadre la zone où se trouvent vos prospects), **+** et **−** ; glisser à la souris pour se déplacer ; échelle en kilomètres ;
+- la légende sert de filtre, et la liste « Par département » permet de zoomer au clavier.
 
-La scène ne s'anime que lorsqu'elle est visible, et reste immobile si votre système demande de réduire les animations. Sans WebGL, la légende chiffrée reste affichée. Les cartes chiffrées s'inclinent légèrement en 3D sous la souris. Bibliothèque : Three.js r128 (licence MIT), chargée depuis cdnjs.
+La carte est un dessin SVG intégré à la page : aucune bibliothèque ni requête externe (Three.js a été retiré). Elle reste immobile si votre système demande de réduire les animations. Données : contours IGN Admin Express (licence ouverte Etalab 2.0) et centres des communes de geo.api.gouv.fr, préparés avec `outils/carte_cockpit.py`. Les cartes chiffrées s'inclinent toujours légèrement sous la souris.
 
 ## Studio site (ajouté le 04/11/2026)
 Dans chaque fiche prospect, le bouton **« ✦ Générer le site »** crée en un clic une maquette complète :

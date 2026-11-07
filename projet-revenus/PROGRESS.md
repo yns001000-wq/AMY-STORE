@@ -220,6 +220,13 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
 - **Priorité aux portables** dans le score du cockpit (+10 points).
 - Preuves : tests unitaires OK ; QA conforme (axe : 0 violation) ; Studio, 3D et cockpit retestés ; cockpit publié en version 11.
 
+### 07/11/2026 — Cockpit, version 12 : carte de France
+- La constellation 3D est remplacée par une **carte de France des prospects** (SVG intégré, Three.js retiré) : 96 départements, points placés sur leur commune, couleur par étape, survol et clic vers la fiche, zoom par département, bouton « Mes prospects », glisser, échelle, légende-filtre.
+- Placement : code postal (6 051 codes), sinon nom de ville unique, sinon département. Les 374 prospects sont placés : Rhône 265, Loire 57, Isère 52.
+- 5 prospects OpenStreetMap n'avaient pas de code postal alors que leur commune n'en a qu'un : complétés (Grigny-sur-Rhône 69520, Mornant et Chaussan 69440, Vaulx-en-Velin 69120, Juliénas 69840). Saint-Étienne et Grenoble, qui ont plusieurs codes, sont placés d'après le nom de la ville.
+- Outil `outils/carte_cockpit.py` pour regénérer les données de la carte.
+- Preuves : test navigateur de la carte (points, bulles, clic vers la fiche, zoom, glisser, filtre, 320 et 400 px sans débordement, mouvement réduit, aucune requête externe) ; axe : 0 violation en thème clair et sombre ; Studio et cockpit retestés ; cockpit publié en version 12.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`
