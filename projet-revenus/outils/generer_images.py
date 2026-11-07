@@ -100,6 +100,47 @@ SUJETS = {
 }
 
 
+# Familles de sites sur mesure du cockpit (pizzeria, cuisine asiatique, cuisines du monde, café, restauration rapide, desserts)
+SUJETS.update({
+    "Pizzeria": [("four", "A Neapolitan pizza baking inside a wood-fired brick oven, visible flames and glowing embers, a long pizza peel, warm light."),
+                 ("margherita", "A Neapolitan margherita pizza with leopard-spotted puffy crust, San Marzano tomato, melted fior di latte and fresh basil, on a rustic wooden board."),
+                 ("diavola", "A diavola pizza with spicy salami slices curling at the edges, tomato, mozzarella, a drizzle of chili oil, on a metal tray."),
+                 ("quatre-fromages", "A four-cheese white pizza with golden bubbling mozzarella, gorgonzola and goat cheese, fresh thyme, on a marble table."),
+                 ("vegetarienne", "A vegetarian pizza with grilled zucchini, peppers, cherry tomatoes, mushrooms, olives and basil, colourful and fresh."),
+                 ("calzone", "A golden folded calzone just out of the oven, cut open to show ham, mozzarella and tomato inside, on a white plate."),
+                 ("pate", "Close-up of hands stretching fresh pizza dough on a floured marble counter, semolina dust, soft side light."),
+                 ("salle", "A cosy Italian pizzeria dining room with a tiled wood-fired oven in the background, wooden tables, warm evening light, no people."),
+                 ("tiramisu", "A generous portion of tiramisu in a glass dish, layers of mascarpone and coffee-soaked ladyfingers, dusted with cocoa.")],
+    "Asiatique": [("sushi", "An assorted sushi platter with salmon and tuna nigiri, maki and california rolls, wasabi and pickled ginger, on a dark slate."),
+                  ("ramen", "A bowl of tonkotsu ramen with chashu pork, soft-boiled marinated egg, nori, spring onions and noodles lifted with chopsticks."),
+                  ("pho", "A steaming bowl of Vietnamese pho with thin slices of beef, rice noodles, fresh herbs, lime and bean sprouts on the side."),
+                  ("wok", "Pad thai with prawns, rice noodles, crushed peanuts, bean sprouts and lime, served on a plate, wok kitchen atmosphere."),
+                  ("dim-sum", "Bamboo steamer baskets with shrimp dumplings and siu mai, steam rising, soy sauce dish, chopsticks.")],
+    "Cuisines du monde": [("couscous", "A traditional couscous royal in a large earthenware dish: fluffy semolina, vegetables, chickpeas, merguez and chicken, broth on the side."),
+                          ("tajine", "A lamb tajine with prunes and toasted almonds in an open terracotta tajine pot, Moroccan atmosphere."),
+                          ("mezze", "A Lebanese mezze spread: hummus with olive oil, tabbouleh, falafel, moutabal, warm pita bread, top view on a table."),
+                          ("steak-frites", "A grilled rib-eye steak with herb butter and golden homemade French fries on a white plate, bistro setting."),
+                          ("pates", "Fresh tagliatelle with a creamy mushroom sauce and grated parmesan in a white bowl, Italian trattoria table."),
+                          ("salade", "A generous fresh composed salad with grilled chicken, avocado, cherry tomatoes, parmesan shavings and croutons."),
+                          ("curry", "Indian chicken tikka masala in a copper bowl with basmati rice and garlic naan bread, warm spices."),
+                          ("grillades", "Mixed grill skewers of marinated lamb and chicken with grilled vegetables and rice, Mediterranean restaurant.")],
+    "Café": [("cappuccino", "A cappuccino with delicate latte art in a ceramic cup on a wooden café table, morning light."),
+             ("viennoiseries", "Freshly baked butter croissants and pains au chocolat on a wooden board, flaky layers, French bakery."),
+             ("brunch", "A generous brunch plate with eggs benedict, avocado toast, fresh fruit and orange juice, bright café table."),
+             ("salle", "A charming French café interior with small marble tables, bentwood chairs, plants and a counter with an espresso machine, no people."),
+             ("baguettes", "Golden crusty French baguettes standing in a wicker basket in a traditional bakery, warm light.")],
+    "Restauration rapide": [("kebab", "A doner kebab in a warm pita bread with shaved grilled meat, lettuce, tomato, onion and white sauce, fries on the side."),
+                            ("frites", "A paper cone of crispy golden fries with a small pot of sauce, street-food setting."),
+                            ("poulet", "Crispy fried chicken tenders with a dipping sauce and coleslaw, in a basket lined with paper."),
+                            ("wrap", "A grilled chicken wrap cut in half showing lettuce, tomato and sauce, served with fries.")],
+    "Desserts": [("panna-cotta", "A vanilla panna cotta with red berry coulis and fresh raspberries in a glass, elegant restaurant dessert.")],
+})
+FAMILLES_REPAS = {"Pizzeria", "Asiatique", "Cuisines du monde", "Café", "Restauration rapide", "Desserts"}
+STYLE_REPAS = ("Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, "
+               "realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, "
+               "no text, no letters, no logos, no watermarks, no brand names. ")
+
+
 def slug(t: str) -> str:
     import unicodedata
     t = unicodedata.normalize("NFKD", t).encode("ascii", "ignore").decode().lower()
@@ -119,7 +160,7 @@ def commandes(metiers: list[str], prompt: str | None, nom: str | None, qualite: 
         if m not in SUJETS:
             raise SystemExit(f"Métier inconnu : {m}. Choix : {', '.join(SUJETS)}")
         for sujet, p in SUJETS[m]:
-            res.append({"metier": m, "sujet": sujet, "prompt": (STYLE_CUISINE if m == "Restaurant traditionnel" else STYLE) + SANS_VISAGE + p,
+            res.append({"metier": m, "sujet": sujet, "prompt": (STYLE_CUISINE if m == "Restaurant traditionnel" else STYLE_REPAS if m in FAMILLES_REPAS else STYLE) + SANS_VISAGE + p,
                         "qualite": "high" if sujet == "accueil" and qualite == "auto" else ("medium" if qualite == "auto" else qualite)})
     return res
 
