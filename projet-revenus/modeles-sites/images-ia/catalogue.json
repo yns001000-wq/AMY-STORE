@@ -614,5 +614,16 @@
   "date": "2026-11-07",
   "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A diavola pizza with spicy salami slices curling at the edges, tomato, mozzarella, a drizzle of chili oil, on a metal tray.",
   "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-pizzeria-quatre-fromages.webp",
+  "metier": "Pizzeria",
+  "sujet": "quatre-fromages",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A four-cheese white pizza with golden bubbling mozzarella, gorgonzola and goat cheese, fresh thyme, on a marble table.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
  }
 ]
