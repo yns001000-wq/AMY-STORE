@@ -260,14 +260,20 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
   - cockpit publié en version 15.
 - Non testé : un appel réel au modèle, qui ne peut se faire que depuis votre compte. Le premier clic vous demandera d'autoriser Claude, y compris l'envoi d'images.
 
-### 07/11/2026 — Cockpit, version 16 : vraies photos dans les sites sur mesure
-- Banque de 38 vraies photos libres de droits, sans aucune dépense : pizzeria, restauration rapide, cuisines du monde, cuisine asiatique, café et boulangerie. Chaque photo a été choisie à l'œil parmi 8 candidates, recadrée en 4:3 et convertie en WebP.
-- Placement automatique par mots-clés (accueil, incontournables, carte, maison, desserts). Crédits CC BY en pied de page.
+### 07/11/2026 — Cockpit, version 17 : photos IA dans les sites sur mesure, à la place des photos libres
+- À votre demande, les 38 photos libres de droits ont été retirées : supprimées du cockpit et du dépôt. Le reste du crédit OpenAI a servi à générer des photos propres pour les secteurs pris en charge.
+- **27 photos générées pour 1,20 $**, notées ligne par ligne dans `crm/donnees/depenses.csv` :
+  - 9 pour les pizzerias ;
+  - 5 pour la cuisine asiatique ;
+  - 8 pour les cuisines du monde ;
+  - 5 pour les cafés et boulangeries.
+- La série s'est arrêtée parce qu'OpenAI a répondu « crédit épuisé ». Les 5 dernières photos (kebab, frites, poulet, wrap, panna cotta) n'ont donc pas été faites. Les 6 tentatives coupées le 06/11 ont donc très probablement été facturées.
+- Toutes les photos ont été vérifiées à l'œil : rendu réaliste, aucun texte, aucun visage reconnaissable.
 - Preuves :
-  - rendu de 3 sites (pizzeria, restaurant libanais, japonais) : toutes les photos se chargent, aucun débordement ;
+  - test de bout en bout : photo d'accueil, 5 incontournables sur 5, 2 photos « maison », aucun crédit superflu ;
   - axe : 0 violation ;
-  - test de bout en bout avec la photo d'accueil, 5 incontournables sur 5 et 2 photos « maison » ;
-  - tests de fumée et du Studio passés.
+  - tests de fumée et du Studio passés ;
+  - cockpit publié en version 17.
 
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
