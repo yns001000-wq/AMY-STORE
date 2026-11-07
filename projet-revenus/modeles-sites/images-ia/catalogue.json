@@ -636,5 +636,16 @@
   "date": "2026-11-07",
   "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A vegetarian pizza with grilled zucchini, peppers, cherry tomatoes, mushrooms, olives and basil, colourful and fresh.",
   "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-pizzeria-calzone.webp",
+  "metier": "Pizzeria",
+  "sujet": "calzone",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A golden folded calzone just out of the oven, cut open to show ham, mozzarella and tomato inside, on a white plate.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
  }
 ]
