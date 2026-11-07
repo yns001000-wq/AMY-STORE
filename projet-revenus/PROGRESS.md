@@ -288,6 +288,7 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
   - QA Casa Mozzat conforme sur 7 largeurs ;
   - tous les tests du cockpit passés ;
   - cockpit publié en version 18.
+- Maquettes express de pizzeria : elles utilisent maintenant les photos IA de pizzeria (four à bois, margherita, diavola, salle) et des textes adaptés.
 - Non vérifié : l'affichage de la carte Google *dans l'aperçu du cockpit*. Les règles de sécurité de la page peuvent l'empêcher. Le site téléchargé ou hébergé l'affiche bien.
 
 ## Paramètres de prospection (à compléter par vous)

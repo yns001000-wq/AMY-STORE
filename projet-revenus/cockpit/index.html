@@ -1204,7 +1204,7 @@ var STU = {
   }
 };
 var JOURS_S = [["lun","Lundi"],["mar","Mardi"],["mer","Mercredi"],["jeu","Jeudi"],["ven","Vendredi"],["sam","Samedi"],["dim","Dimanche"]];
-var FAMILLE_S = {"Snack":"bouche","Restaurant":"bouche","Restauration rapide":"bouche","Plombier":"artisan","Chauffagiste":"artisan","Électricien":"artisan","Peintre":"artisan","Traiteur":"bouche","Pâtisserie":"bouche","Coiffure":"beaute","Soins de beauté":"beaute"};
+var FAMILLE_S = {"Pizzeria":"bouche","Snack":"bouche","Restaurant":"bouche","Restauration rapide":"bouche","Plombier":"artisan","Chauffagiste":"artisan","Électricien":"artisan","Peintre":"artisan","Traiteur":"bouche","Pâtisserie":"bouche","Coiffure":"beaute","Soins de beauté":"beaute"};
 function familleDe(m){ if (FAMILLE_S[m]) return FAMILLE_S[m]; m = (m||"").toLowerCase();
   if (/coif|beaut|esth|ongl|barb|spa|maquill|cil/.test(m)) return "beaute";
   if (/trait|p[aâ]tiss|boulang|chocolat|cuisin|restau|food|glac/.test(m)) return "bouche"; return "artisan"; }
@@ -1243,6 +1243,8 @@ var CONTENU_S = {
     accroche:"Soins et beauté à {ville}. Tarifs affichés, rendez-vous en un geste.", couleur:"#9d4e6a",
     avis:[["Amandine V.","Soin du visage très relaxant, peau éclatante. Je recommande."],["Léa M.","Semi-permanent qui tient trois semaines, travail minutieux."],["Sonia K.","Accueil chaleureux, cabine propre et prix affichés."]]}
 };
+CONTENU_S["Pizzeria"] = {services:[["Pizzas au feu de bois","Pâte travaillée à la main, garnitures généreuses.","Dès 11 € (exemple)"],["À emporter","Commande par téléphone, prête à l'heure.","Prix de la carte"],["Livraison","Dans le secteur, selon disponibilité.","Selon la distance"],["Desserts maison","Tiramisu et douceurs du moment.","Dès 5 € (exemple)"]],
+  accroche:"Pizzas cuites au feu de bois, à emporter ou sur place, à {ville}. Commandez en un appel.", couleur:"#1d4d3a"};
 var COMMUN_S = {
   artisan: {horaires:{lun:"08:00-18:00",mar:"08:00-18:00",mer:"08:00-18:00",jeu:"08:00-18:00",ven:"08:00-18:00",sam:"09:00-12:00",dim:""},
     atouts:["Devis gratuit","Prix annoncé avant les travaux","Intervention rapide","Chantier laissé propre"],
@@ -1314,6 +1316,7 @@ function ficheDepuisProspect(p){
   if (met === "Snack") Object.assign(f, {cta_secondaire:"Commander", bouton_formulaire:"Envoyer ma commande", libelle_realisations:"En images", titre_realisations:"Fait minute, servi généreux", titre_contact:"Une commande, une question ?", atouts:["Fait minute","À emporter","Livraison possible","Prix doux"]});
   var LEG_IA = {"ia-plombier-douche": "Douche à l'italienne", "ia-plombier-chauffe-eau": "Remplacement de chauffe-eau", "ia-chauffagiste-pompe": "Pompe à chaleur", "ia-chauffagiste-thermostat": "Thermostat connecté", "ia-electricien-borne": "Borne de recharge", "ia-electricien-eclairage": "Éclairage d'ambiance", "ia-peintre-facade": "Ravalement de façade", "ia-peintre-outils": "Préparation du chantier", "ia-traiteur-plateau": "Plateaux repas", "ia-traiteur-evenement": "Dîner de mariage", "ia-patisserie-vitrine": "La vitrine", "ia-patisserie-boite": "Coffret de macarons", "ia-snack-burger": "Burger maison", "ia-snack-assiette": "Assiette kebab", "ia-snack-comptoir": "Le comptoir", "ia-restaurant-plat": "Plat du jour", "ia-restaurant-terrasse": "La terrasse", "ia-coiffure-couleur": "Balayage", "ia-coiffure-produits": "Soins professionnels", "ia-soins-de-beaute-ongles": "Manucure", "ia-soins-de-beaute-soin": "Soin du visage", "ia-soins-de-beaute-cabine": "Cabine de soins"};
   if (met === "Restaurant"){ IA_S["Restaurant"] = {hero:"ia-restaurant-accueil", apropos:"", galerie:["ia-resto-table","ia-resto-ardoise","ia-restaurant-terrasse"]}; LEG_IA["ia-resto-table"] = "Le partage à la française"; LEG_IA["ia-resto-ardoise"] = "La salle"; }
+  if (met === "Pizzeria"){ IA_S["Pizzeria"] = {hero:"ia-pizzeria-four", apropos:"ia-pizzeria-pate", galerie:["ia-pizzeria-margherita","ia-pizzeria-diavola","ia-pizzeria-salle"]}; LEG_IA["ia-pizzeria-margherita"] = "Margherita"; LEG_IA["ia-pizzeria-diavola"] = "Diavola"; LEG_IA["ia-pizzeria-salle"] = "La salle"; }
   var ia = IA_S[met] || (fam === "beaute" ? IA_S["Coiffure"] : fam === "bouche" ? IA_S["Restaurant"] : null);
   if (ia && STU.photos[ia.hero]){ // photos d'exemple du métier (le bandeau de la maquette précise qu'elles sont à remplacer)
     f.images.hero = photoS(ia.hero); f.images.galerie = ia.galerie.map(function(k){ return {src:photoS(k), legende:LEG_IA[k] || ""}; });
