@@ -834,5 +834,16 @@
   "date": "2026-11-07",
   "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A cappuccino with delicate latte art in a ceramic cup on a wooden café table, morning light.",
   "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-cafe-viennoiseries.webp",
+  "metier": "Café",
+  "sujet": "viennoiseries",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. Freshly baked butter croissants and pains au chocolat on a wooden board, flaky layers, French bakery.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
  }
 ]
