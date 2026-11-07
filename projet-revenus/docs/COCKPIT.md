@@ -94,6 +94,21 @@ Bouton **« ✦ Créer le site sur mesure »** dans la fiche prospect. Comptez 2
    - « Photo principale » et « Photos de la maison » : ajoutez les vraies photos du client. À défaut, des emblèmes élégants les remplacent.
    - « Télécharger le site » : un fichier unique.
 
+**Vraies photos (version 16).** Les sites sur mesure utilisent une banque de 38 vraies photos libres de droits, trouvées sur Openverse (Flickr et Wikimedia, licences CC BY 2.0 ou domaine public). Elles couvrent :
+- les pizzas, le four à bois, le pizzaiolo, la salle de pizzeria ;
+- le kebab, le wrap, les tacos, le burger, les frites, le poulet ;
+- le couscous, le tajine, les mezze, le houmous, le steak-frites, les pâtes, la salade, la salle de restaurant ;
+- le curry, les sushis, les nigiris, les ramen, le phở, le pad thaï, les dim sum, le poke ;
+- le cappuccino, les croissants, le pain au chocolat, le brunch, la salle de café, les baguettes, les macarons ;
+- le tiramisu et la panna cotta.
+
+Les photos sont placées ainsi :
+- l'IA choisit en priorité les clés `ph-…` ;
+- là où elle n'en met pas, le cockpit place la photo qui correspond au nom du plat, par mots-clés. Il ne met jamais une photo d'un autre plat ;
+- l'accueil et « La maison » reçoivent une photo par défaut selon le type d'établissement.
+
+Les crédits (auteur et licence) s'affichent automatiquement en pied de page, avec la mention « photos d'illustration, non contractuelles ». Les fichiers et leurs crédits sont dans `cockpit/photos-libres/` (`credits.json`).
+
 **Précautions.** La page porte le bandeau « Maquette de démonstration » et une balise noindex. Elle n'affiche ni avis ni statistique. Les points non vérifiés (prix, horaires, livraison, « fait maison »…) figurent dans « À valider avec le client ».
 
 **Indices publics.** Les fiches portent un champ `indices` (OpenStreetMap et Sirene), affiché dans « Informations » et transmis à l'IA. Pour régénérer : `python outils/etudier_prospects.py --dossier EXPORT/prospects --sortie crm/donnees/indices.json`. Les nouveaux imports `prospects_osm.py` ajoutent les indices aux notes.

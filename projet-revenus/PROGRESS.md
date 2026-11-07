@@ -260,6 +260,15 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
   - cockpit publié en version 15.
 - Non testé : un appel réel au modèle, qui ne peut se faire que depuis votre compte. Le premier clic vous demandera d'autoriser Claude, y compris l'envoi d'images.
 
+### 07/11/2026 — Cockpit, version 16 : vraies photos dans les sites sur mesure
+- Banque de 38 vraies photos libres de droits, sans aucune dépense : pizzeria, restauration rapide, cuisines du monde, cuisine asiatique, café et boulangerie. Chaque photo a été choisie à l'œil parmi 8 candidates, recadrée en 4:3 et convertie en WebP.
+- Placement automatique par mots-clés (accueil, incontournables, carte, maison, desserts). Crédits CC BY en pied de page.
+- Preuves :
+  - rendu de 3 sites (pizzeria, restaurant libanais, japonais) : toutes les photos se chargent, aucun débordement ;
+  - axe : 0 violation ;
+  - test de bout en bout avec la photo d'accueil, 5 incontournables sur 5 et 2 photos « maison » ;
+  - tests de fumée et du Studio passés.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`
