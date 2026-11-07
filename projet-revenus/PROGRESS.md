@@ -275,6 +275,21 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
   - tests de fumée et du Studio passés ;
   - cockpit publié en version 17.
 
+### 07/11/2026 — Cockpit, version 18 : plan d'accès Google Maps en fin de page
+- Tous les sites du Studio, en mode sur mesure comme en maquette express, se terminent par la section « Nous trouver ». Elle contient le fond de plan, l'adresse et les boutons « Afficher la carte » (Google Maps, chargée au clic pour le RGPD) et « Itinéraire ».
+- Casa Mozzat :
+  - section ajoutée et mentions légales complétées ;
+  - site reconstruit et mis à jour dans le cockpit ;
+  - nouvel aperçu en un seul fichier et nouveau zip.
+- Preuves :
+  - la vraie carte Google Maps s'affiche au clic, en mobile et en ordinateur ;
+  - 4 modèles de maquette express testés (artisan, beauté, restaurant, commande) ;
+  - axe : 0 violation ;
+  - QA Casa Mozzat conforme sur 7 largeurs ;
+  - tous les tests du cockpit passés ;
+  - cockpit publié en version 18.
+- Non vérifié : l'affichage de la carte Google *dans l'aperçu du cockpit*. Les règles de sécurité de la page peuvent l'empêcher. Le site téléchargé ou hébergé l'affiche bien.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`

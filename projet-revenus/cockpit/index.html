@@ -1288,7 +1288,7 @@ function ficheDepuisProspect(p){
   var mobile = /^0[67]/.test(chiffresS(tel)) || /^\+?33[67]/.test(chiffresS(tel));
   var modele = met === "Restaurant" ? "restaurant" : fam === "beaute" ? "beaute" : ((met === "Pâtisserie" || met === "Snack") && mobile ? "commande-whatsapp" : "artisan");
   var f = {modele:modele, maquette:true, pays:p.pays||"FR", nom:(p.entreprise||"Votre entreprise").replace(/\s*\([^)]*\)/g,"").replace(/^(sarl|sas|sasu|eurl)\s+/i,""),
-    metier:met, ville:ville, zone:ville + " et alentours (zone à préciser).", telephone:tel || "Votre numéro", email:p.email||"",
+    metier:met, ville:ville, code_postal:p.code_postal || "", adresse:String(p.adresse || "").replace(new RegExp("\\s*" + (p.code_postal || "#") + ".*$"), "").trim(), zone:ville + " et alentours (zone à préciser).", telephone:tel || "Votre numéro", email:p.email||"",
     titre: modele === "artisan" ? met + " à " + ville : "", accroche:(c.accroche || "Votre activité présentée clairement, joignable en un geste depuis un téléphone.").replace("{ville}", ville),
     description: (p.entreprise||"") + ", " + met.toLowerCase() + " à " + ville + ". Ce texte sera remplacé par votre présentation : votre parcours, votre façon de travailler et ce que vos clients apprécient.",
     couleur: c.couleur || "#1f5fbf", atouts:k.atouts.slice(), horaires_semaine:Object.assign({}, k.horaires),
@@ -1495,10 +1495,21 @@ function pageS(f, css, police){
     + '<aside class="bandeau-info" aria-label="Information sur cette page"><p>Maquette préparée pour ' + hS(f.nom) + ' : non publiée, non contractuelle.' + (f.maquette ? ' Avis, prix, horaires et photos sont des exemples à remplacer par les vôtres.' : '') + '</p></aside>'
     + '<header class="entete"><div class="conteneur"><a class="marque" href="#contenu">' + hS(f.nom) + '<small>' + hS(f.metier) + ', ' + hS(f.ville) + '</small></a><nav class="nav" id="nav" aria-label="Navigation principale"><ul>' + nav + '</ul></nav>' + r.entete
     + '<button class="btn-menu" type="button" aria-expanded="false" aria-controls="nav"><span class="cache">Menu</span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></header>'
-    + '<main id="contenu">' + r.corps + '</main>' + piedS(f) + '<div class="barre-mobile" role="region" aria-label="Actions rapides">' + r.barre + '</div>'
-    + '<script>window.__H=' + JSON.stringify(f.horaires_semaine || null).replace(/</g,"\\u003c") + ';<\/script>' + SCRIPT_S + r.scripts + '</body></html>';
+    + '<main id="contenu">' + r.corps + planExpressS(f, pal) + '</main>' + piedS(f) + '<div class="barre-mobile" role="region" aria-label="Actions rapides">' + r.barre + '</div>'
+    + '<script>window.__H=' + JSON.stringify(f.horaires_semaine || null).replace(/</g,"\\u003c") + ';<\/script>' + SCRIPT_S + r.scripts + SCRIPT_PLAN_SM + '</body></html>';
 }
 
+
+/* Plan d'accès des maquettes express : même bloc que les sites sur mesure, avec ses propres réglages de couleurs. */
+function planExpressS(f, pal){ var ville = [f.code_postal, f.ville].filter(Boolean).join(" "); if (!f.ville || f.ville === "votre ville") return "";
+  var adr = [f.adresse, ville].filter(Boolean), C = couleursSM("artisan", {principal:pal["accent-fonce"], accent:pal.accent});
+  var itin = "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent([f.nom].concat(adr).join(", "));
+  var ico = function(){ return '<svg class="ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>'; };
+  return '<style>' + CSS_PLAN_EXPRESS + CSS_PLAN_SM + '</style>' + planSM({nom:f.nom}, adr, C, itin, ico); }
+var CSS_PLAN_EXPRESS = '.plan{--papier:#fff;--filet:rgba(0,0,0,.12);--r:16px;--ombre:0 18px 40px -22px rgba(0,0,0,.4);--max:72rem;--encre:#1b1b1b;--gris:#555;--tomate:var(--accent-texte)}'
+  + '.plan .surtitre{font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-texte);margin:0 0 .5rem}.plan h2{margin:0;color:var(--encre)}'
+  + '.plan .cache-titre{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.plan .btn{display:inline-flex;align-items:center;gap:.5rem;border-radius:999px;font-weight:700;text-decoration:none;border:2px solid transparent;cursor:pointer;font-size:1rem}'
+  + '.plan .btn-appel{background:var(--accent);color:var(--sur-accent);border-color:var(--accent)}.plan .btn-ligne{background:transparent;color:var(--accent-texte);border-color:currentColor}.plan .btn svg{width:1.1rem;height:1.1rem}';
 
 /* ----- Studio : état, aperçu, IA, photos, téléchargement ----- */
 var ST = {id:null, f:null, histo:[], vue:"mobile", css:{}, data:{}, timer:null, retour:null, ctrl:null};
@@ -1808,7 +1819,7 @@ function pageSM(d){ var F = FAM_SM[d.famille] || FAM_SM.restaurant, C = couleurs
     + (F.titre !== "archivo" ? '@font-face{font-family:"Archivo";src:url("' + pUi + '") format("woff2");font-weight:500 800;font-display:block}' : '')
     + ':root{--vert:' + C.principal + ';--vert-2:' + C.principal2 + ';--vert-clair:' + C.principalClair + ';--creme:' + C.fond + ';--papier:' + C.papier + ';--encre:' + C.encre + ';--texte:' + C.texte + ';--gris:' + C.gris + ';--filet:' + C.filet
     + ';--tomate:' + C.accent + ';--tomate-2:' + C.accent2 + ';--or:' + C.or + ';--sur:' + C.surPrin + ';--doux:' + C.doux + ';--titre:"' + famT + '",Georgia,"Times New Roman",serif;--poids:' + (F.titre === "archivo" ? 800 : 400) + ';--ui:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;--r:18px;--max:72rem;--ombre:0 18px 40px -22px rgba(28,37,32,.35)}'
-    + CSS_SM;
+    + CSS_SM + CSS_PLAN_SM;
   var jsonld = {"@context":"https://schema.org","@type":F.schema,name:d.nom,telephone:aTel ? t164 : undefined,email:d.email || undefined,
     address:adr.length ? {"@type":"PostalAddress",streetAddress:d.adresse || undefined,postalCode:d.code_postal || undefined,addressLocality:d.ville || undefined,addressCountry:d.pays || "FR"} : undefined,
     geo:d.lat && d.lon ? {"@type":"GeoCoordinates",latitude:d.lat,longitude:d.lon} : undefined,
@@ -1871,14 +1882,14 @@ function pageSM(d){ var F = FAM_SM[d.famille] || FAM_SM.restaurant, C = couleurs
   h.push('<div class="bloc"><h3>Bon à savoir</h3>' + ((I.bon_a_savoir || []).length ? '<ul class="lignes">' + I.bon_a_savoir.map(function(x){ return '<li>' + ico("ok") + hS(x) + '</li>'; }).join("") + '</ul>' : '') + (d.email ? '<a class="btn btn-ligne" href="mailto:' + hS(d.email) + '">Écrire un e-mail</a>' : '') + '</div></div></div></section>');
   if ((d.faq || []).length && !cache("faq")) h.push('<section class="faq" aria-labelledby="t-faq"><div class="enveloppe"><div><p class="surtitre">Questions fréquentes</p><h2 id="t-faq">Bon à savoir</h2></div><div>' + d.faq.map(function(q){ return '<details><summary>' + hS(q.q) + '</summary><p>' + hS(q.r) + '</p></details>'; }).join("") + '</div></div></section>');
   var Fi = d.final || {};
-  h.push('<section class="final" aria-labelledby="t-final"><div class="enveloppe"><h2 id="t-final">' + hS(Fi.titre || "Une question ? Appelez-nous.") + '</h2>' + (Fi.texte ? '<p>' + hS(Fi.texte) + '</p>' : '') + (aTel ? '<a class="gros-tel" href="tel:' + t164 + '">' + ico("tel") + hS(tel) + '</a>' : '') + '</div></section></main>');
+  h.push('<section class="final" aria-labelledby="t-final"><div class="enveloppe"><h2 id="t-final">' + hS(Fi.titre || "Une question ? Appelez-nous.") + '</h2>' + (Fi.texte ? '<p>' + hS(Fi.texte) + '</p>' : '') + (aTel ? '<a class="gros-tel" href="tel:' + t164 + '">' + ico("tel") + hS(tel) + '</a>' : '') + '</div></section>' + planSM(d, adr, C, carte, ico) + '</main>');
   var rh = d.horaires ? resumeHorairesSM(d.horaires) : [];
   h.push('<footer class="pied"><div class="enveloppe"><div><b>' + hS(d.nom) + '</b><p>' + hS((d.activite || F.lib) + " à " + d.ville + ".") + (adr.length ? '<br>' + adr.map(hS).join(", ") : '') + (aTel ? '<br><a href="tel:' + t164 + '">' + hS(tel) + '</a>' : '') + (d.email ? ' · <a href="mailto:' + hS(d.email) + '">' + hS(d.email) + '</a>' : '') + '</p></div>'
     + '<div><h2>Ouvert</h2><p>' + (rh.length ? rh.map(function(r){ return hS(r[0]) + '<br>' + hS(r[1]); }).join("<br>") : "Sur appel") + '</p></div>'
     + '<div><h2>Liens</h2><ul><li><a href="#offre">' + hS(offreNav) + '</a></li><li><a href="#infos">Horaires et accès</a></li>' + (d.facebook ? '<li><a href="' + hS(d.facebook) + '" rel="noopener" target="_blank">Facebook<span class="cache-titre"> (s\'ouvre dans un nouvel onglet)</span></a></li>' : '') + '</ul></div>'
     + (creditsSM(d).length ? '<p class="credits">Photos d\'illustration, non contractuelles, recadrées. Crédits : ' + creditsSM(d).map(hS).join(" · ") + '.</p>' : '') + '<p class="mentions"><span>© <span id="annee">' + new Date().getFullYear() + '</span> ' + hS(d.nom) + '</span><span>Mentions légales et confidentialité : page fournie à la mise en ligne.</span><span>Aucun cookie.</span></p></div></footer>');
   h.push('<div class="barre" id="barre" aria-hidden="true">' + (aTel ? '<a class="b-appel" href="tel:' + t164 + '" tabindex="-1">' + ico("tel") + 'Appeler</a>' : '') + '<a class="b-carte" href="#offre" tabindex="-1">' + ico("carte") + hS(offreNav.replace(/^(nos|les)\s/i, "").replace(/^./, function(c){ return c.toUpperCase(); })) + '</a></div>');
-  h.push('<script>window.__H=' + JSON.stringify(H) + ';<\/script>' + SCRIPT_SM + '</body></html>');
+  h.push('<script>window.__H=' + JSON.stringify(H) + ';<\/script>' + SCRIPT_SM + SCRIPT_PLAN_SM + '</body></html>');
   return h.join("\n"); }
 
 var SYMBOLES_SM = '<symbol id="i-tel" viewBox="0 0 24 24"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></symbol>'
@@ -1960,6 +1971,31 @@ var SCRIPT_SM = '<script>(function(){var H=window.__H||{},$=function(i){return d
   + 'if("IntersectionObserver" in window&&barre){var vu={haut:true,fin:false};function mb(){var v=!vu.haut&&!vu.fin;barre.classList.toggle("visible",v);barre.setAttribute("aria-hidden",!v);barre.querySelectorAll("a").forEach(function(a){a.tabIndex=v?0:-1;});}'
   + 'new IntersectionObserver(function(es){vu.haut=es[0].isIntersecting;mb();}).observe($("actions-haut"));var fi=document.querySelector(".final");if(fi)new IntersectionObserver(function(es){vu.fin=es[0].isIntersecting;mb();}).observe(fi);}'
   + '})();<\/script>';
+
+/* ----- plan d'accès en fin de page : fond de plan dessiné (aucune requête), carte Google Maps chargée au clic (RGPD) ----- */
+function fondPlanSM(graine, C){ var s = 0; for (var i = 0; i < graine.length; i++) s = (s * 31 + graine.charCodeAt(i)) >>> 0;
+  var r = function(){ s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }, W = 1200, H = 440, l = [];
+  l.push('<rect width="' + W + '" height="' + H + '" fill="' + melS(C.fond, "#e9e4d8", 0.6) + '"/>');
+  for (var p = 0; p < 4; p++) l.push('<rect x="' + Math.round(r() * W) + '" y="' + Math.round(r() * H) + '" width="' + Math.round(90 + r() * 160) + '" height="' + Math.round(60 + r() * 110) + '" rx="10" fill="#d5e5c8"/>');
+  if (r() > 0.4){ var y0 = Math.round(H * (0.15 + r() * 0.7)); l.push('<path d="M-20 ' + y0 + ' C 300 ' + (y0 - 80) + ', 700 ' + (y0 + 90) + ', 1220 ' + (y0 - 30) + '" stroke="#c4daea" stroke-width="34" fill="none"/>'); }
+  var rues = function(n, larg){ for (var k = 0; k < n; k++){ var v = r() > 0.5, a = Math.round(r() * (v ? W : H)), b = a + Math.round((r() - 0.5) * 160);
+      var d = v ? "M" + a + " -10 L" + b + " " + (H + 10) : "M-10 " + a + " L" + (W + 10) + " " + b;
+      l.push('<path d="' + d + '" stroke="#cfc6b3" stroke-width="' + (larg + 4) + '" fill="none"/><path d="' + d + '" stroke="#ffffff" stroke-width="' + larg + '" fill="none"/>'); } };
+  rues(14, 7); rues(4, 14);
+  return '<svg class="plan-fond" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + l.join("")
+    + '<g transform="translate(600 205)"><circle r="46" fill="' + C.accent + '" opacity=".16"/><path d="M0 22c-14-16-24-28-24-41a24 24 0 0 1 48 0c0 13-10 25-24 41z" fill="' + C.accent + '"/><circle cy="-19" r="9" fill="#fff"/></g></svg>'; }
+function planSM(d, adr, C, itin, ico){ if (!adr.length) return "";
+  var q = [d.nom].concat(adr).join(", "), src = "https://maps.google.com/maps?q=" + encodeURIComponent(q) + "&z=16&hl=fr&output=embed";
+  return '<section class="plan" id="plan" aria-labelledby="t-plan"><div class="plan-carte" id="plan-carte" data-src="' + hS(src) + '" data-titre="' + hS("Carte Google Maps : " + q) + '">' + fondPlanSM(q, C)
+    + '<div class="plan-fiche"><p class="surtitre">Nous trouver</p><h2 id="t-plan">' + hS(d.nom) + '</h2><address>' + adr.map(hS).join("<br>") + '</address>'
+    + '<div class="plan-actions"><button type="button" class="btn btn-appel" id="plan-afficher">' + ico("pin") + 'Afficher la carte</button><a class="btn btn-ligne" href="' + hS(itin) + '" target="_blank" rel="noopener">Itinéraire<span class="cache-titre"> (s\'ouvre dans Google Maps)</span></a></div>'
+    + '<p class="plan-note">La carte interactive Google Maps ne se charge qu\'après votre clic.</p></div></div></section>'; }
+var CSS_PLAN_SM = '.plan{padding:0;background:var(--papier)}.plan-carte{position:relative;min-height:27rem;display:grid;align-items:center;overflow:hidden;border-top:1px solid var(--filet)}'
+  + '.plan-fond,.plan-carte iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.plan-fiche{position:relative;z-index:1;margin:2rem max(1.25rem,calc((100% - var(--max)) / 2));background:var(--papier);border-radius:var(--r);box-shadow:var(--ombre);padding:1.6rem;max-width:25rem}'
+  + '.plan-fiche h2{font-size:clamp(1.7rem,1.3rem + 1.4vw,2.3rem)}.plan-fiche address{font-style:normal;margin:.8rem 0 1.2rem;color:var(--encre)}.plan-actions{display:flex;flex-wrap:wrap;gap:.6rem}.plan-actions .btn{min-height:2.9rem;padding:.65rem 1.1rem}'
+  + '.plan-note{font-size:.82rem;color:var(--gris);margin-top:.9rem}.plan-carte.chargee{min-height:30rem}.plan-carte.chargee .plan-fiche{align-self:end;padding:1.1rem 1.3rem}.plan-carte.chargee .plan-note,.plan-carte.chargee #plan-afficher{display:none}'
+  + '@media (max-width:40rem){.plan-carte{min-height:0;align-items:end}.plan-fond{position:relative;height:15rem;inset:auto}.plan-fiche{margin:-3rem 1rem 1.5rem;max-width:none}.plan-carte.chargee{display:block}.plan-carte.chargee iframe{position:relative;height:20rem}.plan-carte.chargee .plan-fiche{margin-top:-2rem}}';
+var SCRIPT_PLAN_SM = '<script>(function(){var b=document.getElementById("plan-afficher"),z=document.getElementById("plan-carte");if(!b||!z)return;b.addEventListener("click",function(){var f=document.createElement("iframe");f.src=z.getAttribute("data-src");f.title=z.getAttribute("data-titre");f.loading="lazy";f.referrerPolicy="no-referrer-when-downgrade";f.allowFullscreen=true;var s=z.querySelector(".plan-fond");if(s)s.replaceWith(f);else z.insertBefore(f,z.firstChild);z.classList.add("chargee");f.focus&&z.querySelector(".plan-fiche a").focus();});})();<\/script>';
 
 /* ----- prompts ----- */
 function dossierProspect(p){ return ["Nom : " + (p.entreprise || "?"), "Catégorie de départ dans le fichier : " + (p.metier || "?") + " (source : " + (p.source || "?") + (p.naf ? ", code NAF " + p.naf : "") + ")",
@@ -2135,7 +2171,7 @@ function ouvrirAtelier(p, bouton, sd){ AT.etape = ""; AT.et = sd && sd.etude || 
 var SUGG_SM = ["Ajoute une formule du midi","Couleurs plus chaleureuses","Titre plus accrocheur","Mets les desserts en avant","Raccourcis les textes","Enlève le bandeau défilant"];
 function remplirSuggestions(l){ var sg = $("st-sugg"); sg.textContent = ""; l.forEach(function(t){ sg.appendChild(el("button",{cls:"btn petit",type:"button",text:t,onclick:function(){ $("st-demande").value = t; $("st-demande").focus(); }})); }); }
 
-window.__cockpit = {S:S, ST:ST, AT:AT, pageSM:pageSM, completerPhotosSM:completerPhotosSM, normaliserSM:normaliserSM, ouvrirAtelier:ouvrirAtelier, ouvrir:ouvrir, fermer:fermer, ouvrirStudio:ouvrirStudio}; // poignée de test (page privée)
+window.__cockpit = {S:S, ST:ST, AT:AT, pageSM:pageSM, planSM:planSM, couleursSM:couleursSM, CSS_PLAN_SM:CSS_PLAN_SM, SCRIPT_PLAN_SM:SCRIPT_PLAN_SM, completerPhotosSM:completerPhotosSM, normaliserSM:normaliserSM, ouvrirAtelier:ouvrirAtelier, ouvrir:ouvrir, fermer:fermer, ouvrirStudio:ouvrirStudio}; // poignée de test (page privée)
 
 /* Carte de France : contours des départements (IGN Admin Express via france-geojson, licence ouverte Etalab 2.0), simplifiés avec mapshaper ;
    centres des communes : API Découpage administratif (geo.api.gouv.fr). Projection équirectangulaire (cos 46,5°), 1 unité ≈ 1,1 km. */

@@ -111,6 +111,14 @@ Placement automatique :
 
 Mention sur le site : « photos de présentation, non contractuelles ».
 
+**Plan d'accès (version 18).** Chaque site créé avec le Studio se termine par une section « Nous trouver », que ce soit en mode sur mesure ou en maquette express. Elle contient :
+- un fond de plan dessiné avec un repère, sans aucune requête extérieure ;
+- le nom et l'adresse ;
+- un bouton **« Afficher la carte »**, qui charge la vraie carte Google Maps du lieu ;
+- un bouton **« Itinéraire »**.
+
+La carte Google ne se charge qu'après le clic, pour rester conforme au RGPD (Google dépose ses propres cookies). Les mentions légales du site le précisent. Le site Casa Mozzat a reçu la même section.
+
 **Précautions.** La page porte le bandeau « Maquette de démonstration » et une balise noindex. Elle n'affiche ni avis ni statistique. Les points non vérifiés (prix, horaires, livraison, « fait maison »…) figurent dans « À valider avec le client ».
 
 **Indices publics.** Les fiches portent un champ `indices` (OpenStreetMap et Sirene), affiché dans « Informations » et transmis à l'IA. Pour régénérer : `python outils/etudier_prospects.py --dossier EXPORT/prospects --sortie crm/donnees/indices.json`. Les nouveaux imports `prospects_osm.py` ajoutent les indices aux notes.
