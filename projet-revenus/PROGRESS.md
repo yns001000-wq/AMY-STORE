@@ -249,6 +249,17 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
 - Correction d'accessibilité : contraste des étiquettes « A répondu » et « Rendez-vous » et du badge IA en thème clair.
 - Preuves : test navigateur des domaines (validation du nom, calcul des dates, liste du jour, bouton « Fait », recalcul, mobile) ; axe : 0 violation sur la fiche ; cockpit, Studio et site sur mesure retestés ; cockpit publié en version 14.
 
+### 07/11/2026 — Cockpit, version 15 : sites sur mesure par l'IA et étude des établissements
+- Le Studio crée maintenant des sites sur mesure sur le modèle de Casa Mozzat, en 9 familles. Avant de rédiger, Claude (modèle le plus capable) étudie l'établissement.
+- En cas de doute, il vous demande de trancher entre ses hypothèses au lieu de deviner. Vous pouvez aussi coller des infos ou joindre des captures. Le métier de la fiche est corrigé si besoin.
+- Indices publics ajoutés à 334 fiches : OpenStreetMap (cuisine, vente à emporter, livraison, horaires) et Sirene (code NAF, enseigne), soit 147 cuisines et 258 établissements rapprochés. Outil `outils/etudier_prospects.py`. `prospects_osm.py` garde désormais ces indices.
+- Preuves :
+  - test navigateur de bout en bout, avec réponses d'IA simulées : étude sûre suivie de la rédaction, étude incertaine suivie de votre choix, métier corrigé, retouche puis annulation, téléchargement, réouverture sans nouvel appel, relance avec texte et capture ;
+  - 3 familles rendues sans débordement, axe : 0 violation en mobile et en ordinateur ;
+  - anciens tests repassés : fumée, Studio, domaines, carte, site Casa Mozzat ;
+  - cockpit publié en version 15.
+- Non testé : un appel réel au modèle, qui ne peut se faire que depuis votre compte. Le premier clic vous demandera d'autoriser Claude, y compris l'envoi d'images.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`

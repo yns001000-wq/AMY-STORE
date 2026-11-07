@@ -63,6 +63,43 @@ Quand un site est fait sur mesure pour un client (hors modèles du Studio), le c
 
 Données : document `sites/<id>` avec un champ `html` (la page, dont les images et les polices pointent vers les fichiers du cockpit `/_blob/…`). Premier site concerné : Casa Mozzat.
 
+## Création de sites sur mesure par l'IA (07/11/2026, version 15)
+Bouton **« ✦ Créer le site sur mesure »** dans la fiche prospect. Comptez 2 à 5 minutes : Claude utilise son modèle le plus capable.
+1. **Étude de l'établissement.** Claude pèse tous les indices :
+   - vos informations et vos captures, prioritaires ;
+   - le nom de l'établissement ;
+   - la cuisine indiquée sur OpenStreetMap ;
+   - la vente à emporter et la livraison ;
+   - le code NAF et l'enseigne Sirene ;
+   - les horaires et l'adresse.
+
+   Il sait que la catégorie de départ (« Snack », « Restaurant ») est souvent fausse. Il affiche le type trouvé, sa confiance, les indices, les doutes et les questions à poser au gérant.
+2. **Vérification.** Sous 75 % de confiance, ou en cas de contradiction, rien n'est rédigé : Claude vous propose 2 ou 3 hypothèses. Pour vous aider à choisir :
+   - liens vers Google Maps, une recherche web et Pages Jaunes ;
+   - un champ pour coller la description Google, la carte ou ce que le gérant a dit ;
+   - l'ajout de captures d'écran (fiche Google, menu), puis « Relancer l'étude ».
+
+   Quand le métier de la fiche était faux, il est corrigé, par exemple « Restaurant » devient « Pizzeria ». La correction est notée dans l'historique.
+3. **Rédaction et mise en page.** Le site complet reprend le modèle de Casa Mozzat :
+   - accueil avec le métier et la ville, statut ouvert ou fermé en direct ;
+   - bandeau défilant, incontournables ;
+   - carte ou tarifs complets en onglets ;
+   - la maison, desserts ou spécialités ;
+   - horaires et accès, questions fréquentes, appel final ;
+   - barre d'appel en mobile, données structurées pour Google.
+
+   Il existe 9 familles, chacune avec ses couleurs, sa police et son emblème : pizzeria, restauration rapide, restaurant, asiatique, café, pâtisserie, traiteur, beauté, artisan. Les couleurs proposées par l'IA sont corrigées automatiquement pour garder un contraste lisible.
+4. **Retouches.**
+   - « Demandez une modification » : l'IA réécrit les blocs concernés. « Annuler » revient en arrière.
+   - « Photo principale » et « Photos de la maison » : ajoutez les vraies photos du client. À défaut, des emblèmes élégants les remplacent.
+   - « Télécharger le site » : un fichier unique.
+
+**Précautions.** La page porte le bandeau « Maquette de démonstration » et une balise noindex. Elle n'affiche ni avis ni statistique. Les points non vérifiés (prix, horaires, livraison, « fait maison »…) figurent dans « À valider avec le client ».
+
+**Indices publics.** Les fiches portent un champ `indices` (OpenStreetMap et Sirene), affiché dans « Informations » et transmis à l'IA. Pour régénérer : `python outils/etudier_prospects.py --dossier EXPORT/prospects --sortie crm/donnees/indices.json`. Les nouveaux imports `prospects_osm.py` ajoutent les indices aux notes.
+
+Données : `sites/<id>` = `{surmesure, etude, html, maj}`, et l'étude courte dans `prospects/<id>.etude`. L'ancien générateur reste disponible sous « Maquette express ».
+
 ## Studio site (ajouté le 04/11/2026)
 Dans chaque fiche prospect, le bouton **« ✦ Générer le site »** crée en un clic une maquette complète :
 - **modèle adapté au métier** : artisan, beauté, ou commande WhatsApp pour une pâtisserie qui a un numéro de portable ;

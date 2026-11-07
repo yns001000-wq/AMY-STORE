@@ -31,6 +31,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import crm  # noqa: E402
+from etudier_prospects import resume as resume_indices  # noqa: E402
 
 SERVEURS = ["https://overpass-api.de/api/interpreter",
             "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
@@ -106,6 +107,7 @@ def extraire(donnees: dict) -> list[dict]:
             "email": t.get("email") or t.get("contact:email") or "",
             "site_existant": site or "", "facebook": t.get("contact:facebook") or t.get("facebook") or "",
             "osm": f"https://www.openstreetmap.org/{el['type']}/{el['id']}",
+            "indices": resume_indices(t, None)[0],  # cuisine, à emporter, horaires… : aide l'IA du cockpit à classer l'établissement
             "lat": el.get("lat") or (el.get("center") or {}).get("lat"), "lon": el.get("lon") or (el.get("center") or {}).get("lon"),
         })
     return res
@@ -194,7 +196,7 @@ def main(argv=None) -> int:
                           "ville": x["ville"], "code_postal": x["code_postal"], "adresse": x["adresse"],
                           "telephone": x["telephone"], "email": x["email"], "site_existant": "non",
                           "source": "OpenStreetMap (ODbL)", "statut": "nouveau",
-                          "notes": f"Fiche OSM : {x['osm']}" + (f" | Facebook : {x['facebook']}" if x["facebook"] else "")})
+                          "notes": f"Fiche OSM : {x['osm']}" + (f" | Facebook : {x['facebook']}" if x["facebook"] else "") + (f" | Indices : {x['indices']}" if x.get("indices") else "")})
             if not ligne["ville"] and x.get("lat") and a.villes:
                 ligne["ville"], cp = ville_depuis(x["lat"], x["lon"])
                 ligne["code_postal"] = ligne["code_postal"] or cp
