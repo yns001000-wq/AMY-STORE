@@ -702,5 +702,16 @@
   "date": "2026-11-07",
   "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A bowl of tonkotsu ramen with chashu pork, soft-boiled marinated egg, nori, spring onions and noodles lifted with chopsticks.",
   "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-asiatique-pho.webp",
+  "metier": "Asiatique",
+  "sujet": "pho",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A steaming bowl of Vietnamese pho with thin slices of beef, rice noodles, fresh herbs, lime and bean sprouts on the side.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
  }
 ]
