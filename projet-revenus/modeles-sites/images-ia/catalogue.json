@@ -790,5 +790,16 @@
   "date": "2026-11-07",
   "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. Fresh tagliatelle with a creamy mushroom sauce and grated parmesan in a white bowl, Italian trattoria table.",
   "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-cuisines-du-monde-salade.webp",
+  "metier": "Cuisines du monde",
+  "sujet": "salade",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A generous fresh composed salad with grilled chicken, avocado, cherry tomatoes, parmesan shavings and croutons.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
  }
 ]
