@@ -581,5 +581,38 @@
   "date": "2026-11-07",
   "prompt": "Authentic documentary food photograph taken in a real traditional French bistro, 35mm lens, soft natural window light, subtle film grain, realistic small imperfections, classic white or earthenware plates, wooden or zinc table, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks. If a person appears, show only hands or a figure from behind, never a recognisable face. A set bistro table seen from above with several traditional French dishes shared: terrine, salad, bread basket, carafe of red wine, natural light.",
   "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-pizzeria-four.webp",
+  "metier": "Pizzeria",
+  "sujet": "four",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A Neapolitan pizza baking inside a wood-fired brick oven, visible flames and glowing embers, a long pizza peel, warm light.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-pizzeria-margherita.webp",
+  "metier": "Pizzeria",
+  "sujet": "margherita",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A Neapolitan margherita pizza with leopard-spotted puffy crust, San Marzano tomato, melted fior di latte and fresh basil, on a rustic wooden board.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-pizzeria-diavola.webp",
+  "metier": "Pizzeria",
+  "sujet": "diavola",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A diavola pizza with spicy salami slices curling at the edges, tomato, mozzarella, a drizzle of chili oil, on a metal tray.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
  }
 ]
