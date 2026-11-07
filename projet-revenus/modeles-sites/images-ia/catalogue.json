@@ -713,5 +713,16 @@
   "date": "2026-11-07",
   "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A steaming bowl of Vietnamese pho with thin slices of beef, rice noodles, fresh herbs, lime and bean sprouts on the side.",
   "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-asiatique-wok.webp",
+  "metier": "Asiatique",
+  "sujet": "wok",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. Pad thai with prawns, rice noodles, crushed peanuts, bean sprouts and lime, served on a plate, wok kitchen atmosphere.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
  }
 ]
