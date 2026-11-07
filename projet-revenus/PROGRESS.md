@@ -227,6 +227,13 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
 - Outil `outils/carte_cockpit.py` pour regénérer les données de la carte.
 - Preuves : test navigateur de la carte (points, bulles, clic vers la fiche, zoom, glisser, filtre, 320 et 400 px sans débordement, mouvement réduit, aucune requête externe) ; axe : 0 violation en thème clair et sombre ; Studio et cockpit retestés ; cockpit publié en version 12.
 
+### 07/11/2026 — Premier client : refonte du site de Casa Mozzat (pizzeria, Tassin-la-Demi-Lune)
+- Nouveau site dans `clients/casa-mozzat/` : carte complète reprise de l'ancien site (21 pizzas, desserts, boissons), statut ouvert ou fermé en direct, appel en un geste, horaires, accès, parking, FAQ.
+- Référencement local : titre et h1 « Pizzeria artisanale à Tassin-la-Demi-Lune », schema.org `Restaurant` avec la carte (`Menu`) et `FAQPage`, coordonnées GPS, sitemap (dès que le domaine est connu). Aucune garantie de première place : la fiche Google Business Profile et les avis restent décisifs (plan dans LIVRAISON.md).
+- **Photos des plats refaites par IA à partir des vraies photos de l'ancien site** (nouvel outil `outils/images_reference.py`, endpoint « edits ») : 14 images, **coût réel 0,85 $**, plafond fixé à 1 $ dans le budget images déjà accordé. Mention « photos de présentation, non contractuelles » sur le site.
+- Preuves : QA de 320 à 1920 px conforme, axe : 0 violation ; Lighthouse 96 en performance sur mobile, 100 sur ordinateur, et 100 en accessibilité, bonnes pratiques et référencement.
+- À valider par la cliente : prix, livraison (non affichée), domaine (dépense), hébergement, mise à jour de la fiche Google.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`
