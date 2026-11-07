@@ -680,5 +680,16 @@
   "date": "2026-11-07",
   "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A generous portion of tiramisu in a glass dish, layers of mascarpone and coffee-soaked ladyfingers, dusted with cocoa.",
   "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-asiatique-sushi.webp",
+  "metier": "Asiatique",
+  "sujet": "sushi",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. An assorted sushi platter with salmon and tuna nigiri, maki and california rolls, wasabi and pickled ginger, on a dark slate.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
  }
 ]
