@@ -239,6 +239,10 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
 - 19 fichiers envoyés au cockpit (photos, polices, capture). Les liens internes défilent correctement dans l'aperçu.
 - Preuves : test navigateur (polices et 27 images chargées, aucun débordement, liens internes, retour au Studio normal à la fermeture) ; Studio, carte et cockpit retestés sans régression ; cockpit publié en version 13.
 
+### 07/11/2026 — Casa Mozzat : site vitrine uniquement
+- Demande de la cliente : un site vitrine avec son numéro, sans commande en ligne. Le site n'avait ni WhatsApp ni commande en ligne ; les boutons « Commander » deviennent « Appeler » (en-tête, accueil, carte, barre mobile), la FAQ et les textes ne parlent plus de commande. Le champ WhatsApp de la fiche de secours du cockpit est retiré.
+- Preuves : QA conforme (7 largeurs, axe : 0 violation), test du site dans le cockpit OK ; cockpit mis à jour (site et capture d'aperçu).
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`
