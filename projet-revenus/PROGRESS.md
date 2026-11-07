@@ -243,6 +243,12 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
 - Demande de la cliente : un site vitrine avec son numéro, sans commande en ligne. Le site n'avait ni WhatsApp ni commande en ligne ; les boutons « Commander » deviennent « Appeler » (en-tête, accueil, carte, barre mobile), la FAQ et les textes ne parlent plus de commande. Le champ WhatsApp de la fiche de secours du cockpit est retiré.
 - Preuves : QA conforme (7 largeurs, axe : 0 violation), test du site dans le cockpit OK ; cockpit mis à jour (site et capture d'aperçu).
 
+### 07/11/2026 — Cockpit, version 14 : rappels de noms de domaine
+- Carte « Nom de domaine » dans la fiche client et rappels automatiques (renouvellement les années prises en charge, puis passage à la charge du client un mois avant), affichés dans « À faire aujourd'hui ».
+- Offre Casa Mozzat : site à 120 €, domaine pris en charge 2 ans, puis environ 15 € par an à sa charge. casamozzat.fr est déjà réservé (OVH, avril 2025, propriétaire anonyme) : lui demander s'il est à elle ; casa-mozzat.fr était libre le 07/11.
+- Correction d'accessibilité : contraste des étiquettes « A répondu » et « Rendez-vous » et du badge IA en thème clair.
+- Preuves : test navigateur des domaines (validation du nom, calcul des dates, liste du jour, bouton « Fait », recalcul, mobile) ; axe : 0 violation sur la fiche ; cockpit, Studio et site sur mesure retestés ; cockpit publié en version 14.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`

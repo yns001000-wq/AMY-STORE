@@ -47,6 +47,14 @@ Sur la vue « Aujourd'hui », une carte de France affiche chaque prospect à l'e
 
 La carte est un dessin SVG intégré à la page : aucune bibliothèque ni requête externe (Three.js a été retiré). Elle reste immobile si votre système demande de réduire les animations. Données : contours IGN Admin Express (licence ouverte Etalab 2.0) et centres des communes de geo.api.gouv.fr, préparés avec `outils/carte_cockpit.py`. Les cartes chiffrées s'inclinent toujours légèrement sous la souris.
 
+## Noms de domaine et rappels (07/11/2026)
+Offre type : le domaine (environ 15 € par an) est pris en charge par Mysite pendant N années (2 par défaut), puis passe à la charge du client. Le domaine est toujours **au nom du client**.
+- Dans la fiche d'un client (statut « A répondu », « Rendez-vous », « Devis » ou « Gagné »), la carte **Nom de domaine** se remplit avec le nom, la date d'achat, le nombre d'années prises en charge et le prix annuel.
+- Les rappels se programment tout seuls :
+  - chaque année prise en charge, 15 jours avant l'échéance : vérifier le renouvellement (à votre charge) ;
+  - 30 jours avant la fin de la prise en charge : prévenir le client que le domaine passe à sa charge et mettre le renouvellement à son nom.
+- Les rappels arrivés à échéance apparaissent dans « À faire aujourd'hui » (étiquette « Domaine »), et le bouton « Fait » les retire. Changer la date d'achat recalcule les rappels.
+
 ## Sites sur mesure (07/11/2026)
 Quand un site est fait sur mesure pour un client (hors modèles du Studio), le cockpit l'affiche **tel quel** :
 - dans la fiche, le bloc « Site du prospect » indique « Site sur mesure » et propose **Voir le site** ;

@@ -7,7 +7,7 @@
 :root{
   --bg:#f3f4f8; --surface:#ffffff; --surface-2:#eceef4; --line:#dde1ea; --ink:#121a2f; --soft:#5a6480;
   --side:#121a2f; --side-ink:#c9d0e2; --side-soft:#7d88a6; --side-hl:#1f2a45;
-  --accent:#d9622b; --accent-2:#f0a03c; --accent-ink:#ffffff; --accent-soft:#fbe8de;
+  --accent:#d9622b; --accent-2:#f0a03c; --accent-ink:#ffffff; --accent-soft:#fbe8de; --accent-texte:#a3401a;
   --ok:#1d7a4c; --ok-soft:#dcf2e6; --warn:#a35a00; --warn-soft:#fdf0d8; --bad:#b42318; --bad-soft:#fbe3e1; --info:#2453a6; --info-soft:#e2eafa;
   --ui:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
   --r:14px; --ombre:0 1px 2px rgba(18,26,47,.05),0 8px 24px -12px rgba(18,26,47,.12);
@@ -15,13 +15,13 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0c111c; --surface:#141b2a; --surface-2:#1c2436; --line:#2a3348; --ink:#e8ecf5; --soft:#9aa4bd;
   --side:#080c15; --side-ink:#c9d0e2; --side-soft:#6f7a96; --side-hl:#18213a;
-  --accent:#ef7a45; --accent-2:#f4b45a; --accent-ink:#1a0d06; --accent-soft:#3a2418;
+  --accent:#ef7a45; --accent-2:#f4b45a; --accent-ink:#1a0d06; --accent-soft:#3a2418; --accent-texte:#ef7a45;
   --ok:#5fd39a; --ok-soft:#173326; --warn:#f0b04a; --warn-soft:#3a2c12; --bad:#ff8f84; --bad-soft:#3d1c1a; --info:#8db2ff; --info-soft:#1c2a47;
   --ombre:0 1px 2px rgba(0,0,0,.3),0 10px 30px -12px rgba(0,0,0,.5); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0c111c; --surface:#141b2a; --surface-2:#1c2436; --line:#2a3348; --ink:#e8ecf5; --soft:#9aa4bd;
   --side:#080c15; --side-ink:#c9d0e2; --side-soft:#6f7a96; --side-hl:#18213a;
-  --accent:#ef7a45; --accent-2:#f4b45a; --accent-ink:#1a0d06; --accent-soft:#3a2418;
+  --accent:#ef7a45; --accent-2:#f4b45a; --accent-ink:#1a0d06; --accent-soft:#3a2418; --accent-texte:#ef7a45;
   --ok:#5fd39a; --ok-soft:#173326; --warn:#f0b04a; --warn-soft:#3a2c12; --bad:#ff8f84; --bad-soft:#3d1c1a; --info:#8db2ff; --info-soft:#1c2a47;
   --ombre:0 1px 2px rgba(0,0,0,.3),0 10px 30px -12px rgba(0,0,0,.5); color-scheme:dark}
 *{box-sizing:border-box}
@@ -75,7 +75,7 @@ h2{font-size:15px;margin:0 0 12px;letter-spacing:-.005em}
 /* bloc IA */
 .ia-bloc{position:relative;border:1px solid transparent;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(135deg,var(--accent),var(--accent-2) 60%,var(--line)) border-box}
 .ia-titre{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.badge-ia{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 9px}
+.badge-ia{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-texte);background:var(--accent-soft);border-radius:999px;padding:2px 9px}
 .ia-texte{white-space:pre-wrap;line-height:1.6}
 .ia-texte.vide{color:var(--soft)}
 .pense::after{content:"";display:inline-block;width:8px;height:8px;margin-left:6px;border-radius:50%;background:var(--accent);animation:pulse 1s infinite ease-in-out}
@@ -91,7 +91,7 @@ h2{font-size:15px;margin:0 0 12px;letter-spacing:-.005em}
 .chip::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
 .st-nouveau{background:var(--info-soft);color:var(--info)}
 .st-contacte,.st-devis{background:var(--warn-soft);color:var(--warn)}
-.st-repondu,.st-rdv{background:var(--accent-soft);color:var(--accent)}
+.st-repondu,.st-rdv{background:var(--accent-soft);color:var(--accent-texte)}
 .st-gagne{background:var(--ok-soft);color:var(--ok)}
 .retard{color:var(--bad);font-weight:600}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;font-weight:600;cursor:pointer;text-decoration:none;color:var(--ink)}
@@ -143,6 +143,11 @@ td.num,.mono{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular
 .tel .mono{font-size:16px;flex:1}
 .actions{display:flex;flex-wrap:wrap;gap:6px}
 .champs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.rappels{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+.rappels li{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font-size:13px}
+.rappels li.fait{opacity:.6}.rappels li.fait span{text-decoration:line-through}
+.rappels time{font-family:var(--mono);font-weight:600;margin-right:6px}
+.dom-tag{font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px;background:var(--surface-2);border:1px solid var(--line);white-space:nowrap}
 .champs input,.champs select{width:100%;min-width:0}
 @media(max-width:520px){.champs{grid-template-columns:minmax(0,1fr)}.champs label.l2{grid-column:auto}}
 #seuils div{flex-wrap:wrap}
@@ -199,7 +204,7 @@ label.btn{position:relative}label.btn:focus-within{outline:2px solid var(--accen
 .st-vue.mobile iframe{width:390px;max-width:100%}
 .studio.sur-mesure .st-panneau,.studio.sur-mesure #st-annuler{display:none}
 .studio.sur-mesure .st-corps{grid-template-columns:minmax(0,1fr)}
-.badge-mesure{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent-ink,#9a3412);background:color-mix(in srgb,var(--accent) 14%,transparent);border-radius:999px;padding:2px 8px;margin-left:6px;vertical-align:middle}
+.badge-mesure{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent-texte);background:color-mix(in srgb,var(--accent) 14%,transparent);border-radius:999px;padding:2px 8px;margin-left:6px;vertical-align:middle}
 .st-charge{position:absolute;top:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:12px;z-index:1}
 body.studio-ouvert{overflow:hidden}
 .liens-num{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;width:100%}
@@ -443,6 +448,17 @@ function chip(st){ return el("span", {cls:"chip st-" + st, text: LIB[st] || st})
 function copier(texte, quoi){ try { navigator.clipboard.writeText(texte).then(function(){ toast((quoi || "Texte") + " copié"); }, function(){ toast("Copie impossible ici : sélectionnez le texte"); }); } catch(e){ toast("Copie impossible ici : sélectionnez le texte"); } }
 function echu(p){ return p.date_prochaine_action && p.date_prochaine_action <= aujourdhui() && !CLOS[p.statut]; }
 function journal(p, texte){ var j = (p.journal || []).slice(); j.unshift({d: aujourdhui(), t: texte}); return j.slice(0,50); }
+/* Noms de domaine : pris en charge N années par Mysite, puis à la charge du client. Rappels programmés à partir de la date d'achat. */
+function plusAns(i, n, jours){ var d = new Date(i + "T12:00:00"); d.setFullYear(d.getFullYear() + n); d.setDate(d.getDate() - (jours || 0)); return iso(d); }
+function rappelsDomaine(dom, client){ if (!dom || !dom.nom || !dom.achat) return [];
+  var n = Math.max(0, parseInt(dom.offert, 10) || 0), prix = dom.prix ? String(dom.prix).replace(".", ",") + " €" : "le prix", l = [], anciens = {};
+  (dom.rappels || []).forEach(function(r){ anciens[r.id + "@" + r.date] = r.fait; });
+  for (var a = 1; a < n; a++) l.push({id:"renouv-" + a, date:plusAns(dom.achat, a, 15), texte:"Vérifier le renouvellement de " + dom.nom + " (à votre charge, année " + (a + 1) + ", environ " + prix + ")"});
+  l.push({id:"passage", date:plusAns(dom.achat, n, 30), texte:"Prévenir " + client + " : " + dom.nom + " passe à sa charge le " + dateLong(plusAns(dom.achat, n)) + " (environ " + prix + " par an). Mettre le renouvellement à son nom."});
+  l.forEach(function(r){ r.fait = !!anciens[r.id + "@" + r.date]; }); return l; }
+function dateLong(i){ var p = i.split("-"); return p[2] + "/" + p[1] + "/" + p[0]; }
+function rappelsDus(){ var t = aujourdhui(), l = []; S.pros.forEach(function(p){ ((p.domaine||{}).rappels || []).forEach(function(r){ if (!r.fait && r.date <= t) l.push({p:p, r:r}); }); });
+  return l.sort(function(a, b){ return a.r.date < b.r.date ? -1 : 1; }); }
 function erreurIA(e){ var c = e && e.code; return c === "not_granted" ? "Vous avez refusé l'accès à Claude pour cette visite. Rechargez la page pour l'autoriser." : c === "rate_limited" ? "Trop de demandes d'un coup : réessayez dans une minute." : c === "cancelled" ? "Arrêté." : "L'IA n'a pas pu répondre. Réessayez dans un instant."; }
 
 /* ---------- score de priorité (local, sans IA, explicable) ---------- */
@@ -493,9 +509,12 @@ function rendreJour(){
   ].forEach(function(x){ var b = el("div",{cls:"carte kpi"},[el("div",{cls:"l",text:x[0]}),el("div",{cls:"v",text:x[1]}),el("div",{cls:"s",text:x[2]})]);
     if (x[3] !== undefined){ var j = el("div",{cls:"jauge"}); var s = el("span"); s.style.width = (x[3]*100).toFixed(1) + "%"; j.appendChild(s); b.appendChild(j); } k.appendChild(b); });
   var jour = S.pros.filter(echu).sort(function(a,b){ return a.date_prochaine_action < b.date_prochaine_action ? -1 : 1; });
-  $("nb-jour").textContent = jour.length;
+  var dus = rappelsDus();
+  $("nb-jour").textContent = jour.length + dus.length;
   var lj = $("liste-jour"); lj.textContent = "";
-  if (!jour.length) lj.appendChild(el("li",{cls:"vide",text: S.charge ? "Rien de programmé. Les meilleures opportunités vous attendent ci-dessous." : "Chargement…"}));
+  dus.forEach(function(x){ var r = x.r.date < aujourdhui();
+    lj.appendChild(el("li",{onclick:function(){ ouvrir(x.p.id); }},[el("span",{cls:"dom-tag",text:"Domaine"}), el("div",{cls:"q"},[el("b",{text:x.p.entreprise}),el("span",{cls: r ? "retard" : "",text:x.r.texte + (r ? " · en retard (depuis le " + dateLong(x.r.date) + ")" : "")})])])); });
+  if (!jour.length && !dus.length) lj.appendChild(el("li",{cls:"vide",text: S.charge ? "Rien de programmé. Les meilleures opportunités vous attendent ci-dessous." : "Chargement…"}));
   jour.slice(0,8).forEach(function(p){ var r = p.date_prochaine_action < aujourdhui();
     lj.appendChild(el("li",{onclick:function(){ ouvrir(p.id); }},[pastille(p), el("div",{cls:"q"},[el("b",{text:p.entreprise}),el("span",{cls: r ? "retard" : "",text:(p.prochaine_action||"Action à préciser") + (r ? " · en retard (" + dateFr(p.date_prochaine_action) + ")" : "")})]), chip(p.statut)])); });
   var lt = $("liste-top"); lt.textContent = "";
@@ -661,6 +680,8 @@ function rendreFiche(){
   bs.appendChild(bg);
   c.appendChild(el("div",{cls:"carte"},[el("h2",{style:"margin-top:0",text:"Site du prospect"}),
     el("p",{cls:"note",style:"margin:0 0 10px",text: sd && sd.html ? "Site sur mesure, enregistré le " + dateFr((sd.maj||"").slice(0,10)) + " : c'est exactement la version préparée pour le client. Affichez-la en mobile ou en ordinateur pour la montrer, ou téléchargez-la." : sd ? "Maquette enregistrée le " + dateFr((sd.maj||"").slice(0,10)) + ". Ouvrez le Studio pour la voir, la retoucher avec l'IA ou la télécharger." : "Un clic : maquette complète adaptée à son métier (avis, prix et horaires d'exemple signalés), puis personnalisée par l'IA."}), bs]));
+  // nom de domaine (clients et prospects avancés)
+  if (p.domaine || ["repondu","rdv","devis","gagne"].indexOf(p.statut) >= 0) c.appendChild(carteDomaine(p));
   // résultat
   c.appendChild(el("div",null,[el("h2",{text:"Noter le résultat"}),(function(){ var a = el("div",{cls:"actions"}); ACTIONS.forEach(function(x){ a.appendChild(el("button",{cls:"btn petit " + x[1],type:"button",text:x[0],onclick:function(){ action(p, x); }})); }); return a; })(), el("div",{id:"zone-action",style:"margin-top:8px"})]));
   // champs
@@ -683,6 +704,29 @@ function rendreFiche(){
   if (!(p.journal||[]).length) jl.appendChild(el("li",{cls:"note",text:"Aucun échange noté pour l'instant."}));
   c.appendChild(el("div",null,[el("h2",{text:"Historique"}),jl]));
 }
+
+function carteDomaine(p){ var d = p.domaine || {}, z = el("div",{cls:"champs"});
+  function ch(cle, lib, type, attrs){ var i = el("input",Object.assign({id:"d-" + cle, type:type || "text"}, attrs || {})); i.value = d[cle] != null ? d[cle] : (cle === "offert" ? 2 : cle === "prix" ? 15 : ""); i.dataset.dom = cle; z.appendChild(el("label",null,[lib, i])); }
+  ch("nom", "Nom de domaine", "text", {placeholder:"exemple.fr", autocomplete:"off"}); ch("achat", "Date d'achat", "date");
+  ch("offert", "Années prises en charge par vous", "number", {min:"0", max:"10", step:"1"}); ch("prix", "Prix annuel (€)", "number", {min:"0", step:"0.5"});
+  var bloc = el("div",{cls:"carte"},[el("h2",{style:"margin-top:0",text:"Nom de domaine"})]);
+  var rs = d.rappels || [];
+  if (d.nom && d.achat){ var fin = plusAns(d.achat, +d.offert || 0);
+    bloc.appendChild(el("p",{cls:"note",style:"margin:0 0 10px",text:(+d.offert ? "Pris en charge par vous jusqu'au " + dateLong(fin) + " (" + d.offert + " an" + (d.offert > 1 ? "s" : "") + "). " : "") + "Ensuite, à la charge du client : environ " + String(d.prix || 15).replace(".", ",") + " € par an."}));
+    var ul = el("ul",{cls:"rappels"});
+    rs.forEach(function(r, i){ ul.appendChild(el("li",{cls:r.fait ? "fait" : ""},[el("span",null,[el("time",{text:dateLong(r.date)}), r.texte]),
+      el("button",{cls:"btn petit",type:"button",text:r.fait ? "Rouvrir" : "Fait","aria-label":(r.fait ? "Rouvrir le rappel : " : "Marquer comme fait : ") + r.texte,onclick:function(){ var n = JSON.parse(JSON.stringify(d)); n.rappels[i].fait = !r.fait;
+        ecrire(p.id, {domaine:n, journal:journal(p, (r.fait ? "Rappel rouvert : " : "Rappel fait : ") + r.texte)}, r.fait ? "Rappel rouvert" : "Rappel marqué comme fait"); }})])); });
+    bloc.appendChild(ul); }
+  else bloc.appendChild(el("p",{cls:"note",style:"margin:0 0 10px",text:"Renseignez le domaine et sa date d'achat : les rappels (renouvellement, puis passage à la charge du client) se programment tout seuls et apparaîtront dans « À faire aujourd'hui »."}));
+  bloc.appendChild(el("details",{open: !(d.nom && d.achat) ? "" : null},[el("summary",{style:"cursor:pointer;font-weight:600;margin:12px 0 8px",text: d.nom ? "Modifier" : "Renseigner le domaine"}), z,
+    el("p",{style:"margin:10px 0 0"},[el("button",{cls:"btn p petit",type:"button",text:"Enregistrer le domaine",onclick:function(){ var n = {};
+      z.querySelectorAll("[data-dom]").forEach(function(i){ n[i.dataset.dom] = i.type === "number" ? (i.value === "" ? null : +i.value) : i.value.trim().toLowerCase(); });
+      if (!n.nom){ toast("Indiquez le nom de domaine"); return; }
+      if (n.nom && !/^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(n.nom)){ toast("Nom de domaine invalide (exemple : casa-mozzat.fr)"); return; }
+      n.rappels = rappelsDomaine(Object.assign({}, n, {rappels:d.rappels}), p.entreprise);
+      ecrire(p.id, {domaine:n, journal:journal(p, "Domaine " + n.nom + (n.achat ? " acheté le " + dateLong(n.achat) + ", " + n.rappels.length + " rappel(s) programmé(s)" : " noté (date d'achat à compléter)"))}, n.achat ? "Domaine enregistré, rappels programmés" : "Domaine enregistré"); }})])]));
+  return bloc; }
 
 function resumeProspect(p){
   return p.entreprise + " — " + (p.metier||"métier ?") + " à " + (p.ville||"?") + " (" + (p.pays||"FR") + "). Statut : " + (LIB[p.statut]||p.statut) +
