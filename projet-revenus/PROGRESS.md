@@ -208,6 +208,18 @@ _Dernière mise à jour : 4 novembre 2026 (refonte des sites clients)._
   - Lighthouse plombier : 99 sur mobile et 100 sur ordinateur en performance, 100 ailleurs ;
   - cockpit publié en version 10.
 
+### 07/11/2026 — Modèle restaurant, L'Avenue, prospects avec portable
+- **L'Avenue** (Lyon 8e, 06 66 09 45 59) était classée « snack » à tort. Corrigée en restaurant, avec une nouvelle maquette dans le Studio et un aperçu dans sa fiche.
+- **Nouveau modèle « restaurant »** (générateur Python et Studio) :
+  - carte de cuisine traditionnelle française : 4 entrées, 6 plats, 4 desserts, 2 formules ;
+  - « Nos spécialités » : 6 plats avec photo ;
+  - bouton « Réserver une table », par WhatsApp quand le numéro est un portable ;
+  - horaires de service midi et soir, questions fréquentes propres au restaurant.
+- **12 photos de plats** générées dans un style « vraie photo de bistrot ». **Coût réel : 0,53 $**, sous le plafond d'1 € accordé.
+- **Prospects avec portable** : filtre `--portables` (06/07 uniquement). **124 nouveaux prospects** : 81 restaurants et 43 snacks, sans site web, dans le Rhône, la Loire et l'Isère. Le cockpit en compte 374.
+- **Priorité aux portables** dans le score du cockpit (+10 points).
+- Preuves : tests unitaires OK ; QA conforme (axe : 0 violation) ; Studio, 3D et cockpit retestés ; cockpit publié en version 11.
+
 ## Paramètres de prospection (à compléter par vous)
 - Zone : **toute la France, Belgique francophone, Suisse romande** (décision du 03/11/2026). Ordre : France → Belgique → Suisse (MARCHES.md)
 - Premier lot de départements (semaine 1) : `69,42,38`

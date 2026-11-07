@@ -77,6 +77,18 @@ SUJETS = {
                    ("plat", "A refined plated main course in a French bistro: seared fish on vegetables with a light sauce, white plate, natural light."),
                    ("geste", "A chef's hands plating a dish with tweezers in a professional kitchen, steam and warm light, face not visible."),
                    ("terrasse", "A sunny restaurant terrace in a French town square with set tables and plants, inviting atmosphere, no people.")],
+    "Restaurant traditionnel": [("bourguignon", "Boeuf bourguignon in a small cast-iron cocotte, tender beef, carrots, lardons, glossy red-wine sauce, a slice of country bread beside it."),
+("blanquette", "Blanquette de veau a l'ancienne in a deep white plate, creamy sauce, mushrooms and small onions, a side of white rice."),
+("quenelle", "A Lyon pike quenelle baked in a small gratin dish with a golden Nantua crayfish sauce, typical Lyon bouchon dish."),
+("confit", "Duck leg confit with crispy golden skin and sarladaise potatoes with parsley and garlic, served on a classic plate."),
+("oignon", "French onion soup in a traditional brown earthenware bowl with a thick golden melted cheese crust and croutons."),
+("oeuf-meurette", "Oeufs en meurette: poached eggs in a dark red-wine sauce with lardons and croutons, served in a shallow bowl."),
+("lyonnaise", "Salade lyonnaise with frisee lettuce, crispy lardons, croutons and a soft poached egg, rustic table."),
+("creme-brulee", "Creme brulee in a white ramekin with a caramelised crust just cracked by a spoon, vanilla bean visible."),
+("tatin", "A slice of tarte Tatin with deeply caramelised apples and a spoonful of creme fraiche on the side."),
+("ile-flottante", "Ile flottante: soft poached meringue floating on vanilla creme anglaise with a thin caramel drizzle, glass coupe."),
+("ardoise", "A French bistro dining room at lunch time, zinc bar, bentwood chairs, a blank chalk menu board without any writing, warm daylight, no people."),
+("table", "A set bistro table seen from above with several traditional French dishes shared: terrine, salad, bread basket, carafe of red wine, natural light.")],
     "Coiffure": [("accueil", "A bright modern hair salon interior with wooden floor, round mirrors, plants and cognac leather chairs, no people."),
                  ("geste", "A hairdresser's hands blow-drying long glossy brown hair, client seen from behind, soft salon light."),
                  ("couleur", "Close-up of a colourist's brush applying balayage on hair sections with foils, seen from behind."),
@@ -94,6 +106,11 @@ def slug(t: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", t).strip("-")
 
 
+STYLE_CUISINE = ("Authentic documentary food photograph taken in a real traditional French bistro, 35mm lens, soft natural window light, "
+                 "subtle film grain, realistic small imperfections, classic white or earthenware plates, wooden or zinc table, appetising but not glossy, "
+                 "natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks. ")
+
+
 def commandes(metiers: list[str], prompt: str | None, nom: str | None, qualite: str) -> list[dict]:
     if prompt:
         return [{"metier": "Personnalisé", "sujet": nom or "image", "prompt": STYLE + SANS_VISAGE + prompt, "qualite": qualite}]
@@ -102,7 +119,7 @@ def commandes(metiers: list[str], prompt: str | None, nom: str | None, qualite: 
         if m not in SUJETS:
             raise SystemExit(f"Métier inconnu : {m}. Choix : {', '.join(SUJETS)}")
         for sujet, p in SUJETS[m]:
-            res.append({"metier": m, "sujet": sujet, "prompt": STYLE + SANS_VISAGE + p,
+            res.append({"metier": m, "sujet": sujet, "prompt": (STYLE_CUISINE if m == "Restaurant traditionnel" else STYLE) + SANS_VISAGE + p,
                         "qualite": "high" if sujet == "accueil" and qualite == "auto" else ("medium" if qualite == "auto" else qualite)})
     return res
 

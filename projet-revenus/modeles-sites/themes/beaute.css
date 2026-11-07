@@ -54,3 +54,14 @@ h3{font-size:1.25rem;font-weight:400;letter-spacing:.02em}
 .reserver .actions{justify-content:center}
 .reserver .btn--ligne{color:#fff;border-color:#fff}
 .reserver .btn--ligne:hover{background:#fff;color:var(--encre)}
+/* Restaurant : spécialités avec photo */
+.specialites{display:grid;gap:2.25rem 1.75rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:40rem){.specialites{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:64rem){.specialites{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.specialite .visuel{overflow:hidden;border-radius:var(--rayon)}
+.specialite img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.specialite .ligne{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin-top:1rem}
+.specialite h3{margin:0;font:400 1.3rem/1.25 var(--titre);color:var(--encre)}
+.specialite .prix{font-weight:600;color:var(--encre);white-space:nowrap}
+.specialite p{margin:.35rem 0 0;color:var(--gris);font-size:.95rem}
+@media (hover:hover) and (prefers-reduced-motion:no-preference){.specialite img{transition:transform .7s cubic-bezier(.2,.7,.2,1)}.specialite:hover img{transform:scale(1.045)}}

@@ -449,5 +449,137 @@
   "date": "2026-11-06",
   "prompt": "Editorial photograph, natural daylight, realistic textures, shallow depth of field, calm premium mood, French small business, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A calm spa cabin with candles, rolled towels and a wooden bench, warm ambience.",
   "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-restaurant-traditionnel-bourguignon.webp",
+  "metier": "Restaurant traditionnel",
+  "sujet": "bourguignon",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real traditional French bistro, 35mm lens, soft natural window light, subtle film grain, realistic small imperfections, classic white or earthenware plates, wooden or zinc table, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks. If a person appears, show only hands or a figure from behind, never a recognisable face. Boeuf bourguignon in a small cast-iron cocotte, tender beef, carrots, lardons, glossy red-wine sauce, a slice of country bread beside it.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-restaurant-traditionnel-blanquette.webp",
+  "metier": "Restaurant traditionnel",
+  "sujet": "blanquette",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real traditional French bistro, 35mm lens, soft natural window light, subtle film grain, realistic small imperfections, classic white or earthenware plates, wooden or zinc table, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks. If a person appears, show only hands or a figure from behind, never a recognisable face. Blanquette de veau a l'ancienne in a deep white plate, creamy sauce, mushrooms and small onions, a side of white rice.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-restaurant-traditionnel-quenelle.webp",
+  "metier": "Restaurant traditionnel",
+  "sujet": "quenelle",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real traditional French bistro, 35mm lens, soft natural window light, subtle film grain, realistic small imperfections, classic white or earthenware plates, wooden or zinc table, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks. If a person appears, show only hands or a figure from behind, never a recognisable face. A Lyon pike quenelle baked in a small gratin dish with a golden Nantua crayfish sauce, typical Lyon bouchon dish.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-restaurant-traditionnel-confit.webp",
+  "metier": "Restaurant traditionnel",
+  "sujet": "confit",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real traditional French bistro, 35mm lens, soft natural window light, subtle film grain, realistic small imperfections, classic white or earthenware plates, wooden or zinc table, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks. If a person appears, show only hands or a figure from behind, never a recognisable face. Duck leg confit with crispy golden skin and sarladaise potatoes with parsley and garlic, served on a classic plate.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-restaurant-traditionnel-oignon.webp",
+  "metier": "Restaurant traditionnel",
+  "sujet": "oignon",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real traditional French bistro, 35mm lens, soft natural window light, subtle film grain, realistic small imperfections, classic white or earthenware plates, wooden or zinc table, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks. If a person appears, show only hands or a figure from behind, never a recognisable face. French onion soup in a traditional brown earthenware bowl with a thick golden melted cheese crust and croutons.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-restaurant-traditionnel-oeuf-meurette.webp",
+  "metier": "Restaurant traditionnel",
+  "sujet": "oeuf-meurette",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real traditional French bistro, 35mm lens, soft natural window light, subtle film grain, realistic small imperfections, classic white or earthenware plates, wooden or zinc table, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks. If a person appears, show only hands or a figure from behind, never a recognisable face. Oeufs en meurette: poached eggs in a dark red-wine sauce with lardons and croutons, served in a shallow bowl.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-restaurant-traditionnel-lyonnaise.webp",
+  "metier": "Restaurant traditionnel",
+  "sujet": "lyonnaise",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real traditional French bistro, 35mm lens, soft natural window light, subtle film grain, realistic small imperfections, classic white or earthenware plates, wooden or zinc table, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks. If a person appears, show only hands or a figure from behind, never a recognisable face. Salade lyonnaise with frisee lettuce, crispy lardons, croutons and a soft poached egg, rustic table.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-restaurant-traditionnel-creme-brulee.webp",
+  "metier": "Restaurant traditionnel",
+  "sujet": "creme-brulee",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real traditional French bistro, 35mm lens, soft natural window light, subtle film grain, realistic small imperfections, classic white or earthenware plates, wooden or zinc table, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks. If a person appears, show only hands or a figure from behind, never a recognisable face. Creme brulee in a white ramekin with a caramelised crust just cracked by a spoon, vanilla bean visible.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-restaurant-traditionnel-tatin.webp",
+  "metier": "Restaurant traditionnel",
+  "sujet": "tatin",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real traditional French bistro, 35mm lens, soft natural window light, subtle film grain, realistic small imperfections, classic white or earthenware plates, wooden or zinc table, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks. If a person appears, show only hands or a figure from behind, never a recognisable face. A slice of tarte Tatin with deeply caramelised apples and a spoonful of creme fraiche on the side.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-restaurant-traditionnel-ile-flottante.webp",
+  "metier": "Restaurant traditionnel",
+  "sujet": "ile-flottante",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real traditional French bistro, 35mm lens, soft natural window light, subtle film grain, realistic small imperfections, classic white or earthenware plates, wooden or zinc table, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks. If a person appears, show only hands or a figure from behind, never a recognisable face. Ile flottante: soft poached meringue floating on vanilla creme anglaise with a thin caramel drizzle, glass coupe.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-restaurant-traditionnel-ardoise.webp",
+  "metier": "Restaurant traditionnel",
+  "sujet": "ardoise",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real traditional French bistro, 35mm lens, soft natural window light, subtle film grain, realistic small imperfections, classic white or earthenware plates, wooden or zinc table, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks. If a person appears, show only hands or a figure from behind, never a recognisable face. A French bistro dining room at lunch time, zinc bar, bentwood chairs, a blank chalk menu board without any writing, warm daylight, no people.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-restaurant-traditionnel-table.webp",
+  "metier": "Restaurant traditionnel",
+  "sujet": "table",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real traditional French bistro, 35mm lens, soft natural window light, subtle film grain, realistic small imperfections, classic white or earthenware plates, wooden or zinc table, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks. If a person appears, show only hands or a figure from behind, never a recognisable face. A set bistro table seen from above with several traditional French dishes shared: terrine, salad, bread basket, carafe of red wine, natural light.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
  }
 ]

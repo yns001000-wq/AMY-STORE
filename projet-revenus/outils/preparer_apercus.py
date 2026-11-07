@@ -73,7 +73,7 @@ METIERS = {
                                      ("Assiettes et menus", "Assiette kebab, menus avec frites et boisson."),
                                      ("À emporter", "Commande prête à l'heure, sans attente."),
                                      ("Livraison", "Dans le secteur, selon disponibilité.")], {}),
-    "Restaurant": ("artisan", "#7c2d12", [("Formule du midi", "Entrée et plat ou plat et dessert, renouvelée chaque semaine."),
+    "Restaurant": ("restaurant", "#7c2d12", [("Formule du midi", "Entrée et plat ou plat et dessert, renouvelée chaque semaine."),
                                           ("Carte du soir", "Cuisine de saison, produits frais."),
                                           ("Groupes et événements", "Repas d'affaires, anniversaires, privatisation."),
                                           ("À emporter", "Une partie de la carte, prête à l'heure convenue.")], {}),
@@ -114,7 +114,7 @@ ACCROCHES = {
     "Traiteur": "Buffets, plateaux repas et menus pour vos événements, à {ville} et alentours.",
     "Pâtisserie": "Gâteaux de fête et douceurs sur commande, à {ville}.",
     "Snack": "Tacos, burgers et assiettes faits minute à {ville}. Commandez sur WhatsApp, c'est prêt à l'heure.",
-    "Restaurant": "Cuisine de saison et accueil chaleureux à {ville}. Réservez votre table en un appel.",
+    "Restaurant": "Bœuf bourguignon, quenelle sauce Nantua, tarte Tatin : une cuisine de tradition, faite maison avec des produits de saison, à {ville}.",
     "Coiffure": "Coupe, couleur et soins à {ville}. Tarifs affichés, rendez-vous en un geste.",
     "Soins de beauté": "Soins et beauté à {ville}. Tarifs affichés, rendez-vous en un geste.",
 }
@@ -202,9 +202,9 @@ def contenu_exemple(fiche: dict, metier: str) -> None:
     fiche.pop("avis_a_venir", None)
     fiche["avis"] = {"note": 4.8, "nombre": 27, "source": "Google",
                      "liste": [{"auteur": a, "texte": x, "note": 5} for a, x in AVIS_EXEMPLE[metier]]}
-    fiche["horaires_semaine"] = HORAIRES_EXEMPLE[fam]
+    fiche["horaires_semaine"] = HORAIRES_RESTAURANT if metier == "Restaurant" else HORAIRES_EXEMPLE[fam]
     fiche["atouts"] = ATOUTS_METIER.get(metier, ATOUTS_EXEMPLE[fam])
-    fiche["faq"] = [{"q": q, "r": r} for q, r in FAQ_EXEMPLE[fam]]
+    fiche["faq"] = [{"q": q, "r": r} for q, r in (FAQ_RESTAURANT if metier == "Restaurant" else FAQ_EXEMPLE[fam])]
     if metier in ("Plombier", "Chauffagiste", "Électricien"):
         fiche["tarifs_depannage"] = {"taux_horaire": "55 € TTC / heure", "deplacement": "30 € TTC dans le secteur", "majorations": "+50 % le soir et le dimanche",
                                      "devis": "Gratuit, avant toute intervention"}
@@ -262,6 +262,54 @@ def images_ia(metier: str) -> dict:
     return res
 
 
+# ---------------------------------------------------------------- restaurant : carte traditionnelle française (exemple)
+CARTE_RESTAURANT = [
+    {"categorie": "Entrées", "liste": [
+        {"nom": "Soupe à l'oignon gratinée", "desc": "Bouillon maison, croûtons, comté fondu", "prix": 8.5},
+        {"nom": "Œufs en meurette", "desc": "Sauce au vin rouge, lardons, croûtons", "prix": 9},
+        {"nom": "Salade lyonnaise", "desc": "Frisée, lardons, croûtons, œuf poché", "prix": 9.5},
+        {"nom": "Terrine de campagne maison", "desc": "Cornichons, pain de campagne grillé", "prix": 8}]},
+    {"categorie": "Plats", "liste": [
+        {"nom": "Bœuf bourguignon", "desc": "Mijoté sept heures, carottes, pommes vapeur", "prix": 19},
+        {"nom": "Blanquette de veau à l'ancienne", "desc": "Champignons, petits oignons, riz", "prix": 18.5},
+        {"nom": "Quenelle de brochet, sauce Nantua", "desc": "Gratinée au four, riz pilaf", "prix": 18},
+        {"nom": "Confit de canard", "desc": "Pommes sarladaises à l'ail et au persil", "prix": 20},
+        {"nom": "Coq au vin", "desc": "Lardons, champignons, tagliatelles fraîches", "prix": 18.5},
+        {"nom": "Pavé de saumon, beurre blanc", "desc": "Légumes de saison", "prix": 19}]},
+    {"categorie": "Desserts", "liste": [
+        {"nom": "Crème brûlée à la vanille", "desc": "Vanille de Madagascar", "prix": 7.5},
+        {"nom": "Tarte Tatin", "desc": "Crème fraîche épaisse", "prix": 8},
+        {"nom": "Île flottante", "desc": "Crème anglaise, caramel", "prix": 7},
+        {"nom": "Mousse au chocolat", "desc": "Chocolat noir 70 %", "prix": 7}]},
+    {"categorie": "Formules", "liste": [
+        {"nom": "Formule du midi", "desc": "Entrée et plat, ou plat et dessert, du lundi au vendredi", "prix": 18.9},
+        {"nom": "Menu tradition", "desc": "Entrée, plat et dessert à la carte", "prix": 29}]},
+]
+SPECIALITES_RESTAURANT = [("Bœuf bourguignon", "Mijoté sept heures au vin rouge, carottes fondantes.", 19, "bourguignon"),
+                          ("Quenelle de brochet, sauce Nantua", "La grande classique lyonnaise, gratinée au four.", 18, "quenelle"),
+                          ("Confit de canard", "Peau croustillante, pommes sarladaises.", 20, "confit"),
+                          ("Blanquette de veau à l'ancienne", "Sauce crémée, champignons et petits oignons.", 18.5, "blanquette"),
+                          ("Crème brûlée à la vanille", "Caramel craquant, cœur onctueux.", 7.5, "creme-brulee"),
+                          ("Tarte Tatin", "Pommes caramélisées, crème fraîche épaisse.", 8, "tatin")]
+HORAIRES_RESTAURANT = {"lun": "12:00-14:00", "mar": "12:00-14:00,19:00-22:00", "mer": "12:00-14:00,19:00-22:00", "jeu": "12:00-14:00,19:00-22:00",
+                       "ven": "12:00-14:00,19:00-22:30", "sam": "19:00-22:30", "dim": ""}
+FAQ_RESTAURANT = [("Faut-il réserver ?", "C'est conseillé, surtout le vendredi soir et le samedi. Un appel ou un message suffit."),
+                  ("Proposez-vous des plats végétariens ?", "Oui, un plat végétarien est proposé chaque jour selon le marché."),
+                  ("Accueillez-vous les groupes ?", "Oui, jusqu'à 30 personnes, avec un menu adapté. Contactez-nous quelques jours avant.")]
+
+
+def photos_restaurant() -> dict:
+    """Photos du restaurant (salle et plats) générées pour les maquettes, si elles existent."""
+    d = generer_site.MODELES / "images-ia"
+    f = lambda nom: f"images-ia/{nom}.webp" if (d / f"{nom}.webp").exists() else None
+    res = {"hero": f("ia-restaurant-accueil"),
+           "galerie": [{"src": s, "legende": l} for s, l in ((f("ia-restaurant-traditionnel-table"), "Le partage à la française"),
+                                                            (f("ia-restaurant-traditionnel-ardoise"), "La salle"),
+                                                            (f("ia-restaurant-terrasse"), "La terrasse")) if s]}
+    return {k: v for k, v in res.items() if v}
+
+
+
 def slugifier(texte: str) -> str:
     t = unicodedata.normalize("NFKD", texte).encode("ascii", "ignore").decode().lower()
     return re.sub(r"[^a-z0-9]+", "-", t).strip("-")[:50] or "prospect"
@@ -309,6 +357,15 @@ def fiche_pour(prospect: dict) -> dict | None:
                 p.pop("image", None)
         fiche.update({"titre": f"Snack à {ville} : commandez, c'est prêt", "modes": ["À emporter", "Livraison (secteur proche)"],
                       "delai_commande": "Prêt en 10 à 15 minutes selon l'affluence.", "mode_retrait": "À emporter ou livraison dans le secteur."})
+    elif modele == "restaurant":
+        fiche["carte"] = CARTE_RESTAURANT
+        dossier = generer_site.MODELES / "images-ia"
+        fiche["specialites"] = [{"nom": n, "desc": d, "prix": px, **({"image": f"images-ia/ia-restaurant-traditionnel-{k}.webp"}
+                                 if (dossier / f"ia-restaurant-traditionnel-{k}.webp").exists() else {})} for n, d, px, k in SPECIALITES_RESTAURANT]
+        fiche["images"] = photos_restaurant() or fiche["images"]
+        fiche["titre"] = f"Restaurant à {ville} : la cuisine française de tradition"
+        if re.fullmatch(r"0[67]\d{8}", re.sub(r"\D", "", prospect.get("telephone") or "")):
+            fiche["whatsapp"] = "33" + re.sub(r"\D", "", prospect["telephone"])[1:]
     elif modele == "artisan":
         fiche["services"] = [{"titre": t, "texte": x} for t, x in contenu]
         if metier in ("Traiteur", "Pâtisserie", "Snack", "Restaurant"):

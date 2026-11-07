@@ -39,6 +39,13 @@ Les styles se trouvent dans `modeles-sites/themes/` : `base.css`, commun aux tro
 - Les **restaurants** reçoivent le modèle artisan avec les textes des métiers de bouche : formule du midi, carte du soir, groupes, à emporter.
 - Recherche de prospects : `amenity=fast_food` et `amenity=restaurant` dans OpenStreetMap, codes NAF 56.10C (Snack) et 56.10A (Restaurant) dans le répertoire Sirene.
 
+## Modèle restaurant (07/11/2026)
+- Modèle `restaurant`, avec la mise en page du modèle beauté :
+  - champ `carte` : catégories de plats avec description et prix ;
+  - champ `specialites` : plats signature avec photo ;
+  - textes « Réserver une table » et « Voir la carte » (ajustables avec le champ `textes`).
+- Sur un site final, les photos de plats générées par IA sont refusées, comme les produits : il faut de vraies photos du restaurant.
+
 ## Interactivité (06/11/2026)
 - **Bandeau défilant** sous l'accueil, aux couleurs du client : métier et ville, communes desservies, services, produits ou prestations, numéro. Il se met en pause au survol, au clavier et avec un **bouton Pause** (WCAG 2.2.2). Il est immobile et réparti sur plusieurs lignes si le visiteur demande moins d'animations. Champ `defilant` : liste personnalisée, ou `false` pour le retirer.
 - **Ville animée dans le titre** : la ville passe sur chaque commune desservie (`communes`), fait **un seul tour** puis revient. Toutes les villes partagent la même case, donc aucun décalage de mise en page (CLS nul, Lighthouse 99 à 100).

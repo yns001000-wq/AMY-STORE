@@ -132,6 +132,7 @@ def main(argv=None) -> int:
     ap.add_argument("--json", type=Path, help="Utiliser une réponse Overpass déjà téléchargée (tests)")
     ap.add_argument("--max-par-metier", type=int, default=0, help="Avec --ajouter : nombre maximum de nouveaux prospects par métier")
     ap.add_argument("--metiers", default="", help="Limiter à ces métiers, séparés par des virgules (ex. Snack,Restaurant)")
+    ap.add_argument("--portables", action="store_true", help="Ne garder que les numéros de portable (06 ou 07)")
     ap.add_argument("--villes", action="store_true", help="Avec --ajouter : retrouver la commune manquante (Nominatim, 1 requête/s)")
     a = ap.parse_args(argv)
 
@@ -154,6 +155,8 @@ def main(argv=None) -> int:
                 print(f"  Département {d} ignoré pour cette fois : {err}. Relancez plus tard.")
     if metiers:
         trouves = [x for x in trouves if x["metier"] in metiers]
+    if a.portables:
+        trouves = [x for x in trouves if re.match(r"0[67]", x["telephone"])]
     sans_site = [x for x in trouves if not x["site_existant"]]
     print(f"OpenStreetMap : {len(trouves)} entreprise(s) avec téléphone, dont {len(sans_site)} sans site web.")
 

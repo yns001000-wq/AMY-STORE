@@ -482,12 +482,17 @@ class TestSnackRestaurant(unittest.TestCase):
         self.assertEqual(snack["whatsapp"], "33611223344")
         self.assertTrue(any(p["nom"] == "Tacos M" for p in snack["produits"]))
         resto = preparer_apercus.fiche_pour({"id": "2", "entreprise": "Le Genova", "metier": "Restaurant", "ville": "Lyon", "telephone": "04 72 68 06 67"})
-        self.assertEqual(resto["modele"], "artisan")
-        self.assertEqual(resto["cta_secondaire"], "Réserver une table")
+        self.assertEqual(resto["modele"], "restaurant")
+        self.assertTrue(any(c["categorie"] == "Plats" for c in resto["carte"]))
         d = Path(tempfile.mkdtemp())
         for f in (snack, resto):
             dossier, _ = generer_site.generer(f, d, apercu=True, base=generer_site.MODELES)
             self.assertIn("Maquette préparée", (dossier / "index.html").read_text(encoding="utf-8"))
+        page = (dossier / "index.html").read_text(encoding="utf-8")
+        for attendu in ("Réserver une table", "Voir la carte", "Bœuf bourguignon", "Quenelle de brochet, sauce Nantua", "Nos spécialités", "Carte et prix d&#x27;exemple"):
+            self.assertIn(attendu, page)
+        resto_mobile = preparer_apercus.fiche_pour({"id": "3", "entreprise": "L'avenue", "metier": "Restaurant", "ville": "Lyon", "telephone": "06 66 09 45 59"})
+        self.assertEqual(resto_mobile["whatsapp"], "33666094559")  # réservation par WhatsApp quand le numéro est un portable
 
 
 class TestProspectsOSM(unittest.TestCase):
@@ -514,6 +519,21 @@ class TestProspectsOSM(unittest.TestCase):
         self.assertNotIn("Hors cible", lignes)
         self.assertNotIn("Sans Tel", lignes)
         self.assertEqual(len(lignes), 3)
+
+    def test_portables_seulement(self):
+        d = Path(tempfile.mkdtemp())
+        ecrire_csv(d, "prospects.csv", [{"id": "1", "entreprise": "Existant", "metier": "Plombier", "statut": "nouveau"}])
+        osm = {"elements": [
+            {"type": "node", "id": 1, "tags": {"amenity": "restaurant", "name": "Chez Fixe", "phone": "04 72 00 00 01", "addr:city": "Lyon"}},
+            {"type": "node", "id": 2, "tags": {"amenity": "restaurant", "name": "Chez Mobile", "phone": "+33 6 12 34 56 78", "addr:city": "Lyon"}},
+            {"type": "node", "id": 3, "tags": {"amenity": "fast_food", "name": "Snack Sept", "phone": "07 11 22 33 44", "addr:city": "Bron"}}]}
+        (d / "osm.json").write_text(json.dumps(osm), encoding="utf-8")
+        prospects_osm.main(["--departements", "69", "--json", str(d / "osm.json"), "--metiers", "Snack,Restaurant", "--portables", "--ajouter", "--fichier", str(d / "prospects.csv")])
+        lignes = {l["entreprise"]: l for l in crm.lire(d, "prospects.csv")}
+        self.assertNotIn("Chez Fixe", lignes)
+        self.assertEqual(lignes["Chez Mobile"]["telephone"], "06 12 34 56 78")
+        self.assertEqual(lignes["Chez Mobile"]["metier"], "Restaurant")
+        self.assertEqual(lignes["Snack Sept"]["metier"], "Snack")
 
 
 if __name__ == "__main__":

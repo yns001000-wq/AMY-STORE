@@ -57,4 +57,4 @@ Cela représente environ 20 à 30 h de travail humain par mois.
 - Dépensé (coût réel calculé à partir de la consommation renvoyée par OpenAI) : **1,82 $** pour 40 illustrations et 2 essais.
 - Point à vérifier : 6 tentatives coupées par le proxy, peut-être facturées (au pire environ 1,08 $). Total maximal : environ 2,90 $, sous le plafond.
 - Chaque image générée est notée automatiquement dans `crm/donnees/depenses.csv`.
-
+- 07/11/2026 : budget complémentaire d'1 € accordé pour des photos de restaurant. Dépensé : **0,53 $** (12 photos). Total réel OpenAI : environ **2,35 $**, plus d'éventuelles tentatives coupées le 06/11 (à vérifier dans Usage).

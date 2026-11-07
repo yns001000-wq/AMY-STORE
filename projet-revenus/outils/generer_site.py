@@ -31,7 +31,7 @@ from urllib.parse import quote
 
 RACINE = Path(__file__).resolve().parent.parent
 MODELES = RACINE / "modeles-sites"
-MODELES_DISPONIBLES = ("artisan", "commande-whatsapp", "beaute")
+MODELES_DISPONIBLES = ("artisan", "commande-whatsapp", "beaute", "restaurant")
 A_COMPLETER = "[À COMPLÉTER]"
 CHAMPS_OBLIGATOIRES = ("modele", "slug", "nom", "metier", "ville", "accroche", "description", "telephone")
 
@@ -116,6 +116,8 @@ def valider(fiche: dict, base: Path | None = None) -> list[str]:
                 raise FicheInvalide(f"Produit invalide : {p!r} (nom et prix positif obligatoires)")
     if fiche["modele"] == "beaute" and not fiche.get("prestations"):
         raise FicheInvalide("Le modèle beaute exige au moins une catégorie de « prestations »")
+    if fiche["modele"] == "restaurant" and not fiche.get("carte"):
+        raise FicheInvalide("Le modèle restaurant exige une « carte » (catégories de plats avec leurs prix)")
     avis = fiche.get("avis")
     if avis:
         note = avis.get("note")
@@ -152,13 +154,14 @@ def chemins_images(fiche: dict) -> list[str]:
     for p in fiche.get("avant_apres") or []:
         chemins += [x for x in (p.get("avant"), p.get("apres")) if x]
     chemins += [p["image"] for p in fiche.get("produits", []) if p.get("image")]
+    chemins += [p["image"] for p in fiche.get("specialites", []) if p.get("image")]
     return chemins
 
 
 # ---------------------------------------------------------------- couleurs
 THEMES = {"artisan": ("artisan.css", "archivo-latin.woff2"),
           "commande-whatsapp": ("commande.css", "gloock-latin.woff2"),
-          "beaute": ("beaute.css", "marcellus-latin.woff2")}
+          "beaute": ("beaute.css", "marcellus-latin.woff2"), "restaurant": ("beaute.css", "marcellus-latin.woff2")}
 
 
 def _rvb(hexa: str) -> tuple[float, float, float]:
@@ -203,7 +206,7 @@ def palette(couleur: str, encre: str) -> dict:
             "accent-texte": texte, "accent-clair": clair}
 
 
-ENCRES = {"artisan": "#0f1b2d", "commande-whatsapp": "#231a17", "beaute": "#1b1716"}
+ENCRES = {"artisan": "#0f1b2d", "commande-whatsapp": "#231a17", "beaute": "#1b1716", "restaurant": "#1b1716"}
 
 
 # ---------------------------------------------------------------- composants communs
@@ -512,8 +515,9 @@ def bandeau_defilant(fiche: dict) -> str:
         items = [f'{fiche["metier"]} à {fiche["ville"]}'] + [c for c in fiche.get("communes") or [] if c != fiche["ville"]][:6]
         if fiche["modele"] == "commande-whatsapp":
             items += [p["nom"] for p in fiche.get("produits") or []][:5] + ["Commande en 2 minutes sur WhatsApp"]
-        elif fiche["modele"] == "beaute":
-            items += [p["nom"] for c in fiche.get("prestations") or [] for p in c.get("liste", [])][:5] + ["Réservation en quelques secondes"]
+        elif fiche["modele"] in ("beaute", "restaurant"):
+            items += [p["nom"] for c in fiche.get("carte") or fiche.get("prestations") or [] for p in c.get("liste", [])][:6]
+            items.append("Réservez votre table" if fiche["modele"] == "restaurant" else "Réservation en quelques secondes")
         else:
             items += [x["titre"] for x in fiche.get("services") or []][:4]
             if fiche.get("delai_reponse"):
@@ -700,23 +704,58 @@ def corps_artisan(fiche: dict, imgs: dict):
 
 
 # ---------------------------------------------------------------- BEAUTÉ
+TEXTES_BEAUTE = {
+    "resa_wa": "Bonjour, je souhaite prendre rendez-vous pour : ", "alt_hero": "Intérieur du salon ", "cta_resa": "Prendre rendez-vous",
+    "cta_tarifs": "Voir les tarifs", "sur_tarifs": "Prestations & tarifs", "titre_tarifs": "Nos tarifs",
+    "intro_tarifs": "Prix affichés, durées indiquées. Le diagnostic est fait avec vous avant chaque couleur.",
+    "mention": "Prix et durées d'exemple, à remplacer par les vôtres.", "btn_tarifs": "Réserver mon créneau",
+    "sur_gal": "Le salon", "titre_gal": "En images", "alt_gal": "Le salon", "sur_apropos": "À propos", "titre_apropos": "Une équipe à votre écoute",
+    "titre_reserver": "Réservez votre moment", "texte_reserver": "En ligne en quelques secondes, ou par téléphone.",
+    "infos": "Le salon", "menu_tarifs": "Tarifs", "menu_gal": "Le salon", "menu_infos": "Accès et horaires", "entete": "Réserver",
+}
+TEXTES_RESTAURANT = {
+    "resa_wa": "Bonjour, je souhaite réserver une table pour ... personnes, le ... à ... h.", "alt_hero": "Salle du restaurant ", "cta_resa": "Réserver une table",
+    "cta_tarifs": "Voir la carte", "sur_tarifs": "La carte", "titre_tarifs": "Cuisine traditionnelle française",
+    "intro_tarifs": "Produits frais et de saison, tout est préparé maison. La carte évolue au fil des marchés.",
+    "mention": "Carte et prix d'exemple, à remplacer par les vôtres.", "btn_tarifs": "Réserver une table",
+    "sur_gal": "La maison", "titre_gal": "En images", "alt_gal": "Le restaurant", "sur_apropos": "La maison", "titre_apropos": "Une cuisine de tradition",
+    "titre_reserver": "Réservez votre table", "texte_reserver": "Par téléphone ou par message, pour le déjeuner comme pour le dîner.",
+    "infos": "Nous trouver", "menu_tarifs": "La carte", "menu_gal": "En images", "menu_infos": "Horaires et accès", "entete": "Réserver",
+}
+
+
+def section_specialites(fiche: dict, imgs: dict) -> str:
+    """Plats signature avec photo, nom, description et prix (restaurant)."""
+    plats = [p for p in fiche.get("specialites") or [] if p.get("nom")]
+    if not plats:
+        return ""
+    cartes = "".join(
+        f'<article class="specialite">' + (f'<div class="visuel">{img_tag(imgs, p["image"], p["nom"], True, 800, 600, "(min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw")}</div>' if p.get("image") else "")
+        + f'<div class="ligne"><h3>{e(p["nom"])}</h3>' + (f'<span class="prix">{e(p["prix"]) if isinstance(p.get("prix"), str) else euros(p["prix"])}</span>' if p.get("prix") is not None else "")
+        + f'</div><p>{e(p.get("desc", ""))}</p></article>' for p in plats[:6])
+    return (f'<section class="section" id="specialites" aria-labelledby="titre-specialites"><div class="conteneur">'
+            f'{tete_section("Nos spécialités", fiche.get("titre_specialites", "Les classiques de la maison"), ident="titre-specialites")}'
+            f'<div class="specialites">{cartes}</div></div></section>')
+
+
 def corps_beaute(fiche: dict, imgs: dict):
+    T = {**(TEXTES_RESTAURANT if fiche["modele"] == "restaurant" else TEXTES_BEAUTE), **(fiche.get("textes") or {})}
     resa = (fiche.get("reservation_url")
-            or (lien_wa(fiche, "Bonjour, je souhaite prendre rendez-vous pour : ") if fiche.get("whatsapp") else "")
+            or (lien_wa(fiche, T["resa_wa"]) if fiche.get("whatsapp") else "")
             or (f"tel:{chiffres(fiche['telephone'])}" if chiffres(fiche["telephone"]) else "#infos"))  # aperçu sans contact : accès et horaires
     cible = ' target="_blank" rel="noopener"' if resa.startswith("http") else ""
     tel = chiffres(fiche["telephone"])
     h = (fiche.get("images") or {}).get("hero")
     accueil = (f'<section class="accueil" aria-labelledby="titre-accueil">'
-               + (f'<div class="photo-accueil">{img_tag(imgs, h, "Intérieur du salon " + fiche["nom"], False, 900, 1000)}</div>' if h else "")
+               + (f'<div class="photo-accueil">{img_tag(imgs, h, T["alt_hero"] + fiche["nom"], False, 900, 1000)}</div>' if h else "")
                + f'<div class="texte"><p class="lieu"><span>{ICO_PIN} {e(fiche.get("zone_courte") or fiche["ville"])}</span>{statut_ouverture(fiche)}</p>'
                f'<h1 id="titre-accueil">{titre_anime(fiche, fiche.get("titre") or fiche["metier"] + " à " + fiche["ville"])}</h1><p class="chapo">{e(fiche["accroche"])}</p>'
-               f'<div class="actions"><a class="btn" href="{e(resa)}"{cible}>Prendre rendez-vous</a><a class="btn btn--ligne" href="#tarifs">Voir les tarifs</a></div>'
+               f'<div class="actions"><a class="btn" href="{e(resa)}"{cible}>{e(T["cta_resa"])}</a><a class="btn btn--ligne" href="#tarifs">{e(T["cta_tarifs"])}</a></div>'
                f'{ligne_note(fiche)}</div></section>')
     atouts = fiche.get("atouts") or []
     bande = (f'<div class="atouts"><div class="conteneur"><ul>' + "".join(f"<li>{ICO_CHECK}{e(a)}</li>" for a in atouts) + "</ul></div></div>") if atouts else ""
     cats = []
-    for c in fiche["prestations"]:
+    for c in fiche.get("carte") or fiche.get("prestations") or []:
         lignes = "".join(
             f'<li><div class="ligne"><span class="nom">{e(p["nom"])}</span><span class="points" aria-hidden="true"></span>'
             f'<span class="prix">{e(p["prix"]) if isinstance(p.get("prix"), str) else euros(p.get("prix", 0))}</span></div>'
@@ -724,26 +763,28 @@ def corps_beaute(fiche: dict, imgs: dict):
             + "</li>" for p in c.get("liste", []))
         cats.append(f'<div><h3>{e(c["categorie"])}</h3><ul>{lignes}</ul></div>')
     tarifs = (f'<section class="section" id="tarifs" aria-labelledby="titre-tarifs"><div class="conteneur">'
-              f'{tete_section("Prestations & tarifs", "Nos tarifs", fiche.get("intro_tarifs", "Prix affichés, durées indiquées. Le diagnostic est fait avec vous avant chaque couleur."), ident="titre-tarifs")}'
+              f'{tete_section(T["sur_tarifs"], T["titre_tarifs"], fiche.get("intro_tarifs", T["intro_tarifs"]), ident="titre-tarifs")}'
               f'<div class="tarifs">{"".join(cats)}</div>'
-              + (mention_exemple("Prix et durées d'exemple, à remplacer par les vôtres.") if fiche.get("maquette") else "")
-              + f'<p style="margin-top:2.5rem"><a class="btn" href="{e(resa)}"{cible}>Réserver mon créneau</a></p></div></section>')
+              + (mention_exemple(T["mention"]) if fiche.get("maquette") else "")
+              + f'<p style="margin-top:2.5rem"><a class="btn" href="{e(resa)}"{cible}>{e(T["btn_tarifs"])}</a></p></div></section>')
     galerie = (fiche.get("images") or {}).get("galerie") or []
     sec_gal = (f'<section class="section gris" id="galerie" aria-labelledby="titre-galerie"><div class="conteneur">'
-               f'{tete_section("Le salon", "En images", ident="titre-galerie")}<div class="galerie">'
-               + "".join(f'<figure>{img_tag(imgs, g["src"], g.get("legende") or "Le salon", True, 700, 700, "(min-width: 40rem) 60vw, 100vw")}'
+               f'{tete_section(T["sur_gal"], T["titre_gal"], ident="titre-galerie")}<div class="galerie">'
+               + "".join(f'<figure>{img_tag(imgs, g["src"], g.get("legende") or T["alt_gal"], True, 700, 700, "(min-width: 40rem) 60vw, 100vw")}'
                          + (f'<figcaption>{e(g["legende"])}</figcaption>' if g.get("legende") else "") + "</figure>" for g in galerie[:3])
                + "</div></div></section>") if galerie else ""
     apropos = (f'<section class="section" id="apropos" aria-labelledby="titre-apropos"><div class="conteneur" style="max-width:48rem">'
-               f'{tete_section("À propos", fiche.get("titre_apropos", "Une équipe à votre écoute"), ident="titre-apropos")}<p>{e(fiche["description"])}</p></div></section>')
-    reserver = (f'<section class="section reserver" aria-labelledby="titre-reserver"><div class="conteneur"><h2 id="titre-reserver">Réservez votre moment</h2>'
-                f'<p>En ligne en quelques secondes, ou par téléphone.</p><div class="actions"><a class="btn" href="{e(resa)}"{cible}>Prendre rendez-vous</a>'
+               f'{tete_section(T["sur_apropos"], fiche.get("titre_apropos", T["titre_apropos"]), ident="titre-apropos")}<p>{e(fiche["description"])}</p></div></section>')
+    reserver = (f'<section class="section reserver" aria-labelledby="titre-reserver"><div class="conteneur"><h2 id="titre-reserver">{e(T["titre_reserver"])}</h2>'
+                f'<p>{e(T["texte_reserver"])}</p><div class="actions"><a class="btn" href="{e(resa)}"{cible}>{e(T["cta_resa"])}</a>'
                 + (f'<a class="btn btn--ligne" href="tel:{e(tel)}">{ICO_TEL} {e(fiche["telephone"])}</a>' if tel else "") + "</div></div></section>")
-    corps = (accueil + bandeau_defilant(fiche) + bande + tarifs + sec_gal + section_avis(fiche) + apropos
-             + section_infos(fiche, "Le salon", "gris") + section_faq(fiche) + reserver)
-    menu = [(a, t) for a, t, ok in [("tarifs", "Tarifs", True), ("galerie", "Le salon", sec_gal), ("avis", "Avis", "id=\"avis\"" in corps), ("infos", "Accès et horaires", True)] if ok]
-    entete = f'<a class="btn" href="{e(resa)}"{cible}>Réserver</a>'
-    barre = (f'<a class="btn btn--ligne" href="tel:{e(tel)}">{ICO_TEL} Appeler</a>' if tel else "") + f'<a class="btn" href="{e(resa)}"{cible}>Réserver</a>'
+    sec_spe = section_specialites(fiche, imgs)
+    corps = (accueil + bandeau_defilant(fiche) + bande + sec_spe + tarifs + sec_gal + section_avis(fiche) + apropos
+             + section_infos(fiche, T["infos"], "gris") + section_faq(fiche) + reserver)
+    menu = [(a, t) for a, t, ok in [("specialites", "Spécialités", sec_spe), ("tarifs", T["menu_tarifs"], True), ("galerie", T["menu_gal"], sec_gal),
+                                     ("avis", "Avis", "id=\"avis\"" in corps), ("infos", T["menu_infos"], True)] if ok]
+    entete = f'<a class="btn" href="{e(resa)}"{cible}>{e(T["entete"])}</a>'
+    barre = (f'<a class="btn btn--ligne" href="tel:{e(tel)}">{ICO_TEL} Appeler</a>' if tel else "") + f'<a class="btn" href="{e(resa)}"{cible}>{e(T["entete"])}</a>'
     return corps, menu, entete, barre, ""
 
 
@@ -860,7 +901,7 @@ def corps_commande(fiche: dict, imgs: dict):
 
 
 
-CONSTRUCTEURS = {"artisan": corps_artisan, "beaute": corps_beaute, "commande-whatsapp": corps_commande}
+CONSTRUCTEURS = {"artisan": corps_artisan, "beaute": corps_beaute, "restaurant": corps_beaute, "commande-whatsapp": corps_commande}
 
 
 def page_mentions(fiche: dict) -> str:
@@ -920,7 +961,7 @@ def generer(fiche: dict, sortie: Path, apercu: bool = False, base: Path | None =
     if not apercu and not fiche.get("demo"):
         im = fiche.get("images") or {}
         interdites = [x for x in [g.get("src", "") for g in im.get("galerie") or []] + [(im.get("apropos") or {}).get("src", "")]
-                      + [p.get("image", "") for p in fiche.get("produits") or []]
+                      + [p.get("image", "") for p in fiche.get("produits") or []] + [p.get("image", "") for p in fiche.get("specialites") or []]
                       + [v for p in fiche.get("avant_apres") or [] for v in (p.get("avant", ""), p.get("apres", ""))] if x and est_ia(x)]
         if interdites:
             raise FicheInvalide("Images générées par IA utilisées comme réalisations, produits ou photo d'équipe : " + ", ".join(interdites)
