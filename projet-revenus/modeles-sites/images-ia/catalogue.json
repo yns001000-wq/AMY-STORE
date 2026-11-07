@@ -856,5 +856,16 @@
   "date": "2026-11-07",
   "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A generous brunch plate with eggs benedict, avocado toast, fresh fruit and orange juice, bright café table.",
   "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-cafe-salle.webp",
+  "metier": "Café",
+  "sujet": "salle",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A charming French café interior with small marble tables, bentwood chairs, plants and a counter with an espresso machine, no people.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
  }
 ]
