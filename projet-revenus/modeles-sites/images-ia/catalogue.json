@@ -669,5 +669,16 @@
   "date": "2026-11-07",
   "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A cosy Italian pizzeria dining room with a tiled wood-fired oven in the background, wooden tables, warm evening light, no people.",
   "usage": "illustration (jamais présentée comme une réalisation du client)"
+ },
+ {
+  "fichier": "ia-pizzeria-tiramisu.webp",
+  "metier": "Pizzeria",
+  "sujet": "tiramisu",
+  "ia": true,
+  "modele": "gpt-image-2",
+  "qualite": "medium",
+  "date": "2026-11-07",
+  "prompt": "Authentic documentary food photograph taken in a real restaurant, 35mm lens, soft natural light, subtle film grain, realistic small imperfections, appetising but not glossy, natural colours without oversaturation, not a 3D render, no text, no letters, no logos, no watermarks, no brand names. If a person appears, show only hands or a figure from behind, never a recognisable face. A generous portion of tiramisu in a glass dish, layers of mascarpone and coffee-soaked ladyfingers, dusted with cocoa.",
+  "usage": "illustration (jamais présentée comme une réalisation du client)"
  }
 ]
