@@ -15,6 +15,7 @@ export interface CapacitesStudio {
   filigrane: boolean;         // mention « Fait avec MySite » sur l'aperçu et le téléchargement
   marqueBlanche: boolean;     // aucune mention MySite, même dans le bandeau de maquette
   sitesMax: number;           // sites conservés dans le Studio
+  banquePerso: number;        // photos gardées dans la banque personnelle (réutilisables sur les prochains sites)
 }
 
 export interface Plan {
@@ -39,28 +40,28 @@ export const PLANS: Record<PlanId, Plan> = {
     prixMensuel: 0, prixAnnuel: 0, departements: 1,
     quotas: { prospects: 15, messages_ia: 10, sites_ia: 0, retouches_ia: 0 },
     export: false, facturation: false, mentionMySite: true, utilisateurs: 1,
-    studio: { effortIA: null, editionComplete: false, couleursLibres: false, choixModele: false, polices: false, photosPerso: false, versions: 0, filigrane: true, marqueBlanche: false, sitesMax: 3 },
+    studio: { effortIA: null, editionComplete: false, couleursLibres: false, choixModele: false, polices: false, photosPerso: false, versions: 0, filigrane: true, marqueBlanche: false, sitesMax: 3, banquePerso: 0 },
   },
   pro: {
     id: "pro", nom: "Pro", accroche: "Pour démarcher sérieusement autour de chez vous",
     prixMensuel: 29, prixAnnuel: 290, departements: 3,
     quotas: { prospects: 300, messages_ia: 300, sites_ia: 10, retouches_ia: 100 },
     export: true, facturation: false, mentionMySite: false, utilisateurs: 1,
-    studio: { effortIA: "medium", editionComplete: true, couleursLibres: true, choixModele: true, polices: false, photosPerso: false, versions: 5, filigrane: false, marqueBlanche: false, sitesMax: 100 },
+    studio: { effortIA: "medium", editionComplete: true, couleursLibres: true, choixModele: true, polices: false, photosPerso: false, versions: 5, filigrane: false, marqueBlanche: false, sitesMax: 100, banquePerso: 0 },
   },
   premium: {
     id: "premium", nom: "Premium", accroche: "Le plus complet pour vendre chaque semaine",
     prixMensuel: 59, prixAnnuel: 590, departements: 10,
     quotas: { prospects: 1000, messages_ia: 1000, sites_ia: 40, retouches_ia: 400 },
     export: true, facturation: true, mentionMySite: false, utilisateurs: 1, misEnAvant: true,
-    studio: { effortIA: "high", editionComplete: true, couleursLibres: true, choixModele: true, polices: true, photosPerso: true, versions: 20, filigrane: false, marqueBlanche: false, sitesMax: 500 },
+    studio: { effortIA: "high", editionComplete: true, couleursLibres: true, choixModele: true, polices: true, photosPerso: true, versions: 20, filigrane: false, marqueBlanche: false, sitesMax: 500, banquePerso: 300 },
   },
   ultra: {
     id: "ultra", nom: "Ultra", accroche: "Pour les agences et les gros volumes",
     prixMensuel: 119, prixAnnuel: 1190, departements: Infinity,
     quotas: { prospects: 3000, messages_ia: 3000, sites_ia: 120, retouches_ia: 1500 },
     export: true, facturation: true, mentionMySite: false, utilisateurs: 3,
-    studio: { effortIA: "xhigh", editionComplete: true, couleursLibres: true, choixModele: true, polices: true, photosPerso: true, versions: 50, filigrane: false, marqueBlanche: true, sitesMax: 2000 },
+    studio: { effortIA: "xhigh", editionComplete: true, couleursLibres: true, choixModele: true, polices: true, photosPerso: true, versions: 50, filigrane: false, marqueBlanche: true, sitesMax: 2000, banquePerso: 2000 },
   },
 };
 

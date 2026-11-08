@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { consommer, rembourser } from "@/lib/quotas";
-import { archiverVersion, chargerSite, contexteStudio, demanderIA, erreurIA } from "@/lib/studio/serveur";
-import { appliquerIA, lireJSON, promptRetouche } from "@/lib/studio";
+import { archiverVersion, chargerSite, contexteStudio, demanderIA, erreurIA, photosDuCommerce } from "@/lib/studio/serveur";
+import { appliquerIA, blocPhotosPerso, lireJSON, promptRetouche, remplacerClesPerso } from "@/lib/studio";
 
 export const maxDuration = 180;
 
@@ -17,10 +17,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   if (!consigne || consigne.trim().length < 3) return NextResponse.json({ erreur: "Décrivez la modification souhaitée." }, { status: 400 });
   if (!(await consommer(session.user.id, plan, "retouches_ia", 1))) return NextResponse.json({ erreur: "Quota de retouches IA du mois atteint.", plan }, { status: 402 });
   const rendre = () => rembourser(session.user.id, "retouches_ia");
+  const perso = blocPhotosPerso(await photosDuCommerce(session.sb, cap, site.prospect_id));
   try {
-    const texte = await demanderIA(promptRetouche(site.donnees, consigne), cap.effortIA === "xhigh" ? "high" : cap.effortIA, 12000);
+    const texte = await demanderIA(promptRetouche(site.donnees, consigne, perso.texte), cap.effortIA === "xhigh" ? "high" : cap.effortIA, 12000);
     if (!texte) { await rendre(); return NextResponse.json({ erreur: "L'IA n'a pas pu faire cette retouche." }, { status: 422 }); }
-    const r = lireJSON(texte);
+    const r = remplacerClesPerso(lireJSON(texte), perso.cles);
     const { d, refuses } = appliquerIA(site.donnees, r.modifications, cap, null);
     await archiverVersion(session.sb, site, cap, `Avant retouche IA : ${consigne.trim()}`);
     await session.sb.from("sites").update({ donnees: d, maj_le: new Date().toISOString() }).eq("id", site.id);

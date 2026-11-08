@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { PLANS } from "../plans";
-import { appliquerEdition, appliquerIA, familleDepuisMetier, lireJSON, PALETTES, promptEtude, promptRedaction, rendreSite, siteDepuisIA, siteExpress } from "./index";
+import { appliquerEdition, appliquerIA, blocPhotosPerso, familleDepuisMetier, lireJSON, PALETTES, photosPourCommerce, poserPhotosCommerce, remplacerClesPerso, promptEtude, promptRedaction, rendreSite, siteDepuisIA, siteExpress } from "./index";
 
 const p = { nom: "Pizza Bella (M. Rossi)", metier: "Pizzeria", ville: "Lyon", code_postal: "69003", adresse: "12 rue Paul Bert 69003 Lyon", telephone: "06 12 34 56 78" };
 const cap = (id: keyof typeof PLANS) => PLANS[id].studio;
@@ -90,5 +90,30 @@ describe("Studio : IA", () => {
     expect(d.accueil.h1_suite).toBe("à Lyon 3e");
     expect(d.horaires.mar).toBe("11:45-14:00");
     expect(() => lireJSON("pas de json")).toThrow();
+  });
+});
+
+describe("Studio : banque de photos personnelle", () => {
+  const ph = (id: string, portee: "commerce" | "tous", prospect_id: string | null, legende = "") => ({ id, url: `https://x.supabase.co/storage/v1/object/public/studio/u/${id}.jpg`, legende, portee, prospect_id });
+  const banque = [ph("a", "commerce", "P1", "Devanture"), ph("b", "commerce", "P2", "Salle"), ph("c", "tous", null, "Four à bois"), ph("d", "commerce", "P1", "Salle")];
+  it("ne propose jamais les photos d'un autre commerce", () => {
+    expect(photosPourCommerce(banque, "P1").map((p) => p.id)).toEqual(["a", "c", "d"]);
+    expect(photosPourCommerce(banque, null).map((p) => p.id)).toEqual(["c"]);
+  });
+  it("présente les photos à l'IA par clés courtes puis remet les vraies adresses", () => {
+    const { texte, cles } = blocPhotosPerso(photosPourCommerce(banque, "P1"));
+    expect(texte).toContain("perso-1 : Devanture (vraie photo de ce commerce)");
+    expect(texte).toContain("photo générique");
+    expect(texte).not.toContain("https://");
+    const r = remplacerClesPerso({ accueil: { photo: "perso-1" }, maison: { photos: ["perso-3", "ia-pizzeria-four"] }, prix: 9 }, cles);
+    expect(r.accueil.photo).toBe(banque[0].url);
+    expect(r.maison.photos).toEqual([banque[3].url, "ia-pizzeria-four"]);
+    expect(blocPhotosPerso([]).texte).toBe("");
+  });
+  it("la maquette express place d'office les vraies photos du commerce", () => {
+    const d = poserPhotosCommerce(siteExpress(p), photosPourCommerce(banque, "P1"));
+    expect(d.accueil.photo).toBe(banque[0].url);
+    expect(d.maison.photos).toEqual([banque[3].url]);
+    expect(rendreSite(d, cap("premium"))).toContain(banque[0].url);
   });
 });

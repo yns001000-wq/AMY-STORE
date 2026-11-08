@@ -3,11 +3,12 @@ import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } f
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  CircleHelp, Clock, Download, History, ImageIcon, LayoutList, ListChecks, Lock, Monitor, Palette, RotateCcw, Save, Smartphone, Trash2, Type, Undo2, Upload, WandSparkles,
+  CircleHelp, Clock, Download, History, ImageIcon, LayoutList, ListChecks, Lock, Monitor, Palette, RotateCcw, Save, Smartphone, Trash2, Type, Undo2, WandSparkles,
 } from "lucide-react";
 import type { CapacitesStudio, PlanId } from "@/lib/plans";
-import { BANQUE_PHOTOS, FAMILLES, ICONES, JOURS, PALETTES, POLICES, SECTIONS, rendreSite, type DonneesSite } from "@/lib/studio";
+import { BANQUE_PHOTOS, FAMILLES, ICONES, JOURS, PALETTES, POLICES, SECTIONS, rendreSite, type DonneesSite, type PhotoPerso } from "@/lib/studio";
 import { Articles, ListeTextes, Texte, Verrou, type Article } from "./champs";
+import { BanquePhotos } from "./BanquePhotos";
 import { EtudeIA, type Etude } from "./EtudeIA";
 
 type Onglet = "ia" | "textes" | "style" | "sections" | "carte" | "horaires" | "faq" | "photos" | "versions" | "telecharger";
@@ -19,10 +20,10 @@ const SUGGESTIONS = ["Ajoute une formule du midi", "Rends le ton plus chic", "Me
 const HORAIRE = /^\d\d:\d\d-\d\d:\d\d(,\d\d:\d\d-\d\d:\d\d)*$/;
 
 export interface VersionResume { id: number; libelle: string | null; cree_le: string }
-interface Props { id: string; initial: DonneesSite; etude: Etude | null; plan: PlanId; cap: CapacitesStudio; versions: VersionResume[]; retouches: { utilise: number; max: number } }
+interface Props { id: string; initial: DonneesSite; etude: Etude | null; plan: PlanId; cap: CapacitesStudio; versions: VersionResume[]; retouches: { utilise: number; max: number }; photosPerso: PhotoPerso[]; prospectId: string | null }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export function EditeurStudio({ id, initial, etude: etude0, plan, cap, versions, retouches }: Props) {
+export function EditeurStudio({ id, initial, etude: etude0, plan, cap, versions, retouches, photosPerso, prospectId }: Props) {
   const router = useRouter();
   const [d, setD] = useState<DonneesSite>(initial);
   const [modifies, setModifies] = useState<Set<string>>(new Set());
@@ -122,17 +123,6 @@ export function EditeurStudio({ id, initial, etude: etude0, plan, cap, versions,
     else { const ph = [...(d.maison?.photos ?? [])]; ph[emplacement === "maison0" ? 0 : 1] = url; dans("maison", "photos", ph.filter(Boolean)); }
   };
   const photoActuelle = emplacement === "accueil" ? d.accueil?.photo : d.maison?.photos?.[emplacement === "maison0" ? 0 : 1];
-  async function envoyerPhoto(f: File | undefined) {
-    if (!f) return;
-    setOccupe("Envoi de la photo…");
-    try {
-      const fd = new FormData(); fd.append("photo", f);
-      const r = await fetch("/api/studio/photo", { method: "POST", body: fd });
-      const j = await r.json();
-      if (!r.ok) setMsg({ t: j.erreur ?? "Envoi impossible." }); else { poserPhoto(j.url); setMsg({ ok: true, t: "Photo ajoutée : pensez à enregistrer." }); }
-    } finally { setOccupe(null); }
-  }
-
   const [verifie, setVerifie] = useState(false);
   const F = FAMILLES[d.famille] ?? FAMILLES.artisan;
   const masquees: string[] = d.masquer ?? [];
@@ -328,9 +318,10 @@ export function EditeurStudio({ id, initial, etude: etude0, plan, cap, versions,
                 {photoActuelle && <button type="button" className="btn" onClick={() => poserPhoto("")}>Retirer</button>}
               </div>
             </fieldset>
-            <Verrou ok={cap.photosPerso} offre="Premium" titre="Vos photos">
-              <label className="btn bloc ed-envoi"><Upload aria-hidden />Envoyer une photo du commerce<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(e) => envoyerPhoto(e.target.files?.[0])} className="cache" /></label>
-              <p className="note">JPEG, PNG ou WebP, 5 Mo maximum. N&apos;utilisez que des photos dont le commerçant détient les droits.</p>
+            <Verrou ok={cap.photosPerso} offre="Premium" titre="Vos photos et votre banque">
+              {cap.photosPerso
+                ? <BanquePhotos photos={photosPerso} max={cap.banquePerso} prospectId={prospectId} prospectNom={d.nom} onChoisir={poserPhoto} selection={photoActuelle} onMessage={setMsg} />
+                : <p className="note" style={{ margin: 0 }}>Envoyez les vraies photos du commerce et gardez-les dans votre banque personnelle : elles seront proposées sur vos prochains sites et l&apos;IA les utilisera automatiquement.</p>}
             </Verrou>
             <fieldset className="ed-bloc"><legend>Banque de photos MySite ({BANQUE_PHOTOS.length})</legend>
               <input type="search" value={filtre} onChange={(e) => setFiltre(e.target.value)} placeholder="Rechercher : pizza, sushi, coiffure…" aria-label="Rechercher une photo" />

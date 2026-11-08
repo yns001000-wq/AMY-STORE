@@ -62,3 +62,12 @@ export function absolutiser(html: string, origine: string): string {
 }
 
 export const planSuffisant = (plan: PlanId, min: PlanId) => (["gratuit", "pro", "premium", "ultra"] as PlanId[]).indexOf(plan) >= (["gratuit", "pro", "premium", "ultra"] as PlanId[]).indexOf(min);
+
+/** Photos de la banque personnelle utilisables pour le site d'un commerce (les siennes et les génériques). */
+export async function photosDuCommerce(sb: SupabaseClient, cap: CapacitesStudio, prospectId: string | null, limite = 40): Promise<import("./index").PhotoPerso[]> {
+  if (!cap.photosPerso || cap.banquePerso <= 0) return [];
+  let q = sb.from("photos_perso").select("id, url, legende, portee, prospect_id").order("cree_le", { ascending: false }).limit(limite);
+  q = prospectId && /^[0-9a-f-]{36}$/i.test(prospectId) ? q.or(`portee.eq.tous,prospect_id.eq.${prospectId}`) : q.eq("portee", "tous");
+  const { data } = await q;
+  return (data ?? []) as import("./index").PhotoPerso[];
+}

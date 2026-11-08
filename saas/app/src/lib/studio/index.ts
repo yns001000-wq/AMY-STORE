@@ -146,6 +146,42 @@ function retirerPhotosExternes(m: Record<string, any>, refuses: string[]) {
   for (const k of Object.keys(m)) m[k] = nettoyer(m[k]);
 }
 
+/* ------------------------- Banque de photos personnelle ------------------------- */
+export interface PhotoPerso { id: string; url: string; legende: string; portee: "commerce" | "tous"; prospect_id: string | null; prospect_nom?: string | null }
+
+/** Photos utilisables sur le site d'un commerce : les siennes, plus les photos « tous mes sites ». Jamais celles d'un autre commerce. */
+export function photosPourCommerce(photos: PhotoPerso[], prospectId: string | null | undefined): PhotoPerso[] {
+  return photos.filter((p) => p.portee === "tous" || (!!prospectId && p.prospect_id === prospectId));
+}
+
+/** Présente les photos de l'utilisateur à l'IA sous forme de clés courtes (perso-1…), remplacées ensuite par les vraies adresses. */
+export function blocPhotosPerso(photos: PhotoPerso[]): { texte: string; cles: Record<string, string> } {
+  if (!photos.length) return { texte: "", cles: {} };
+  const cles: Record<string, string> = {};
+  const lignes = photos.slice(0, 40).map((p, i) => {
+    cles[`perso-${i + 1}`] = p.url;
+    return `- perso-${i + 1} : ${p.legende.replace(/[\n\r]/g, " ") || "sans légende"} (${p.portee === "commerce" ? "vraie photo de ce commerce" : "photo générique de l'utilisateur"})`;
+  });
+  return { texte: `VRAIES PHOTOS fournies par l'utilisateur : à PRIVILÉGIER sur la banque (surtout accueil.photo et maison.photos), si la légende correspond à l'emplacement.\n${lignes.join("\n")}\n\n`, cles };
+}
+
+/** Remplace, dans une réponse de l'IA, les clés perso-N par l'adresse de la photo. */
+export function remplacerClesPerso<T>(o: T, cles: Record<string, string>): T {
+  if (typeof o === "string") return (cles[o] ?? o) as T;
+  if (Array.isArray(o)) return o.map((x) => remplacerClesPerso(x, cles)) as T;
+  if (o && typeof o === "object") return Object.fromEntries(Object.entries(o).map(([k, v]) => [k, remplacerClesPerso(v, cles)])) as T;
+  return o;
+}
+
+/** Maquette express : place automatiquement les vraies photos du commerce (accueil, puis la maison). */
+export function poserPhotosCommerce(d: DonneesSite, photos: PhotoPerso[]): DonneesSite {
+  const urls = photos.filter((p) => p.portee === "commerce").map((p) => p.url);
+  if (!urls.length) return d;
+  if (d.accueil) d.accueil.photo = urls[0];
+  if (d.maison && urls.length > 1) d.maison.photos = urls.slice(1, 3);
+  return d;
+}
+
 /* ------------------------------ Prompts IA ------------------------------ */
 const CONTEXTE = "MySite aide des indépendants à vendre des sites vitrines aux commerces et artisans locaux. Règles : aucune promesse de résultat, aucun avis client, aucune statistique, aucun fait invérifiable présenté comme vrai.";
 const listePhotos = () => Object.entries(PHOTOS).map(([k, [, l]]) => `- ${k} : ${l}`).join("\n");
@@ -158,18 +194,19 @@ export function promptEtude(p: ProspectSite, precisions?: string): string {
     + `Réponds UNIQUEMENT avec un objet JSON : {"type": "libellé précis", "famille": "clé", "confiance": 0-100, "cuisine": "ou vide", "indices": ["…"], "hypotheses": [{"type": "…", "famille": "…", "probabilite": 0-100}], "a_verifier": ["questions pour le gérant"], "resume": "deux phrases"}`;
 }
 
-export function promptRedaction(p: ProspectSite, etude: { type: string; famille: string; cuisine?: string; precisions?: string }): string {
+export function promptRedaction(p: ProspectSite, etude: { type: string; famille: string; cuisine?: string; precisions?: string }, perso = ""): string {
   const F = FAMILLES[etude.famille] ?? FAMILLES.artisan;
   return `${CONTEXTE}\n\nTu es directeur artistique et rédacteur web senior. Tu prépares la MAQUETTE d'un site vitrine sur mesure (non publiée) pour la montrer au gérant. Niveau attendu : site d'agence. Le site est une vitrine : l'action principale est d'appeler.\n\n`
     + `ÉTABLISSEMENT\n${dossier(p)}\nÉTUDE VALIDÉE : ${etude.type} (famille « ${etude.famille} » : ${F.lib})${etude.cuisine ? ` · cuisine : ${etude.cuisine}` : ""}${etude.precisions ? `\nPrécisions : ${etude.precisions.slice(0, 3000)}` : ""}\n\n`
-    + `PHOTOS (clés) : utilise une photo uniquement si elle montre exactement ce plat ou ce lieu ; sinon laisse "".\n${listePhotos()}\n\n`
+    + perso
+    + `PHOTOS DE LA BANQUE (clés) : utilise une photo uniquement si elle montre exactement ce plat ou ce lieu ; sinon laisse "".\n${listePhotos()}\n\n`
     + `RÈGLES : français impeccable, vouvoiement, phrases courtes et concrètes ; métier et ville dans le h1 et la meta description. Carte ou services COMPLETS et crédibles pour ce type précis (3 à 5 onglets, 4 à 10 articles, prix réalistes en euros). Aucun fait invérifiable présenté comme vrai : liste-les dans a_verifier. Aucun avis, aucune note, aucune statistique.\n`
     + `Réponds UNIQUEMENT avec un objet JSON : {"activite", "marque_sous", "title", "meta_description", "couleurs": {"principal": "#…", "accent": "#…"}, "accueil": {"h1", "h1_suite", "chapo", "atouts": [4], "etiquette": {"gros", "texte"}, "photo"}, "defilant": [6], "vedettes": {"surtitre", "titre", "articles": [{"nom", "desc", "prix", "photo"}]}, "offre": {"nav": "${F.offre} ou mieux", "surtitre", "titre", "texte", "onglets": [{"nom", "articles": [{"nom", "desc", "prix"${F.repas ? "" : ", \"duree\""}}]}], "pied"}, "maison": {"surtitre", "titre", "texte", "engagements": [3 {"titre", "texte", "icone": "${ICONES.join("|")}"}], "signature", "photos": []}, "bande": null ou {"surtitre", "titre", "texte", "articles": [3 {"titre", "photo"}]}, "infos": {"texte", "acces": [], "bon_a_savoir": []}, "horaires": {"lun": "HH:MM-HH:MM,HH:MM-HH:MM" ou "", … "dim"}, "faq": [5 {"q", "r"}], "final": {"titre", "texte"}, "a_verifier": []}`;
 }
 
-export function promptRetouche(d: DonneesSite, consigne: string): string {
+export function promptRetouche(d: DonneesSite, consigne: string, perso = ""): string {
   const copie = { ...d }; for (const k of ["telephone", "email", "adresse", "code_postal", "ville", "nom", "maquette"]) delete copie[k];
-  return `${CONTEXTE}\n\nTu retouches la MAQUETTE d'un site vitrine. Données actuelles (JSON) :\n${JSON.stringify(copie)}\n\nPhotos disponibles (clés) :\n${listePhotos()}\nFamilles : ${Object.keys(FAMILLES).join(", ")}. Sections masquables : defilant, vedettes, maison, bande, faq, plan.\n\nDemande de l'utilisateur : ${consigne.slice(0, 2000)}\n\n`
+  return `${CONTEXTE}\n\nTu retouches la MAQUETTE d'un site vitrine. Données actuelles (JSON) :\n${JSON.stringify(copie)}\n\n${perso}Photos de la banque (clés) :\n${listePhotos()}\nFamilles : ${Object.keys(FAMILLES).join(", ")}. Sections masquables : defilant, vedettes, maison, bande, faq, plan.\n\nDemande de l'utilisateur : ${consigne.slice(0, 2000)}\n\n`
     + `Règles : français impeccable, vouvoiement, aucun fait inventé présenté comme vrai, aucun avis ni statistique. Garde le métier et la ville dans le h1.\nRéponds UNIQUEMENT avec un objet JSON : {"modifications": {seulement les blocs de premier niveau à changer, chacun donné EN ENTIER au même format}, "explication": "une phrase"}`;
 }
 

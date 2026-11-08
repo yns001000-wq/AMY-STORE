@@ -18,6 +18,7 @@ const LIGNES: [string, (c: CapacitesStudio, q: { sites_ia: number; retouches_ia:
   ["Couleurs libres et choix du modèle", (c) => c.couleursLibres],
   ["Polices des titres", (c) => c.polices],
   ["Vos propres photos", (c) => c.photosPerso],
+  ["Banque de photos personnelle, réutilisée par l'IA", (c) => (c.banquePerso ? String(c.banquePerso) : false)],
   ["Historique des versions", (c) => (c.versions ? String(c.versions) : false)],
   ["Version finale sans bandeau", (c) => !c.filigrane],
   ["Marque blanche (aucune mention MySite)", (c) => c.marqueBlanche],
@@ -36,7 +37,7 @@ export default async function ListeStudio() {
     <>
       <div className="barre-haut">
         <div><p className="note" style={{ margin: "0 0 .3rem" }}>Studio {P.nom} · {conso.sites_ia}/{P.quotas.sites_ia} sites IA · {conso.retouches_ia}/{P.quotas.retouches_ia} retouches ce mois-ci</p><h1>Mes sites</h1></div>
-        <Link className="btn" href="/espace">Créer depuis un prospect</Link>
+        <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}><Link className="btn" href="/espace/studio/photos">Ma banque de photos</Link><Link className="btn" href="/espace">Créer depuis un prospect</Link></div>
       </div>
       {!sites?.length ? (
         <div className="carte vide"><LayoutTemplate aria-hidden /><h2>Aucun site pour l&apos;instant</h2><p className="note">Ouvrez la fiche d&apos;un prospect et créez sa maquette en un clic : c&apos;est l&apos;argument qui fait signer.</p><Link className="btn p" href="/espace">Voir mes prospects</Link></div>

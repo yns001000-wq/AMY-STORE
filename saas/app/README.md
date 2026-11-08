@@ -39,15 +39,20 @@ Ce dossier contient le socle de la phase 1. Le plan complet est dans `../PLAN.md
     - **Pro** : en plus, la carte et les services, les horaires, la FAQ, le référencement, les couleurs libres, le modèle, les retouches IA, 5 versions et la version finale sans bandeau ;
     - **Premium** : en plus, les polices, vos propres photos et 20 versions ;
     - **Ultra** : réflexion maximale de l'IA, marque blanche et 50 versions.
+  - **Banque de photos personnelle** (Premium : 300 photos, Ultra : 2 000), page Studio > Ma banque de photos :
+    - à chaque envoi de photo, l'outil **propose de la garder pour les prochains sites** (case cochée par défaut) ;
+    - **portée** : « seulement pour ce commerce » par défaut, ou « pour tous mes sites » pour une photo dont l'utilisateur détient les droits. Les photos d'un commerce ne sont jamais proposées sur le site d'un autre, ce qui serait trompeur ;
+    - les maquettes express placent d'office les vraies photos du commerce ;
+    - l'IA les utilise en priorité (rédaction et retouches) quand la légende correspond.
   - **Le serveur refiltre toute modification selon l'offre** (`appliquerEdition`) : le navigateur n'est jamais cru sur parole.
   - **Téléchargement** d'un fichier HTML autonome : la maquette avec son bandeau, ou la version finale sans bandeau et indexable (dès Pro, après confirmation que le contenu a été vérifié avec le gérant).
 - **Page publique « Retirer mon entreprise »** (droit d'opposition) : l'entreprise est exclue chez tous les utilisateurs.
 - **Pages légales** en brouillon. Les informations à compléter sont surlignées en jaune.
 
 ## Tests
-- `npm test` : 28 tests sur les offres, les quotas, les garde-fous RGPD de la recherche, le moteur de sites et les droits d'édition du Studio selon l'offre.
+- `npm test` : 31 tests sur les offres, les quotas, les garde-fous RGPD de la recherche, le moteur de sites et les droits d'édition du Studio selon l'offre.
 - `LIVE=1 npm test` : en plus, un vrai appel à l'API Sirene.
-- `supabase/tests/test_rls.sql` (15 tests), `test_exclusivite.sql` (10 tests) et `test_studio.sql` (10 tests) : sécurité, exclusivité et Studio, testées sur Postgres 16. Charger `stub_supabase.sql`, puis les migrations dans l'ordre.
+- `supabase/tests/test_rls.sql` (15 tests), `test_exclusivite.sql` (10 tests) et `test_studio.sql` (10 tests) et `test_banque_photos.sql` (5 tests) : sécurité, exclusivité et Studio, testées sur Postgres 16. Charger `stub_supabase.sql`, puis les migrations dans l'ordre.
 - `npm run build` : compilation de production.
 
 ## Mise en route (à faire avec les comptes du propriétaire)

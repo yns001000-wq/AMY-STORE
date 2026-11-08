@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { contexteStudio } from "@/lib/studio/serveur";
-import { FAMILLES, siteExpress } from "@/lib/studio";
+import { contexteStudio, photosDuCommerce } from "@/lib/studio/serveur";
+import { FAMILLES, poserPhotosCommerce, siteExpress } from "@/lib/studio";
 import { ajouterJournal } from "@/lib/pipeline";
 
 const CHAMPS_PROSPECT = "id, nom, metier, ville, code_postal, adresse, telephone, email, indices, notes, statut, journal";
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
   if (!p) return NextResponse.json({ erreur: "Prospect introuvable" }, { status: 404 });
   const { count } = await session.sb.from("sites").select("id", { count: "exact", head: true });
   if ((count ?? 0) >= cap.sitesMax) return NextResponse.json({ erreur: `Votre offre conserve ${cap.sitesMax} sites : supprimez-en un ou passez à l'offre supérieure.`, plan }, { status: 402 });
-  const donnees = siteExpress(p, famille && FAMILLES[famille] ? famille : undefined);
+  const donnees = poserPhotosCommerce(siteExpress(p, famille && FAMILLES[famille] ? famille : undefined), await photosDuCommerce(session.sb, cap, p.id));
   const { data: site, error } = await session.sb.from("sites").insert({ user_id: session.user.id, prospect_id: p.id, type: "express", donnees }).select("id").single();
   if (error || !site) return NextResponse.json({ erreur: "Création impossible" }, { status: 500 });
   await session.sb.from("prospects").update({ journal: ajouterJournal(p.journal, "Maquette express créée dans le Studio") }).eq("id", p.id);

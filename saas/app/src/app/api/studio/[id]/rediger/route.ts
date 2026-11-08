@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { rembourser } from "@/lib/quotas";
 import { ajouterJournal } from "@/lib/pipeline";
-import { archiverVersion, chargerSite, contexteStudio, demanderIA, erreurIA } from "@/lib/studio/serveur";
-import { FAMILLES, lireJSON, promptRedaction, siteDepuisIA } from "@/lib/studio";
+import { archiverVersion, chargerSite, contexteStudio, demanderIA, erreurIA, photosDuCommerce } from "@/lib/studio/serveur";
+import { blocPhotosPerso, FAMILLES, lireJSON, promptRedaction, remplacerClesPerso, siteDepuisIA } from "@/lib/studio";
 
 export const maxDuration = 300;
 const ESSAIS_MAX = 3;
@@ -28,10 +28,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const prospect = p ?? { nom: String(site.donnees.nom ?? "Établissement"), ville: site.donnees.ville, code_postal: site.donnees.code_postal, adresse: site.donnees.adresse, telephone: site.donnees.telephone, email: site.donnees.email };
   const dernierEssai = essais + 1 >= ESSAIS_MAX;
   const echec = async (r: NextResponse) => { if (dernierEssai) await rembourser(session.user.id, "sites_ia"); return r; };
+  const perso = blocPhotosPerso(await photosDuCommerce(session.sb, cap, site.prospect_id));
   try {
-    const texte = await demanderIA(promptRedaction(prospect, choix), cap.effortIA, 16000);
+    const texte = await demanderIA(promptRedaction(prospect, choix, perso.texte), cap.effortIA, 16000);
     if (!texte) return echec(NextResponse.json({ erreur: "L'IA n'a pas pu rédiger ce site." }, { status: 422 }));
-    const red = lireJSON(texte);
+    const red = remplacerClesPerso(lireJSON(texte), perso.cles);
     const donnees = siteDepuisIA(prospect, famille, red, red.horaires);
     await archiverVersion(session.sb, site, cap, "Avant rédaction IA");
     await session.sb.from("sites").update({ donnees, type: "ia", etude: { ...etude, ...choix, essais: essais + 1, statut: "redige" }, maj_le: new Date().toISOString() }).eq("id", site.id);

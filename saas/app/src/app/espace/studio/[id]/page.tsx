@@ -5,6 +5,7 @@ import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { consommation, profilEtPlan } from "@/lib/quotas";
 import { PLANS } from "@/lib/plans";
 import { FAMILLES } from "@/lib/studio";
+import { photosDuCommerce } from "@/lib/studio/serveur";
 import { EditeurStudio } from "@/components/studio/EditeurStudio";
 import type { Etude } from "@/components/studio/EtudeIA";
 
@@ -19,9 +20,10 @@ export default async function PageStudio({ params }: { params: Promise<{ id: str
   if (!site) notFound();
   const { plan } = await profilEtPlan(session.user.id);
   const cap = PLANS[plan].studio;
-  const [{ data: versions }, conso] = await Promise.all([
+  const [{ data: versions }, conso, photosPerso] = await Promise.all([
     cap.versions > 0 ? session.sb.from("sites_versions").select("id, libelle, cree_le").eq("site_id", id).order("cree_le", { ascending: false }).limit(cap.versions) : Promise.resolve({ data: [] }),
     consommation(session.user.id),
+    photosDuCommerce(session.sb, cap, site.prospect_id, 300),
   ]);
   return (
     <>
@@ -33,7 +35,8 @@ export default async function PageStudio({ params }: { params: Promise<{ id: str
         <span className="badge-offre">{site.type === "ia" ? "Sur mesure" : "Maquette express"} · {FAMILLES[site.donnees?.famille]?.lib.split(" (")[0] ?? ""} · Studio {PLANS[plan].nom}</span>
       </div>
       <EditeurStudio id={site.id} initial={site.donnees} etude={(site.etude as Etude) ?? null} plan={plan} cap={cap}
-        versions={versions ?? []} retouches={{ utilise: conso.retouches_ia, max: PLANS[plan].quotas.retouches_ia }} />
+        versions={versions ?? []} retouches={{ utilise: conso.retouches_ia, max: PLANS[plan].quotas.retouches_ia }}
+        photosPerso={photosPerso} prospectId={site.prospect_id} />
     </>
   );
 }
