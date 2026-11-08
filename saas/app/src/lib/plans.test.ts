@@ -1,0 +1,40 @@
+import { describe, expect, it } from "vitest";
+import { abonnementActif, departementsAutorises, economieAnnuelle, limite, planDepuisPriceId, planEffectif, priceIdStripe, PLANS } from "./plans";
+
+const env = { STRIPE_PRICE_PRO_MENSUEL: "price_pro_m", STRIPE_PRICE_PRO_ANNUEL: "price_pro_a", STRIPE_PRICE_PREMIUM_MENSUEL: "price_prem_m", STRIPE_PRICE_ULTRA_ANNUEL: "price_ultra_a" };
+
+describe("offres", () => {
+  it("les quotas montent avec l'offre", () => {
+    expect(limite("gratuit", "prospects")).toBeLessThan(limite("pro", "prospects"));
+    expect(limite("pro", "sites_ia")).toBeLessThan(limite("premium", "sites_ia"));
+    expect(limite("gratuit", "sites_ia")).toBe(0);
+  });
+  it("l'annuel offre 2 mois", () => {
+    expect(economieAnnuelle("pro")).toBe(58);
+    expect(PLANS.premium.prixAnnuel).toBe(PLANS.premium.prixMensuel * 10);
+  });
+  it("limite les départements selon l'offre", () => {
+    const d = ["69", "42", "38", "01", "73"];
+    expect(departementsAutorises("gratuit", d)).toEqual(["69"]);
+    expect(departementsAutorises("pro", d)).toEqual(["69", "42", "38"]);
+    expect(departementsAutorises("ultra", d)).toEqual(d);
+  });
+  it("retrouve l'offre depuis Stripe, et donne le gratuit par défaut", () => {
+    expect(priceIdStripe("pro", "annuel", env)).toBe("price_pro_a");
+    expect(planDepuisPriceId("price_prem_m", env)).toBe("premium");
+    expect(planDepuisPriceId("price_inconnu", env)).toBe("gratuit");
+    expect(planDepuisPriceId(null, env)).toBe("gratuit");
+  });
+  it("l'essai Premium ne s'applique qu'au gratuit et jusqu'à sa date de fin", () => {
+    const now = new Date("2026-11-08T12:00:00Z");
+    expect(planEffectif({ plan: "gratuit", essai_fin: "2026-11-10T00:00:00Z" }, now)).toBe("premium");
+    expect(planEffectif({ plan: "gratuit", essai_fin: "2026-11-01T00:00:00Z" }, now)).toBe("gratuit");
+    expect(planEffectif({ plan: "pro", essai_fin: "2026-11-10T00:00:00Z" }, now)).toBe("pro");
+    expect(planEffectif({ plan: "n'importe quoi" }, now)).toBe("gratuit");
+  });
+  it("seuls active et trialing donnent accès", () => {
+    expect(abonnementActif("active")).toBe(true);
+    expect(abonnementActif("past_due")).toBe(false);
+    expect(abonnementActif("canceled")).toBe(false);
+  });
+});
