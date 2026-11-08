@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>MySite, raconté</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@500;600;700;800&family=Gloock&display=swap" rel="stylesheet">
+<style>
+:root{--encre:#15131f;--creme:#fff4e4;--corail:#ff6b4a;--violet:#6d4aff;--jaune:#ffd23f;--menthe:#2ee6a6;--ciel:#4cc9f0;--rose:#ff8fc7;--ease:cubic-bezier(.16,1,.3,1);--rebond:cubic-bezier(.34,1.56,.64,1)}
+*{box-sizing:border-box}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:var(--creme);color:var(--encre);font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased}
+.titre,h2{font-family:"Bricolage Grotesque",sans-serif;letter-spacing:-.03em}
+/* fond : points + formes douces qui dérivent */
+.fond{position:absolute;inset:0;background-image:radial-gradient(rgba(21,19,31,.13) 2px,transparent 2.5px);background-size:44px 44px}
+.forme{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55}
+.f1{width:620px;height:620px;background:#ffc6a8;left:-180px;top:-160px;animation:derive 14s ease-in-out 0s infinite alternate}
+.f2{width:560px;height:560px;background:#c9bcff;right:-200px;top:820px;animation:derive 17s ease-in-out 0s infinite alternate-reverse}
+.f3{width:520px;height:520px;background:#b8f5df;left:-120px;bottom:-200px;animation:derive 20s ease-in-out 0s infinite alternate}
+@keyframes derive{to{transform:translate(120px,90px) scale(1.15)}}
+
+/* briques d'animation, relatives au début de la scène (--s) */
+.sc{position:absolute;inset:0;animation:entre .55s var(--ease) var(--s) both,sort .35s ease-in var(--f) forwards}
+@keyframes entre{from{opacity:0;transform:translateY(60px) scale(.97)}}
+@keyframes sort{to{opacity:0;transform:translateY(-50px) scale(.97)}}
+.pop{animation:pop .6s var(--rebond) calc(var(--s) + var(--o,0s)) both}@keyframes pop{from{opacity:0;transform:scale(.3) rotate(-8deg)}}
+.monte{animation:monte .7s var(--ease) calc(var(--s) + var(--o,0s)) both}@keyframes monte{from{opacity:0;transform:translateY(90px)}}
+.glisse{animation:glisse .8s var(--ease) calc(var(--s) + var(--o,0s)) both}@keyframes glisse{from{opacity:0;transform:translateX(-160px) rotate(-6deg)}}
+.tombe{animation:tombe .7s var(--rebond) calc(var(--s) + var(--o,0s)) both}@keyframes tombe{from{opacity:0;transform:translateY(-260px) rotate(10deg)}}
+.tampon{animation:tampon .45s cubic-bezier(.2,1.4,.4,1) calc(var(--s) + var(--o,0s)) both}@keyframes tampon{from{opacity:0;transform:scale(3) rotate(-25deg)}to{opacity:1;transform:scale(1) rotate(-10deg)}}
+.flotte{animation:pop .6s var(--rebond) calc(var(--s) + var(--o,0s)) both,flotte 2.6s ease-in-out calc(var(--s) + var(--o,0s) + .6s) infinite alternate}
+@keyframes flotte{to{transform:translateY(-16px) rotate(2deg)}}
+
+/* style « néo-brutal » : traits épais et ombres décalées */
+.bloc{background:#fff;border:5px solid var(--encre);border-radius:30px;box-shadow:12px 12px 0 var(--encre)}
+.puce{display:inline-flex;align-items:center;gap:12px;padding:16px 26px;border:4px solid var(--encre);border-radius:99px;background:var(--jaune);font:800 30px/1 Inter;box-shadow:6px 6px 0 var(--encre);white-space:nowrap}
+
+/* en-tête */
+.entete{position:absolute;left:0;right:0;top:170px;display:flex;justify-content:center;z-index:10}
+.marque{display:flex;align-items:center;gap:14px;padding:14px 26px 14px 16px;border:4px solid var(--encre);border-radius:99px;background:#fff;box-shadow:6px 6px 0 var(--encre);font:800 34px/1 "Bricolage Grotesque"}
+.logo{width:52px;height:52px;border-radius:16px;background:linear-gradient(120deg,#6d4aff,#3b5bfd 45%,#0ea5c6);display:grid;place-items:center}
+.logo svg{width:28px;height:28px}
+
+/* sous-titres mot à mot */
+.sous{position:absolute;left:70px;right:70px;top:300px;height:400px;display:flex;align-items:center;justify-content:center;text-align:center;z-index:9}
+.sous p{margin:0;font:800 70px/1.14 "Bricolage Grotesque";letter-spacing:-.025em}
+.sous span{display:inline-block;margin:0 .12em;transition:none;opacity:.22}
+.sous span.dit{opacity:1}
+.sous span.actuel{opacity:1;background:var(--jaune);border-radius:14px;padding:0 .14em;margin:0 -.02em;box-shadow:0 0 0 4px var(--encre),5px 5px 0 4px var(--encre);transform:rotate(-2deg) scale(1.06)}
+.sous span.marque-mot{color:var(--violet)}
+
+/* zone visuelle */
+.zone{position:absolute;left:70px;right:70px;top:760px;height:800px}
+
+/* rue */
+.boutique{position:absolute;bottom:40px;width:290px;height:440px;border:5px solid var(--encre);border-radius:26px 26px 12px 12px;background:#fff;box-shadow:10px 10px 0 var(--encre);overflow:visible}
+.store{height:86px;border-bottom:5px solid var(--encre);border-radius:20px 20px 0 0;background:repeating-linear-gradient(90deg,var(--c) 0 36px,#fff 36px 72px)}
+.enseigne{margin:22px 18px 0;padding:14px 10px;border:4px solid var(--encre);border-radius:14px;text-align:center;font:400 32px/1 Gloock,serif;background:var(--creme)}
+.vitrine{margin:22px 18px 0;height:150px;border:4px solid var(--encre);border-radius:12px;background:linear-gradient(135deg,#d9f3ff,#fff 60%)}
+.porte{position:absolute;bottom:0;left:50%;width:78px;height:110px;margin-left:-39px;border:4px solid var(--encre);border-bottom:0;border-radius:12px 12px 0 0;background:var(--c)}
+.sticker{position:absolute;top:-34px;right:-26px;padding:14px 18px;border:4px solid var(--encre);border-radius:16px;background:var(--corail);color:#fff;font:800 26px/1 Inter;white-space:nowrap;box-shadow:5px 5px 0 var(--encre)}
+
+/* liste de prospects */
+.recherche{display:flex;align-items:center;gap:18px;padding:22px 28px;font:700 32px/1 Inter;border-radius:99px}
+.recherche svg{width:36px;height:36px}
+.ligne{display:grid;grid-template-columns:84px 1fr auto;gap:22px;align-items:center;padding:20px 24px;margin-top:22px;border-radius:26px}
+.av{width:84px;height:84px;border-radius:22px;border:4px solid var(--encre);display:grid;place-items:center;font:800 30px/1 "Bricolage Grotesque"}
+.ligne b{display:block;font:800 34px/1.1 "Bricolage Grotesque"}.ligne small{font:600 24px/1.2 Inter;color:#5a5670}
+.reserve{padding:12px 16px;border:3px solid var(--encre);border-radius:99px;background:var(--menthe);font:800 21px/1 Inter;white-space:nowrap}
+
+/* téléphone */
+.tel{position:absolute;width:390px;height:790px;border:6px solid var(--encre);border-radius:58px;background:var(--encre);padding:12px;box-shadow:16px 16px 0 rgba(21,19,31,.9)}
+.tel .ecran{width:100%;height:100%;border-radius:44px;overflow:hidden;background:#f7f2e8}
+.tel img{width:100%;display:block}
+.defile{animation:defile 5.2s cubic-bezier(.65,0,.35,1) calc(var(--s) + .8s) both}
+@keyframes defile{0%,10%{transform:translateY(0)}45%,55%{transform:translateY(-1000px)}100%{transform:translateY(-2350px)}}
+.note{position:absolute;padding:20px 26px;border:4px solid var(--encre);border-radius:20px;font:800 32px/1 Inter;box-shadow:7px 7px 0 var(--encre);white-space:nowrap}
+.bulle{position:absolute;padding:24px 30px;border:4px solid var(--encre);border-radius:30px 30px 30px 6px;background:#fff;font:700 32px/1.25 Inter;box-shadow:7px 7px 0 var(--encre);max-width:520px}
+.etoile{position:absolute;font:800 64px/1 Inter;color:var(--jaune);-webkit-text-stroke:3px var(--encre)}
+
+/* devis */
+.papier{position:absolute;left:90px;top:20px;width:760px;padding:46px;transform:rotate(-2deg)}
+.papier h2{margin:0 0 8px;font-size:52px}
+.papier .meta{font:600 22px/1.3 Inter;color:#6b6780;margin:0 0 26px}
+.pl{display:flex;justify-content:space-between;gap:20px;padding:20px 0;border-bottom:4px dashed #d8d4e6;font:600 28px/1.3 Inter}
+.total{display:flex;justify-content:space-between;margin-top:20px;font:800 44px/1 "Bricolage Grotesque"}
+.cachet{position:absolute;right:46px;bottom:26px;padding:18px 28px;border:6px solid #12a974;border-radius:16px;color:#12a974;background:rgba(255,255,255,.9);font:800 46px/1 "Bricolage Grotesque";text-transform:uppercase}
+.puces{position:absolute;left:0;right:0;bottom:30px;display:flex;flex-wrap:wrap;justify-content:center;gap:16px}
+
+/* navigateur */
+.nav{position:absolute;left:0;right:0;top:40px;border-radius:30px;overflow:hidden}
+.nav-barre{height:90px;display:flex;align-items:center;gap:14px;padding:0 26px;border-bottom:5px solid var(--encre);background:var(--creme)}
+.nav-barre i{width:20px;height:20px;border-radius:50%;border:3px solid var(--encre);background:var(--corail)}.nav-barre i:nth-child(2){background:var(--jaune)}.nav-barre i:nth-child(3){background:var(--menthe)}
+.url{flex:1;margin-left:12px;height:56px;border:4px solid var(--encre);border-radius:99px;background:#fff;display:flex;align-items:center;gap:12px;padding:0 22px;font:800 30px/1 Inter}
+.url svg{width:26px;height:26px}
+.nav img{width:100%;display:block}
+.vert{position:absolute;right:30px;top:120px;padding:18px 26px;border:4px solid var(--encre);border-radius:99px;background:var(--menthe);font:800 32px/1 Inter;box-shadow:6px 6px 0 var(--encre)}
+.confetti{position:absolute;width:20px;height:30px;border:3px solid var(--encre);border-radius:4px;opacity:0;animation:confetti 1.5s cubic-bezier(.1,.7,.3,1) calc(var(--s) + var(--o)) forwards}
+@keyframes confetti{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(var(--r))}}
+
+/* encaisser */
+.facture{position:absolute;left:30px;top:40px;width:560px;padding:36px}
+.facture h2{margin:0;font-size:44px}.facture p{margin:10px 0 0;font:600 26px/1.3 Inter;color:#5a5670}
+.facture .montant{margin-top:26px;font:800 64px/1 "Bricolage Grotesque";color:var(--encre)}
+.paye{position:absolute;right:34px;bottom:40px;padding:14px 22px;border:5px solid #12a974;border-radius:14px;background:#fff;color:#12a974;font:800 36px/1 "Bricolage Grotesque";text-transform:uppercase}
+.abo{position:absolute;right:20px;top:420px;width:560px;padding:34px;background:var(--violet);color:#fff}
+.abo small{font:700 24px/1 Inter;opacity:.85}.abo b{display:block;margin-top:12px;font:800 44px/1.1 "Bricolage Grotesque"}
+.abo .rep{display:flex;gap:10px;margin-top:22px}.abo .rep i{flex:1;height:18px;border:3px solid var(--encre);border-radius:99px;background:var(--jaune)}
+.ex{position:absolute;right:30px;bottom:30px;font:600 22px/1 Inter;color:#6b6780}
+
+/* académie */
+.progres{position:absolute;left:0;right:0;top:40px;padding:40px}
+.progres h2{margin:0 0 26px;font-size:48px;display:flex;justify-content:space-between}
+.barre{height:56px;border:5px solid var(--encre);border-radius:99px;background:#fff;overflow:hidden}
+.barre i{display:block;height:100%;width:0;background:repeating-linear-gradient(-45deg,var(--violet) 0 26px,#8a6dff 26px 52px);border-right:5px solid var(--encre)}
+.lecon{position:absolute;left:0;right:0;display:flex;align-items:center;gap:22px;padding:26px 30px;font:800 32px/1.15 "Bricolage Grotesque"}
+.lecon .ok{flex:none;width:58px;height:58px;border-radius:50%;border:4px solid var(--encre);background:var(--menthe);display:grid;place-items:center}
+.lecon .ok svg{width:30px;height:30px}
+
+/* fin */
+.final{position:absolute;left:0;right:0;top:820px;display:grid;justify-items:center;gap:40px;text-align:center}
+.final .gros{display:flex;align-items:center;gap:26px;font:800 140px/1 "Bricolage Grotesque";letter-spacing:-.04em}
+.final .gros .logo{width:140px;height:140px;border-radius:40px;border:5px solid var(--encre);box-shadow:9px 9px 0 var(--encre)}.final .gros .logo svg{width:76px;height:76px}
+.cta{padding:34px 60px;border:5px solid var(--encre);border-radius:99px;background:var(--corail);color:#fff;font:800 50px/1 "Bricolage Grotesque";box-shadow:10px 10px 0 var(--encre)}
+.fleche{font:800 90px/1 Inter;animation:pop .6s var(--rebond) calc(var(--s) + 1.4s) both,rebond .7s ease-in-out calc(var(--s) + 2s) infinite alternate}
+@keyframes rebond{to{transform:translateY(24px)}}
+.noir{position:absolute;inset:0;background:var(--creme);opacity:0;animation:fondu .6s ease var(--fin) forwards;z-index:50}
+@keyframes fondu{to{opacity:1}}
+</style>
+</head>
+<body>
+<div class="fond"></div><i class="forme f1"></i><i class="forme f2"></i><i class="forme f3"></i>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="etoiles" viewBox="0 0 24 24"><path fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9.94 14.06A2 2 0 0 0 8.5 12.62L3.36 11.3a.5.5 0 0 1 0-.96L8.5 9.02A2 2 0 0 0 9.94 7.58l1.32-5.14a.5.5 0 0 1 .96 0l1.32 5.14a2 2 0 0 0 1.44 1.44l5.14 1.32a.5.5 0 0 1 0 .96l-5.14 1.32a2 2 0 0 0-1.44 1.44l-1.32 5.14a.5.5 0 0 1-.96 0zM20 3v4M22 5h-4M4 17v2M5 18H3"/></symbol>
+  <symbol id="coche" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="loupe" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="3"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
+  <symbol id="cadenas" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2" fill="#12a974"/><path d="M8 11V7a4 4 0 0 1 8 0v4" fill="none" stroke="#12a974" stroke-width="2.6"/></symbol>
+</defs></svg>
+
+<div class="entete"><div class="marque"><span class="logo"><svg><use href="#etoiles"/></svg></span>MySite</div></div>
+<div class="sous"><p id="sous"></p></div>
+
+<!-- 1-2 : la rue, puis le constat -->
+<section class="sc" style="@@rue_constat@@">
+  <div class="zone">
+    <div class="boutique tombe" style="--o:.3s;left:0;--c:#ff6b4a"><div class="store"></div><div class="enseigne">Pizza Bella</div><div class="vitrine"></div><div class="porte"></div><span class="sticker pop" style="--s:@@s_constat@@;--o:.7s">Pas de site</span></div>
+    <div class="boutique tombe" style="--o:.5s;left:325px;--c:#4cc9f0;height:480px"><div class="store"></div><div class="enseigne">Coiffure Zoé</div><div class="vitrine"></div><div class="porte"></div><span class="sticker pop" style="--s:@@s_constat@@;--o:1.3s">Pas de site</span></div>
+    <div class="boutique tombe" style="--o:.7s;left:650px;--c:#2ee6a6"><div class="store"></div><div class="enseigne">Le Bistrot</div><div class="vitrine"></div><div class="porte"></div><span class="sticker pop" style="--s:@@s_constat@@;--o:1.9s">Pas de site</span></div>
+  </div>
+</section>
+
+<!-- 3 : trouver -->
+<section class="sc" style="@@trouver@@">
+  <div class="zone">
+    <div class="bloc recherche monte" style="--o:.2s"><svg><use href="#loupe"/></svg><span data-tape="Restaurants · Lyon" data-t="@@tape_trouver@@"></span></div>
+    <div class="bloc ligne glisse" style="--o:1.6s"><span class="av" style="background:#ffc6a8">PB</span><div><b>Pizza Bella</b><small>Pizzeria · Lyon 3e</small></div><span class="reserve">Réservé pour toi</span></div>
+    <div class="bloc ligne glisse" style="--o:1.85s"><span class="av" style="background:#c9f2ff">SR</span><div><b>Snack du Rhône</b><small>Snack · Lyon 7e</small></div><span class="reserve">Réservé pour toi</span></div>
+    <div class="bloc ligne glisse" style="--o:2.1s"><span class="av" style="background:#c9bcff">LB</span><div><b>Le Bistrot</b><small>Restaurant · Villeurbanne</small></div><span class="reserve">Réservé pour toi</span></div>
+    <div class="bloc ligne glisse" style="--o:2.35s"><span class="av" style="background:#b8f5df">ST</span><div><b>Sushi Tokyo</b><small>Cuisine japonaise · Lyon 2e</small></div><span class="reserve">Réservé pour toi</span></div>
+  </div>
+</section>
+
+<!-- 4 : la maquette prête -->
+<section class="sc" style="@@maquette@@">
+  <div class="zone">
+    <div class="tel monte" style="--o:.2s;left:255px;top:0"><div class="ecran"><img class="defile" src="telephone.jpg" alt=""></div></div>
+    <div class="note flotte" style="--o:1.6s;left:-10px;top:120px;background:var(--jaune)">La carte</div>
+    <div class="note flotte" style="--o:2.4s;right:-10px;top:330px;background:var(--ciel)">Les horaires</div>
+    <div class="note flotte" style="--o:3.3s;left:-10px;top:560px;background:var(--rose)">Le plan d'accès</div>
+  </div>
+</section>
+
+<!-- 5 : la visite -->
+<section class="sc" style="@@visite@@">
+  <div class="zone">
+    <div class="tel monte" style="--o:.3s;left:345px;top:20px;transform-origin:bottom;rotate:6deg"><div class="ecran"><img src="telephone.jpg" alt=""></div></div>
+    <div class="bulle pop" style="--o:1.3s;left:-10px;top:110px">Voici votre futur site&nbsp;!</div>
+    <span class="etoile pop" style="--o:1.9s;left:280px;top:420px">✦</span>
+    <span class="etoile pop" style="--o:2.1s;left:820px;top:40px">✦</span>
+    <span class="etoile pop" style="--o:2.3s;left:860px;top:640px;font-size:44px">✦</span>
+  </div>
+</section>
+
+<!-- 6 : le devis -->
+<section class="sc" style="@@devis@@">
+  <div class="zone">
+    <div class="bloc papier monte" style="--o:.2s">
+      <h2 class="titre">Devis D-2026-0001</h2>
+      <p class="meta">Pizza Bella · 12 rue Paul Bert, Lyon</p>
+      <div class="pl monte" style="--o:.9s"><span>Création du site vitrine</span><b>490 €</b></div>
+      <div class="pl monte" style="--o:1.2s"><span>Mises à jour × 12 mois</span><b>348 €</b></div>
+      <div class="total monte" style="--o:1.5s"><span>Total</span><span>838 €</span></div>
+      <div style="height:120px"></div>
+      <div class="cachet tampon" style="--o:2.4s">Signé ✓</div>
+    </div>
+    <div class="puces"><span class="puce pop" style="--o:2.9s">Mentions légales</span><span class="puce pop" style="--o:3.2s;background:var(--ciel)">PDF</span><span class="puce pop" style="--o:3.5s;background:var(--rose)">Numérotation</span></div>
+  </div>
+</section>
+
+<!-- 7 : en ligne -->
+<section class="sc" style="@@enligne@@">
+  <div class="zone">
+    <div class="bloc nav monte" style="--o:.2s">
+      <div class="nav-barre"><i></i><i></i><i></i><div class="url"><svg><use href="#cadenas"/></svg><span data-tape="pizzabella.fr" data-t="@@tape_enligne@@"></span></div></div>
+      <img src="site-ordi.jpg" alt="">
+    </div>
+    <div class="vert pop" style="--o:1.7s">En ligne ✓</div>
+    <div id="confettis"></div>
+  </div>
+</section>
+
+<!-- 8 : encaisser -->
+<section class="sc" style="@@encaisser@@">
+  <div class="zone">
+    <div class="bloc facture glisse" style="--o:.2s"><h2 class="titre">Facture F-2026-0001</h2><p>Pizza Bella</p><div class="montant">838 €</div><span class="paye tampon" style="--o:1.3s">Payée</span></div>
+    <div class="bloc abo monte" style="--o:2.2s"><small>Abonnement mises à jour</small><b>chaque mois, chaque client</b><div class="rep"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    <span class="ex" style="opacity:.9">Montants d'exemple</span>
+  </div>
+</section>
+
+<!-- 9 : académie -->
+<section class="sc" style="@@academie@@">
+  <div class="zone">
+    <div class="bloc progres monte" style="--o:.2s"><h2 class="titre"><span>Académie</span><span id="pct">0 %</span></h2><div class="barre"><i id="barre"></i></div></div>
+    <div class="bloc lecon glisse" style="--o:1.0s;top:330px"><span class="ok"><svg><use href="#coche"/></svg></span>Trouver ses premiers clients</div>
+    <div class="bloc lecon glisse" style="--o:1.5s;top:480px"><span class="ok"><svg><use href="#coche"/></svg></span>Présenter la maquette</div>
+    <div class="bloc lecon glisse" style="--o:2.0s;top:630px"><span class="ok"><svg><use href="#coche"/></svg></span>Livrer et se faire payer</div>
+  </div>
+</section>
+
+<!-- 10 : fin -->
+<section class="sc" style="@@fin@@;--f:999s">
+  <div class="final">
+    <div class="gros pop" style="--o:.15s"><span class="logo"><svg><use href="#etoiles"/></svg></span>MySite</div>
+    <div class="cta pop" style="--o:.9s">Commence gratuitement</div>
+    <div class="puce pop" style="--o:1.2s;background:#fff">Lien en bio</div>
+    <div class="fleche">↓</div>
+  </div>
+</section>
+<div class="noir" style="--fin:@@fondu@@"></div>
+
+<script>
+const TL = @@TIMELINE@@;
+// confettis de la mise en ligne
+(function(){const z=document.getElementById("confettis"),c=["#ff6b4a","#6d4aff","#ffd23f","#2ee6a6","#4cc9f0","#ff8fc7"];
+for(let k=0;k<40;k++){const e=document.createElement("i");e.className="confetti";const a=(k/40)*Math.PI*2,d=240+((k*53)%220);
+e.style.cssText=`left:760px;top:170px;background:${c[k%6]};--o:1.7s;--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d-120}px;--r:${(k*97)%720}deg`;z.appendChild(e);}})();
+
+// sous-titres : mots répartis selon leur longueur (pauses plus longues après la ponctuation)
+const phrases = TL.scenes.map(s => {
+  const mots = s.texte.replace(/\s+([?!:;»])/g, "\u00a0$1").split(/ +/);
+  const poids = mots.map(m => m.replace(/[^\p{L}\d]/gu, "").length + 2 + (/[.?!:]$/.test(m) ? 6 : /,$/.test(m) ? 3 : 0));
+  const total = poids.reduce((a, b) => a + b, 0);
+  let cumul = 0;
+  const debuts = poids.map(p => { const d = s.voix + (cumul / total) * s.duree; cumul += p; return d; });
+  return { s, mots, debuts };
+});
+const el = document.getElementById("sous");
+let dernier = -1;
+const fx=(a,b,t)=>Math.min(1,Math.max(0,(t-a)/(b-a)));
+function maj(t){
+  const k = phrases.findIndex(p => t >= p.s.debut && t < p.s.fin);
+  if (k !== dernier) { dernier = k; el.innerHTML = k < 0 ? "" : phrases[k].mots.map(m => `<span${/MySite/.test(m) ? ' class="marque-mot"' : ""}>${m}</span>`).join(" "); }
+  if (k >= 0) {
+    const p = phrases[k], sp = el.children;
+    for (let i = 0; i < sp.length; i++) {
+      const fin = i + 1 < p.debuts.length ? p.debuts[i + 1] : p.s.voix + p.s.duree;
+      sp[i].className = (/MySite/.test(p.mots[i]) ? "marque-mot " : "") + (t >= p.debuts[i] && t < fin ? "actuel" : t >= p.debuts[i] ? "dit" : "");
+    }
+    el.parentElement.style.opacity = Math.min(1, (t - p.s.debut) * 4, (p.s.fin - t) * 5 + (k === phrases.length - 1 ? 9 : 0));
+  }
+  document.querySelectorAll("[data-tape]").forEach(e => { const [a, b] = e.dataset.t.split(",").map(Number), s = e.dataset.tape; e.textContent = s.slice(0, Math.round(s.length * fx(a, b, t))); });
+  const ac = TL.scenes.find(s => s.id === "academie"), p = fx(ac.debut + 0.6, ac.debut + 3.0, t);
+  document.getElementById("barre").style.width = (p * 100) + "%";
+  document.getElementById("pct").textContent = Math.round(p * 100) + " %";
+}
+window.rendre = function(t){ document.getAnimations().forEach(a => { a.pause(); a.currentTime = t * 1000; }); maj(t); };
+window.DUREE = TL.total;
+if (!navigator.webdriver) { const d = performance.now(); (function b(){ window.rendre(((performance.now() - d) / 1000) % TL.total); requestAnimationFrame(b); })(); }
+</script>
+</body>
+</html>

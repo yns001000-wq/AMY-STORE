@@ -1,0 +1,85 @@
+{
+ "scenes": [
+  {
+   "id": "rue",
+   "debut": 0.4,
+   "voix": 0.75,
+   "fin": 5.105,
+   "duree": 3.805,
+   "texte": "Tu cherches un vrai complément de revenus ? Regarde autour de toi."
+  },
+  {
+   "id": "constat",
+   "debut": 5.105,
+   "voix": 5.455,
+   "fin": 8.902,
+   "duree": 2.897,
+   "texte": "Beaucoup de commerces de ton quartier n'ont toujours pas de site internet."
+  },
+  {
+   "id": "trouver",
+   "debut": 8.902,
+   "voix": 9.252,
+   "fin": 15.524,
+   "duree": 5.722,
+   "texte": "Avec MySite, tu les trouves en un clic. Et chaque commerce est réservé rien que pour toi."
+  },
+  {
+   "id": "maquette",
+   "debut": 15.524,
+   "voix": 15.874,
+   "fin": 22.119,
+   "duree": 5.695,
+   "texte": "Avant même de passer les voir, leur futur site est déjà prêt : leur carte, leurs horaires, leur plan d'accès."
+  },
+  {
+   "id": "visite",
+   "debut": 22.119,
+   "voix": 22.469,
+   "fin": 26.88,
+   "duree": 3.861,
+   "texte": "Tu entres, tu sors ton téléphone, et tu leur montres leur propre site."
+  },
+  {
+   "id": "devis",
+   "debut": 26.88,
+   "voix": 27.23,
+   "fin": 32.551,
+   "duree": 4.771,
+   "texte": "Ils sont partants ? Ton devis est prêt en deux clics, avec toutes les mentions obligatoires."
+  },
+  {
+   "id": "enligne",
+   "debut": 32.551,
+   "voix": 32.901,
+   "fin": 37.083,
+   "duree": 3.632,
+   "texte": "Un clic, et leur site est en ligne, sur leur propre nom de domaine."
+  },
+  {
+   "id": "encaisser",
+   "debut": 37.083,
+   "voix": 37.433,
+   "fin": 41.82,
+   "duree": 3.837,
+   "texte": "Tu factures, tu encaisses, et tu proposes un petit abonnement pour les mises à jour."
+  },
+  {
+   "id": "academie",
+   "debut": 41.82,
+   "voix": 42.17,
+   "fin": 46.44,
+   "duree": 3.72,
+   "texte": "Tu débutes ? L'Académie t'explique tout, étape par étape."
+  },
+  {
+   "id": "fin",
+   "debut": 46.44,
+   "voix": 46.79,
+   "fin": 52.333,
+   "duree": 3.643,
+   "texte": "MySite. Commence gratuitement, le lien est en bio."
+  }
+ ],
+ "total": 52.33
+}
