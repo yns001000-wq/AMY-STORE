@@ -29,3 +29,9 @@ python3 construire.py  # → video.html, calé sur les durées de la voix
 python3 mixage.py      # → mix-voix.wav (utilise ../bande_son.py)
 node rendu.js          # → MySite-motion-voix.mp4
 ```
+
+## Version voix d'homme
+
+`chaine.sh` enchaîne tout : la voix, le traitement, le montage, le mixage et le rendu. Le résultat est `MySite-motion-voix-homme.mp4`.
+
+La voix est guidée par un lecteur bénévole de LibriVox (« Cinq semaines en ballon », enregistrement du **domaine public**), dont on prend un extrait de 16 s. Ce lecteur a été choisi par analyse automatique de trois voix d'homme : hauteur d'environ 115 Hz, intonation vivante, peu de bruit de fond. Le texte et ses prises sont dans `script-homme.json`.

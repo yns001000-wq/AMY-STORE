@@ -11,7 +11,7 @@ s = json.load(open("script.json"))
 for i, x in enumerate(s):
     meilleur = (-1, None)
     for essai in range(3):
-        w = tts.generate(x["tts"], language_id="fr", audio_prompt_path="ref-humaine.wav", exaggeration=0.55, cfg_weight=0.45, temperature=0.75)
+        w = tts.generate(x["tts"], language_id="fr", audio_prompt_path="ref-humaine.wav", exaggeration=0.6, cfg_weight=0.45, temperature=0.75)
         ta.save(f"prise-{i}-{essai}.wav", w, tts.sr)
         txt = " ".join(seg.text for seg in asr.transcribe(librosa.load(f"prise-{i}-{essai}.wav", sr=16000)[0], language="fr")[0])
         attendu = x["texte"].replace("MySite", "My Site")
