@@ -5,7 +5,7 @@ Deux formats : 16:9 (1920 × 1080, YouTube, site, LinkedIn) et 9:16 (1080 × 192
 Vidéo de présentation du SaaS : Trouver, Montrer, Signer, Livrer, Encaisser, puis l'Académie. Format 1920 × 1080, 30 images/s, son stéréo.
 
 - `video.html` : le montage. Toutes les animations sont en CSS ; `window.rendre(t)` place la vidéo à l'instant `t` (en secondes). Ouvert dans un navigateur, le montage tourne en boucle.
-- `bande_son.py` : musique à 120 BPM et bruitages synchronisés, entièrement synthétisés (aucun droit d'auteur). Le script produit `bande_son.wav`.
+- `bande_son.py` : ambiance lo-fi détendue (piano électrique, batterie lente, basse ronde, grain de vinyle) et bruitages doux synchronisés, entièrement synthétisés (aucun droit d'auteur). Le script produit `bande_son.wav`.
 - `rendu.js` : capture chaque image avec Playwright, puis assemble la vidéo avec ffmpeg en MP4 H.264 + AAC. Le son est normalisé à −14 LUFS, le niveau attendu par YouTube, Instagram et TikTok.
 - `apercus.js` : captures d'instants précis, pour vérifier le montage (`node apercus.js 5,12.3 vertical`).
 - Format vertical : `video.html?vertical`. Les mêmes scènes sont recomposées (texte en haut, visuel en dessous).
