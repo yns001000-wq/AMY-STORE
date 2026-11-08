@@ -1,0 +1,15 @@
+# Vidéo de présentation MySite (48 s)
+
+Vidéo de présentation du SaaS : Trouver, Montrer, Signer, Livrer, Encaisser, puis l'Académie. Format 1920 × 1080, 30 images/s, son stéréo.
+
+- `video.html` : le montage. Toutes les animations sont en CSS ; `window.rendre(t)` place la vidéo à l'instant `t` (en secondes). Ouvert dans un navigateur, le montage tourne en boucle.
+- `bande_son.py` : musique à 120 BPM et bruitages synchronisés, entièrement synthétisés (aucun droit d'auteur). Le script produit `bande_son.wav`.
+- `rendu.js` : capture chaque image avec Playwright, puis assemble la vidéo avec ffmpeg en MP4 H.264 + AAC. Le son est normalisé à −14 LUFS, le niveau attendu par YouTube, Instagram et TikTok.
+- `apercus.js` : captures d'instants précis, pour vérifier le montage.
+
+Images : `telephone.jpg` et `site-ordi.jpg` sont des captures d'un site d'exemple généré par le Studio ; `ia-pizzeria-four.webp` vient de la banque de photos MySite.
+
+```bash
+python3 bande_son.py   # → bande_son.wav (numpy requis)
+node rendu.js          # → MySite-presentation.mp4 (Playwright et ffmpeg requis, environ 7 min)
+```

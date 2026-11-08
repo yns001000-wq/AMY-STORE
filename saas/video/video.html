@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>MySite en 48 secondes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Gloock&display=swap" rel="stylesheet">
+<style>
+:root{--v:#6d4aff;--i:#3b5bfd;--c:#0ea5c6;--r:#ec4899;--o:#f97316;--g:#10b981;--j:#f5b70a;--deg:linear-gradient(120deg,#6d4aff,#3b5bfd 45%,#0ea5c6);--chaud:linear-gradient(120deg,#f97316,#ec4899 60%,#6d4aff);--ease:cubic-bezier(.16,1,.3,1);--rebond:cubic-bezier(.34,1.56,.64,1)}
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#07080f;color:#fff;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.titre{font-family:"Plus Jakarta Sans",Inter,sans-serif;letter-spacing:-.035em}
+svg{display:block}
+
+/* ---------- fond ---------- */
+.fond{position:absolute;inset:0;overflow:hidden;background:radial-gradient(120% 90% at 10% 0%,#1a1440 0%,#07080f 55%)}
+.fond i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55}
+.b1{width:900px;height:900px;left:-250px;top:-300px;background:#6d4aff;animation:derive1 16s ease-in-out 0s infinite alternate}
+.b2{width:760px;height:760px;right:-200px;bottom:-320px;background:#0ea5c6;animation:derive2 19s ease-in-out 0s infinite alternate}
+.b3{width:520px;height:520px;right:420px;top:-160px;background:#ec4899;opacity:.28!important;animation:derive1 23s ease-in-out 0s infinite alternate}
+@keyframes derive1{to{transform:translate(220px,160px) scale(1.15)}}
+@keyframes derive2{to{transform:translate(-260px,-120px) scale(1.1)}}
+.grille{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse at 50% 40%,#000 20%,transparent 75%)}
+.grain{position:absolute;inset:-50%;opacity:.06;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");animation:grain 1s steps(4) 0s infinite}
+@keyframes grain{25%{transform:translate(3%,-2%)}50%{transform:translate(-2%,3%)}75%{transform:translate(2%,2%)}}
+
+/* ---------- briques d'animation (toutes « recherchables » image par image) ---------- */
+.scene{position:absolute;inset:0;animation:entre .7s var(--ease) var(--a) both,sort .45s ease-in var(--b) forwards}
+@keyframes entre{from{opacity:0;transform:scale(1.07);filter:blur(14px)}}
+@keyframes sort{to{opacity:0;transform:scale(.95);filter:blur(12px)}}
+.monte{animation:monte .8s var(--ease) var(--d) both}@keyframes monte{from{opacity:0;transform:translateY(70px)}}
+.pop{animation:pop .6s var(--rebond) var(--d) both}@keyframes pop{from{opacity:0;transform:scale(.4)}}
+.gauche{animation:gauche .8s var(--ease) var(--d) both}@keyframes gauche{from{opacity:0;transform:translateX(-90px)}}
+.droite{animation:droite .9s var(--ease) var(--d) both}@keyframes droite{from{opacity:0;transform:translateX(140px) rotate(3deg)}}
+.fondu{animation:fondu .6s ease var(--d) both}@keyframes fondu{from{opacity:0}}
+.masque{display:block;overflow:hidden;padding-bottom:.08em}
+.masque>span{display:block;animation:masque .9s var(--ease) var(--d) both}@keyframes masque{from{transform:translateY(110%) rotate(4deg)}}
+
+/* ---------- textes ---------- */
+.gauche-col{position:absolute;left:150px;top:0;bottom:0;width:720px;display:flex;flex-direction:column;justify-content:center;gap:30px}
+.etiquette{align-self:flex-start;display:inline-flex;align-items:center;gap:12px;font:700 22px/1 Inter;letter-spacing:.14em;text-transform:uppercase;padding:14px 22px;border-radius:99px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px)}
+.etiquette b{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--deg);font-size:16px;letter-spacing:0}
+h1{font-size:96px;line-height:1;margin:0;font-weight:800}
+.deg{background:linear-gradient(110deg,#fff 20%,#b9a8ff 55%,#7dd3fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.texte{font-size:32px;line-height:1.4;color:rgba(255,255,255,.78);margin:0;max-width:640px;font-weight:500}
+.verre{background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.16);border-radius:28px;backdrop-filter:blur(18px);box-shadow:0 40px 90px -30px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.12)}
+
+/* ---------- barre d'étapes ---------- */
+.etapes{position:absolute;left:50%;top:44px;transform:translateX(-50%);display:flex;gap:10px;padding:10px;border-radius:99px;background:rgba(10,12,28,.55);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);z-index:20}
+.etapes span{position:relative;overflow:hidden;font:700 20px/1 Inter;padding:14px 24px;border-radius:99px;color:rgba(255,255,255,.55)}
+.etapes span i{position:absolute;inset:0;background:var(--deg);transform-origin:left;transform:scaleX(0);z-index:-1;border-radius:99px}
+.etapes span.ok{color:#fff}
+.etapes{isolation:isolate}
+.marque-coin{position:absolute;left:56px;top:50px;display:flex;align-items:center;gap:14px;font:800 30px/1 "Plus Jakarta Sans";z-index:20}
+.logo{width:52px;height:52px;border-radius:16px;background:var(--deg);display:grid;place-items:center;box-shadow:0 14px 34px -10px rgba(109,74,255,.9)}
+.logo svg{width:28px;height:28px}
+
+/* ---------- curseur ---------- */
+.curseur{position:absolute;width:46px;height:46px;z-index:30;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.clic{position:absolute;width:90px;height:90px;margin:-45px 0 0 -45px;border-radius:50%;border:4px solid #fff;opacity:0;animation:clic .6s ease-out var(--d) forwards;z-index:29}
+@keyframes clic{0%{opacity:.9;transform:scale(.2)}100%{opacity:0;transform:scale(1.6)}}
+
+/* ---------- S0 intro ---------- */
+.intro{display:grid;place-content:center;justify-items:center;gap:34px;text-align:center}
+.intro .logo{width:150px;height:150px;border-radius:44px}.intro .logo svg{width:80px;height:80px}
+.intro h1{font-size:150px}
+.intro p{font-size:40px;color:rgba(255,255,255,.82);margin:0;font-weight:500}
+.halo{position:absolute;width:150px;height:150px;border-radius:44px;border:3px solid rgba(255,255,255,.6);opacity:0;animation:halo 1.4s ease-out var(--d) forwards}
+@keyframes halo{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(2.6)}}
+
+/* ---------- S1 prospects ---------- */
+.app{position:absolute;left:960px;top:200px;width:820px;padding:34px;display:grid;gap:18px}
+.recherche{display:flex;gap:14px;align-items:center}
+.champ{flex:1;height:76px;border-radius:20px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;gap:16px;padding:0 24px;font:500 28px/1 Inter}
+.champ svg{width:30px;height:30px;opacity:.7;flex:none}
+.caret{display:inline-block;width:3px;height:32px;background:#fff;margin-left:2px;vertical-align:middle}
+.bouton{height:76px;padding:0 32px;border-radius:20px;background:var(--deg);display:flex;align-items:center;font:700 26px/1 Inter;box-shadow:0 16px 34px -12px rgba(109,74,255,.9)}
+.ligne{display:grid;grid-template-columns:72px 1fr auto;gap:22px;align-items:center;padding:18px 22px;border-radius:22px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
+.av{width:72px;height:72px;border-radius:20px;display:grid;place-items:center;font:800 28px/1 "Plus Jakarta Sans"}
+.ligne b{display:block;font:700 30px/1.2 "Plus Jakarta Sans"}.ligne small{font-size:22px;color:rgba(255,255,255,.65)}
+.badge{font:700 20px/1 Inter;padding:12px 18px;border-radius:99px;background:rgba(16,185,129,.18);color:#6ee7b7;border:1px solid rgba(16,185,129,.4);display:flex;gap:8px;align-items:center}
+.compteur-chip{position:absolute;right:-40px;top:-50px;padding:18px 26px;border-radius:22px;background:var(--chaud);font:800 30px/1 "Plus Jakarta Sans";box-shadow:0 20px 40px -14px rgba(236,72,153,.8)}
+
+/* ---------- S2 carte ---------- */
+.plan{position:absolute;left:940px;top:170px;width:860px;height:760px;overflow:hidden;padding:0}
+.plan svg{position:absolute;inset:0}
+.epingle{position:absolute;width:44px;height:44px;margin:-44px 0 0 -22px}
+.epingle .tete{width:44px;height:44px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:4px solid #fff;box-shadow:0 10px 18px rgba(0,0,0,.4)}
+.epingle .onde{position:absolute;left:50%;top:100%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:3px solid currentColor;opacity:0;animation:onde 1.6s ease-out var(--d) 2 forwards}
+@keyframes onde{from{opacity:.9;transform:scale(.3)}to{opacity:0;transform:scale(4)}}
+.tombe{animation:tombe .7s var(--rebond) var(--d) both}@keyframes tombe{from{opacity:0;transform:translateY(-120px)}}
+.legende{position:absolute;left:30px;bottom:30px;display:flex;gap:12px;padding:14px 18px}
+.legende span{display:flex;gap:8px;align-items:center;font:600 20px/1 Inter}.legende i{width:16px;height:16px;border-radius:50%}
+.bulle-rdv{position:absolute;padding:14px 20px;border-radius:16px;background:#fff;color:#11142a;font:700 21px/1.2 Inter;box-shadow:0 18px 30px -10px rgba(0,0,0,.6)}
+.bulle-rdv small{display:block;color:#6b7086;font-weight:600;font-size:17px}
+
+/* ---------- téléphone ---------- */
+.tel{position:absolute;width:430px;height:880px;border-radius:64px;background:#0d0f18;padding:16px;box-shadow:0 0 0 2px rgba(255,255,255,.18),0 60px 120px -30px rgba(0,0,0,.9),0 0 120px -20px rgba(109,74,255,.6)}
+.tel .ecran{width:100%;height:100%;border-radius:50px;overflow:hidden;position:relative;background:#f7f2e8}
+.tel .ecran img{width:100%;display:block}
+.tel .encoche{position:absolute;left:50%;top:28px;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#0d0f18;z-index:2}
+.defile{animation:defile 5.6s cubic-bezier(.65,0,.35,1) var(--d) both}
+@keyframes defile{0%,14%{transform:translateY(0)}46%,58%{transform:translateY(-1180px)}100%{transform:translateY(-2560px)}}
+.flottant{position:absolute;display:flex;align-items:center;gap:14px;padding:18px 24px;border-radius:22px;font:700 26px/1.1 Inter;background:rgba(255,255,255,.95);color:#11142a;box-shadow:0 26px 50px -18px rgba(0,0,0,.7)}
+.flottant .ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;color:#fff}
+.flottant .ic svg{width:26px;height:26px}
+.flotte{animation:pop .6s var(--rebond) var(--d) both,flotte 3s ease-in-out calc(var(--d) + .6s) infinite alternate}
+@keyframes flotte{to{transform:translateY(-14px)}}
+
+/* ---------- S4 studio ---------- */
+.editeur{position:absolute;left:150px;top:470px;width:700px;padding:30px;display:grid;gap:22px}
+.onglets{display:flex;gap:8px;flex-wrap:wrap}
+.onglets span{font:600 20px/1 Inter;padding:12px 16px;border-radius:12px;color:rgba(255,255,255,.65)}
+.onglets span.actif{background:rgba(109,74,255,.35);color:#fff}
+.palettes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.palette{display:flex;align-items:center;gap:12px;padding:16px;border-radius:16px;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1);font:600 20px/1.1 Inter}
+.palette i{width:30px;height:30px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)}.palette i+i{margin-left:-20px}
+.choisi1{animation:choisi .3s ease 20.35s both,dechoisi .2s ease 21.65s forwards}
+.choisi2{animation:choisi .3s ease 21.65s both}
+@keyframes choisi{to{border-color:#a78bfa;background:rgba(109,74,255,.25);box-shadow:0 0 0 5px rgba(109,74,255,.25)}}
+@keyframes dechoisi{from{border-color:#a78bfa;background:rgba(109,74,255,.25)}to{border-color:rgba(255,255,255,.1);background:rgba(255,255,255,.06);box-shadow:none}}
+.interrupteurs{display:grid;gap:12px}
+.inter{display:flex;justify-content:space-between;align-items:center;font:600 22px/1 Inter;color:rgba(255,255,255,.85)}
+.inter u{width:64px;height:36px;border-radius:99px;background:var(--g);position:relative;text-decoration:none}
+.inter u::after{content:"";position:absolute;right:4px;top:4px;width:28px;height:28px;border-radius:50%;background:#fff}
+.apercu-site{position:absolute;left:960px;top:170px;width:820px;height:760px;border-radius:26px;overflow:hidden;background:#f7f2e8;color:#1b1d27;box-shadow:0 50px 100px -30px rgba(0,0,0,.9)}
+.apercu-site .nav{height:96px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;color:#fff}
+.apercu-site .nav b{font:400 40px/1 Gloock,serif}
+.apercu-site .nav span{padding:16px 26px;border-radius:99px;font:700 22px/1 Inter;color:#fff}
+.apercu-site .hero{display:grid;grid-template-columns:1fr 330px;gap:30px;padding:46px 40px}
+.apercu-site h3{font:400 72px/1 Gloock,serif;margin:0 0 20px;letter-spacing:-.02em}
+.apercu-site p{font-size:24px;line-height:1.45;color:#3d4054;margin:0 0 26px}
+.apercu-site .appel{display:inline-flex;padding:20px 30px;border-radius:99px;color:#fff;font:700 24px/1 Inter}
+.apercu-site .photo{height:420px;border-radius:22px;background:url(ia-pizzeria-four.webp) center/cover}
+.apercu-site .carte-l{margin:0 40px;padding:22px 26px;border-radius:18px;background:#fff;display:flex;justify-content:space-between;font:400 30px/1 Gloock,serif}
+.apercu-site .carte-l em{font:700 26px/1 Inter;font-style:normal}
+/* changement de couleurs au clic : deux palettes successives */
+.recolore .nav{animation:fondP 3s steps(1,end) 20.4s forwards}
+@keyframes fondP{0%,43.2%{background:#16243a}43.3%,100%{background:#4a1d24}}
+.recolore .nav span,.recolore .appel{animation:fondA 3s steps(1,end) 20.4s forwards}
+@keyframes fondA{0%,43.2%{background:#c2391b}43.3%,100%{background:#a8432f}}
+.recolore h3{animation:texteP2 3s steps(1,end) 20.4s forwards}
+@keyframes texteP2{0%,43.2%{color:#16243a}43.3%,100%{color:#4a1d24}}
+.recolore .carte-l em{animation:texteA2 3s steps(1,end) 20.4s forwards}
+@keyframes texteA2{0%,43.2%{color:#c2391b}43.3%,100%{color:#a8432f}}
+.avant .nav{background:#1d4d3a}.avant .nav span,.avant .appel{background:#b3372a}.avant h3{color:#1d4d3a}.avant .carte-l em{color:#b3372a}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;animation:flash .5s ease-out var(--d) forwards;pointer-events:none}
+@keyframes flash{0%{opacity:.55}100%{opacity:0}}
+
+/* ---------- S5 devis ---------- */
+.papier{position:absolute;left:1010px;top:150px;width:720px;padding:50px;border-radius:18px;background:#fff;color:#1b1d27;box-shadow:0 60px 110px -30px rgba(0,0,0,.95);transform:rotate(-2deg)}
+.papier h3{font-size:44px;margin:0 0 6px}
+.papier .meta{font:500 20px/1.4 Inter;color:#6b7086;margin:0 0 30px}
+.papier .client{margin:0 0 30px auto;width:300px;padding:18px 20px;border:2px solid #e5e7ef;border-radius:14px;font:600 20px/1.4 Inter}
+.papier .client small{display:block;color:#8b90a4;font-size:15px;letter-spacing:.1em;text-transform:uppercase}
+.pl{display:flex;justify-content:space-between;gap:20px;padding:18px 0;border-bottom:2px solid #eef0f6;font:500 23px/1.35 Inter}
+.pl b{white-space:nowrap}
+.total{display:flex;justify-content:space-between;margin-top:22px;padding-top:18px;border-top:4px solid #1b1d27;font:800 34px/1 "Plus Jakarta Sans"}
+.signature{margin-top:30px;height:110px;border:2px dashed #c3c7d6;border-radius:14px;padding:14px;font:500 17px/1.3 Inter;color:#8b90a4}
+.tampon{position:absolute;right:70px;bottom:70px;padding:20px 30px;border:6px solid #10b981;border-radius:16px;color:#10b981;font:800 40px/1 "Plus Jakarta Sans";text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.85);animation:tampon .45s cubic-bezier(.2,1.4,.4,1) var(--d) both}
+@keyframes tampon{0%{opacity:0;transform:scale(3) rotate(-25deg)}100%{opacity:1;transform:scale(1) rotate(-12deg)}}
+.puces{display:flex;flex-wrap:wrap;gap:14px}
+.puce{display:flex;align-items:center;gap:10px;font:600 24px/1 Inter;padding:16px 22px;border-radius:99px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16)}
+.puce svg{width:26px;height:26px;color:#6ee7b7}
+.confetti{position:absolute;width:14px;height:22px;border-radius:3px;opacity:0;animation:confetti 1.6s cubic-bezier(.1,.7,.3,1) var(--d) forwards}
+@keyframes confetti{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(var(--r))}}
+.secousse{animation:secousse .35s ease var(--d) both}
+@keyframes secousse{25%{transform:translate(-8px,4px) rotate(-2deg)}50%{transform:translate(6px,-4px) rotate(-2deg)}100%{transform:rotate(-2deg)}}
+
+/* ---------- S6 mise en ligne ---------- */
+.gros-bouton{position:absolute;left:150px;top:770px;display:flex;align-items:center;gap:18px;padding:34px 52px;border-radius:99px;background:var(--deg);font:800 40px/1 "Plus Jakarta Sans";box-shadow:0 30px 60px -18px rgba(109,74,255,.95)}
+.gros-bouton svg{width:44px;height:44px}
+.appui{animation:appui .3s ease 30.6s both}@keyframes appui{50%{transform:scale(.92)}}
+.navigateur{position:absolute;left:930px;top:170px;width:880px;border-radius:24px;overflow:hidden;background:#fff;box-shadow:0 60px 120px -30px rgba(0,0,0,.95)}
+.nav-barre{height:78px;background:#eef0f6;display:flex;align-items:center;gap:16px;padding:0 24px}
+.nav-barre i{width:16px;height:16px;border-radius:50%;background:#ff5f57}.nav-barre i:nth-child(2){background:#febc2e}.nav-barre i:nth-child(3){background:#28c840}
+.url{flex:1;margin-left:16px;height:48px;border-radius:14px;background:#fff;display:flex;align-items:center;gap:12px;padding:0 18px;font:600 24px/1 Inter;color:#11142a}
+.url svg{width:22px;height:22px;color:#10b981}
+.navigateur img{width:100%;display:block}
+.en-ligne{position:absolute;right:30px;top:100px;padding:16px 24px;border-radius:99px;background:#10b981;color:#fff;font:800 26px/1 "Plus Jakarta Sans";display:flex;gap:10px;align-items:center;box-shadow:0 18px 30px -10px rgba(16,185,129,.8)}
+.en-ligne svg{width:26px;height:26px}
+.verifs{position:absolute;left:930px;top:860px;display:flex;gap:14px}
+
+/* ---------- S7 encaisser ---------- */
+.tuiles{position:absolute;left:960px;top:180px;width:820px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.tuile{padding:32px}
+.tuile small{font:600 22px/1 Inter;color:rgba(255,255,255,.7)}
+.tuile .val{font:800 66px/1 "Plus Jakarta Sans";margin-top:16px;letter-spacing:-.03em}
+.barres{grid-column:1/-1;height:300px;display:flex;align-items:flex-end;gap:22px;padding:34px 40px}
+.barres i{flex:1;border-radius:14px 14px 6px 6px;background:var(--deg);transform-origin:bottom;animation:barre .9s var(--ease) var(--d) both}
+@keyframes barre{from{transform:scaleY(0)}}
+.facture-mini{position:absolute;left:150px;top:690px;width:620px;padding:26px 30px;display:flex;align-items:center;gap:20px}
+.facture-mini .doc{width:64px;height:80px;border-radius:10px;background:#fff;flex:none;box-shadow:0 10px 20px rgba(0,0,0,.4)}
+.facture-mini b{font:700 28px/1.2 "Plus Jakarta Sans"}.facture-mini small{display:block;font-size:20px;color:rgba(255,255,255,.65)}
+.payee{margin-left:auto;padding:14px 22px;border:4px solid #10b981;border-radius:12px;color:#6ee7b7;font:800 26px/1 "Plus Jakarta Sans";text-transform:uppercase;animation:tampon .45s cubic-bezier(.2,1.4,.4,1) var(--d) both}
+.exemple{position:absolute;right:140px;bottom:120px;font:500 18px/1 Inter;color:rgba(255,255,255,.5)}
+
+/* ---------- S8 académie ---------- */
+.anneau{position:absolute;left:1000px;top:240px;width:440px;height:440px}
+.anneau svg{width:100%;height:100%;transform:rotate(-90deg)}
+.anneau circle{fill:none;stroke-width:34}
+.anneau span{position:absolute;inset:0;display:grid;place-content:center;text-align:center;gap:14px}.anneau span span{position:static;display:inline}
+.anneau b{font:800 110px/1 "Plus Jakarta Sans"}.anneau small{font:600 24px/1 Inter;color:rgba(255,255,255,.7)}
+.niveaux{position:absolute;left:1500px;top:250px;display:grid;gap:16px}
+.niv{display:flex;align-items:center;gap:14px;padding:16px 22px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font:700 24px/1 Inter;color:rgba(255,255,255,.5)}
+.niv i{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.3)}
+.niv.atteint{color:#fff;background:rgba(109,74,255,.3);border-color:rgba(167,139,250,.6)}.niv.atteint i{background:#a78bfa;box-shadow:0 0 0 6px rgba(167,139,250,.3)}
+.modules{position:absolute;left:1000px;top:760px;display:flex;gap:14px}
+.mod{width:96px;height:96px;border-radius:24px;display:grid;place-items:center;box-shadow:0 16px 30px -12px rgba(0,0,0,.6)}
+.mod svg{width:44px;height:44px}
+
+/* ---------- S9 fin ---------- */
+.mot{position:absolute;inset:0;display:grid;place-items:center;font:800 230px/1 "Plus Jakarta Sans";letter-spacing:-.05em;opacity:0;animation:mot .36s linear var(--d) both}
+@keyframes mot{0%{opacity:0;transform:scale(1.35);filter:blur(10px)}22%{opacity:1;transform:scale(1);filter:blur(0)}80%{opacity:1;transform:scale(.97)}100%{opacity:0;transform:scale(.9)}}
+.final{display:grid;place-content:center;justify-items:center;gap:36px;text-align:center}
+.final .marque{display:flex;align-items:center;gap:26px;font:800 120px/1 "Plus Jakarta Sans";letter-spacing:-.04em}
+.final .logo{width:120px;height:120px;border-radius:36px}.final .logo svg{width:64px;height:64px}
+.final p{margin:0;font-size:40px;color:rgba(255,255,255,.85);font-weight:500}
+.cta{padding:32px 60px;border-radius:99px;background:#fff;color:#2b1c88;font:800 44px/1 "Plus Jakarta Sans";box-shadow:0 0 0 0 rgba(255,255,255,.4);animation:pop .6s var(--rebond) 45.6s both,pulse 1.2s ease-out 46.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.45)}100%{box-shadow:0 0 0 34px rgba(255,255,255,0)}}
+.offres{display:flex;gap:14px}
+.offres span{font:700 24px/1 Inter;padding:14px 24px;border-radius:99px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2)}
+.noir{position:absolute;inset:0;background:#000;opacity:0;animation:noir .6s ease 47.4s forwards;z-index:50}
+@keyframes noir{to{opacity:1}}
+</style>
+</head>
+<body>
+<div class="fond"><i class="b1"></i><i class="b2"></i><i class="b3"></i><div class="grille"></div><div class="grain"></div></div>
+
+<!-- Repères communs -->
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="etoiles" viewBox="0 0 24 24"><path fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9.94 14.06A2 2 0 0 0 8.5 12.62L3.36 11.3a.5.5 0 0 1 0-.96L8.5 9.02A2 2 0 0 0 9.94 7.58l1.32-5.14a.5.5 0 0 1 .96 0l1.32 5.14a2 2 0 0 0 1.44 1.44l5.14 1.32a.5.5 0 0 1 0 .96l-5.14 1.32a2 2 0 0 0-1.44 1.44l-1.32 5.14a.5.5 0 0 1-.96 0zM20 3v4M22 5h-4M4 17v2M5 18H3"/></symbol>
+  <symbol id="coche" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="loupe" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="#fff" stroke-width="2.4"/><path d="m20 20-4-4" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="fleche" viewBox="0 0 32 32"><path d="M6 3v24l7-6 4.5 9 4-2-4.5-9H26z" fill="#fff" stroke="#11142a" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="fusee" viewBox="0 0 24 24"><path fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09zM12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2zM9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol>
+  <symbol id="cadenas" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2" fill="currentColor"/><path d="M8 11V7a4 4 0 0 1 8 0v4" fill="none" stroke="currentColor" stroke-width="2.4"/></symbol>
+  <symbol id="horloge" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#fff" stroke-width="2.4"/><path d="M12 7v5l3 2" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/></symbol>
+  <symbol id="tel" viewBox="0 0 24 24"><path fill="#fff" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></symbol>
+  <symbol id="menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></symbol>
+  <symbol id="epin" viewBox="0 0 24 24"><path fill="none" stroke="#fff" stroke-width="2.4" d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5" fill="#fff"/></symbol>
+  <symbol id="toque" viewBox="0 0 24 24"><path fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round" d="m22 10-10-5L2 10l10 5 10-5zM6 12v5c3 2 9 2 12 0v-5"/></symbol>
+</defs></svg>
+
+<div class="marque-coin fondu" style="--d:3.1s"><span class="logo"><svg><use href="#etoiles"/></svg></span>MySite</div>
+<div class="etapes" id="etapes"><span><i></i>Trouver</span><span><i></i>Montrer</span><span><i></i>Signer</span><span><i></i>Livrer</span><span><i></i>Encaisser</span></div>
+
+<!-- S0 : intro -->
+<section class="scene intro" style="--a:0s;--b:2.75s">
+  <div style="position:relative;display:grid;place-items:center">
+    <span class="halo" style="--d:.55s"></span>
+    <span class="logo pop" style="--d:.2s"><svg><use href="#etoiles"/></svg></span>
+  </div>
+  <h1><span class="masque"><span class="deg" style="--d:.55s">MySite</span></span></h1>
+  <p class="monte" style="--d:1.1s">Vendez des sites internet aux commerces près de chez vous.</p>
+</section>
+
+<!-- S1 : trouver -->
+<section class="scene" style="--a:3s;--b:7.7s">
+  <div class="gauche-col">
+    <span class="etiquette gauche" style="--d:3.3s"><b>1</b>Trouver</span>
+    <h1><span class="masque"><span style="--d:3.4s">Trouvez</span></span><span class="masque"><span class="deg" style="--d:3.5s">vos clients.</span></span></h1>
+    <p class="texte monte" style="--d:3.8s">Les commerces de votre zone, issus du registre officiel des entreprises. Chacun n'est attribué qu'à vous.</p>
+  </div>
+  <div class="app verre droite" style="--d:3.3s">
+    <div class="compteur-chip pop" style="--d:4.9s">+<span data-cpt="0,25,4.9,5.9">0</span> prospects</div>
+    <div class="recherche"><div class="champ"><svg><use href="#loupe"/></svg><span data-tape="Pizzeria, restaurant · Rhône" data-t="3.6,4.5"></span><i class="caret" data-caret="3.6,4.75"></i></div><div class="bouton" id="b-rech">Rechercher</div></div>
+    <div class="ligne monte" style="--d:4.9s"><span class="av" style="background:linear-gradient(135deg,#7c5cff,#5432e8)">PB</span><div><b>Pizza Bella</b><small>Pizzeria · Lyon 3e</small></div><span class="badge"><svg width="20" height="20"><use href="#coche"/></svg>Exclusif</span></div>
+    <div class="ligne monte" style="--d:5.05s"><span class="av" style="background:linear-gradient(135deg,#22c3e6,#0b8fb0)">SR</span><div><b>Snack du Rhône</b><small>Restauration rapide · Lyon 7e</small></div><span class="badge"><svg width="20" height="20"><use href="#coche"/></svg>Exclusif</span></div>
+    <div class="ligne monte" style="--d:5.2s"><span class="av" style="background:linear-gradient(135deg,#f472b6,#db2777)">LB</span><div><b>Le Bistrot</b><small>Restaurant · Villeurbanne</small></div><span class="badge"><svg width="20" height="20"><use href="#coche"/></svg>Exclusif</span></div>
+    <div class="ligne monte" style="--d:5.35s"><span class="av" style="background:linear-gradient(135deg,#fb923c,#ea580c)">ST</span><div><b>Sushi Tokyo</b><small>Cuisine asiatique · Lyon 2e</small></div><span class="badge"><svg width="20" height="20"><use href="#coche"/></svg>Exclusif</span></div>
+  </div>
+  <svg class="curseur" style="animation:cur1 1.1s var(--ease) 4.05s both"><use href="#fleche"/></svg>
+  <span class="clic" style="--d:4.65s;left:1700px;top:278px"></span>
+  <style>@keyframes cur1{from{left:1880px;top:600px;opacity:0}to{left:1688px;top:262px;opacity:1}}</style>
+</section>
+
+<!-- S2 : carte -->
+<section class="scene" style="--a:8s;--b:12.25s">
+  <div class="gauche-col">
+    <span class="etiquette gauche" style="--d:8.25s"><b><svg width="18" height="18"><use href="#epin"/></svg></b>Carte</span>
+    <h1><span class="masque"><span style="--d:8.3s">Organisez</span></span><span class="masque"><span class="deg" style="--d:8.4s">vos tournées.</span></span></h1>
+    <p class="texte monte" style="--d:8.7s">Tous vos prospects sur la carte, colorés selon leur étape. Les plus proches se démarchent le même jour.</p>
+  </div>
+  <div class="plan verre droite" style="--d:8.15s">
+    <svg viewBox="0 0 860 760" preserveAspectRatio="none">
+      <rect width="860" height="760" fill="#0c1022"/>
+      <path d="M-20 520 C 160 470, 260 600, 420 540 S 700 380, 900 430" stroke="#16467a" stroke-width="46" fill="none" opacity=".9"/>
+      <path d="M-20 520 C 160 470, 260 600, 420 540 S 700 380, 900 430" stroke="#1e5b97" stroke-width="30" fill="none"/>
+      <g stroke="rgba(255,255,255,.12)" stroke-width="10" fill="none">
+        <path d="M0 120 L860 180"/><path d="M0 300 L860 260"/><path d="M0 660 L860 700"/><path d="M120 0 L180 760"/><path d="M340 0 L300 760"/><path d="M560 0 L620 760"/><path d="M760 0 L720 760"/>
+      </g>
+      <g stroke="rgba(255,255,255,.06)" stroke-width="4" fill="none">
+        <path d="M0 40 L860 90"/><path d="M0 210 L860 220"/><path d="M0 390 L860 360"/><path d="M0 600 L860 610"/><path d="M60 0 L90 760"/><path d="M240 0 L250 760"/><path d="M450 0 L470 760"/><path d="M660 0 L680 760"/><path d="M820 0 L800 760"/>
+      </g>
+      <path id="route" d="M190 230 L330 160 L470 300 L600 210 L690 360 L520 640" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" style="opacity:.95"/>
+    </svg>
+    <div class="epingle tombe" style="--d:8.6s;left:190px;top:230px;color:#3b5bfd"><div class="tete" style="background:#3b5bfd"></div><span class="onde" style="--d:8.9s"></span></div>
+    <div class="epingle tombe" style="--d:8.78s;left:330px;top:160px;color:#f59e0b"><div class="tete" style="background:#f59e0b"></div><span class="onde" style="--d:9.08s"></span></div>
+    <div class="epingle tombe" style="--d:8.96s;left:470px;top:300px;color:#6d4aff"><div class="tete" style="background:#6d4aff"></div><span class="onde" style="--d:9.26s"></span></div>
+    <div class="epingle tombe" style="--d:9.14s;left:600px;top:210px;color:#f97316"><div class="tete" style="background:#f97316"></div><span class="onde" style="--d:9.44s"></span></div>
+    <div class="epingle tombe" style="--d:9.32s;left:690px;top:360px;color:#3b5bfd"><div class="tete" style="background:#3b5bfd"></div><span class="onde" style="--d:9.62s"></span></div>
+    <div class="epingle tombe" style="--d:9.5s;left:520px;top:640px;color:#10b981"><div class="tete" style="background:#10b981"></div><span class="onde" style="--d:9.8s"></span></div>
+    <div class="bulle-rdv pop" style="--d:10.9s;left:360px;top:60px">Rendez-vous<small>Mardi · 14 h 30</small></div>
+    <div class="bulle-rdv pop" style="--d:11.2s;left:560px;top:560px">Gagné<small>Le Bistrot</small></div>
+    <div class="legende verre fondu" style="--d:9.6s"><span><i style="background:#3b5bfd"></i>À contacter</span><span><i style="background:#f59e0b"></i>Rendez-vous</span><span><i style="background:#f97316"></i>Devis</span><span><i style="background:#10b981"></i>Gagné</span></div>
+  </div>
+</section>
+
+<!-- S3 : montrer -->
+<section class="scene" style="--a:12.5s;--b:18.75s">
+  <div class="gauche-col">
+    <span class="etiquette gauche" style="--d:12.75s"><b>2</b>Montrer</span>
+    <h1><span class="masque"><span style="--d:12.85s">Montrez-leur</span></span><span class="masque"><span class="deg" style="--d:12.95s">leur futur site.</span></span></h1>
+    <p class="texte monte" style="--d:13.3s">Une maquette prête en un instant, à présenter sur votre téléphone pendant la visite.</p>
+  </div>
+  <div class="tel droite" style="--d:12.7s;left:1180px;top:110px"><span class="encoche"></span><div class="ecran"><img class="defile" style="--d:13.2s" src="telephone.jpg" alt=""></div></div>
+  <div class="flottant flotte" style="--d:14s;left:900px;top:250px"><span class="ic" style="background:#10b981"><svg><use href="#horloge"/></svg></span>Ouvert maintenant</div>
+  <div class="flottant flotte" style="--d:14.6s;left:1520px;top:420px"><span class="ic" style="background:#c2391b"><svg><use href="#tel"/></svg></span>Appel en un geste</div>
+  <div class="flottant flotte" style="--d:15.5s;left:930px;top:640px"><span class="ic" style="background:#6d4aff"><svg><use href="#menu"/></svg></span>Carte et prix</div>
+  <div class="flottant flotte" style="--d:16.4s;left:1560px;top:800px"><span class="ic" style="background:#0ea5c6"><svg><use href="#epin"/></svg></span>Plan d'accès</div>
+</section>
+
+<!-- S4 : personnaliser -->
+<section class="scene" style="--a:19s;--b:23.75s">
+  <div style="position:absolute;left:150px;top:150px;display:grid;gap:22px">
+    <span class="etiquette gauche" style="--d:19.2s"><b><svg width="18" height="18"><use href="#etoiles"/></svg></b>Studio</span>
+    <h1 style="font-size:84px"><span class="masque"><span style="--d:19.3s">Personnalisez tout,</span></span><span class="masque"><span class="deg" style="--d:19.4s">en direct.</span></span></h1>
+  </div>
+  <div class="editeur verre gauche" style="--d:19.5s">
+    <div class="onglets"><span>Textes</span><span class="actif">Style</span><span>Sections</span><span>Carte</span><span>Horaires</span><span>Photos</span><span>Publier</span></div>
+    <div class="palettes">
+      <div class="palette"><i style="background:#1d4d3a"></i><i style="background:#b3372a"></i>Forêt</div>
+      <div class="palette choisi1"><i style="background:#16243a"></i><i style="background:#c2391b"></i>Nuit</div>
+      <div class="palette"><i style="background:#3d2c2e"></i><i style="background:#9d4e6a"></i>Prune</div>
+      <div class="palette choisi2"><i style="background:#4a1d24"></i><i style="background:#a8432f"></i>Bordeaux</div>
+      <div class="palette"><i style="background:#16324f"></i><i style="background:#c2410c"></i>Ardoise</div>
+      <div class="palette"><i style="background:#1f1d1a"></i><i style="background:#c2391b"></i>Charbon</div>
+    </div>
+    <div class="interrupteurs"><div class="inter">Bandeau défilant<u></u></div><div class="inter">Questions fréquentes<u></u></div><div class="inter">Plan d'accès<u></u></div></div>
+  </div>
+  <div class="apercu-site avant recolore droite" style="--d:19.4s">
+    <div class="nav"><b>Pizza Bella</b><span>Appeler</span></div>
+    <div class="hero"><div><h3>Pizzeria à Lyon</h3><p>Des pizzas cuites minute, à savourer sur place ou à emporter.</p><span class="appel">Appeler le 06 12 34 56 78</span></div><div class="photo"></div></div>
+    <div class="carte-l">Margherita<em>11 €</em></div>
+    <span class="flash" style="--d:20.4s"></span><span class="flash" style="--d:21.7s"></span>
+  </div>
+  <svg class="curseur" style="animation:cur4 3s var(--ease) 19.6s both"><use href="#fleche"/></svg>
+  <span class="clic" style="--d:20.3s;left:500px;top:652px"></span>
+  <span class="clic" style="--d:21.6s;left:283px;top:732px"></span>
+  <style>@keyframes cur4{0%{left:900px;top:900px;opacity:0}22%{left:494px;top:646px;opacity:1}45%{left:494px;top:646px}66%{left:277px;top:726px}100%{left:277px;top:726px;opacity:1}}</style>
+</section>
+
+<!-- S5 : signer -->
+<section class="scene" style="--a:24s;--b:29.25s">
+  <div class="gauche-col">
+    <span class="etiquette gauche" style="--d:24.25s"><b>3</b>Signer</span>
+    <h1><span class="masque"><span style="--d:24.35s">Un devis conforme</span></span><span class="masque"><span class="deg" style="--d:24.45s">en deux clics.</span></span></h1>
+    <div class="puces">
+      <span class="puce pop" style="--d:25.2s"><svg><use href="#coche"/></svg>Mentions légales</span>
+      <span class="puce pop" style="--d:25.45s"><svg><use href="#coche"/></svg>Numérotation</span>
+      <span class="puce pop" style="--d:25.7s"><svg><use href="#coche"/></svg>PDF</span>
+      <span class="puce pop" style="--d:25.95s"><svg><use href="#coche"/></svg>Factures et avoirs</span>
+    </div>
+  </div>
+  <div class="papier droite secousse" style="--d:24.3s">
+    <h3>Devis D-2026-0001</h3>
+    <p class="meta">Noa Exemple EI · SIRET 123 456 789 00011</p>
+    <div class="client"><small>Destinataire</small>Pizza Bella<br>12 rue Paul Bert, Lyon</div>
+    <div class="pl monte" style="--d:25.0s"><span>Création du site vitrine</span><b>490,00 €</b></div>
+    <div class="pl monte" style="--d:25.4s"><span>Hébergement et modifications × 12</span><b>348,00 €</b></div>
+    <div class="total fondu" style="--d:25.8s"><span>Total</span><span><span data-cpt="0,838,25.8,26.9" data-eur>0</span></span></div>
+    <div class="signature">Date et signature, précédées de « Bon pour accord »</div>
+    <div class="tampon" style="--d:27.5s">Accepté ✓</div>
+  </div>
+  <div id="confettis-s5"></div>
+</section>
+
+<!-- S6 : livrer -->
+<section class="scene" style="--a:29.5s;--b:34.25s">
+  <div class="gauche-col" style="justify-content:flex-start;padding-top:250px">
+    <span class="etiquette gauche" style="--d:29.75s"><b>4</b>Livrer</span>
+    <h1><span class="masque"><span style="--d:29.85s">En ligne</span></span><span class="masque"><span class="deg" style="--d:29.95s">en un clic.</span></span></h1>
+    <p class="texte monte" style="--d:30.2s">Sur le nom de domaine du client, avec les mentions légales.</p>
+  </div>
+  <div class="gros-bouton pop appui" style="--d:30.1s"><svg><use href="#fusee"/></svg>Mettre en ligne</div>
+  <svg class="curseur" style="animation:cur6 .7s var(--ease) 30s both"><use href="#fleche"/></svg>
+  <span class="clic" style="--d:30.6s;left:520px;top:830px"></span>
+  <style>@keyframes cur6{from{left:820px;top:1060px;opacity:0}to{left:508px;top:814px;opacity:1}}</style>
+  <div class="navigateur droite" style="--d:30.85s">
+    <div class="nav-barre"><i></i><i></i><i></i><div class="url"><svg><use href="#cadenas"/></svg><span data-tape="pizzabella.fr" data-t="31.2,31.9"></span><i class="caret" data-caret="31.2,32.2" style="background:#11142a;width:3px;height:28px;border-radius:0"></i></div></div>
+    <img src="site-ordi.jpg" alt="">
+    <div class="en-ligne pop" style="--d:32.3s"><svg><use href="#coche"/></svg>En ligne</div>
+  </div>
+  <div class="verifs">
+    <span class="puce pop" style="--d:32.6s"><svg><use href="#coche"/></svg>Nom de domaine</span>
+    <span class="puce pop" style="--d:32.8s"><svg><use href="#coche"/></svg>HTTPS</span>
+    <span class="puce pop" style="--d:33.0s"><svg><use href="#coche"/></svg>Mentions légales</span>
+  </div>
+</section>
+
+<!-- S7 : encaisser -->
+<section class="scene" style="--a:34.5s;--b:38.75s">
+  <div class="gauche-col" style="justify-content:flex-start;padding-top:250px">
+    <span class="etiquette gauche" style="--d:34.75s"><b>5</b>Encaisser</span>
+    <h1><span class="masque"><span style="--d:34.85s">Facturez,</span></span><span class="masque"><span class="deg" style="--d:34.95s">encaissez.</span></span></h1>
+    <p class="texte monte" style="--d:35.2s">Factures conformes et suivi de ce que vous avez encaissé.</p>
+  </div>
+  <div class="facture-mini verre gauche" style="--d:35.6s"><span class="doc"></span><div><b>Facture F-2026-0001</b><small>Pizza Bella · 838,00 €</small></div><span class="payee" style="--d:36.6s">Payée</span></div>
+  <div class="tuiles">
+    <div class="tuile verre pop" style="--d:35.0s"><small>Encaissé ce mois-ci</small><div class="val"><span data-cpt="0,1270,35.3,36.9" data-eur>0</span></div></div>
+    <div class="tuile verre pop" style="--d:35.15s"><small>Abonnements actifs</small><div class="val"><span data-cpt="0,10,35.4,36.6">0</span></div></div>
+    <div class="barres verre pop" style="--d:35.3s">
+      <i style="--d:35.6s;height:28%"></i><i style="--d:35.7s;height:40%"></i><i style="--d:35.8s;height:36%"></i><i style="--d:35.9s;height:58%"></i><i style="--d:36.0s;height:66%"></i><i style="--d:36.1s;height:84%"></i><i style="--d:36.2s;height:100%;background:var(--chaud)"></i>
+    </div>
+  </div>
+  <span class="exemple fondu" style="--d:35.6s">Montants d'exemple</span>
+</section>
+
+<!-- S8 : académie -->
+<section class="scene" style="--a:39s;--b:42.75s">
+  <div class="gauche-col">
+    <span class="etiquette gauche" style="--d:39.25s"><b><svg width="18" height="18"><use href="#toque"/></svg></b>Académie</span>
+    <h1><span class="masque"><span style="--d:39.35s">Apprenez</span></span><span class="masque"><span class="deg" style="--d:39.45s">à vendre.</span></span></h1>
+    <p class="texte monte" style="--d:39.7s">Cours vidéo, quiz et missions : votre progression en pourcentage, du premier prospect au premier paiement.</p>
+  </div>
+  <div class="anneau pop" style="--d:39.4s">
+    <svg viewBox="0 0 200 200"><defs><linearGradient id="gA" x1="0" x2="1"><stop offset="0" stop-color="#6d4aff"/><stop offset="1" stop-color="#0ea5c6"/></linearGradient></defs><circle cx="100" cy="100" r="80" stroke="rgba(255,255,255,.1)"/><circle id="arc" cx="100" cy="100" r="80" stroke="url(#gA)" stroke-linecap="round" stroke-dasharray="502.65" stroke-dashoffset="502.65"/></svg>
+    <span><b><span data-cpt="0,100,39.8,41.7">0</span> %</b><small>du parcours</small></span>
+  </div>
+  <div class="niveaux" id="niveaux"><div class="niv"><i></i>Débutant</div><div class="niv"><i></i>Prospecteur</div><div class="niv"><i></i>Vendeur</div><div class="niv"><i></i>Expert</div><div class="niv"><i></i>Maître MySite</div></div>
+  <div class="modules">
+    <span class="mod pop" style="--d:40.0s;background:#6d4aff"><svg><use href="#coche"/></svg></span>
+    <span class="mod pop" style="--d:40.25s;background:#0ea5c6"><svg><use href="#coche"/></svg></span>
+    <span class="mod pop" style="--d:40.5s;background:#ec4899"><svg><use href="#coche"/></svg></span>
+    <span class="mod pop" style="--d:40.75s;background:#f97316"><svg><use href="#coche"/></svg></span>
+    <span class="mod pop" style="--d:41.0s;background:#10b981"><svg><use href="#coche"/></svg></span>
+    <span class="mod pop" style="--d:41.25s;background:#3b5bfd"><svg><use href="#coche"/></svg></span>
+    <span class="mod pop" style="--d:41.5s;background:#a855f7"><svg><use href="#coche"/></svg></span>
+  </div>
+</section>
+
+<!-- S9 : fin -->
+<div class="mot deg" style="--d:43.05s">Trouvez.</div>
+<div class="mot deg" style="--d:43.4s">Montrez.</div>
+<div class="mot deg" style="--d:43.75s">Signez.</div>
+<div class="mot deg" style="--d:44.1s">Livrez.</div>
+<div class="mot" style="--d:44.45s;background:var(--chaud);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Encaissez.</div>
+<section class="scene final" style="--a:45s;--b:99s">
+  <div class="marque pop" style="--d:45.05s"><span class="logo"><svg><use href="#etoiles"/></svg></span><span class="deg">MySite</span></div>
+  <p class="monte" style="--d:45.3s">Le cockpit pour vendre des sites aux commerces de votre ville.</p>
+  <span class="cta">Commencez gratuitement</span>
+  <div class="offres fondu" style="--d:46s"><span>Gratuit</span><span>Pro</span><span>Premium</span><span>Ultra</span></div>
+</section>
+<div class="noir"></div>
+
+<script>
+// Confettis du devis accepté
+(function(){const z=document.getElementById("confettis-s5"),c=["#6d4aff","#0ea5c6","#ec4899","#f97316","#10b981","#f5b70a"];
+for(let k=0;k<46;k++){const e=document.createElement("i");e.className="confetti";const a=(k/46)*Math.PI*2,d=260+((k*53)%220);
+e.style.cssText=`left:1500px;top:820px;background:${c[k%6]};--d:27.55s;--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d-160}px;--r:${(k*97)%720}deg`;z.appendChild(e);}})();
+
+const fx=(a,b,t)=>Math.min(1,Math.max(0,(t-a)/(b-a)));
+const doux=x=>1-Math.pow(1-x,3);
+const euros=n=>new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:0}).format(n);
+const ETAPES=[3,12.5,24,29.5,34.5,39];
+
+function maj(t){
+  document.querySelectorAll("[data-tape]").forEach(e=>{const [a,b]=e.dataset.t.split(",").map(Number),s=e.dataset.tape;e.textContent=s.slice(0,Math.round(s.length*fx(a,b,t)));});
+  document.querySelectorAll("[data-caret]").forEach(e=>{const [a,b]=e.dataset.caret.split(",").map(Number);e.style.opacity=(t>=a-.4&&t<=b&&Math.floor(t*3.3)%2===0)?1:0;});
+  document.querySelectorAll("[data-cpt]").forEach(e=>{const [d,f,a,b]=e.dataset.cpt.split(",").map(Number),v=Math.round(d+(f-d)*doux(fx(a,b,t)));e.textContent=e.hasAttribute("data-eur")?euros(v):v.toLocaleString("fr-FR");});
+  // barre d'étapes
+  const barre=document.getElementById("etapes");barre.style.opacity=(t>=3.05&&t<42.9)?Math.min(1,(t-3.05)*3,(42.9-t)*4):0;
+  barre.querySelectorAll("span").forEach((s,k)=>{const p=fx(ETAPES[k],ETAPES[k+1],t);s.querySelector("i").style.transform=`scaleX(${p})`;s.classList.toggle("ok",p>0);});
+  document.querySelector(".marque-coin").style.visibility=t<42.9?"visible":"hidden";
+  // anneau de progression
+  const p=doux(fx(39.8,41.7,t));document.getElementById("arc").setAttribute("stroke-dashoffset",String(502.65*(1-p)));
+  document.querySelectorAll("#niveaux .niv").forEach((n,k)=>n.classList.toggle("atteint",p*100>=[0,25,50,75,100][k]&&t>39.8));
+  // tracé de la tournée
+  const r=document.getElementById("route"),L=r.getTotalLength();r.style.strokeDasharray=`${L}`;r.style.strokeDashoffset=String(L*(1-doux(fx(9.7,11.1,t))));
+}
+window.rendre=function(t){document.getAnimations().forEach(a=>{a.pause();a.currentTime=t*1000;});maj(t);};
+window.DUREE=48;
+if(!navigator.webdriver){let d=performance.now();(function boucle(){const t=((performance.now()-d)/1000)%48;window.rendre(t);requestAnimationFrame(boucle);})();}
+</script>
+</body>
+</html>
