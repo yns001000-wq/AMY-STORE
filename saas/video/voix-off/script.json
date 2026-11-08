@@ -3,60 +3,60 @@
   "id": "rue",
   "texte": "Tu cherches un vrai complément de revenus ? Regarde autour de toi.",
   "tts": "Tu cherches un vrai complément de revenus ? Regarde autour de toi.",
-  "duree": 3.805
+  "duree": 3.188
  },
  {
   "id": "constat",
   "texte": "Beaucoup de commerces de ton quartier n'ont toujours pas de site internet.",
   "tts": "Beaucoup de commerces de ton quartier n'ont toujours pas de site internet.",
-  "duree": 2.897
+  "duree": 3.615
  },
  {
   "id": "trouver",
   "texte": "Avec MySite, tu les trouves en un clic. Et chaque commerce est réservé rien que pour toi.",
   "tts": "Avec Maï Saïte, tu les trouves en un clic. Et chaque commerce est réservé rien que pour toi.",
-  "duree": 5.722
+  "duree": 4.73
  },
  {
   "id": "maquette",
   "texte": "Avant même de passer les voir, leur futur site est déjà prêt : leur carte, leurs horaires, leur plan d'accès.",
   "tts": "Avant même de passer les voir, leur futur site est déjà prêt : leur carte, leurs horaires, leur plan d'accès.",
-  "duree": 5.695
+  "duree": 5.45
  },
  {
   "id": "visite",
   "texte": "Tu entres, tu sors ton téléphone, et tu leur montres leur propre site.",
   "tts": "Tu entres, tu sors ton téléphone, et tu leur montres leur propre site.",
-  "duree": 3.861
+  "duree": 3.496
  },
  {
   "id": "devis",
   "texte": "Ils sont partants ? Ton devis est prêt en deux clics, avec toutes les mentions obligatoires.",
   "tts": "Ils sont partants ? Ton devis est prêt en deux clics, avec toutes les mentions obligatoires.",
-  "duree": 4.771
+  "duree": 4.321
  },
  {
   "id": "enligne",
   "texte": "Un clic, et leur site est en ligne, sur leur propre nom de domaine.",
   "tts": "Un clic, et leur site est en ligne, sur leur propre nom de domaine.",
-  "duree": 3.632
+  "duree": 3.248
  },
  {
   "id": "encaisser",
   "texte": "Tu factures, tu encaisses, et tu proposes un petit abonnement pour les mises à jour.",
   "tts": "Tu factures, tu encaisses, et tu proposes un petit abonnement pour les mises à jour.",
-  "duree": 3.837
+  "duree": 4.04
  },
  {
   "id": "academie",
   "texte": "Tu débutes ? L'Académie t'explique tout, étape par étape.",
   "tts": "Tu débutes ? L'Académie t'explique tout, étape par étape.",
-  "duree": 3.72
+  "duree": 2.894
  },
  {
   "id": "fin",
   "texte": "MySite. Commence gratuitement, le lien est en bio.",
   "tts": "Maï Saïte. Commence gratuitement, le lien est en bio.",
-  "duree": 3.643
+  "duree": 2.626
  }
 ]
