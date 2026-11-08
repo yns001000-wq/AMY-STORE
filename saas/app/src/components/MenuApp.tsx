@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CreditCard, LayoutDashboard, Settings2 } from "lucide-react";
+import { Columns3, CreditCard, LayoutDashboard, Settings2 } from "lucide-react";
 
-const LIENS = [["/espace", "Tableau de bord", LayoutDashboard], ["/espace/bienvenue", "Secteur et zone", Settings2], ["/espace/abonnement", "Mon abonnement", CreditCard]] as const;
+const LIENS = [["/espace", "Tableau de bord", LayoutDashboard], ["/espace/pipeline", "Pipeline", Columns3], ["/espace/bienvenue", "Secteur et zone", Settings2], ["/espace/abonnement", "Mon abonnement", CreditCard]] as const;
 
 export function MenuApp() {
   const chemin = usePathname();

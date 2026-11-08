@@ -5,6 +5,7 @@ import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { consommation, profilEtPlan } from "@/lib/quotas";
 import { departementsAutorises, PLANS, type TypeQuota } from "@/lib/plans";
 import { secteurParId } from "@/lib/secteurs";
+import { etape } from "@/lib/pipeline";
 import { nomDepartement } from "@/lib/departements";
 import { BoutonRecherche } from "@/components/BoutonRecherche";
 
@@ -88,10 +89,10 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
                   const recherche = encodeURIComponent(`${p.nom} ${p.ville ?? ""}`);
                   return (
                     <tr key={p.id}>
-                      <td><div className="ent"><span className="avatar" style={{ background: COULEURS[i % COULEURS.length] }}>{initiales(p.nom)}</span><span><strong>{p.nom}</strong><small>{p.indices}</small></span></div></td>
+                      <td><div className="ent"><span className="avatar" style={{ background: COULEURS[i % COULEURS.length] }}>{initiales(p.nom)}</span><span><Link href={`/espace/prospects/${p.id}`}><strong>{p.nom}</strong></Link><small>{p.indices}</small></span></div></td>
                       <td>{p.metier}</td>
                       <td>{p.ville} <span className="note">{p.code_postal}</span></td>
-                      <td><span className="statut">{p.statut === "nouveau" ? "À contacter" : p.statut}</span></td>
+                      <td><span className="statut" style={{ color: etape(p.statut).couleur, background: `color-mix(in srgb, ${etape(p.statut).couleur} 14%, transparent)` }}>{etape(p.statut).nom}</span></td>
                       <td>{p.telephone ?? <span className="liens-num"><a href={`https://www.google.com/maps/search/?api=1&query=${recherche}`} target="_blank" rel="noopener">Maps</a><a href={`https://www.pagesjaunes.fr/annuaire/chercherlespros?quoiqui=${encodeURIComponent(p.nom)}&ou=${encodeURIComponent(p.ville ?? "")}`} target="_blank" rel="noopener">Pages Jaunes</a></span>}</td>
                     </tr>
                   );
