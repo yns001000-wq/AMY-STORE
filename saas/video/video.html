@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
+<script>if(/vertical/.test(location.search))document.documentElement.classList.add("vertical");</script>
 <title>MySite en 48 secondes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +35,7 @@ svg{display:block}
 .gauche{animation:gauche .8s var(--ease) var(--d) both}@keyframes gauche{from{opacity:0;transform:translateX(-90px)}}
 .droite{animation:droite .9s var(--ease) var(--d) both}@keyframes droite{from{opacity:0;transform:translateX(140px) rotate(3deg)}}
 .fondu{animation:fondu .6s ease var(--d) both}@keyframes fondu{from{opacity:0}}
-.masque{display:block;overflow:hidden;padding-bottom:.08em}
+.masque{display:block;overflow:hidden;padding:.04em 0 .24em;margin:-.04em 0 -.24em}
 .masque>span{display:block;animation:masque .9s var(--ease) var(--d) both}@keyframes masque{from{transform:translateY(110%) rotate(4deg)}}
 
 /* ---------- textes ---------- */
@@ -223,6 +224,35 @@ h1{font-size:96px;line-height:1;margin:0;font-weight:800}
 .offres span{font:700 24px/1 Inter;padding:14px 24px;border-radius:99px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2)}
 .noir{position:absolute;inset:0;background:#000;opacity:0;animation:noir .6s ease 47.4s forwards;z-index:50}
 @keyframes noir{to{opacity:1}}
+
+/* ================= format vertical 9:16 (TikTok, Reels, Shorts) ================= */
+.groupe{position:absolute;inset:0;transform-origin:0 0}
+.vertical,.vertical body{width:1080px;height:1920px}
+.vertical .marque-coin{display:none}
+.vertical .etapes{top:200px;padding:8px;gap:6px}.vertical .etapes span{font-size:19px;padding:12px 17px}
+.vertical .gauche-col{left:70px;right:70px;top:300px;bottom:auto;width:auto;justify-content:flex-start!important;padding-top:0!important;gap:22px}
+.vertical h1{font-size:88px}
+.vertical .texte{font-size:30px;max-width:none}
+.vertical .titre-s4{left:70px!important;top:300px!important}.vertical .titre-s4 h1{font-size:80px!important}
+.vertical .intro p{max-width:860px;font-size:42px}
+.vertical .g1{transform:translate(-830px,740px)}
+.vertical .g2{transform:translate(-762px,698px) scale(.95)}
+.vertical .g3{transform:translate(-785px,655px) scale(.95)}
+.vertical .g4b{transform:translate(-404px,504px) scale(.8)}
+.vertical .g4a{transform:translate(-73px,675px) scale(.82);z-index:2}
+.vertical .g5{transform:translate(-624px,719px) scale(.85)}
+.vertical .g6a{transform:translate(-80px,-30px)}
+.vertical .g6b{transform:translate(-693px,737px) scale(.9)}
+.vertical .g7{transform:translate(-967px,522px) scale(1.1)}
+.vertical .facture-mini{left:230px;top:1300px}
+.vertical .exemple{right:0;left:0;bottom:auto;top:1470px;text-align:center;font-size:22px}
+.vertical .g8{transform:translate(-966px,568px) scale(1.05)}
+.vertical .mot{font-size:150px}
+.flottant,.puce,.niv,.bulle-rdv,.badge,.compteur-chip,.en-ligne,.payee,.legende span,.etiquette{white-space:nowrap}
+.verifs,.puces,.niveaux,.legende{width:max-content}
+.vertical .puces{width:auto}
+.vertical .editeur{background:linear-gradient(160deg,rgba(40,32,92,.97),rgba(20,18,44,.97))}
+.vertical .final .marque{font-size:110px}.vertical .final p{max-width:880px;font-size:38px}
 </style>
 </head>
 <body>
@@ -263,6 +293,7 @@ h1{font-size:96px;line-height:1;margin:0;font-weight:800}
     <h1><span class="masque"><span style="--d:3.4s">Trouvez</span></span><span class="masque"><span class="deg" style="--d:3.5s">vos clients.</span></span></h1>
     <p class="texte monte" style="--d:3.8s">Les commerces de votre zone, issus du registre officiel des entreprises. Chacun n'est attribué qu'à vous.</p>
   </div>
+  <div class="groupe g1">
   <div class="app verre droite" style="--d:3.3s">
     <div class="compteur-chip pop" style="--d:4.9s">+<span data-cpt="0,25,4.9,5.9">0</span> prospects</div>
     <div class="recherche"><div class="champ"><svg><use href="#loupe"/></svg><span data-tape="Pizzeria, restaurant · Rhône" data-t="3.6,4.5"></span><i class="caret" data-caret="3.6,4.75"></i></div><div class="bouton" id="b-rech">Rechercher</div></div>
@@ -274,6 +305,7 @@ h1{font-size:96px;line-height:1;margin:0;font-weight:800}
   <svg class="curseur" style="animation:cur1 1.1s var(--ease) 4.05s both"><use href="#fleche"/></svg>
   <span class="clic" style="--d:4.65s;left:1700px;top:278px"></span>
   <style>@keyframes cur1{from{left:1880px;top:600px;opacity:0}to{left:1688px;top:262px;opacity:1}}</style>
+  </div>
 </section>
 
 <!-- S2 : carte -->
@@ -283,6 +315,7 @@ h1{font-size:96px;line-height:1;margin:0;font-weight:800}
     <h1><span class="masque"><span style="--d:8.3s">Organisez</span></span><span class="masque"><span class="deg" style="--d:8.4s">vos tournées.</span></span></h1>
     <p class="texte monte" style="--d:8.7s">Tous vos prospects sur la carte, colorés selon leur étape. Les plus proches se démarchent le même jour.</p>
   </div>
+  <div class="groupe g2">
   <div class="plan verre droite" style="--d:8.15s">
     <svg viewBox="0 0 860 760" preserveAspectRatio="none">
       <rect width="860" height="760" fill="#0c1022"/>
@@ -306,6 +339,7 @@ h1{font-size:96px;line-height:1;margin:0;font-weight:800}
     <div class="bulle-rdv pop" style="--d:11.2s;left:560px;top:560px">Gagné<small>Le Bistrot</small></div>
     <div class="legende verre fondu" style="--d:9.6s"><span><i style="background:#3b5bfd"></i>À contacter</span><span><i style="background:#f59e0b"></i>Rendez-vous</span><span><i style="background:#f97316"></i>Devis</span><span><i style="background:#10b981"></i>Gagné</span></div>
   </div>
+  </div>
 </section>
 
 <!-- S3 : montrer -->
@@ -315,19 +349,22 @@ h1{font-size:96px;line-height:1;margin:0;font-weight:800}
     <h1><span class="masque"><span style="--d:12.85s">Montrez-leur</span></span><span class="masque"><span class="deg" style="--d:12.95s">leur futur site.</span></span></h1>
     <p class="texte monte" style="--d:13.3s">Une maquette prête en un instant, à présenter sur votre téléphone pendant la visite.</p>
   </div>
+  <div class="groupe g3">
   <div class="tel droite" style="--d:12.7s;left:1180px;top:110px"><span class="encoche"></span><div class="ecran"><img class="defile" style="--d:13.2s" src="telephone.jpg" alt=""></div></div>
   <div class="flottant flotte" style="--d:14s;left:900px;top:250px"><span class="ic" style="background:#10b981"><svg><use href="#horloge"/></svg></span>Ouvert maintenant</div>
   <div class="flottant flotte" style="--d:14.6s;left:1520px;top:420px"><span class="ic" style="background:#c2391b"><svg><use href="#tel"/></svg></span>Appel en un geste</div>
   <div class="flottant flotte" style="--d:15.5s;left:930px;top:640px"><span class="ic" style="background:#6d4aff"><svg><use href="#menu"/></svg></span>Carte et prix</div>
   <div class="flottant flotte" style="--d:16.4s;left:1560px;top:800px"><span class="ic" style="background:#0ea5c6"><svg><use href="#epin"/></svg></span>Plan d'accès</div>
+  </div>
 </section>
 
 <!-- S4 : personnaliser -->
 <section class="scene" style="--a:19s;--b:23.75s">
-  <div style="position:absolute;left:150px;top:150px;display:grid;gap:22px">
+  <div class="titre-s4" style="position:absolute;left:150px;top:150px;display:grid;gap:22px">
     <span class="etiquette gauche" style="--d:19.2s"><b><svg width="18" height="18"><use href="#etoiles"/></svg></b>Studio</span>
     <h1 style="font-size:84px"><span class="masque"><span style="--d:19.3s">Personnalisez tout,</span></span><span class="masque"><span class="deg" style="--d:19.4s">en direct.</span></span></h1>
   </div>
+  <div class="groupe g4a">
   <div class="editeur verre gauche" style="--d:19.5s">
     <div class="onglets"><span>Textes</span><span class="actif">Style</span><span>Sections</span><span>Carte</span><span>Horaires</span><span>Photos</span><span>Publier</span></div>
     <div class="palettes">
@@ -340,16 +377,21 @@ h1{font-size:96px;line-height:1;margin:0;font-weight:800}
     </div>
     <div class="interrupteurs"><div class="inter">Bandeau défilant<u></u></div><div class="inter">Questions fréquentes<u></u></div><div class="inter">Plan d'accès<u></u></div></div>
   </div>
+  </div>
+  <div class="groupe g4b">
   <div class="apercu-site avant recolore droite" style="--d:19.4s">
     <div class="nav"><b>Pizza Bella</b><span>Appeler</span></div>
     <div class="hero"><div><h3>Pizzeria à Lyon</h3><p>Des pizzas cuites minute, à savourer sur place ou à emporter.</p><span class="appel">Appeler le 06 12 34 56 78</span></div><div class="photo"></div></div>
     <div class="carte-l">Margherita<em>11 €</em></div>
     <span class="flash" style="--d:20.4s"></span><span class="flash" style="--d:21.7s"></span>
   </div>
+  </div>
+  <div class="groupe g4a">
   <svg class="curseur" style="animation:cur4 3s var(--ease) 19.6s both"><use href="#fleche"/></svg>
   <span class="clic" style="--d:20.3s;left:500px;top:652px"></span>
   <span class="clic" style="--d:21.6s;left:283px;top:732px"></span>
   <style>@keyframes cur4{0%{left:900px;top:900px;opacity:0}22%{left:494px;top:646px;opacity:1}45%{left:494px;top:646px}66%{left:277px;top:726px}100%{left:277px;top:726px;opacity:1}}</style>
+  </div>
 </section>
 
 <!-- S5 : signer -->
@@ -364,6 +406,7 @@ h1{font-size:96px;line-height:1;margin:0;font-weight:800}
       <span class="puce pop" style="--d:25.95s"><svg><use href="#coche"/></svg>Factures et avoirs</span>
     </div>
   </div>
+  <div class="groupe g5">
   <div class="papier droite secousse" style="--d:24.3s">
     <h3>Devis D-2026-0001</h3>
     <p class="meta">Noa Exemple EI · SIRET 123 456 789 00011</p>
@@ -375,6 +418,7 @@ h1{font-size:96px;line-height:1;margin:0;font-weight:800}
     <div class="tampon" style="--d:27.5s">Accepté ✓</div>
   </div>
   <div id="confettis-s5"></div>
+  </div>
 </section>
 
 <!-- S6 : livrer -->
@@ -384,10 +428,13 @@ h1{font-size:96px;line-height:1;margin:0;font-weight:800}
     <h1><span class="masque"><span style="--d:29.85s">En ligne</span></span><span class="masque"><span class="deg" style="--d:29.95s">en un clic.</span></span></h1>
     <p class="texte monte" style="--d:30.2s">Sur le nom de domaine du client, avec les mentions légales.</p>
   </div>
+  <div class="groupe g6a">
   <div class="gros-bouton pop appui" style="--d:30.1s"><svg><use href="#fusee"/></svg>Mettre en ligne</div>
   <svg class="curseur" style="animation:cur6 .7s var(--ease) 30s both"><use href="#fleche"/></svg>
   <span class="clic" style="--d:30.6s;left:520px;top:830px"></span>
   <style>@keyframes cur6{from{left:820px;top:1060px;opacity:0}to{left:508px;top:814px;opacity:1}}</style>
+  </div>
+  <div class="groupe g6b">
   <div class="navigateur droite" style="--d:30.85s">
     <div class="nav-barre"><i></i><i></i><i></i><div class="url"><svg><use href="#cadenas"/></svg><span data-tape="pizzabella.fr" data-t="31.2,31.9"></span><i class="caret" data-caret="31.2,32.2" style="background:#11142a;width:3px;height:28px;border-radius:0"></i></div></div>
     <img src="site-ordi.jpg" alt="">
@@ -397,6 +444,7 @@ h1{font-size:96px;line-height:1;margin:0;font-weight:800}
     <span class="puce pop" style="--d:32.6s"><svg><use href="#coche"/></svg>Nom de domaine</span>
     <span class="puce pop" style="--d:32.8s"><svg><use href="#coche"/></svg>HTTPS</span>
     <span class="puce pop" style="--d:33.0s"><svg><use href="#coche"/></svg>Mentions légales</span>
+  </div>
   </div>
 </section>
 
@@ -408,12 +456,14 @@ h1{font-size:96px;line-height:1;margin:0;font-weight:800}
     <p class="texte monte" style="--d:35.2s">Factures conformes et suivi de ce que vous avez encaissé.</p>
   </div>
   <div class="facture-mini verre gauche" style="--d:35.6s"><span class="doc"></span><div><b>Facture F-2026-0001</b><small>Pizza Bella · 838,00 €</small></div><span class="payee" style="--d:36.6s">Payée</span></div>
+  <div class="groupe g7">
   <div class="tuiles">
     <div class="tuile verre pop" style="--d:35.0s"><small>Encaissé ce mois-ci</small><div class="val"><span data-cpt="0,1270,35.3,36.9" data-eur>0</span></div></div>
     <div class="tuile verre pop" style="--d:35.15s"><small>Abonnements actifs</small><div class="val"><span data-cpt="0,10,35.4,36.6">0</span></div></div>
     <div class="barres verre pop" style="--d:35.3s">
       <i style="--d:35.6s;height:28%"></i><i style="--d:35.7s;height:40%"></i><i style="--d:35.8s;height:36%"></i><i style="--d:35.9s;height:58%"></i><i style="--d:36.0s;height:66%"></i><i style="--d:36.1s;height:84%"></i><i style="--d:36.2s;height:100%;background:var(--chaud)"></i>
     </div>
+  </div>
   </div>
   <span class="exemple fondu" style="--d:35.6s">Montants d'exemple</span>
 </section>
@@ -425,6 +475,7 @@ h1{font-size:96px;line-height:1;margin:0;font-weight:800}
     <h1><span class="masque"><span style="--d:39.35s">Apprenez</span></span><span class="masque"><span class="deg" style="--d:39.45s">à vendre.</span></span></h1>
     <p class="texte monte" style="--d:39.7s">Cours vidéo, quiz et missions : votre progression en pourcentage, du premier prospect au premier paiement.</p>
   </div>
+  <div class="groupe g8">
   <div class="anneau pop" style="--d:39.4s">
     <svg viewBox="0 0 200 200"><defs><linearGradient id="gA" x1="0" x2="1"><stop offset="0" stop-color="#6d4aff"/><stop offset="1" stop-color="#0ea5c6"/></linearGradient></defs><circle cx="100" cy="100" r="80" stroke="rgba(255,255,255,.1)"/><circle id="arc" cx="100" cy="100" r="80" stroke="url(#gA)" stroke-linecap="round" stroke-dasharray="502.65" stroke-dashoffset="502.65"/></svg>
     <span><b><span data-cpt="0,100,39.8,41.7">0</span> %</b><small>du parcours</small></span>
@@ -438,6 +489,7 @@ h1{font-size:96px;line-height:1;margin:0;font-weight:800}
     <span class="mod pop" style="--d:41.0s;background:#10b981"><svg><use href="#coche"/></svg></span>
     <span class="mod pop" style="--d:41.25s;background:#3b5bfd"><svg><use href="#coche"/></svg></span>
     <span class="mod pop" style="--d:41.5s;background:#a855f7"><svg><use href="#coche"/></svg></span>
+  </div>
   </div>
 </section>
 
