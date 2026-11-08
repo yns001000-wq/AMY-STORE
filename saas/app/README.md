@@ -26,26 +26,41 @@ Ce dossier contient le socle de la phase 1. Le plan complet est dans `../PLAN.md
   - Les règles légales sont imposées : expéditeur identifié, mention STOP, aucun fait inventé.
   - Le quota est remboursé en cas d'échec.
   - Rien n'est envoyé automatiquement.
+- **Studio de sites** (menu Studio, et bouton « Son futur site » sur chaque fiche prospect) :
+  - **maquette express** instantanée et sans IA, pour toutes les offres ;
+  - **site sur mesure par l'IA**, en 2 temps :
+    1. l'IA étudie le vrai type d'établissement (le code d'activité est souvent faux : snack ou restaurant ?), avec un indice de confiance et des hypothèses ;
+    2. l'utilisateur confirme ou corrige, ajoute ce qu'il sait, puis l'IA rédige tout le site : carte complète, textes, FAQ, horaires, photos.
+
+    Quota `sites_ia`, remboursé si l'étude échoue, 3 essais de rédaction par étude.
+  - **retouches en langage naturel** (« ajoute une formule midi »), quota `retouches_ia`, remboursé en cas d'échec ;
+  - **panneau de modification**, avec aperçu en direct sur ordinateur et téléphone, annulation et Ctrl+S. Sa puissance dépend de l'offre :
+    - **Gratuit** : textes, palettes, sections et banque de photos, avec la mention « Fait avec MySite » ;
+    - **Pro** : en plus, la carte et les services, les horaires, la FAQ, le référencement, les couleurs libres, le modèle, les retouches IA, 5 versions et la version finale sans bandeau ;
+    - **Premium** : en plus, les polices, vos propres photos et 20 versions ;
+    - **Ultra** : réflexion maximale de l'IA, marque blanche et 50 versions.
+  - **Le serveur refiltre toute modification selon l'offre** (`appliquerEdition`) : le navigateur n'est jamais cru sur parole.
+  - **Téléchargement** d'un fichier HTML autonome : la maquette avec son bandeau, ou la version finale sans bandeau et indexable (dès Pro, après confirmation que le contenu a été vérifié avec le gérant).
 - **Page publique « Retirer mon entreprise »** (droit d'opposition) : l'entreprise est exclue chez tous les utilisateurs.
 - **Pages légales** en brouillon. Les informations à compléter sont surlignées en jaune.
 
 ## Tests
-- `npm test` : 15 tests sur les offres, les quotas et les garde-fous RGPD de la recherche.
+- `npm test` : 28 tests sur les offres, les quotas, les garde-fous RGPD de la recherche, le moteur de sites et les droits d'édition du Studio selon l'offre.
 - `LIVE=1 npm test` : en plus, un vrai appel à l'API Sirene.
-- `supabase/tests/test_rls.sql` (15 tests) et `test_exclusivite.sql` (10 tests) : sécurité et exclusivité de la base, testées sur Postgres 16. Charger `stub_supabase.sql`, puis les migrations dans l'ordre.
+- `supabase/tests/test_rls.sql` (15 tests), `test_exclusivite.sql` (10 tests) et `test_studio.sql` (10 tests) : sécurité, exclusivité et Studio, testées sur Postgres 16. Charger `stub_supabase.sql`, puis les migrations dans l'ordre.
 - `npm run build` : compilation de production.
 
 ## Mise en route (à faire avec les comptes du propriétaire)
-1. **Supabase**. Créez un projet, de préférence en région UE. Dans l'éditeur SQL, exécutez dans l'ordre `0001_init.sql` puis `0002_exclusivite_pipeline.sql`, puis planifiez chaque nuit (Database > Cron) `liberer_reservations_dormantes()` et `purger_prospects_anciens()`. Dans Authentication > URL configuration, ajoutez l'URL du site et `/auth/callback`.
+1. **Supabase**. Créez un projet, de préférence en région UE. Dans l'éditeur SQL, exécutez dans l'ordre `0001_init.sql`, `0002_exclusivite_pipeline.sql` puis `0003_studio.sql` (elle crée aussi le compartiment de stockage `studio` des photos des clients), puis planifiez chaque nuit (Database > Cron) `liberer_reservations_dormantes()` et `purger_prospects_anciens()`. Dans Authentication > URL configuration, ajoutez l'URL du site et `/auth/callback`.
 2. **Stripe**, en mode test :
    - créez 3 produits (Pro, Premium, Ultra), chacun avec un prix mensuel et un prix annuel TTC ;
    - activez le portail client, avec la résiliation et le changement d'offre ;
    - créez un webhook vers `/api/stripe/webhook` avec les événements `checkout.session.completed` et `customer.subscription.*`.
 3. Copiez `.env.example` vers `.env.local` et remplissez-le. **La clé `service_role` et les clés Stripe ne doivent jamais être exposées au navigateur.**
 4. Lancez `npm install`, puis `npm run dev`, et testez un paiement avec la carte 4242 4242 4242 4242.
-5. **Vercel** : importez le dépôt avec `saas/app` comme dossier racine, recopiez les variables d'environnement, puis branchez le nom de domaine.
+5. **Vercel** : importez le dépôt avec `saas/app` comme dossier racine, recopiez les variables d'environnement, puis branchez le nom de domaine. La rédaction d'un site par l'IA peut durer jusqu'à 5 minutes (`maxDuration = 300`) : le plan Vercel doit l'autoriser.
 
 ## Suite
 - Carte de France des prospects.
-- Étude d'établissement et **site sur mesure par l'IA** (reprise du Studio du cockpit, quota `sites_ia`).
+- Mise en ligne en un clic des sites finaux (sous-domaine MySite ou nom de domaine du client).
 - Export CSV (Pro et plus), devis et factures (Premium et plus).

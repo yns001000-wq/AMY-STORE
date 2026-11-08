@@ -5,6 +5,9 @@ import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { ETAPES, etape, type EntreeJournal } from "@/lib/pipeline";
 import { changerStatut, enregistrerSuivi, noterEchange, supprimerProspect } from "@/lib/actions-prospects";
 import { GenerateurMessage } from "@/components/GenerateurMessage";
+import { BoutonsStudio } from "@/components/studio/BoutonsStudio";
+import { consommation, profilEtPlan } from "@/lib/quotas";
+import { PLANS } from "@/lib/plans";
 
 export const metadata = { title: "Fiche prospect" };
 
@@ -15,6 +18,10 @@ export default async function FicheProspect({ params }: { params: Promise<{ id: 
   // RLS : la requête ne renvoie rien si le prospect appartient à un autre utilisateur.
   const { data: p } = await session.sb.from("prospects").select("*").eq("id", id).maybeSingle();
   if (!p) notFound();
+  const [{ data: sites }, { plan }, conso] = await Promise.all([
+    session.sb.from("sites").select("id, type, maj_le").eq("prospect_id", id).order("maj_le", { ascending: false }),
+    profilEtPlan(session.user.id), consommation(session.user.id),
+  ]);
   const e = etape(p.statut), q = encodeURIComponent(`${p.nom} ${p.ville ?? ""}`);
   const journal = (Array.isArray(p.journal) ? p.journal : []) as EntreeJournal[];
   return (
@@ -57,6 +64,7 @@ export default async function FicheProspect({ params }: { params: Promise<{ id: 
           </form>
         </div>
         <div style={{ display: "grid", gap: "1.2rem", alignContent: "start" }}>
+          <BoutonsStudio prospectId={p.id} sites={sites ?? []} ia={!!PLANS[plan].studio.effortIA} restants={Math.max(0, PLANS[plan].quotas.sites_ia - conso.sites_ia)} />
           <GenerateurMessage id={p.id} bloque={p.statut === "refus" ? "Ce prospect a demandé à ne plus être contacté." : undefined} />
           <div className="carte">
             <h2 style={{ fontSize: "1.15rem" }}>Historique</h2>

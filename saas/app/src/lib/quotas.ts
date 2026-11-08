@@ -13,8 +13,8 @@ export async function profilEtPlan(userId: string): Promise<{ profil: Record<str
 }
 
 export async function consommation(userId: string): Promise<Record<TypeQuota, number>> {
-  const { data } = await supabaseAdmin().from("consommation").select("prospects, messages_ia, sites_ia").eq("user_id", userId).eq("mois", moisCourant()).maybeSingle();
-  return { prospects: data?.prospects ?? 0, messages_ia: data?.messages_ia ?? 0, sites_ia: data?.sites_ia ?? 0 };
+  const { data } = await supabaseAdmin().from("consommation").select("prospects, messages_ia, sites_ia, retouches_ia").eq("user_id", userId).eq("mois", moisCourant()).maybeSingle();
+  return { prospects: data?.prospects ?? 0, messages_ia: data?.messages_ia ?? 0, sites_ia: data?.sites_ia ?? 0, retouches_ia: data?.retouches_ia ?? 0 };
 }
 
 /** Réserve n unités du quota, de façon atomique. false = limite atteinte (rien n'est consommé). */
@@ -24,4 +24,9 @@ export async function consommer(userId: string, plan: PlanId, type: TypeQuota, n
   const { data, error } = await supabaseAdmin().rpc("consommer_quota", { p_user: userId, p_type: type, p_n: n, p_limite: max });
   if (error) throw error;
   return data === true;
+}
+
+/** Rend une unité de quota après un échec de l'IA. */
+export async function rembourser(userId: string, type: TypeQuota): Promise<void> {
+  await supabaseAdmin().rpc("rembourser_quota", { p_user: userId, p_type: type });
 }

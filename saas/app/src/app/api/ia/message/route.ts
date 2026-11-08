@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
-import { supabaseAdmin } from "@/lib/supabase/admin";
-import { consommer, moisCourant, profilEtPlan } from "@/lib/quotas";
+import { consommer, profilEtPlan, rembourser } from "@/lib/quotas";
 import { anthropic, consigneMessage, type Canal } from "@/lib/ia";
 import { ajouterJournal } from "@/lib/pipeline";
 
@@ -19,11 +18,7 @@ export async function POST(req: Request) {
 
   const { profil, plan } = await profilEtPlan(session.user.id);
   if (!(await consommer(session.user.id, plan, "messages_ia", 1))) return NextResponse.json({ erreur: "quota", plan }, { status: 402 });
-  const rembourser = async () => {
-    const admin = supabaseAdmin();
-    const { data } = await admin.from("consommation").select("messages_ia").eq("user_id", session.user.id).eq("mois", moisCourant()).single();
-    if (data && data.messages_ia > 0) await admin.from("consommation").update({ messages_ia: data.messages_ia - 1 }).eq("user_id", session.user.id).eq("mois", moisCourant());
-  };
+  const rendre = () => rembourser(session.user.id, "messages_ia");
 
   const expediteur = `${(profil.prenom as string) || "[votre prénom]"}, création de sites internet pour les commerçants et artisans`;
   try {
@@ -35,13 +30,13 @@ export async function POST(req: Request) {
       fallbacks: "default",
       messages: [{ role: "user", content: consigneMessage(p, canal!, expediteur) }],
     });
-    if (rep.stop_reason === "refusal") { await rembourser(); return NextResponse.json({ erreur: "L'IA n'a pas pu rédiger ce message." }, { status: 422 }); }
+    if (rep.stop_reason === "refusal") { await rendre(); return NextResponse.json({ erreur: "L'IA n'a pas pu rédiger ce message." }, { status: 422 }); }
     const texte = rep.content.flatMap((b) => (b.type === "text" ? [b.text] : [])).join("\n").trim();
-    if (!texte) { await rembourser(); return NextResponse.json({ erreur: "Réponse vide, réessayez." }, { status: 502 }); }
+    if (!texte) { await rendre(); return NextResponse.json({ erreur: "Réponse vide, réessayez." }, { status: 502 }); }
     await session.sb.from("prospects").update({ journal: ajouterJournal(p.journal, `Message IA préparé (${canal})`) }).eq("id", id);
     return NextResponse.json({ texte });
   } catch (e) {
-    await rembourser();
+    await rendre();
     if (e instanceof Anthropic.RateLimitError) return NextResponse.json({ erreur: "Trop de demandes : réessayez dans une minute." }, { status: 429 });
     if (e instanceof Anthropic.APIError) return NextResponse.json({ erreur: "Le service d'IA est indisponible pour le moment." }, { status: 502 });
     throw e;

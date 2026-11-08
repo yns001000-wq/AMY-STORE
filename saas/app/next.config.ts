@@ -10,7 +10,11 @@ const securite = [
 const config: NextConfig = {
   poweredByHeader: false,
   async headers() {
-    return [{ source: "/:path*", headers: securite }];
+    return [
+      { source: "/:path*", headers: securite },
+      // Polices chargées par l'aperçu du Studio (iframe isolée, origine opaque) et par les sites téléchargés
+      { source: "/polices/:fichier", headers: [{ key: "Access-Control-Allow-Origin", value: "*" }, { key: "Cache-Control", value: "public, max-age=31536000, immutable" }] },
+    ];
   },
 };
 

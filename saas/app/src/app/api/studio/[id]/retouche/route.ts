@@ -1,0 +1,33 @@
+import { NextResponse } from "next/server";
+import { consommer, rembourser } from "@/lib/quotas";
+import { archiverVersion, chargerSite, contexteStudio, demanderIA, erreurIA } from "@/lib/studio/serveur";
+import { appliquerIA, lireJSON, promptRetouche } from "@/lib/studio";
+
+export const maxDuration = 180;
+
+/** Retouche en langage naturel (« ajoute une formule midi », « ton plus chic »…). Quota retouches_ia. */
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const ctx = await contexteStudio();
+  if ("erreur" in ctx) return ctx.erreur;
+  const { session, cap, plan } = ctx;
+  if (!cap.effortIA) return NextResponse.json({ erreur: "Les retouches par l'IA sont incluses dès l'offre Pro.", plan }, { status: 402 });
+  const site = await chargerSite(session.sb, (await params).id);
+  if (!site) return NextResponse.json({ erreur: "Site introuvable" }, { status: 404 });
+  const { consigne } = (await req.json().catch(() => ({}))) as { consigne?: string };
+  if (!consigne || consigne.trim().length < 3) return NextResponse.json({ erreur: "Décrivez la modification souhaitée." }, { status: 400 });
+  if (!(await consommer(session.user.id, plan, "retouches_ia", 1))) return NextResponse.json({ erreur: "Quota de retouches IA du mois atteint.", plan }, { status: 402 });
+  const rendre = () => rembourser(session.user.id, "retouches_ia");
+  try {
+    const texte = await demanderIA(promptRetouche(site.donnees, consigne), cap.effortIA === "xhigh" ? "high" : cap.effortIA, 12000);
+    if (!texte) { await rendre(); return NextResponse.json({ erreur: "L'IA n'a pas pu faire cette retouche." }, { status: 422 }); }
+    const r = lireJSON(texte);
+    const { d, refuses } = appliquerIA(site.donnees, r.modifications, cap, null);
+    await archiverVersion(session.sb, site, cap, `Avant retouche IA : ${consigne.trim()}`);
+    await session.sb.from("sites").update({ donnees: d, maj_le: new Date().toISOString() }).eq("id", site.id);
+    return NextResponse.json({ donnees: d, explication: String(r.explication ?? "").slice(0, 300), refuses });
+  } catch (err) {
+    await rendre();
+    const r = erreurIA(err); if (r) return r;
+    throw err;
+  }
+}

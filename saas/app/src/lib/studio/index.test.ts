@@ -1,0 +1,94 @@
+import { describe, expect, it } from "vitest";
+import { PLANS } from "../plans";
+import { appliquerEdition, appliquerIA, familleDepuisMetier, lireJSON, PALETTES, promptEtude, promptRedaction, rendreSite, siteDepuisIA, siteExpress } from "./index";
+
+const p = { nom: "Pizza Bella (M. Rossi)", metier: "Pizzeria", ville: "Lyon", code_postal: "69003", adresse: "12 rue Paul Bert 69003 Lyon", telephone: "06 12 34 56 78" };
+const cap = (id: keyof typeof PLANS) => PLANS[id].studio;
+
+describe("Studio : maquette express", () => {
+  it("produit une maquette complète, sans IA, avec les faits de la fiche", () => {
+    const d = siteExpress(p);
+    expect(d.famille).toBe("pizzeria");
+    expect(d.nom).toBe("Pizza Bella");
+    expect(d.adresse).toBe("12 rue Paul Bert");
+    expect(d.accueil.h1).toBe("Pizzeria");
+    expect(d.accueil.photo).toMatch(/^\/photos\//);
+    expect(d.offre.onglets.length).toBeGreaterThan(0);
+    expect(rendreSite(d, cap("gratuit"))).toContain("Fait avec MySite");
+    expect(rendreSite(d, cap("ultra"))).not.toContain("MySite");
+  });
+  it("devine la famille depuis le métier déclaré", () => {
+    expect(familleDepuisMetier("Restauration de type rapide")).toBe("rapide");
+    expect(familleDepuisMetier("Sushi bar")).toBe("asiatique");
+    expect(familleDepuisMetier("Coiffure")).toBe("beaute");
+    expect(familleDepuisMetier("Plombier")).toBe("artisan");
+  });
+});
+
+describe("Studio : panneau de modification selon l'offre", () => {
+  const d0 = siteExpress(p);
+  it("Gratuit : textes principaux et palettes, mais pas la carte, les couleurs libres, le modèle ni la police", () => {
+    const { d, refuses } = appliquerEdition(d0, {
+      accueil: { ...d0.accueil, h1: "Pizzeria au feu de bois" },
+      couleurs: { principal: PALETTES[1].principal, accent: PALETTES[1].accent },
+      offre: { ...d0.offre, titre: "Piraté" }, famille: "restaurant", police: "gloock", faq: [],
+    }, cap("gratuit"));
+    expect(d.accueil.h1).toBe("Pizzeria au feu de bois");
+    expect(d.couleurs.principal).toBe(PALETTES[1].principal);
+    expect(d.offre.titre).toBe(d0.offre.titre);
+    expect(d.famille).toBe("pizzeria");
+    expect(d.police).toBeUndefined();
+    expect(refuses).toEqual(expect.arrayContaining(["offre", "type de site", "police", "faq"]));
+    const libre = appliquerEdition(d0, { couleurs: { principal: "#123456", accent: "#654321" } }, cap("gratuit"));
+    expect(libre.d.couleurs).toBeUndefined();
+    expect(libre.refuses).toContain("couleurs libres");
+  });
+  it("Pro : carte, horaires, couleurs libres et modèle ; pas de police ni de photos personnelles", () => {
+    const { d, refuses } = appliquerEdition(d0, {
+      offre: { ...d0.offre, titre: "Nos pizzas" }, couleurs: { principal: "#123456", accent: "#aa3300" }, famille: "restaurant", police: "gloock",
+      horaires: { lun: "", mar: "12:00-14:00", mer: "", jeu: "", ven: "", sam: "", dim: "" },
+      accueil: { ...d0.accueil, photo: "https://exemple.supabase.co/storage/v1/object/public/studio/u/a.jpg" },
+    }, cap("pro"));
+    expect(d.offre.titre).toBe("Nos pizzas");
+    expect(d.famille).toBe("restaurant");
+    expect(d.horaires.mar).toBe("12:00-14:00");
+    expect(d.police).toBeUndefined();
+    expect(d.accueil.photo).not.toMatch(/^https/);
+    expect(refuses).toEqual(expect.arrayContaining(["police", "photos personnelles"]));
+  });
+  it("Premium : police et photos personnelles", () => {
+    const url = "https://exemple.supabase.co/storage/v1/object/public/studio/u/a.jpg";
+    const { d, refuses } = appliquerEdition(d0, { police: "bricolage", accueil: { ...d0.accueil, photo: url } }, cap("premium"));
+    expect(d.police).toBe("bricolage");
+    expect(d.accueil.photo).toBe(url);
+    expect(refuses).toEqual([]);
+  });
+  it("nettoie les faits saisis et revient aux couleurs du modèle", () => {
+    const avec = appliquerEdition(d0, { couleurs: { principal: PALETTES[0].principal, accent: PALETTES[0].accent } }, cap("gratuit")).d;
+    const { d } = appliquerEdition(avec, { nom: "  <b>Bella</b>  ", couleurs: null }, cap("gratuit"));
+    expect(d.nom).toBe("b Bella /b");
+    expect(d.couleurs).toBeUndefined();
+  });
+  it("retouche IA : n'applique que les blocs autorisés et complète les photos", () => {
+    const { d } = appliquerIA(d0, { offre: { ...d0.offre, onglets: [{ nom: "Pizzas", articles: [{ nom: "Margherita", desc: "Tomate, mozzarella, basilic", prix: 9 }] }] } }, cap("pro"));
+    expect(d.offre.onglets[0].articles[0].nom).toBe("Margherita");
+  });
+});
+
+describe("Studio : IA", () => {
+  it("les consignes imposent les règles légales et le doute sur le code d'activité", () => {
+    const e = promptEtude(p, "Vraie salle de restaurant");
+    expect(e).toContain("souvent faux");
+    expect(e).toContain("Vraie salle de restaurant");
+    const r = promptRedaction(p, { type: "Pizzeria au feu de bois", famille: "pizzeria" });
+    expect(r).toContain("Aucun avis");
+    expect(r).toContain("ia-pizzeria-");
+  });
+  it("lit un JSON entouré de texte et construit le site", () => {
+    const j = lireJSON('Voici :\n```json\n{"accueil":{"h1":"Pizzeria","h1_suite":"à Lyon 3e","chapo":"Bienvenue"},"horaires":{"lun":"","mar":"11:45-14:00","mer":"","jeu":"","ven":"","sam":"","dim":""}}\n```');
+    const d = siteDepuisIA(p, "pizzeria", j, j.horaires);
+    expect(d.accueil.h1_suite).toBe("à Lyon 3e");
+    expect(d.horaires.mar).toBe("11:45-14:00");
+    expect(() => lireJSON("pas de json")).toThrow();
+  });
+});
