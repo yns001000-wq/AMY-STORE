@@ -85,7 +85,7 @@ export function PanneauPublication({ id, d, cap, siret, nonEnregistre, onMessage
         {champ("adresse", "Adresse")}
         <div className="deux-col">{champ("telephone", "Téléphone")}{champ("email", "E-mail")}</div>
         {champ("directeur", "Directeur de la publication", "En général le gérant (nom et prénom).")}
-        {champ("realisation", "Réalisation (facultatif)", "Ex. « Site réalisé par Yanis, création de sites »")}
+        {champ("realisation", "Réalisation (facultatif)", "Ex. « Site réalisé par Noa, création de sites »")}
       </fieldset>
 
       <label className="ed-case"><input type="checkbox" checked={verifie} onChange={(e) => setVerifie(e.target.checked)} />Le gérant a validé les textes, prix, horaires et photos.</label>

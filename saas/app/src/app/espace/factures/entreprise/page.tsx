@@ -18,7 +18,7 @@ export default async function PageEntreprise({ searchParams }: { searchParams: P
       <div className="barre-haut" style={{ marginTop: ".6rem" }}><div><p className="note" style={{ margin: "0 0 .3rem" }}>Ces informations figurent sur vos devis et factures</p><h1>Mon entreprise</h1></div></div>
       {ok && <p className="alerte ok">Enregistré. Les documents déjà émis gardent les informations du jour de leur émission.</p>}
       <form action={enregistrerEntreprise} className="carte pile" style={{ maxWidth: "46rem" }}>
-        <label>Nom et prénom, ou raison sociale<input name="nom" defaultValue={v("nom")} required placeholder="Ex. Yanis Dupont EI" /></label>
+        <label>Nom et prénom, ou raison sociale<input name="nom" defaultValue={v("nom")} required placeholder="Ex. Noa Dupont EI" /></label>
         <p className="note" style={{ margin: "-.4rem 0 0" }}>Entrepreneur individuel : faites suivre votre nom de la mention « EI » ou « entrepreneur individuel ».</p>
         <div className="deux-col">
           <label>SIRET<input name="siret" defaultValue={v("siret")} required inputMode="numeric" pattern="[0-9 ]{14,17}" /></label>

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { controleEmission, mentionsLegales, nettoyerLignes, totaux } from "./factures";
 
-const e = { nom: "Yanis Exemple EI", siret: "12345678900011", adresse: "1 rue Test, 69000 Lyon", tva: "franchise", taux_tva: 0 };
+const e = { nom: "Noa Exemple EI", siret: "12345678900011", adresse: "1 rue Test, 69000 Lyon", tva: "franchise", taux_tva: 0 };
 
 describe("devis et factures", () => {
   it("calcule les totaux au centime près", () => {

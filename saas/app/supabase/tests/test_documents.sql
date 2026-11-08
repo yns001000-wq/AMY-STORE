@@ -17,13 +17,13 @@ do $$ begin
   begin insert into documents (user_id, type, numero, statut) values (auth.uid(), 'facture', 'F-1', 'emise'); raise notice 'ÉCHEC : facture créée déjà émise';
   exception when others then raise notice 'OK impossible de créer une facture déjà numérotée'; end;
 end $$;
-insert into entreprises (user_id, nom, siret, adresse) values (auth.uid(), 'Yanis Test', '12345678900011', '1 rue Test, 69000 Lyon');
+insert into entreprises (user_id, nom, siret, adresse) values (auth.uid(), 'Noa Test', '12345678900011', '1 rue Test, 69000 Lyon');
 select case when emettre_document('aaaaaaaa-0000-0000-0000-000000000001') ~ '^F-\d{4}-0001$' then 'OK première facture : F-AAAA-0001' else 'ÉCHEC numéro' end;
 select case when emettre_document('aaaaaaaa-0000-0000-0000-000000000002') ~ '^F-\d{4}-0002$' then 'OK numérotation continue : F-AAAA-0002' else 'ÉCHEC continuité' end;
 select case when emettre_document('aaaaaaaa-0000-0000-0000-000000000003') ~ '^D-\d{4}-0001$' then 'OK série distincte pour les devis' else 'ÉCHEC série devis' end;
 select case when emetteur->>'siret' = '12345678900011' and date_emission is not null and statut = 'emise' then 'OK identité du vendeur figée à l''émission' else 'ÉCHEC' end from documents where id = 'aaaaaaaa-0000-0000-0000-000000000001';
 update entreprises set nom = 'Autre nom' where user_id = auth.uid();
-select case when emetteur->>'nom' = 'Yanis Test' then 'OK changer son identité ne modifie pas les factures passées' else 'ÉCHEC' end from documents where id = 'aaaaaaaa-0000-0000-0000-000000000001';
+select case when emetteur->>'nom' = 'Noa Test' then 'OK changer son identité ne modifie pas les factures passées' else 'ÉCHEC' end from documents where id = 'aaaaaaaa-0000-0000-0000-000000000001';
 do $$ begin
   begin update documents set total_ht = 1 where id = 'aaaaaaaa-0000-0000-0000-000000000001'; raise notice 'ÉCHEC : facture émise modifiée';
   exception when others then raise notice 'OK facture émise non modifiable'; end;

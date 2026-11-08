@@ -180,7 +180,7 @@ AVIS_EXEMPLE = {
     "Pâtisserie": [("Nadia R.", "Le gâteau d'anniversaire était magnifique et délicieux. Commande très simple."),
                    ("Thomas G.", "Les tartes du week-end sont devenues un rituel à la maison."),
                    ("Élodie P.", "Gâteau de baptême parfait, tout le monde a demandé l'adresse !")],
-    "Snack": [("Yanis B.", "Le meilleur tacos du coin, bien garni et prêt en 10 minutes."),
+    "Snack": [("Noa B.", "Le meilleur tacos du coin, bien garni et prêt en 10 minutes."),
               ("Sarah M.", "Commande sur WhatsApp super pratique, burger maison excellent."),
               ("Mehdi K.", "Accueil sympa, portions généreuses et prix corrects.")],
     "Restaurant": [("Claire V.", "Formule du midi excellente et service rapide, parfait pour une pause déjeuner."),
