@@ -1,0 +1,82 @@
+[
+ {
+  "id": "stop",
+  "texte": "Stop. Regarde ce restaurant, en bas de chez toi.",
+  "tts": "Stop. Regarde ce restaurant, en bas de chez toi.",
+  "prise": 0,
+  "comprehension": 1.0,
+  "duree": 5.055
+ },
+ {
+  "id": "pasdesite",
+  "texte": "Il n'a pas de site internet. Et il est loin d'être le seul.",
+  "tts": "Il n'a pas de site internet. Et il est loin d'être le seul.",
+  "prise": 1,
+  "comprehension": 1.0,
+  "duree": 3.481
+ },
+ {
+  "id": "trouver",
+  "texte": "Avec MySite, tu trouves ces commerces en un clic. Et ils sont réservés rien que pour toi.",
+  "tts": "Avec Maï Saïte, tu trouves ces commerces en un clic. Et ils sont réservés rien que pour toi.",
+  "prise": 2,
+  "comprehension": 0.914,
+  "duree": 6.083
+ },
+ {
+  "id": "maquette",
+  "texte": "Leur futur site est déjà prêt : la carte, les horaires, le plan d'accès.",
+  "tts": "Leur futur site est déjà prêt : la carte, les horaires, le plan d'accès.",
+  "prise": 1,
+  "comprehension": 0.857,
+  "duree": 5.063
+ },
+ {
+  "id": "montrer",
+  "texte": "Tu passes les voir, et tu leur montres, directement sur ton téléphone.",
+  "tts": "Tu passes les voir, et tu leur montres, directement sur ton téléphone.",
+  "prise": 0,
+  "comprehension": 0.917,
+  "duree": 4.529
+ },
+ {
+  "id": "devis",
+  "texte": "Ils sont partants ? Ton devis est prêt en deux clics.",
+  "tts": "Ils sont partants ? Ton devis est prêt en deux clics.",
+  "prise": 0,
+  "comprehension": 1.0,
+  "duree": 3.139
+ },
+ {
+  "id": "enligne",
+  "texte": "Un clic de plus, et leur site est en ligne.",
+  "tts": "Un clic de plus, et leur site est en ligne.",
+  "prise": 0,
+  "comprehension": 1.0,
+  "duree": 2.836
+ },
+ {
+  "id": "encaisser",
+  "texte": "Tu factures, tu encaisses, et tu proposes un abonnement pour les mises à jour.",
+  "tts": "Tu factures, tu encaisses, et tu proposes un abonnement pour les mises à jour.",
+  "prise": 0,
+  "comprehension": 1.0,
+  "duree": 4.794
+ },
+ {
+  "id": "academie",
+  "texte": "Et si tu débutes, l'Académie t'explique tout, étape par étape.",
+  "tts": "Et si tu débutes, l'Académie t'explique tout, étape par étape.",
+  "prise": 0,
+  "comprehension": 1.0,
+  "duree": 4.675
+ },
+ {
+  "id": "fin",
+  "texte": "MySite. Commence gratuitement, le lien est en bio.",
+  "tts": "Maï Saïte. Commence gratuitement, le lien est en bio.",
+  "prise": 0,
+  "comprehension": 0.778,
+  "duree": 4.459
+ }
+]
