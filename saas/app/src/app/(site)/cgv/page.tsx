@@ -17,7 +17,11 @@ export default function Cgv() {
       <p>Vous disposez de 14 jours après la souscription. Si vous demandez expressément l&apos;accès immédiat au service, vous reconnaissez perdre ce droit une fois le service pleinement exécuté. En cas de rétractation avant, vous payez seulement la part du service déjà fournie (articles L221-18, L221-25 et L221-28 du Code de la consommation). Formulaire de rétractation : <AFaire>lien ou adresse e-mail</AFaire>.</p>
       <h2>5. Essai Premium</h2>
       <p>7 jours, une fois par compte, sans carte bancaire. Aucun prélèvement à la fin : le compte repasse automatiquement en Gratuit.</p>
-      <h2>6. Réclamations et médiation</h2>
+      <h2>6. Hébergement des sites mis en ligne</h2>
+      <p>Les sites publiés avec la mise en ligne en un clic (offres Pro et plus) sont hébergés tant que l&apos;abonnement est actif. Après la fin de l&apos;abonnement, ils restent en ligne 15 jours, puis sont retirés ; ils restent disponibles dans le Studio et téléchargeables à tout moment pour être hébergés ailleurs. Il vous appartient d&apos;en informer vos propres clients.</p>
+      <h2>7. Devis et factures</h2>
+      <p>MySite fournit un outil de facturation (offres Premium et Ultra) : numérotation continue, mentions légales usuelles, avoirs. Vous restez responsable de l&apos;exactitude de vos documents et de vos déclarations. Vos documents émis restent consultables même après un changement d&apos;offre.</p>
+      <h2>8. Réclamations et médiation</h2>
       <p>Contact : <AFaire>e-mail</AFaire>. Médiateur de la consommation : <AFaire>nom et site</AFaire>.</p>
     </article>
   );

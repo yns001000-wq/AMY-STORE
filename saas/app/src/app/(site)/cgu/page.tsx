@@ -18,9 +18,11 @@ export default function Cgu() {
       <p>Pour votre propre prospection, vous agissez en tant que responsable de traitement au sens du RGPD. MySite peut suspendre un compte en cas d&apos;usage abusif (spam, harcèlement, revente de données).</p>
       <h2>3. Contenus générés par l&apos;IA et maquettes</h2>
       <p>Les textes, prix et contenus d&apos;exemple produits par l&apos;IA peuvent être inexacts. Ils sont signalés comme des exemples à valider. Les maquettes sont des démonstrations non publiées.</p>
-      <h2>4. Compte et sécurité</h2>
+      <h2>4. Sites publiés, factures et Académie</h2>
+      <p>Vous êtes responsable des sites que vous publiez : leur contenu doit être validé par le commerçant concerné, ses mentions légales doivent être exactes, et les noms de domaine doivent être enregistrés au nom de vos clients. Les cours de l&apos;Académie sont donnés à titre informatif : ils ne constituent ni un conseil juridique ou comptable personnalisé, ni une promesse de revenus.</p>
+      <h2>5. Compte et sécurité</h2>
       <p>Un compte par personne. Vous protégez vos identifiants. Vos données restent les vôtres : export possible, suppression du compte sur demande à <AFaire>e-mail</AFaire>.</p>
-      <h2>5. Responsabilité, droit applicable</h2>
+      <h2>6. Responsabilité, droit applicable</h2>
       <p>Droit français. Pour un consommateur : tribunal de son domicile et médiation de la consommation (voir les mentions légales). <AFaire>Clauses de limitation de responsabilité à rédiger avec l&apos;avocat</AFaire>.</p>
     </article>
   );

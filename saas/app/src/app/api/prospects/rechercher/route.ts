@@ -51,7 +51,7 @@ export async function POST() {
 
   const { error } = await admin.from("prospects").insert(reserves.map((p) => ({
     user_id: uid, siret: p.siret, siren: p.siren, nom: p.nom, enseigne: p.enseigne, naf: p.naf, metier: p.metier, adresse: p.adresse,
-    code_postal: p.code_postal, ville: p.ville, departement: p.departement, source: p.source, indices: p.indices,
+    code_postal: p.code_postal, ville: p.ville, departement: p.departement, source: p.source, indices: p.indices, latitude: p.latitude, longitude: p.longitude,
     journal: [{ d: new Date().toISOString().slice(0, 10), t: "Trouvé dans la base Sirene (registre public)" }],
   })));
   if (error) {

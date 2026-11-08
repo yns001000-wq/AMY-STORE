@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Columns3, CreditCard, LayoutDashboard, LayoutTemplate, Settings2 } from "lucide-react";
+import { Columns3, CreditCard, GraduationCap, LayoutDashboard, LayoutTemplate, Map as IconeCarte, ReceiptText, Settings2 } from "lucide-react";
 
-const LIENS = [["/espace", "Tableau de bord", LayoutDashboard], ["/espace/pipeline", "Pipeline", Columns3], ["/espace/studio", "Studio", LayoutTemplate], ["/espace/bienvenue", "Secteur et zone", Settings2], ["/espace/abonnement", "Mon abonnement", CreditCard]] as const;
+const LIENS = [["/espace", "Tableau de bord", LayoutDashboard], ["/espace/pipeline", "Pipeline", Columns3], ["/espace/carte", "Carte", IconeCarte], ["/espace/studio", "Studio", LayoutTemplate], ["/espace/factures", "Devis et factures", ReceiptText], ["/espace/academie", "Académie", GraduationCap], ["/espace/bienvenue", "Secteur et zone", Settings2], ["/espace/abonnement", "Mon abonnement", CreditCard]] as const;
 
 export function MenuApp() {
   const chemin = usePathname();

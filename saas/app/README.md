@@ -46,17 +46,38 @@ Ce dossier contient le socle de la phase 1. Le plan complet est dans `../PLAN.md
     - l'IA les utilise en priorité (rédaction et retouches) quand la légende correspond.
   - **Le serveur refiltre toute modification selon l'offre** (`appliquerEdition`) : le navigateur n'est jamais cru sur parole.
   - **Téléchargement** d'un fichier HTML autonome : la maquette avec son bandeau, ou la version finale sans bandeau et indexable (dès Pro, après confirmation que le contenu a été vérifié avec le gérant).
+- **Mise en ligne en un clic** (Studio, onglet Publier ; Pro 3 sites, Premium 20, Ultra 150) :
+  - site final sans bandeau, indexable, avec **mentions légales obligatoires** saisies et insérées en bas du site (éditeur, directeur de la publication, hébergeur, confidentialité) ;
+  - adresse `<adresse>.NEXT_PUBLIC_DOMAINE_SITES` (ou `/s/<adresse>` en secours), `robots.txt` et `sitemap.xml` générés ;
+  - **nom de domaine du client** : réglages DNS affichés, vérification DNS en direct, ajout automatique au projet Vercel si `VERCEL_TOKEN` est configuré ;
+  - le site est servi dans une origine isolée (CSP sandbox) : il ne peut jamais lire les cookies de l'application ;
+  - fin d'abonnement : 15 jours de grâce puis retrait (`retirer_publications_hors_offre()`, à planifier chaque nuit).
+- **Carte des prospects** (Leaflet) : coordonnées fournies par la base Sirene, ou calculées avec la Base Adresse Nationale ; filtres par étape, totaux par département.
+- **Export CSV** (Pro et plus) : compatible Excel, protégé contre l'injection de formules.
+- **Devis, factures et avoirs** (Premium et Ultra) :
+  - numérotation continue par type et par année, attribuée par la base à l'émission ;
+  - document émis non modifiable et non supprimable ; annulation par avoir ;
+  - identité du vendeur figée à l'émission ; mentions obligatoires (TVA, pénalités, 40 €) ;
+  - **vente chez le commerçant** (art. L221-3 du code de la consommation) : rétractation de 14 jours, aucun paiement avant 7 jours et formulaire de rétractation ajoutés au devis ;
+  - impression ou PDF ; encaissé du mois et de l'année (à déclarer à l'Urssaf).
+- **Assistant de livraison** (depuis chaque fiche prospect) : 10 étapes de l'accord au premier avis. Les étapes automatiques se cochent d'après les devis, publications, DNS et factures. Inclut des idées de noms de domaine avec disponibilité vérifiée par RDAP (registres officiels).
+- **Académie** : 7 modules, 17 leçons, de la création de la micro-entreprise à la routine hebdomadaire.
+  - Chaque leçon a une **vidéo interactive** : animations, voix française (synthèse vocale de l'appareil), bruitages et musique générés par le navigateur, sous-titres, chapitres et questions dans la vidéo.
+  - Elle a aussi un résumé et un quiz de validation.
+  - Progression en %, 5 niveaux, badges par module.
+  - **Missions « Première vente »** cochées automatiquement d'après l'activité réelle.
+  - Aucune promesse de revenus : les exemples chiffrés sont signalés comme exemples.
 - **Page publique « Retirer mon entreprise »** (droit d'opposition) : l'entreprise est exclue chez tous les utilisateurs.
 - **Pages légales** en brouillon. Les informations à compléter sont surlignées en jaune.
 
 ## Tests
-- `npm test` : 31 tests sur les offres, les quotas, les garde-fous RGPD de la recherche, le moteur de sites et les droits d'édition du Studio selon l'offre.
+- `npm test` : 48 tests sur les offres, les quotas, les garde-fous RGPD de la recherche, le moteur de sites et les droits d'édition du Studio selon l'offre.
 - `LIVE=1 npm test` : en plus, un vrai appel à l'API Sirene.
-- `supabase/tests/test_rls.sql` (15 tests), `test_exclusivite.sql` (10 tests) et `test_studio.sql` (10 tests) et `test_banque_photos.sql` (5 tests) : sécurité, exclusivité et Studio, testées sur Postgres 16. Charger `stub_supabase.sql`, puis les migrations dans l'ordre.
+- `supabase/tests/test_rls.sql` (15 tests), `test_exclusivite.sql` (10 tests) et `test_studio.sql` (10 tests) `test_banque_photos.sql` (5 tests) et `test_documents.sql` (22 tests) : sécurité, numérotation des factures, documents non modifiables, exclusivité et Studio, testées sur Postgres 16. Charger `stub_supabase.sql`, puis les migrations dans l'ordre.
 - `npm run build` : compilation de production.
 
 ## Mise en route (à faire avec les comptes du propriétaire)
-1. **Supabase**. Créez un projet, de préférence en région UE. Dans l'éditeur SQL, exécutez dans l'ordre `0001_init.sql`, `0002_exclusivite_pipeline.sql`, `0003_studio.sql` (elle crée aussi le compartiment de stockage `studio` des photos des clients) puis `0004_banque_photos.sql`, puis planifiez chaque nuit (Database > Cron) `liberer_reservations_dormantes()` et `purger_prospects_anciens()`. Dans Authentication > URL configuration, ajoutez l'URL du site et `/auth/callback`.
+1. **Supabase**. Créez un projet, de préférence en région UE. Dans l'éditeur SQL, exécutez dans l'ordre `0001_init.sql`, `0002_exclusivite_pipeline.sql`, `0003_studio.sql` (elle crée aussi le compartiment de stockage `studio` des photos des clients), `0004_banque_photos.sql` puis `0005_vente_complete.sql`, puis planifiez chaque nuit (Database > Cron) `liberer_reservations_dormantes()`, `purger_prospects_anciens()` et `retirer_publications_hors_offre()`. Dans Authentication > URL configuration, ajoutez l'URL du site et `/auth/callback`.
 2. **Stripe**, en mode test :
    - créez 3 produits (Pro, Premium, Ultra), chacun avec un prix mensuel et un prix annuel TTC ;
    - activez le portail client, avec la résiliation et le changement d'offre ;
@@ -66,6 +87,5 @@ Ce dossier contient le socle de la phase 1. Le plan complet est dans `../PLAN.md
 5. **Vercel** : importez le dépôt avec `saas/app` comme dossier racine, recopiez les variables d'environnement, puis branchez le nom de domaine. La rédaction d'un site par l'IA peut durer jusqu'à 5 minutes (`maxDuration = 300`) : le plan Vercel doit l'autoriser.
 
 ## Suite
-- Carte de France des prospects.
-- Mise en ligne en un clic des sites finaux (sous-domaine MySite ou nom de domaine du client).
-- Export CSV (Pro et plus), devis et factures (Premium et plus).
+- Facturation électronique (plateforme agréée, Factur-X) avant les échéances de la réforme.
+- Achat de noms de domaine directement depuis MySite (revendeur agréé).

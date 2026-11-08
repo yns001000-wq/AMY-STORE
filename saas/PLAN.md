@@ -166,8 +166,9 @@ Exemple de script conforme :
 |---|---|---|
 | 0 | Plan, prix, cadre légal | ✅ ce document |
 | 1 | Socle : inscription, accueil guidé, offres et quotas, Stripe, recherche de prospects conforme, page d'opposition, pages légales en brouillon | 🔨 commencé (`saas/app`) |
-| 2 | Cockpit dans l'application : exclusivité des prospects, fiche, pipeline, journal, rappels, messages IA | ✅ fait (carte de France : à faire) |
+| 2 | Cockpit dans l'application : exclusivité des prospects, fiche, pipeline, journal, rappels, messages IA | ✅ fait, carte de France comprise |
 | 3 | Studio : maquette express, étude d'établissement et site sur mesure par l'IA, retouches IA, panneau de modification dont la puissance dépend de l'offre, versions, téléchargement | fait (code et tests ; appel IA réel à valider avec la clé Anthropic) |
+| 3 bis | Vente complète : mise en ligne en un clic (sous-domaine ou domaine du client, mentions légales), export CSV, devis/factures/avoirs conformes, assistant de livraison, Académie (17 leçons, vidéos interactives, progression, missions) | fait (code et tests ; à valider en production : domaine des sites, jeton Vercel, fond de carte) |
 | 4 | Pages légales relues par un avocat, médiateur, registre RGPD, tests de paiement réels | à faire, avec vous |
 | 5 | Lancement : vidéos IA conformes, page d'accueil, suivi des inscriptions | à faire |
 

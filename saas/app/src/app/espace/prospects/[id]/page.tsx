@@ -6,6 +6,7 @@ import { ETAPES, etape, type EntreeJournal } from "@/lib/pipeline";
 import { changerStatut, enregistrerSuivi, noterEchange, supprimerProspect } from "@/lib/actions-prospects";
 import { GenerateurMessage } from "@/components/GenerateurMessage";
 import { BoutonsStudio } from "@/components/studio/BoutonsStudio";
+import { ConclureVente } from "@/components/ConclureVente";
 import { consommation, profilEtPlan } from "@/lib/quotas";
 import { PLANS } from "@/lib/plans";
 
@@ -18,9 +19,10 @@ export default async function FicheProspect({ params }: { params: Promise<{ id: 
   // RLS : la requête ne renvoie rien si le prospect appartient à un autre utilisateur.
   const { data: p } = await session.sb.from("prospects").select("*").eq("id", id).maybeSingle();
   if (!p) notFound();
-  const [{ data: sites }, { plan }, conso] = await Promise.all([
+  const [{ data: sites }, { plan }, conso, { data: docs }] = await Promise.all([
     session.sb.from("sites").select("id, type, maj_le").eq("prospect_id", id).order("maj_le", { ascending: false }),
     profilEtPlan(session.user.id), consommation(session.user.id),
+    session.sb.from("documents").select("id, type, numero, statut").eq("prospect_id", id).order("cree_le", { ascending: false }),
   ]);
   const e = etape(p.statut), q = encodeURIComponent(`${p.nom} ${p.ville ?? ""}`);
   const journal = (Array.isArray(p.journal) ? p.journal : []) as EntreeJournal[];
@@ -65,6 +67,7 @@ export default async function FicheProspect({ params }: { params: Promise<{ id: 
         </div>
         <div style={{ display: "grid", gap: "1.2rem", alignContent: "start" }}>
           <BoutonsStudio prospectId={p.id} sites={sites ?? []} ia={!!PLANS[plan].studio.effortIA} restants={Math.max(0, PLANS[plan].quotas.sites_ia - conso.sites_ia)} />
+          <ConclureVente prospectId={p.id} docs={docs ?? []} facturation={PLANS[plan].facturation} />
           <GenerateurMessage id={p.id} bloque={p.statut === "refus" ? "Ce prospect a demandé à ne plus être contacté." : undefined} />
           <div className="carte">
             <h2 style={{ fontSize: "1.15rem" }}>Historique</h2>

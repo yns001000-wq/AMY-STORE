@@ -25,6 +25,7 @@ export default async function PageStudio({ params }: { params: Promise<{ id: str
     consommation(session.user.id),
     photosDuCommerce(session.sb, cap, site.prospect_id, 300),
   ]);
+  const { data: pr } = site.prospect_id ? await session.sb.from("prospects").select("siret").eq("id", site.prospect_id).maybeSingle() : { data: null };
   return (
     <>
       <div className="barre-haut" style={{ marginBottom: "1rem" }}>
@@ -36,7 +37,7 @@ export default async function PageStudio({ params }: { params: Promise<{ id: str
       </div>
       <EditeurStudio id={site.id} initial={site.donnees} etude={(site.etude as Etude) ?? null} plan={plan} cap={cap}
         versions={versions ?? []} retouches={{ utilise: conso.retouches_ia, max: PLANS[plan].quotas.retouches_ia }}
-        photosPerso={photosPerso} prospectId={site.prospect_id} />
+        photosPerso={photosPerso} prospectId={site.prospect_id} siret={pr?.siret ?? null} />
     </>
   );
 }

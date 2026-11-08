@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Crown, Gift, Lock, Search, Store, Target, WandSparkles } from "lucide-react";
+import { Crown, Download, Gift, Lock, Map as IconeCarte, Search, Store, Target, WandSparkles } from "lucide-react";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { consommation, profilEtPlan } from "@/lib/quotas";
 import { departementsAutorises, PLANS, type TypeQuota } from "@/lib/plans";
@@ -76,7 +76,13 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
       <section className="carte">
         <div className="tableau-entete">
           <h2>Mes prospects <span className="note">({prospects?.length ?? 0})</span></h2>
-          <BoutonRecherche desactive={plein} />
+          <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
+            <Link className="btn" href="/espace/carte"><IconeCarte aria-hidden />Carte</Link>
+            {PLANS[plan].export
+              ? <a className="btn" href="/api/prospects/export" download><Download aria-hidden />Export CSV</a>
+              : <Link className="btn" href="/espace/abonnement" title="Inclus dès l'offre Pro"><Lock aria-hidden />Export CSV</Link>}
+            <BoutonRecherche desactive={plein} />
+          </div>
         </div>
         {!prospects?.length ? (
           <div className="vide"><Search aria-hidden /><h3>Aucun prospect pour l&apos;instant</h3><p className="note">Lancez votre première recherche : MySite parcourt la base officielle des entreprises de votre zone.</p></div>

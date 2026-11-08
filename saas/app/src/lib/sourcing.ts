@@ -17,6 +17,7 @@ interface EtablissementApi {
   siret?: string; adresse?: string | null; code_postal?: string | null; libelle_commune?: string | null;
   liste_enseignes?: string[] | null; nom_commercial?: string | null; etat_administratif?: string;
   activite_principale?: string | null; statut_diffusion_etablissement?: string | null;
+  latitude?: string | number | null; longitude?: string | number | null;
 }
 export interface ResultatApi {
   siren?: string; nom_complet?: string; nom_raison_sociale?: string | null; activite_principale?: string | null;
@@ -28,11 +29,18 @@ export interface ResultatApi {
 export interface ProspectTrouve {
   siren: string; siret: string; nom: string; enseigne: string | null; naf: string; metier: string;
   adresse: string; code_postal: string; ville: string; departement: string; source: string; indices: string;
+  latitude: number | null; longitude: number | null;
 }
 
 export interface Opposition { sirens: Set<string>; sirets: Set<string> }
 
 const titre = (t: string) => t.toLowerCase().replace(/(^|[\s'’-])(\p{L})/gu, (_m, a: string, b: string) => a + b.toUpperCase());
+
+/** Coordonnées GPS fournies par l'API (pour la carte), si elles sont valides. */
+export function coordonnees(e: { latitude?: string | number | null; longitude?: string | number | null }): { latitude: number | null; longitude: number | null } {
+  const la = Number(e.latitude), lo = Number(e.longitude);
+  return Number.isFinite(la) && Number.isFinite(lo) && la !== 0 && Math.abs(la) <= 90 && Math.abs(lo) <= 180 ? { latitude: la, longitude: lo } : { latitude: null, longitude: null };
+}
 
 /** Transforme un résultat de l'API en prospect, ou null s'il doit être écarté. */
 export function versProspect(r: ResultatApi, secteur: Secteur, dep: string, opp: Opposition): ProspectTrouve | null {
@@ -55,7 +63,7 @@ export function versProspect(r: ResultatApi, secteur: Secteur, dep: string, opp:
   return {
     siren: r.siren, siret: e.siret, nom, enseigne: enseigne ? titre(enseigne) : null, naf, metier: secteur.metier(naf),
     adresse: e.adresse ?? "", code_postal: e.code_postal ?? "", ville: titre(e.libelle_commune ?? ""), departement: dep,
-    source: SOURCE_SIRENE, indices,
+    source: SOURCE_SIRENE, indices, ...coordonnees(e),
   };
 }
 

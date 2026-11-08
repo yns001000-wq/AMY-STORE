@@ -3,27 +3,28 @@ import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } f
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  CircleHelp, Clock, Download, History, ImageIcon, LayoutList, ListChecks, Lock, Monitor, Palette, RotateCcw, Save, Smartphone, Trash2, Type, Undo2, WandSparkles,
+  CircleHelp, Clock, Download, History, ImageIcon, LayoutList, ListChecks, Lock, Monitor, Palette, RotateCcw, Save, Rocket, Smartphone, Trash2, Type, Undo2, WandSparkles,
 } from "lucide-react";
 import type { CapacitesStudio, PlanId } from "@/lib/plans";
 import { BANQUE_PHOTOS, FAMILLES, ICONES, JOURS, PALETTES, POLICES, SECTIONS, rendreSite, type DonneesSite, type PhotoPerso } from "@/lib/studio";
 import { Articles, ListeTextes, Texte, Verrou, type Article } from "./champs";
 import { BanquePhotos } from "./BanquePhotos";
+import { PanneauPublication } from "./PanneauPublication";
 import { EtudeIA, type Etude } from "./EtudeIA";
 
 type Onglet = "ia" | "textes" | "style" | "sections" | "carte" | "horaires" | "faq" | "photos" | "versions" | "telecharger";
 const ONGLETS: [Onglet, string, typeof Type][] = [
   ["ia", "IA", WandSparkles], ["textes", "Textes", Type], ["style", "Style", Palette], ["sections", "Sections", LayoutList], ["carte", "Carte", ListChecks],
-  ["horaires", "Horaires", Clock], ["faq", "FAQ", CircleHelp], ["photos", "Photos", ImageIcon], ["versions", "Versions", History], ["telecharger", "Télécharger", Download],
+  ["horaires", "Horaires", Clock], ["faq", "FAQ", CircleHelp], ["photos", "Photos", ImageIcon], ["versions", "Versions", History], ["telecharger", "Publier", Rocket],
 ];
 const SUGGESTIONS = ["Ajoute une formule du midi", "Rends le ton plus chic", "Mets en avant la livraison et la vente à emporter", "Raccourcis tous les textes", "Ajoute une catégorie Boissons à la carte", "Écris une FAQ plus complète"];
 const HORAIRE = /^\d\d:\d\d-\d\d:\d\d(,\d\d:\d\d-\d\d:\d\d)*$/;
 
 export interface VersionResume { id: number; libelle: string | null; cree_le: string }
-interface Props { id: string; initial: DonneesSite; etude: Etude | null; plan: PlanId; cap: CapacitesStudio; versions: VersionResume[]; retouches: { utilise: number; max: number }; photosPerso: PhotoPerso[]; prospectId: string | null }
+interface Props { id: string; initial: DonneesSite; etude: Etude | null; plan: PlanId; cap: CapacitesStudio; versions: VersionResume[]; retouches: { utilise: number; max: number }; photosPerso: PhotoPerso[]; prospectId: string | null; siret?: string | null }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export function EditeurStudio({ id, initial, etude: etude0, plan, cap, versions, retouches, photosPerso, prospectId }: Props) {
+export function EditeurStudio({ id, initial, etude: etude0, plan, cap, versions, retouches, photosPerso, prospectId, siret }: Props) {
   const router = useRouter();
   const [d, setD] = useState<DonneesSite>(initial);
   const [modifies, setModifies] = useState<Set<string>>(new Set());
@@ -345,11 +346,16 @@ export function EditeurStudio({ id, initial, etude: etude0, plan, cap, versions,
           )}
 
           {onglet === "telecharger" && <>
+            <Verrou ok={cap.publications > 0} offre="Pro" titre="Mise en ligne en un clic">
+              {cap.publications > 0
+                ? <PanneauPublication id={id} d={d} cap={cap} siret={siret} nonEnregistre={modifies.size > 0} onMessage={setMsg} />
+                : <p className="note" style={{ margin: 0 }}>Publiez le site final en un clic, hébergé par MySite, sur une adresse MySite ou sur le nom de domaine du client, avec les mentions légales ajoutées automatiquement.</p>}
+            </Verrou>
             <fieldset className="ed-bloc"><legend>Maquette à montrer</legend>
               <p className="note">Fichier HTML autonome avec le bandeau « maquette » : idéal pour l&apos;envoyer au commerçant ou l&apos;ouvrir sur votre téléphone pendant le rendez-vous.{cap.filigrane ? " L'offre Gratuite ajoute la mention « Fait avec MySite »." : ""}</p>
               <a className="btn bloc" href={`/api/studio/${id}/telecharger`} onClick={(e) => { if (modifies.size) { e.preventDefault(); setMsg({ t: "Enregistrez d'abord vos modifications." }); } }}><Download aria-hidden />Télécharger la maquette</a>
             </fieldset>
-            <Verrou ok={plan !== "gratuit"} offre="Pro" titre="Version finale à mettre en ligne">
+            <Verrou ok={plan !== "gratuit"} offre="Pro" titre="Version finale à héberger vous-même">
               <p className="note">Sans bandeau de maquette et indexable par Google{cap.marqueBlanche ? ", en marque blanche" : ""}. À héberger chez Netlify, OVH, o2switch…</p>
               <label className="ed-case"><input type="checkbox" checked={verifie} onChange={(e) => setVerifie(e.target.checked)} />J&apos;ai vérifié avec le gérant les textes, prix, horaires et photos.</label>
               <a className={`btn p bloc${verifie && !modifies.size ? "" : " inactif"}`} aria-disabled={!verifie || !!modifies.size} href={verifie && !modifies.size ? `/api/studio/${id}/telecharger?finale=1` : undefined}><Download aria-hidden />Télécharger la version finale</a>
