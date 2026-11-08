@@ -56,7 +56,7 @@ Ce dossier contient le socle de la phase 1. Le plan complet est dans `../PLAN.md
 - `npm run build` : compilation de production.
 
 ## Mise en route (à faire avec les comptes du propriétaire)
-1. **Supabase**. Créez un projet, de préférence en région UE. Dans l'éditeur SQL, exécutez dans l'ordre `0001_init.sql`, `0002_exclusivite_pipeline.sql` puis `0003_studio.sql` (elle crée aussi le compartiment de stockage `studio` des photos des clients), puis planifiez chaque nuit (Database > Cron) `liberer_reservations_dormantes()` et `purger_prospects_anciens()`. Dans Authentication > URL configuration, ajoutez l'URL du site et `/auth/callback`.
+1. **Supabase**. Créez un projet, de préférence en région UE. Dans l'éditeur SQL, exécutez dans l'ordre `0001_init.sql`, `0002_exclusivite_pipeline.sql`, `0003_studio.sql` (elle crée aussi le compartiment de stockage `studio` des photos des clients) puis `0004_banque_photos.sql`, puis planifiez chaque nuit (Database > Cron) `liberer_reservations_dormantes()` et `purger_prospects_anciens()`. Dans Authentication > URL configuration, ajoutez l'URL du site et `/auth/callback`.
 2. **Stripe**, en mode test :
    - créez 3 produits (Pro, Premium, Ultra), chacun avec un prix mensuel et un prix annuel TTC ;
    - activez le portail client, avec la résiliation et le changement d'offre ;
