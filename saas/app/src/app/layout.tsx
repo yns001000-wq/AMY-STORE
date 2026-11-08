@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+
+const titre = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["600", "700", "800"], variable: "--police-titre", display: "swap" });
+const ui = Inter({ subsets: ["latin"], variable: "--police-ui", display: "swap" });
 
 export const metadata: Metadata = {
   title: { default: "MySite · vos prospects locaux, prêts à appeler", template: "%s · MySite" },
@@ -9,29 +12,8 @@ export const metadata: Metadata = {
 
 export default function Racine({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
-      <body>
-        <div className="conteneur">
-          <header className="entete">
-            <Link className="marque" href="/">MySite</Link>
-            <nav className="nav" aria-label="Navigation principale">
-              <Link href="/#tarifs">Tarifs</Link>
-              <Link href="/espace">Mon cockpit</Link>
-              <Link className="btn p" href="/connexion">Essai gratuit</Link>
-            </nav>
-          </header>
-          <main>{children}</main>
-          <footer className="pied">
-            <span>© {new Date().getFullYear()} MySite</span>
-            <Link href="/mentions-legales">Mentions légales</Link>
-            <Link href="/cgu">CGU</Link>
-            <Link href="/cgv">CGV</Link>
-            <Link href="/confidentialite">Confidentialité</Link>
-            <Link href="/opposition">Retirer mon entreprise</Link>
-            <span>Données entreprises : base Sirene (INSEE), licence ouverte · © contributeurs OpenStreetMap (ODbL)</span>
-          </footer>
-        </div>
-      </body>
+    <html lang="fr" className={`${titre.variable} ${ui.variable}`}>
+      <body>{children}</body>
     </html>
   );
 }

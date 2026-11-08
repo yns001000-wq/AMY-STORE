@@ -1,34 +1,68 @@
-import { ORDRE_PLANS, PLANS, type PlanId } from "@/lib/plans";
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import { Check, Minus, Star } from "lucide-react";
+import { ORDRE_PLANS, PLANS, type Periode, type PlanId } from "@/lib/plans";
 
-const fmt = (n: number) => (Number.isFinite(n) ? n.toLocaleString("fr-FR") : "France entière");
+const fmt = (n: number) => n.toLocaleString("fr-FR");
 
-/** Grille des offres. `action` : rendu du bouton de chaque offre (lien d'inscription ou formulaire de paiement). */
-export function Tarifs({ action, planActuel }: { action: (id: PlanId) => React.ReactNode; planActuel?: PlanId }) {
+/** Bouton de chaque offre : lien d'inscription (site public) ou formulaire de paiement Stripe (espace connecté). */
+function Action({ id, periode, mode, particulier, abonne }: { id: PlanId; periode: Periode; mode: "inscription" | "abonnement"; particulier?: boolean; abonne?: boolean }) {
+  const p = id === "premium" ? " p" : "";
+  if (mode === "inscription") return <Link className={`btn bloc${p}`} href="/connexion?mode=inscription">{id === "gratuit" ? "Commencer gratuitement" : "Essayer maintenant"}</Link>;
+  if (id === "gratuit" || abonne) return null;
   return (
-    <div className="grille">
-      {ORDRE_PLANS.map((id) => {
-        const p = PLANS[id];
-        return (
-          <article key={id} className={`carte offre${p.misEnAvant ? " avant" : ""}`} aria-labelledby={`offre-${id}`}>
-            {p.misEnAvant && <span className="badge">Le plus choisi</span>}
-            <h3 id={`offre-${id}`}>{p.nom}</h3>
-            <p className="note">{p.accroche}</p>
-            <p className="prix">{p.prixMensuel} €<small> TTC / mois</small></p>
-            {p.prixAnnuel > 0 && <p className="note">ou {p.prixAnnuel} € par an (2 mois offerts)</p>}
-            <ul>
-              <li>{Number.isFinite(p.departements) ? `${p.departements} département${p.departements > 1 ? "s" : ""}` : "France entière"}</li>
-              <li>{fmt(p.quotas.prospects)} prospects par mois</li>
-              <li>{fmt(p.quotas.messages_ia)} messages rédigés par l&apos;IA</li>
-              <li className={p.quotas.sites_ia ? "" : "non"}>{p.quotas.sites_ia ? `${p.quotas.sites_ia} sites sur mesure par l'IA` : "1 maquette express (pas de site sur mesure)"}</li>
-              <li>Pipeline, rappels et carte</li>
-              <li className={p.export ? "" : "non"}>Export CSV</li>
-              <li className={p.facturation ? "" : "non"}>Devis et factures</li>
-              {p.utilisateurs > 1 && <li>{p.utilisateurs} utilisateurs</li>}
-            </ul>
-            <div style={{ marginTop: "auto" }}>{planActuel === id ? <p className="note"><strong>Votre offre actuelle</strong></p> : action(id)}</div>
-          </article>
-        );
-      })}
-    </div>
+    <form action="/api/stripe/checkout" method="post" className="pile" style={{ gap: ".7rem" }}>
+      <input type="hidden" name="plan" value={id} /><input type="hidden" name="periode" value={periode} />
+      {particulier && (
+        <label className="case" style={{ fontSize: ".8rem" }}><input type="checkbox" name="renonciation" value="oui" required />
+          <span className="note" style={{ fontSize: ".8rem" }}>Je demande l&apos;accès immédiat et je reconnais perdre mon droit de rétractation de 14 jours une fois le service pleinement exécuté (art. L221-28 C. conso.).</span></label>
+      )}
+      <button className={`btn bloc${p}`} type="submit">Passer à {PLANS[id].nom}</button>
+    </form>
+  );
+}
+
+/** Grille des offres, avec bascule mensuel/annuel. */
+export function Tarifs({ mode, planActuel, particulier, abonne }: { mode: "inscription" | "abonnement"; planActuel?: PlanId; particulier?: boolean; abonne?: boolean }) {
+  const [periode, setPeriode] = useState<Periode>("mensuel");
+  return (
+    <>
+      <div style={{ display: "flex" }}>
+        <div className="bascule" role="group" aria-label="Période de facturation">
+          <button type="button" aria-pressed={periode === "mensuel"} onClick={() => setPeriode("mensuel")}>Mensuel</button>
+          <button type="button" aria-pressed={periode === "annuel"} onClick={() => setPeriode("annuel")}>Annuel <span className="remise">2 mois offerts</span></button>
+        </div>
+      </div>
+      <div className="offres">
+        {ORDRE_PLANS.map((id) => {
+          const p = PLANS[id], annuel = periode === "annuel" && p.prixAnnuel > 0;
+          const prix = annuel ? Math.round((p.prixAnnuel / 12) * 100) / 100 : p.prixMensuel;
+          const lignes: [boolean, string][] = [
+            [true, Number.isFinite(p.departements) ? `${p.departements} département${p.departements > 1 ? "s" : ""}` : "France entière"],
+            [true, `${fmt(p.quotas.prospects)} prospects par mois`],
+            [true, `${fmt(p.quotas.messages_ia)} messages rédigés par l'IA`],
+            [p.quotas.sites_ia > 0, p.quotas.sites_ia ? `${p.quotas.sites_ia} sites sur mesure par l'IA` : "Maquette express uniquement"],
+            [true, "Pipeline, rappels et carte"],
+            [p.export, "Export CSV"],
+            [p.facturation, "Devis et factures"],
+            ...(p.utilisateurs > 1 ? [[true, `${p.utilisateurs} utilisateurs`] as [boolean, string]] : []),
+          ];
+          return (
+            <article key={id} className={`carte offre${p.misEnAvant ? " avant" : ""}`} aria-labelledby={`offre-${id}`}>
+              {p.misEnAvant && <span className="badge"><Star aria-hidden />Le plus choisi</span>}
+              <h3 id={`offre-${id}`}>{p.nom}</h3>
+              <p className="accroche">{p.accroche}</p>
+              <p className="prix"><b>{prix.toLocaleString("fr-FR")} €</b><span>TTC / mois</span></p>
+              <p className="sous-prix">{annuel ? `soit ${fmt(p.prixAnnuel)} € facturés par an` : p.prixAnnuel ? "sans engagement" : "pour toujours"}</p>
+              <ul className="inclus">
+                {lignes.map(([oui, t]) => <li key={t} className={oui ? "" : "non"}>{oui ? <Check aria-hidden /> : <Minus aria-hidden />}<span>{t}</span></li>)}
+              </ul>
+              <div className="pied-offre">{planActuel === id ? <span className="badge-offre">Votre offre actuelle</span> : <Action id={id} periode={periode} mode={mode} particulier={particulier} abonne={abonne} />}</div>
+            </article>
+          );
+        })}
+      </div>
+    </>
   );
 }
