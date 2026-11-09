@@ -59,7 +59,8 @@ export async function POST(req: Request, { params }: Ctx) {
   }
 
   const origine = process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin;
-  const html = insererMentions(absolutiser(rendreSite({ ...site.donnees, maquette: false }, cap, origine), origine), m, hebergeurParDefaut());
+  const html = insererMentions(absolutiser(rendreSite({ ...site.donnees, maquette: false }, cap, origine), origine), m, hebergeurParDefaut(),
+    { lienSignalement: `${origine}/signaler?site=${encodeURIComponent(urlPublique(slug, domaine).replace(/^https:\/\//, ""))}`, contact: process.env.CONTACT_EMAIL });
   const { error } = await session.sb.from("publications").upsert({ site_id: site.id, user_id: session.user.id, slug, domaine, html, mentions: m, maj_le: new Date().toISOString() }, { onConflict: "site_id" });
   if (error) return NextResponse.json({ erreur: error.code === "23505" ? "Adresse ou domaine déjà pris." : "Mise en ligne impossible." }, { status: error.code === "23505" ? 409 : 500 });
 

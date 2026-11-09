@@ -22,11 +22,12 @@ describe("mise en ligne", () => {
   it("exige les mentions légales et les insère dans le site final", () => {
     expect(mentionsManquantes({ editeur: "Pizza Bella" })).toEqual(["adresse", "directeur de la publication", "téléphone ou e-mail de contact"]);
     const d = { ...siteExpress({ nom: "Pizza Bella", metier: "Pizzeria", ville: "Lyon" }), maquette: false };
-    const html = insererMentions(rendreSite(d, PLANS.pro.studio), { editeur: "Pizza Bella <script>", adresse: "12 rue Paul Bert, 69003 Lyon", directeur: "M. Rossi", telephone: "06 12 34 56 78", siret: "123" }, { nom: "Vercel Inc.", adresse: "Covina" });
+    const html = insererMentions(rendreSite(d, PLANS.pro.studio), { editeur: "Pizza Bella <script>", adresse: "12 rue Paul Bert, 69003 Lyon", directeur: "M. Rossi", telephone: "06 12 34 56 78", siret: "123" }, { nom: "Vercel Inc.", adresse: "Covina" }, { lienSignalement: "https://app.mysite.fr/signaler?site=pizza-bella-lyon.mysite.site" });
     expect(html).toContain('id="mentions-legales"');
     expect(html).toContain("Directeur de la publication");
     expect(html).toContain("Pizza Bella &lt;script&gt;");
     expect(html).not.toContain("page fournie à la mise en ligne");
+    expect(html).toContain("Signaler un contenu illicite");
     expect(html).not.toContain('content="noindex"');
     expect(html).not.toContain("Maquette de démonstration");
   });

@@ -31,9 +31,13 @@ export async function POST(req: Request) {
       const item = sub.items.data[0];
       const supprime = ev.type === "customer.subscription.deleted";
       const plan = supprime || !abonnementActif(sub.status) ? "gratuit" : planDepuisPriceId(item?.price.id);
+      const intervalle = item?.price.recurring?.interval;
       const maj = {
         plan, abonnement_statut: sub.status, stripe_subscription_id: supprime ? null : sub.id,
         periode_fin: item?.current_period_end ? new Date(item.current_period_end * 1000).toISOString() : null,
+        periode: intervalle === "year" ? "annuel" : intervalle === "month" ? "mensuel" : null,
+        abonnement_debut: supprime ? null : new Date(sub.start_date * 1000).toISOString(),
+        resiliation_prevue: !supprime && !!sub.cancel_at_period_end,
       };
       const userId = sub.metadata?.user_id;
       const q = admin.from("profils").update(maj);

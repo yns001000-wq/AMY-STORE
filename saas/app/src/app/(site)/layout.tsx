@@ -21,7 +21,7 @@ export default function Site({ children }: { children: React.ReactNode }) {
           <div><Logo /><p style={{ marginTop: ".8rem", maxWidth: "26rem" }}>Le cockpit de prospection des indépendants qui vendent aux commerces de leur région.</p>
             <p>Données entreprises : base Sirene (INSEE), licence ouverte · © contributeurs OpenStreetMap (ODbL)</p></div>
           <div><h4>Produit</h4><ul><li><Link href="/#fonctionnalites">Fonctionnalités</Link></li><li><Link href="/#tarifs">Tarifs</Link></li><li><Link href="/#faq">Questions</Link></li><li><Link href="/connexion">Mon cockpit</Link></li></ul></div>
-          <div><h4>Légal</h4><ul><li><Link href="/mentions-legales">Mentions légales</Link></li><li><Link href="/cgu">CGU</Link></li><li><Link href="/cgv">CGV</Link></li><li><Link href="/confidentialite">Confidentialité</Link></li><li><Link href="/opposition">Retirer mon entreprise</Link></li></ul></div>
+          <div><h4>Légal</h4><ul><li><Link href="/mentions-legales">Mentions légales</Link></li><li><Link href="/cgu">CGU</Link></li><li><Link href="/cgv">CGV</Link></li><li><Link href="/confidentialite">Confidentialité</Link></li><li><Link href="/opposition">Retirer mon entreprise</Link></li><li><Link href="/signaler">Signaler un contenu</Link></li><li><Link href="/resilier"><b>Résilier mon abonnement</b></Link></li></ul></div>
         </div>
       </footer>
     </>

@@ -16,8 +16,9 @@ function Action({ id, periode, mode, particulier, abonne }: { id: PlanId; period
       <input type="hidden" name="plan" value={id} /><input type="hidden" name="periode" value={periode} />
       {particulier && (
         <label className="case" style={{ fontSize: ".8rem" }}><input type="checkbox" name="renonciation" value="oui" required />
-          <span className="note" style={{ fontSize: ".8rem" }}>Je demande l&apos;accès immédiat et je reconnais perdre mon droit de rétractation de 14 jours une fois le service pleinement exécuté (art. L221-28 C. conso.).</span></label>
+          <span className="note" style={{ fontSize: ".8rem" }}>Je demande l&apos;accès immédiat au service. Si je me rétracte dans les 14 jours, je serai remboursé, déduction faite de la part du service déjà fournie (art. L221-25 C. conso.).</span></label>
       )}
+      <p className="note" style={{ fontSize: ".78rem", margin: 0 }}>Sans engagement · renouvelé automatiquement chaque {periode === "annuel" ? "année" : "mois"} · résiliable à tout moment en ligne.</p>
       <button className={`btn bloc${p}`} type="submit">Passer à {PLANS[id].nom}</button>
     </form>
   );

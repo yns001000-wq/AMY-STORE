@@ -70,14 +70,39 @@ Ce dossier contient le socle de la phase 1. Le plan complet est dans `../PLAN.md
 - **Page publique « Retirer mon entreprise »** (droit d'opposition) : l'entreprise est exclue chez tous les utilisateurs.
 - **Pages légales** en brouillon. Les informations à compléter sont surlignées en jaune.
 
+## Conformité légale du SaaS
+- **Résiliation en ligne** (art. L215-1-1 du Code de la consommation, dite « en 3 clics ») :
+  - bouton visible « Résilier mon abonnement » dans « Mon abonnement », lien public `/resilier` en bas de toutes les pages ;
+  - page de confirmation avec la date d'effet, puis confirmation à l'écran et par e-mail ;
+  - effet à la fin de la période payée, et possibilité de reprendre avant cette date.
+- **Rétractation de 14 jours** pour les consommateurs : bouton dédié, arrêt immédiat et remboursement au prorata des jours utilisés (art. L221-18 et L221-25). Le formulaire type figure dans les CGV.
+- **Reconduction tacite** : rappel par e-mail aux abonnés annuels entre 3 mois et 1 mois avant l'échéance (art. L215-1), via une tâche planifiée quotidienne (`vercel.json`, `/api/cron/reconduction`).
+- **RGPD** :
+  - « Mon compte » permet d'exporter toutes ses données (JSON) et de supprimer son compte. La suppression arrête l'abonnement, retire les sites publiés et efface les photos ;
+  - la politique de confidentialité liste les finalités, les durées et les sous-traitants ;
+  - MySite agit comme sous-traitant pour les données des clients des utilisateurs (CGU, art. 10).
+- **Contenus publiés par les utilisateurs** (sites, photos, textes) :
+  - les CGU encadrent ces contenus : garanties sur les droits, contenus interdits, licence d'hébergement limitée ;
+  - n'importe qui peut signaler un contenu (`/signaler`, et un lien dans les mentions légales de chaque site publié), avec une décision motivée (règlement européen DSA, art. 16 et 17 ; LCEN) ;
+  - un point de contact unique figure dans les mentions légales.
+- **Preuves** : le journal `journal_conformite` garde les résiliations, rétractations, exports, suppressions et rappels, même après la suppression du compte.
+- **Information avant commande** : prix TTC, durée, renouvellement automatique, sans engagement et résiliable, rappelés sur les offres et dans Stripe Checkout. La majorité et l'acceptation des CGU et CGV sont demandées à l'inscription.
+- **À faire par l'éditeur** :
+  - compléter l'identité, le SIRET et l'e-mail dans les pages légales (passages surlignés) ;
+  - choisir un médiateur de la consommation ;
+  - configurer Resend (`RESEND_API_KEY`) : sans lui, aucun e-mail de confirmation ou de rappel n'est envoyé ;
+  - signer les accords de sous-traitance (DPA) des prestataires ;
+  - faire relire les CGU, CGV et la confidentialité par un avocat ;
+  - traiter les signalements (table `signalements`).
+
 ## Tests
 - `npm test` : 48 tests sur les offres, les quotas, les garde-fous RGPD de la recherche, le moteur de sites et les droits d'édition du Studio selon l'offre.
 - `LIVE=1 npm test` : en plus, un vrai appel à l'API Sirene.
-- `supabase/tests/test_rls.sql` (15 tests), `test_exclusivite.sql` (10 tests) et `test_studio.sql` (10 tests) `test_banque_photos.sql` (5 tests) et `test_documents.sql` (22 tests) : sécurité, numérotation des factures, documents non modifiables, exclusivité et Studio, testées sur Postgres 16. Charger `stub_supabase.sql`, puis les migrations dans l'ordre.
+- `supabase/tests/test_rls.sql` (15 tests), `test_exclusivite.sql` (10 tests) et `test_studio.sql` (10 tests) `test_banque_photos.sql` (5 tests) `test_documents.sql` (22 tests) et `test_conformite.sql` (5 tests) : sécurité, numérotation des factures, documents non modifiables, exclusivité et Studio, testées sur Postgres 16. Charger `stub_supabase.sql`, puis les migrations dans l'ordre.
 - `npm run build` : compilation de production.
 
 ## Mise en route (à faire avec les comptes du propriétaire)
-1. **Supabase**. Créez un projet, de préférence en région UE. Dans l'éditeur SQL, exécutez dans l'ordre `0001_init.sql`, `0002_exclusivite_pipeline.sql`, `0003_studio.sql` (elle crée aussi le compartiment de stockage `studio` des photos des clients), `0004_banque_photos.sql` puis `0005_vente_complete.sql`, puis planifiez chaque nuit (Database > Cron) `liberer_reservations_dormantes()`, `purger_prospects_anciens()` et `retirer_publications_hors_offre()`. Dans Authentication > URL configuration, ajoutez l'URL du site et `/auth/callback`.
+1. **Supabase**. Créez un projet, de préférence en région UE. Dans l'éditeur SQL, exécutez dans l'ordre `0001_init.sql`, `0002_exclusivite_pipeline.sql`, `0003_studio.sql` (elle crée aussi le compartiment de stockage `studio` des photos des clients), `0004_banque_photos.sql`, `0005_vente_complete.sql` puis `0006_conformite.sql`, puis planifiez chaque nuit (Database > Cron) `liberer_reservations_dormantes()`, `purger_prospects_anciens()` et `retirer_publications_hors_offre()`. Dans Authentication > URL configuration, ajoutez l'URL du site et `/auth/callback`.
 2. **Stripe**, en mode test :
    - créez 3 produits (Pro, Premium, Ultra), chacun avec un prix mensuel et un prix annuel TTC ;
    - activez le portail client, avec la résiliation et le changement d'offre ;

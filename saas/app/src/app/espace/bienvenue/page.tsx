@@ -37,7 +37,7 @@ export default async function Bienvenue({ searchParams }: { searchParams: Promis
           <label><input type="radio" name="statut" value="particulier" defaultChecked={p?.statut_utilisateur === "particulier"} />Je me lance (pas encore d&apos;activité déclarée)</label>
         </fieldset>
         <label className="case"><input type="checkbox" name="cgu" value="oui" required />
-          <span>J&apos;accepte les <Link href="/cgu" target="_blank">conditions d&apos;utilisation</Link> et les <Link href="/cgv" target="_blank">conditions de vente</Link>, et je m&apos;engage à prospecter dans le respect des règles (messages professionnels identifiés, droit d&apos;opposition respecté).</span>
+          <span>Je certifie être majeur. J&apos;accepte les <Link href="/cgu" target="_blank">conditions d&apos;utilisation</Link> et les <Link href="/cgv" target="_blank">conditions de vente</Link>, et je m&apos;engage à prospecter dans le respect des règles (messages professionnels identifiés, droit d&apos;opposition respecté).</span>
         </label>
         <button className="btn p grand" type="submit">Enregistrer et voir mes prospects</button>
       </form>

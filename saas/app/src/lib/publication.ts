@@ -78,11 +78,12 @@ export function mentionsManquantes(m: Partial<Mentions>): string[] {
  * Ajoute au site les mentions légales (loi pour la confiance dans l'économie numérique, art. 6)
  * et une politique de confidentialité honnête : le site ne dépose aucun cookie et la carte Google ne se charge qu'au clic.
  */
-export function insererMentions(html: string, m: Mentions, heb: Hebergeur): string {
+export function insererMentions(html: string, m: Mentions, heb: Hebergeur, service?: { lienSignalement: string; contact?: string }): string {
   const lignes = [
     `<p><b>Éditeur</b> : ${h(m.editeur)}${m.forme ? `, ${h(m.forme)}` : ""}${m.siret ? `, SIRET ${h(m.siret)}` : ""}<br>${h(m.adresse)}${m.telephone ? `<br>Tél. ${h(m.telephone)}` : ""}${m.email ? `<br>${h(m.email)}` : ""}</p>`,
     `<p><b>Directeur de la publication</b> : ${h(m.directeur)}</p>`,
     `<p><b>Hébergeur</b> : ${h(heb.nom)}, ${h(heb.adresse)}${heb.telephone ? `, tél. ${h(heb.telephone)}` : ""}</p>`,
+    service ? `<p><b>Service de création et d'hébergement</b> : MySite${service.contact ? ` (${h(service.contact)})` : ""}. <a href="${h(service.lienSignalement)}" target="_blank" rel="noopener">Signaler un contenu illicite</a></p>` : "",
     m.realisation ? `<p><b>Réalisation</b> : ${h(m.realisation)}</p>` : "",
     `<p><b>Confidentialité</b> : ce site ne dépose aucun cookie et ne collecte aucune donnée personnelle. La carte Google Maps ne se charge que si vous cliquez pour l'afficher ; Google applique alors sa propre politique de confidentialité. Pour toute question : ${h(m.email || m.telephone || m.adresse)}.</p>`,
     `<p><b>Propriété intellectuelle</b> : textes et photos appartiennent à leurs auteurs respectifs ; toute reproduction sans autorisation est interdite.</p>`,

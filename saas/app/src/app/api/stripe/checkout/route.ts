@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   const admin = supabaseAdmin();
   const { data: profil } = await admin.from("profils").select("stripe_customer_id, statut_utilisateur, cgu_acceptees_le").eq("id", session.user.id).single();
   if (!profil?.cgu_acceptees_le) return NextResponse.redirect(new URL("/espace/bienvenue", SITE()), 303);
-  // Particulier : l'accès immédiat suppose la demande expresse et la renonciation au droit de rétractation (C. conso. L221-28).
+  // Particulier : l'accès immédiat pendant le délai de rétractation suppose sa demande expresse (C. conso. L221-25) ; le droit de rétractation reste ouvert, au prorata.
   if (profil.statut_utilisateur !== "professionnel" && form.get("renonciation") !== "oui") {
     return NextResponse.redirect(new URL("/espace/abonnement?erreur=renonciation", SITE()), 303);
   }
@@ -35,8 +35,9 @@ export async function POST(req: Request) {
     customer: client,
     client_reference_id: session.user.id,
     line_items: [{ price, quantity: 1 }],
-    subscription_data: { metadata: { user_id: session.user.id, renonciation_retractation: profil.statut_utilisateur === "professionnel" ? "professionnel" : "oui" } },
+    subscription_data: { metadata: { user_id: session.user.id, acces_immediat_demande: profil.statut_utilisateur === "professionnel" ? "professionnel" : "oui" } },
     allow_promotion_codes: true,
+    custom_text: { submit: { message: "Abonnement sans engagement, renouvelé automatiquement chaque période et résiliable à tout moment depuis « Mon abonnement ». En validant, vous acceptez les CGV et les CGU de MySite." } },
     locale: "fr",
     success_url: `${SITE()}/espace?abonnement=ok`,
     cancel_url: `${SITE()}/espace/abonnement?annule=1`,
