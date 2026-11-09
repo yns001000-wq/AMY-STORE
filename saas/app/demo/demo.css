@@ -1,0 +1,18 @@
+/* ---------- compléments de la démo ---------- */
+:root{--police-titre:"Plus Jakarta Sans";--police-ui:"Inter"}
+/* le thème choisi dans Claude prime sur celui du système */
+:root[data-theme="light"]{--fond:#f7f7fb;--fond-2:#eef0f8;--surface:#ffffff;--surface-2:#f4f5fa;--encre:#0f1222;--texte:#2b3045;--doux:#5f6680;--ligne:#e4e6f0;--ombre:0 1px 2px rgba(15,18,34,.04),0 12px 32px -12px rgba(43,48,90,.18);--ombre-forte:0 30px 60px -20px rgba(59,63,140,.35);--ok:#0f9d6b;--alerte:#b45309;color-scheme:light}
+:root[data-theme="dark"]{--fond:#0b0d17;--fond-2:#11142a;--surface:#141831;--surface-2:#1a1f3d;--encre:#f3f4ff;--texte:#d6d9ee;--doux:#9aa0c2;--ligne:#262b4f;--ombre:0 1px 2px rgba(0,0,0,.3),0 16px 40px -16px rgba(0,0,0,.6);--ombre-forte:0 30px 70px -25px rgba(109,74,255,.45);--ok:#34d399;--alerte:#fbbf24;color-scheme:dark}
+html,body{background:var(--fond)}
+.bandeau-demo{position:sticky;top:0;z-index:40;display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1.2rem;padding:.55rem max(16px,env(safe-area-inset-right,0px)) .55rem max(16px,env(safe-area-inset-left,0px));background:var(--encre);color:var(--fond);font:600 .85rem/1.2 var(--ui)}
+.bd-titre{display:inline-flex;align-items:center;gap:.4rem}.bd-titre svg{width:1rem;height:1rem;color:#c4b5fd}
+.bd-offres{display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;margin-left:auto}
+.bd-offres span{opacity:.75;margin-right:.2rem}
+.bd-offres button,.bd-reset,.bd-confirme button{border:1px solid color-mix(in srgb,var(--fond) 35%,transparent);background:transparent;color:inherit;font:inherit;padding:.35rem .7rem;border-radius:999px;cursor:pointer}
+.bd-offres button[aria-pressed="true"]{background:var(--degrade);border-color:transparent;color:#fff}
+.bd-reset{display:inline-flex;align-items:center;gap:.35rem}.bd-reset svg{width:.9rem;height:.9rem}
+.bd-confirme{display:inline-flex;align-items:center;gap:.4rem}
+.toast-demo{position:fixed;left:50%;bottom:calc(1.2rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;max-width:min(92vw,40rem);padding:.85rem 1.2rem;border-radius:14px;background:var(--encre);color:var(--fond);font:600 .92rem/1.4 var(--ui);box-shadow:var(--ombre-forte)}
+.app{min-height:calc(100vh - 2.6rem)}
+@media (min-width:60rem){.cote{top:2.6rem;height:calc(100vh - 2.6rem)}}
+@media (max-width:40rem){.bd-offres{margin-left:0}}
