@@ -4,17 +4,23 @@
   {
    "id": "accroche",
    "texte": "Arrête d'expliquer ce qu'est un site. Montre-le.",
-   "tts": "Arrête d'expliquer ce qu'est un site. Montre-le."
+   "tts": "Arrête d'expliquer ce qu'est un site. Montre-le.",
+   "prise": 0,
+   "comprehension": 1.0
   },
   {
    "id": "site",
    "texte": "Avec MySite, tu crées la maquette d'un commerce en un clic : sa carte, ses horaires, son bouton pour appeler.",
-   "tts": "Avec Maï Saïte, tu crées la maquette d'un commerce en un clic : sa carte, ses horaires, son bouton pour appeler."
+   "tts": "Avec Maï Saïte, tu crées la maquette d'un commerce en un clic : sa carte, ses horaires, son bouton pour appeler.",
+   "prise": 0,
+   "comprehension": 0.927
   },
   {
    "id": "studio",
    "texte": "Tu changes les textes, les photos et les couleurs, sans une ligne de code.",
-   "tts": "Tu changes les textes, les photos et les couleurs, sans une ligne de code."
+   "tts": "Tu changes les textes, les photos et les couleurs, sans une ligne de code.",
+   "prise": 0,
+   "comprehension": 0.857
   },
   {
    "id": "rdv",
