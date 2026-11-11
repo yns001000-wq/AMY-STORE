@@ -1,18 +1,18 @@
 import Link from "next/link";
-import { AFaire } from "@/components/AFaire";
+import { Info } from "@/components/Info";
+import { EDITEUR as E } from "@/lib/editeur";
 
 export const metadata = { title: "Conditions générales d'utilisation" };
 
-/** CGU de MySite. Brouillon structuré : à faire relire par un avocat avant l'ouverture au public. */
+/** CGU de MySite. */
 export default function Cgu() {
   return (
     <article className="legal">
       <h1 style={{ fontSize: "2rem" }}>Conditions générales d&apos;utilisation</h1>
       <p className="note">Version du 9 novembre 2026.</p>
-      <p className="alerte">Brouillon à faire relire par un avocat avant l&apos;ouverture au public.</p>
 
       <h2>1. Objet et acceptation</h2>
-      <p>MySite est un logiciel en ligne (SaaS) édité par <AFaire>Prénom NOM, entrepreneur individuel, SIRET</AFaire> (« MySite », « nous »).</p>
+      <p>MySite est un logiciel en ligne (SaaS) édité par <Info v={E.nom} manque="Prénom NOM" />, entrepreneur individuel, SIREN {E.siren} (« MySite », « nous »).</p>
       <p>Il permet de trouver des entreprises à démarcher dans des registres publics, de suivre ses échanges, de rédiger des messages, de créer et publier des sites vitrines, d&apos;émettre des devis et factures, et de se former.</p>
       <p>Ces conditions s&apos;appliquent à toute personne qui crée un compte (« vous »). Elles sont acceptées à l&apos;inscription. Les conditions de vente des abonnements figurent dans les <Link href="/cgv">CGV</Link>.</p>
 
@@ -56,7 +56,7 @@ export default function Cgu() {
       <p>Toute personne peut nous signaler un contenu illicite sur un site publié avec MySite, depuis la page <Link href="/signaler">Signaler un contenu</Link> ou le lien présent dans les mentions légales de chaque site.</p>
       <p>Nous examinons les signalements avec diligence. En cas de contenu manifestement illicite ou contraire à ces conditions, nous pouvons retirer le contenu, rendre le site inaccessible ou suspendre le compte.</p>
       <p>Nous vous informons de notre décision et de ses motifs, sauf obligation légale contraire, et vous pouvez la contester en nous répondant. Les manquements graves ou répétés peuvent entraîner la résiliation du compte.</p>
-      <p>Point de contact pour les autorités et les utilisateurs : <AFaire>e-mail</AFaire>.</p>
+      <p>Point de contact pour les autorités et les utilisateurs : <Info v={E.email} manque="e-mail" lien="mail" />.</p>
 
       <h2>6. Textes et images proposés par l&apos;outil</h2>
       <p>Les textes, prix et contenus d&apos;exemple proposés automatiquement peuvent être inexacts. Ils sont signalés comme des exemples à vérifier. Les photos de la banque MySite sont des images d&apos;illustration générées par IA : elles doivent être présentées comme telles et remplacées par de vraies photos du commerce dès que possible. Les maquettes sont des démonstrations non publiées.</p>
@@ -87,7 +87,6 @@ export default function Cgu() {
       <p>MySite ne garantit aucun résultat commercial ni aucun revenu.</p>
       <p>Pour les utilisateurs professionnels, la responsabilité de MySite est limitée aux dommages directs et plafonnée au montant payé au titre des 12 derniers mois.</p>
       <p>Pour les consommateurs, la responsabilité de MySite s&apos;exerce dans les conditions du droit commun.</p>
-      <p><AFaire>Clauses à valider avec l&apos;avocat</AFaire></p>
 
       <h2>12. Suspension, résiliation et modification</h2>
       <p>Vous pouvez supprimer votre compte à tout moment. Nous pouvons suspendre ou résilier un compte en cas de manquement à ces conditions, après vous en avoir informé, sauf urgence ou obligation légale.</p>

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cronAutorise } from "@/lib/securite";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { rappelReconductionDu } from "@/lib/conformite";
 import { envoyerEmail, signature } from "@/lib/email";
@@ -10,7 +11,7 @@ import { PLANS, estPlan } from "@/lib/plans";
  * Informe les abonnés annuels de la reconduction, entre 3 mois et 1 mois avant l'échéance (art. L215-1 du Code de la consommation).
  */
 export async function GET(req: Request) {
-  if (!process.env.CRON_SECRET || req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`) return NextResponse.json({ erreur: "Non autorisé" }, { status: 401 });
+  if (!cronAutorise(req)) return NextResponse.json({ erreur: "Non autorisé" }, { status: 401 });
   const admin = supabaseAdmin();
   const { data } = await admin.from("profils").select("id, plan, periode, periode_fin, resiliation_prevue, rappel_reconduction_pour").eq("periode", "annuel").not("periode_fin", "is", null).limit(5000);
   let envoyes = 0;

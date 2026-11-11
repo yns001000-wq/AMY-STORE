@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { empreinteIP, limiter } from "@/lib/securite";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { MOTIFS_SIGNALEMENT } from "@/lib/conformite";
 import { envoyerEmail } from "@/lib/email";
@@ -11,6 +12,8 @@ export async function POST(req: Request) {
   if (!url || !MOTIFS_SIGNALEMENT.some(([k]) => k === motif) || description.length < 10) return NextResponse.json({ erreur: "Indiquez l'adresse de la page, le motif et une explication (10 caractères au moins)." }, { status: 400 });
   if (b.bonne_foi !== true) return NextResponse.json({ erreur: "Confirmez que votre signalement est exact et de bonne foi." }, { status: 400 });
   if (b.site_web) return NextResponse.json({ ok: true }); // champ piège anti-robots
+  // Contre les abus (et l'envoi d'e-mails en masse via l'accusé de réception) : 5 signalements par heure et par connexion.
+  if (!(await limiter(`signaler:${empreinteIP(req)}`, 5, 3600))) return NextResponse.json({ erreur: "Trop de signalements envoyés depuis cette connexion. Réessayez dans une heure." }, { status: 429 });
   const { data, error } = await supabaseAdmin().from("signalements").insert({ url, motif, description, email: email || null, nom: nom || null, bonne_foi: true }).select("id").single();
   if (error) return NextResponse.json({ erreur: "Enregistrement impossible, réessayez." }, { status: 500 });
   if (process.env.CONTACT_EMAIL) await envoyerEmail(process.env.CONTACT_EMAIL, `Signalement ${motif} : ${url}`, `${description}\n\nDe : ${nom || "anonyme"} ${email}\nRéférence : ${data.id}`);

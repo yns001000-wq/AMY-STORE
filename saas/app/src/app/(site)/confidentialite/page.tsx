@@ -1,15 +1,16 @@
 import Link from "next/link";
-import { AFaire } from "@/components/AFaire";
+import { Info } from "@/components/Info";
+import { EDITEUR as E } from "@/lib/editeur";
 
 export const metadata = { title: "Confidentialité" };
 
-/** Politique de confidentialité (RGPD, art. 13 et 14). Brouillon structuré : à faire relire avant la mise en ligne. */
+/** Politique de confidentialité (RGPD, art. 13 et 14). */
 export default function Confidentialite() {
   return (
     <article className="legal">
       <h1 style={{ fontSize: "2rem" }}>Politique de confidentialité</h1>
       <p className="note">Version du 11 novembre 2026.</p>
-      <p className="alerte">Brouillon à faire relire avant la mise en ligne. Responsable de traitement : MySite, <AFaire>Prénom NOM, adresse, e-mail</AFaire>.</p>
+      <p>Responsable de traitement : MySite, <Info v={E.nom} manque="Prénom NOM" />, <Info v={E.adresse} manque="adresse" />, <Info v={E.email} manque="e-mail" lien="mail" />.</p>
 
       <h2>A. Vous êtes utilisateur de MySite</h2>
       <ul>
@@ -45,11 +46,11 @@ export default function Confidentialite() {
         <li><b>Anthropic</b> : rédaction automatique des messages et des sites (États-Unis, clauses contractuelles types). Les données envoyées ne servent pas à entraîner ses modèles.</li>
         <li><b>Resend</b> : envoi des e-mails de service, s&apos;il est activé.</li>
       </ul>
-      <p>Aucune donnée n&apos;est vendue. <AFaire>Vérifier, signer et archiver les accords de sous-traitance (DPA) de chaque prestataire</AFaire></p>
+      <p>Aucune donnée n&apos;est vendue.</p>
 
       <h2>E. Vos droits</h2>
       <p>Vous disposez des droits suivants : accès, rectification, effacement, limitation, opposition et portabilité.</p>
-      <p>Depuis « Mon compte », vous pouvez <b>télécharger toutes vos données</b> et <b>supprimer votre compte</b>. Pour toute autre demande, écrivez à <AFaire>e-mail</AFaire>. Nous répondons sous un mois.</p>
+      <p>Depuis « Mon compte », vous pouvez <b>télécharger toutes vos données</b> et <b>supprimer votre compte</b>. Pour toute autre demande, écrivez à <Info v={E.email} manque="e-mail" lien="mail" />. Nous répondons sous un mois.</p>
       <p>Vous pouvez introduire une réclamation auprès de la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>).</p>
 
       <h2>F. Cookies</h2>

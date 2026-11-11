@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { absolutiser, chargerSite, contexteStudio } from "@/lib/studio/serveur";
 import { rendreSite } from "@/lib/studio";
-import { hebergeurParDefaut, insererMentions, mentionsManquantes, normaliserDomaine, reglagesDNS, slugValide, urlPublique, type Mentions } from "@/lib/publication";
+import { domaineInterdit, hebergeurParDefaut, insererMentions, mentionsManquantes, normaliserDomaine, reglagesDNS, slugValide, urlPublique, type Mentions } from "@/lib/publication";
 import { ajouterDomaine, retirerDomaine, vercelConfigure } from "@/lib/vercel";
 import { verifierDNS } from "@/lib/dns";
 import { ajouterJournal } from "@/lib/pipeline";
@@ -43,6 +43,7 @@ export async function POST(req: Request, { params }: Ctx) {
     if (!cap.domainePerso) return NextResponse.json({ erreur: "Le nom de domaine du client est inclus dès l'offre Pro.", plan }, { status: 402 });
     domaine = normaliserDomaine(b.domaine);
     if (!domaine) return NextResponse.json({ erreur: "Nom de domaine invalide (ex. pizzabella.fr)." }, { status: 400 });
+    if (domaineInterdit(domaine)) return NextResponse.json({ erreur: "Ce nom de domaine ne peut pas être utilisé." }, { status: 400 });
   }
 
   const admin = supabaseAdmin();
@@ -61,7 +62,8 @@ export async function POST(req: Request, { params }: Ctx) {
   const origine = process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin;
   const html = insererMentions(absolutiser(rendreSite({ ...site.donnees, maquette: false }, cap, origine), origine), m, hebergeurParDefaut(),
     { lienSignalement: `${origine}/signaler?site=${encodeURIComponent(urlPublique(slug, domaine).replace(/^https:\/\//, ""))}`, contact: process.env.CONTACT_EMAIL });
-  const { error } = await session.sb.from("publications").upsert({ site_id: site.id, user_id: session.user.id, slug, domaine, html, mentions: m, maj_le: new Date().toISOString() }, { onConflict: "site_id" });
+  // Écriture par le serveur uniquement (migration 0008) : tout a été vérifié ci-dessus, et le site appartient à l'utilisateur (chargerSite, RLS).
+  const { error } = await admin.from("publications").upsert({ site_id: site.id, user_id: session.user.id, slug, domaine, html, mentions: m, maj_le: new Date().toISOString() }, { onConflict: "site_id" });
   if (error) return NextResponse.json({ erreur: error.code === "23505" ? "Adresse ou domaine déjà pris." : "Mise en ligne impossible." }, { status: error.code === "23505" ? 409 : 500 });
 
   let branchement: string | undefined;

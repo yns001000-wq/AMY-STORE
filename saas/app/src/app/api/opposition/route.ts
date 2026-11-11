@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { empreinteIP, limiter } from "@/lib/securite";
 import { createHash } from "node:crypto";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
@@ -13,6 +14,8 @@ export async function POST(req: Request) {
   const site = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   if (!/^\d{9}(\d{5})?$/.test(id)) return NextResponse.redirect(new URL("/opposition?erreur=1", site), 303);
   const siren = id.slice(0, 9), siret = id.length === 14 ? id : null;
+  // Contre les abus : 10 demandes par heure et par connexion.
+  if (!(await limiter(`opposition:${empreinteIP(req)}`, 10, 3600))) return NextResponse.redirect(new URL("/opposition?erreur=trop", site), 303);
   const admin = supabaseAdmin();
   await admin.from("opposition").insert({ siren: siret ? null : siren, siret, telephone_hash: tel ? createHash("sha256").update(tel).digest("hex") : null });
   // Retrait immédiat des prospects déjà enregistrés chez les utilisateurs

@@ -54,3 +54,14 @@ describe("aiguillage des hôtes", () => {
     expect(hoteDeSite("www.pizzabella.fr", env)).toEqual({ domaine: "www.pizzabella.fr" });
   });
 });
+
+import { domaineInterdit } from "./publication";
+describe("domaineInterdit", () => {
+  const env = { NEXT_PUBLIC_SITE_URL: "https://app.mysite.fr", NEXT_PUBLIC_DOMAINE_SITES: "mysite.site" };
+  it("refuse l'adresse de MySite et ses sous-domaines", () => {
+    for (const d of ["app.mysite.fr", "mysite.fr", "www.mysite.fr", "pirate.mysite.site", "mysite.site", "x.vercel.app"]) expect(domaineInterdit(d, env)).toBe(true);
+  });
+  it("accepte le domaine d'un client", () => {
+    for (const d of ["pizzabella.fr", "www.pizzabella.fr", "mysite-pizza.fr"]) expect(domaineInterdit(d, env)).toBe(false);
+  });
+});

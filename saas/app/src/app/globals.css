@@ -150,7 +150,7 @@ section.bloc{padding:clamp(3.5rem,7vw,6rem) 0}
 /* pied */
 .pied{border-top:1px solid var(--ligne);margin-top:4rem;padding:2.5rem 0 3rem;font-size:.9rem;color:var(--doux)}
 .pied .conteneur{display:grid;gap:1.5rem}
-@media (min-width:52rem){.pied .conteneur{grid-template-columns:1.4fr 1fr 1fr}}
+@media (min-width:52rem){.pied .conteneur{grid-template-columns:1.4fr 1fr 1fr 1fr}}
 .pied ul{list-style:none;padding:0;margin:0;display:grid;gap:.4rem}.pied a{color:var(--texte);text-decoration:none}.pied a:hover{color:var(--violet)}
 .pied h4{margin:0 0 .6rem;color:var(--encre);font-size:.9rem}
 
