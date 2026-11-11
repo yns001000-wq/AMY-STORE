@@ -58,17 +58,21 @@ Supabase n'envoie que **2 e-mails de confirmation par heure** avec son service d
 
 ## Coût de l'IA et marge
 
-Les quotas sont réglés pour que l'IA ne puisse jamais coûter plus de 40 % de ce qu'une offre rapporte, même si l'abonné utilise tout. Un test automatique le vérifie (`app/src/lib/plans.test.ts`).
+Formule mixte : Claude Opus 5.5 rédige les sites sur mesure (ce que l'abonné montre à son client) ; Claude Sonnet 5.5, moitié moins cher, rédige les messages et les retouches.
+
+Les quotas sont réglés pour que l'IA ne puisse jamais coûter plus de 40 % de ce qu'une offre rapporte, même si l'abonné utilise tout. Un test automatique le vérifie (`app/src/lib/plans.test.ts`). Avec la formule mixte, le maximum tombe à environ 27 %.
 
 | Offre | Messages | Sites sur mesure | Retouches | Coût maximal de l'IA par mois | Recette la plus basse par mois (abonnement annuel) |
 |---|---|---|---|---|---|
-| Gratuit | 5 | 0 | 0 | 0,18 $ | 0 € |
-| Essai Premium (7 jours) | 20 | 2 | 5 | 3,13 $ | 0 € |
-| Pro | 100 | 5 | 12 | 9,49 $ | 24,17 € |
-| Premium | 200 | 12 | 22 | 19,50 $ | 49,17 € |
-| Ultra | 400 | 25 | 44 | 39,53 $ | 99,17 € |
+| Gratuit | 5 | 0 | 0 | 0,09 $ | 0 € |
+| Essai Premium (7 jours) | 20 | 2 | 5 | 2,09 $ | 0 € |
+| Pro | 100 | 5 | 12 | 6,07 $ | 24,17 € |
+| Premium | 200 | 12 | 22 | 12,93 $ | 49,17 € |
+| Ultra | 400 | 25 | 44 | 26,39 $ | 99,17 € |
 
-Ces coûts sont des maximums calculés (chaque appel poussé à sa longueur maximale, tarif de Claude Opus 5.5 relevé le 3 novembre 2026), pas des mesures. Le coût réel devrait être 2 à 3 fois plus bas. À recalculer si le modèle ou son tarif change.
+Ces coûts sont des maximums calculés (chaque appel poussé à sa longueur maximale, tarifs relevés le 3 novembre 2026), pas des mesures. Le coût réel devrait être 2 à 3 fois plus bas. À recalculer si un modèle ou son tarif change.
+
+La qualité de Sonnet sur les messages et les retouches n'a pas encore été comparée à celle d'Opus : à faire dès qu'une clé Anthropic est en place (moins d'un euro). Les modèles se règlent en un seul endroit, `MODELE_IA` dans `app/src/lib/plans.ts`.
 
 Sécurité supplémentaire conseillée : fixer un plafond de dépense mensuel dans la console Anthropic.
 

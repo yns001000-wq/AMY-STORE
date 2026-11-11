@@ -96,15 +96,18 @@ export function limite(plan: PlanId, type: TypeQuota, essai = false): number {
   return quotasEffectifs(plan, essai)[type];
 }
 
+/** Modèle d'IA par tâche : le plus capable pour le site entier (ce que l'abonné montre à son client), un modèle moitié moins cher pour les tâches courtes. */
+export const MODELE_IA = { site: "claude-opus-5-5", message: "claude-sonnet-5-5", retouche: "claude-sonnet-5-5" } as const;
+
 /**
- * Coût maximal de l'IA pour une action, en dollars : chaque appel poussé à sa longueur maximale, au tarif de Claude Opus 5.5
- * (4 $ par million de jetons lus, 20 $ par million écrits ; relevé le 3 novembre 2026). Le coût réel est en général 2 à 3 fois plus bas.
- *  - message : 1 500 jetons écrits au plus ;
- *  - site sur mesure : une étude (8 000) puis une rédaction (16 000) ;
- *  - retouche : 12 000 jetons écrits au plus.
+ * Coût maximal de l'IA pour une action, en dollars : chaque appel poussé à sa longueur maximale. Tarifs relevés le 3 novembre 2026,
+ * par million de jetons lus et écrits : Claude Opus 5.5, 4 $ et 20 $ ; Claude Sonnet 5.5, 2 $ et 10 $. Le coût réel est en général 2 à 3 fois plus bas.
+ *  - message (Sonnet) : 1 500 jetons écrits au plus ;
+ *  - site sur mesure (Opus) : une étude (8 000) puis une rédaction (16 000) ;
+ *  - retouche (Sonnet) : 12 000 jetons écrits au plus.
  * À recalculer si le modèle, son tarif ou les longueurs maximales changent (voir plans.test.ts : la marge y est vérifiée).
  */
-export const COUT_MAX_IA: Record<TypeQuota, number> = { prospects: 0, messages_ia: 0.036, sites_ia: 0.53, retouches_ia: 0.27 };
+export const COUT_MAX_IA: Record<TypeQuota, number> = { prospects: 0, messages_ia: 0.018, sites_ia: 0.53, retouches_ia: 0.135 };
 
 /** Dépense d'IA maximale par mois si tous les quotas sont utilisés jusqu'au bout, en dollars. */
 export function coutMaxIA(quotas: Record<TypeQuota, number>): number {

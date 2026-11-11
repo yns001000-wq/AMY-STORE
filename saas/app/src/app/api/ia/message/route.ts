@@ -4,6 +4,7 @@ import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { consommer, profilEtPlan, rembourser } from "@/lib/quotas";
 import { anthropic, consigneMessage, type Canal } from "@/lib/ia";
 import { ajouterJournal } from "@/lib/pipeline";
+import { MODELE_IA } from "@/lib/plans";
 
 /** Rédige un message de prospection pour UN prospect de l'utilisateur (quota messages_ia). */
 export async function POST(req: Request) {
@@ -23,7 +24,7 @@ export async function POST(req: Request) {
   const expediteur = `${(profil.prenom as string) || "[votre prénom]"}, création de sites internet pour les commerçants et artisans`;
   try {
     const rep = await anthropic().beta.messages.create({
-      model: "claude-opus-5-5",
+      model: MODELE_IA.message,
       max_tokens: 1500, // un message, un e-mail ou un script d'appel tient largement ; plafonne aussi le coût (voir COUT_MAX_IA)
       output_config: { effort: "low" },
       betas: ["server-side-fallback-2026-07-01"],

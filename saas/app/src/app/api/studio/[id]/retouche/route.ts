@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { consommer, rembourser } from "@/lib/quotas";
+import { MODELE_IA } from "@/lib/plans";
 import { archiverVersion, chargerSite, contexteStudio, demanderIA, erreurIA, photosDuCommerce } from "@/lib/studio/serveur";
 import { appliquerIA, blocPhotosPerso, lireJSON, promptRetouche, remplacerClesPerso } from "@/lib/studio";
 
@@ -19,7 +20,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const rendre = () => rembourser(session.user.id, "retouches_ia");
   const perso = blocPhotosPerso(await photosDuCommerce(session.sb, cap, site.prospect_id));
   try {
-    const texte = await demanderIA(promptRetouche(site.donnees, consigne, perso.texte), cap.effortIA === "xhigh" ? "high" : cap.effortIA, 12000);
+    const texte = await demanderIA(promptRetouche(site.donnees, consigne, perso.texte), cap.effortIA === "xhigh" ? "high" : cap.effortIA, 12000, MODELE_IA.retouche);
     if (!texte) { await rendre(); return NextResponse.json({ erreur: "L'IA n'a pas pu faire cette retouche." }, { status: 422 }); }
     const r = remplacerClesPerso(lireJSON(texte), perso.cles);
     const { d, refuses } = appliquerIA(site.donnees, r.modifications, cap, null);
