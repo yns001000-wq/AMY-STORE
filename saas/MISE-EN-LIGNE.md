@@ -30,15 +30,31 @@ Quand le compte passera en mode réel, il faudra recréer les mêmes prix en ré
 
 ## 3. Vercel (hébergement du site)
 
-- [ ] Créer un compte gratuit sur vercel.com (bouton « Continue with GitHub »).
-- [ ] Importer le dépôt `AMY-STORE`, dossier racine `saas/app`.
-- [ ] Renseigner les variables d'environnement (liste dans `app/.env.example`).
+- [x] Projet `amy-store` relié au dépôt GitHub (branche `main`, dossier `saas/app`) : chaque envoi sur `main` redéploie le site.
+- [x] Site en ligne : https://amy-store-six.vercel.app
+- [x] Clés Supabase déjà présentes (posées par l'intégration Supabase de Vercel) et pointant vers le bon projet.
+- [x] Variables ajoutées : adresse du site, 6 prix Stripe, secret des tâches planifiées, région Supabase.
 
 ## 4. Branchements
 
-- [ ] Webhook Stripe vers `/api/stripe/webhook`.
-- [ ] Adresse du site dans Supabase (liens de confirmation par e-mail).
-- [ ] Resend (e-mails de service) et secret des tâches planifiées.
+- [x] Webhook Stripe (mode test) vers `/api/stripe/webhook` ; son secret est allé directement dans Vercel, sans être affiché.
+- [x] Adresse du site renseignée dans Supabase (liens de confirmation par e-mail).
+
+### Il manque encore, dans Vercel → Settings → Environment Variables
+
+| Variable | Valeur | Sans elle |
+|---|---|---|
+| `STRIPE_SECRET_KEY` | ta clé secrète Stripe de test (`sk_test_…`) | le paiement ne démarre pas |
+| `ANTHROPIC_API_KEY` | une clé créée sur console.anthropic.com (payant à l'usage) | pas de messages ni de sites rédigés par l'IA |
+| `ADMIN_EMAILS` | ton adresse e-mail de connexion à MySite | la page « Suivi des ventes » reste cachée |
+| `RESEND_API_KEY`, `EMAIL_EXPEDITEUR` | compte gratuit sur resend.com | pas d'e-mails de service (bienvenue, résiliation, fin d'essai) |
+| `CONTACT_EMAIL`, `EDITEUR_NOM`, `EDITEUR_ADRESSE`, `EDITEUR_TELEPHONE`, `EDITEUR_SIREN`, `MEDIATEUR_CONSOMMATION` | ton identité d'entrepreneur | pages légales incomplètes |
+
+Après un ajout, il faut redéployer (Vercel → Deployments → « Redeploy »).
+
+### Limite à connaître
+
+Supabase n'envoie que **2 e-mails de confirmation par heure** avec son service d'envoi par défaut. Avant d'ouvrir au public, il faut y brancher Resend (Supabase → Authentication → Emails → SMTP), sinon la troisième personne qui s'inscrit dans l'heure ne recevra pas son e-mail.
 
 ## 5. Avant d'ouvrir au public
 
