@@ -1,0 +1,48 @@
+{
+ "voix": "homme",
+ "scenes": [
+  {
+   "id": "accroche",
+   "texte": "Vendre un site web à un commerce de ta ville ? Voilà comment ça marche.",
+   "tts": "Vendre un site web à un commerce de ta ville ? Voilà comment ça marche.",
+   "prise": 0,
+   "comprehension": 1.0
+  },
+  {
+   "id": "trouver",
+   "texte": "Tu choisis un métier et un département. MySite te trouve les commerces, réservés pour toi.",
+   "tts": "Tu choisis un métier et un département. Maï Saïte te trouve les commerces, réservés pour toi.",
+   "prise": 0,
+   "comprehension": 0.839
+  },
+  {
+   "id": "message",
+   "texte": "Pour chacun, ton premier message est déjà rédigé. Tu relis, et tu envoies.",
+   "tts": "Pour chacun, ton premier message est déjà rédigé. Tu relis, et tu envoies.",
+   "prise": 0,
+   "comprehension": 0.889
+  },
+  {
+   "id": "maquette",
+   "texte": "Un clic, et sa maquette de site est prête, à son nom.",
+   "tts": "Un clic, et sa maquette de site est prête, à son nom.",
+   "prise": 0,
+   "comprehension": 1.0
+  },
+  {
+   "id": "montrer",
+   "texte": "Tu passes le voir, et tu lui montres, sur ton téléphone.",
+   "tts": "Tu passes le voir, et tu lui montres, sur ton téléphone."
+  },
+  {
+   "id": "devis",
+   "texte": "Il est partant ? Devis, mise en ligne, facture : tout est guidé.",
+   "tts": "Il est partant ? Devis, mise en ligne, facture : tout est guidé."
+  },
+  {
+   "id": "fin",
+   "texte": "MySite. Commence gratuitement, le lien est en bio.",
+   "tts": "Maï Saïte. Commence gratuitement, le lien est en bio."
+  }
+ ]
+}

@@ -1,0 +1,207 @@
+{
+ "motsCles": "sites|vendre|mysite|commerces|zone|registre|officiel|réservé|toi|personne|carte|quartier|suivi|rappeler|quand|gratuit|bio",
+ "scenes": [
+  {
+   "id": "accroche",
+   "de": "accroche",
+   "type": "eventail",
+   "c": [
+    "#7c2dff",
+    "#ff2d75",
+    "#3b5bfd"
+   ],
+   "accent": "#ffd166",
+   "images": [
+    "accueil.jpg",
+    "carte.jpg",
+    "suivi.jpg"
+   ],
+   "gros": "?",
+   "grosTaille": 460,
+   "grosY": 470,
+   "grosO": 1.5
+  },
+  {
+   "id": "registre",
+   "de": "registre",
+   "type": "tel",
+   "c": [
+    "#0891b2",
+    "#7c5cff",
+    "#22d3ee"
+   ],
+   "accent": "#67e8f9",
+   "image": "accueil.jpg",
+   "defile": [
+    [
+     0,
+     -450
+    ],
+    [
+     26,
+     -450
+    ],
+    [
+     100,
+     -930
+    ]
+   ],
+   "tap": {
+    "x": 250,
+    "y": 517,
+    "o": 0.45
+   },
+   "puces": [
+    {
+     "t": "Registre officiel",
+     "x": 40,
+     "y": 520,
+     "o": 1.8,
+     "c": "#3b5bfd"
+    }
+   ]
+  },
+  {
+   "id": "reserve",
+   "de": "reserve",
+   "type": "tel",
+   "c": [
+    "#3b5bfd",
+    "#a3e635",
+    "#22d3ee"
+   ],
+   "accent": "#bef264",
+   "image": "accueil.jpg",
+   "defile": [
+    [
+     0,
+     -960
+    ],
+    [
+     100,
+     -960
+    ]
+   ],
+   "ry0": 16,
+   "ry1": -6,
+   "cadres": [
+    {
+     "x": 50,
+     "y": 56,
+     "w": 458,
+     "h": 226,
+     "o": 0.6,
+     "d": 1.1
+    },
+    {
+     "x": 50,
+     "y": 286,
+     "w": 458,
+     "h": 226,
+     "o": 1.6,
+     "d": 1.1
+    },
+    {
+     "x": 50,
+     "y": 516,
+     "w": 458,
+     "h": 240,
+     "o": 2.6,
+     "d": 1.3
+    }
+   ],
+   "puces": [
+    {
+     "t": "Rien que pour toi",
+     "x": 560,
+     "y": 720,
+     "o": 1.2
+    }
+   ]
+  },
+  {
+   "id": "carte",
+   "de": "carte",
+   "type": "tel",
+   "c": [
+    "#10b981",
+    "#0891b2",
+    "#a3e635"
+   ],
+   "accent": "#86efac",
+   "image": "carte.jpg",
+   "defile": [
+    [
+     0,
+     0
+    ],
+    [
+     100,
+     -50
+    ]
+   ],
+   "zoom": 1.1,
+   "puces": [
+    {
+     "t": "Par quartier",
+     "x": 40,
+     "y": 640,
+     "o": 1.1
+    }
+   ]
+  },
+  {
+   "id": "suivi",
+   "de": "suivi",
+   "type": "tel",
+   "c": [
+    "#f97316",
+    "#ec4899",
+    "#7c5cff"
+   ],
+   "accent": "#fdba74",
+   "image": "suivi.jpg",
+   "defile": [
+    [
+     0,
+     0
+    ],
+    [
+     100,
+     0
+    ]
+   ],
+   "ry0": 14,
+   "ry1": -10,
+   "puces": [
+    {
+     "t": "Qui rappeler",
+     "x": 40,
+     "y": 560,
+     "o": 0.9,
+     "c": "#f97316"
+    },
+    {
+     "t": "Et quand",
+     "x": 660,
+     "y": 760,
+     "o": 1.7,
+     "c": "#ec4899"
+    }
+   ]
+  },
+  {
+   "id": "fin",
+   "de": "fin",
+   "type": "fin",
+   "c": [
+    "#7c5cff",
+    "#22d3ee",
+    "#ff3d75"
+   ],
+   "accent": "#ffe14d",
+   "cta": "Gratuit pour commencer",
+   "garanties": "Sans carte bancaire · lien en bio"
+  }
+ ]
+}

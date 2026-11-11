@@ -1,0 +1,219 @@
+{
+ "motsCles": "site|montre-le|montre|mysite|maquette|clic|carte|horaires|appeler|textes|photos|couleurs|code|rendez-vous|futur|téléphone|débutes|académie|étape|gratuitement|bio",
+ "scenes": [
+  {
+   "id": "accroche",
+   "de": "accroche",
+   "type": "eventail",
+   "c": [
+    "#ff5a3c",
+    "#7c2dff",
+    "#ff2d75"
+   ],
+   "accent": "#ffd166",
+   "images": [
+    "studio.jpg",
+    "site.jpg",
+    "academie.jpg"
+   ]
+  },
+  {
+   "id": "site",
+   "de": "site",
+   "type": "tel",
+   "c": [
+    "#7c5cff",
+    "#ff3d75",
+    "#3b5bfd"
+   ],
+   "accent": "#c4b5fd",
+   "image": "site.jpg",
+   "defile": [
+    [
+     0,
+     0
+    ],
+    [
+     22,
+     0
+    ],
+    [
+     55,
+     -1500
+    ],
+    [
+     70,
+     -1500
+    ],
+    [
+     100,
+     -2250
+    ]
+   ],
+   "puces": [
+    {
+     "t": "En un clic",
+     "x": 40,
+     "y": 480,
+     "o": 1.6,
+     "c": "#7c5cff"
+    },
+    {
+     "t": "Sa carte",
+     "x": 680,
+     "y": 620,
+     "o": 3.4,
+     "c": "#f97316"
+    },
+    {
+     "t": "Bouton Appeler",
+     "x": 40,
+     "y": 860,
+     "o": 5,
+     "c": "#10b981"
+    }
+   ]
+  },
+  {
+   "id": "studio",
+   "de": "studio",
+   "type": "tel",
+   "c": [
+    "#0891b2",
+    "#7c5cff",
+    "#22d3ee"
+   ],
+   "accent": "#67e8f9",
+   "image": "studio.jpg",
+   "defile": [
+    [
+     0,
+     0
+    ],
+    [
+     60,
+     0
+    ],
+    [
+     100,
+     -330
+    ]
+   ],
+   "ry0": 16,
+   "ry1": -8,
+   "cadres": [
+    {
+     "x": 56,
+     "y": 288,
+     "w": 446,
+     "h": 176,
+     "o": 0.7,
+     "d": 2.3
+    }
+   ],
+   "puces": [
+    {
+     "t": "Textes",
+     "x": 40,
+     "y": 620,
+     "o": 1,
+     "c": "#3b5bfd"
+    },
+    {
+     "t": "Photos",
+     "x": 720,
+     "y": 520,
+     "o": 1.6,
+     "c": "#ec4899"
+    },
+    {
+     "t": "Couleurs",
+     "x": 660,
+     "y": 820,
+     "o": 2.2,
+     "c": "#f97316"
+    }
+   ]
+  },
+  {
+   "id": "rdv",
+   "de": "rdv",
+   "type": "tel",
+   "c": [
+    "#ff3d75",
+    "#ffb03c",
+    "#7c5cff"
+   ],
+   "accent": "#ffd166",
+   "image": "site.jpg",
+   "defile": [
+    [
+     0,
+     -40
+    ],
+    [
+     100,
+     -620
+    ]
+   ],
+   "zoom": 1.14,
+   "ry0": -18,
+   "ry1": 8,
+   "puces": [
+    {
+     "t": "Son futur site",
+     "x": 40,
+     "y": 520,
+     "o": 1,
+     "c": "#ec4899"
+    }
+   ]
+  },
+  {
+   "id": "academie",
+   "de": "academie",
+   "type": "tel",
+   "c": [
+    "#7c5cff",
+    "#c026d3",
+    "#3b5bfd"
+   ],
+   "accent": "#d8b4fe",
+   "image": "academie.jpg",
+   "defile": [
+    [
+     0,
+     0
+    ],
+    [
+     100,
+     -560
+    ]
+   ],
+   "ry0": 14,
+   "ry1": -10,
+   "puces": [
+    {
+     "t": "Étape par étape",
+     "x": 560,
+     "y": 600,
+     "o": 1.1,
+     "c": "#7c5cff"
+    }
+   ]
+  },
+  {
+   "id": "fin",
+   "de": "fin",
+   "type": "fin",
+   "c": [
+    "#7c5cff",
+    "#22d3ee",
+    "#ff3d75"
+   ],
+   "accent": "#ffe14d",
+   "cta": "Commence gratuitement",
+   "garanties": "Sans carte bancaire · lien en bio"
+  }
+ ]
+}

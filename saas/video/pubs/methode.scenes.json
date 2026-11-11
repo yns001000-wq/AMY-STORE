@@ -1,0 +1,249 @@
+{
+ "motsCles": "site|commerce|ville|métier|département|mysite|réservés|toi|message|rédigé|clic|maquette|nom|téléphone|partant|devis|ligne|facture|guidé|gratuitement|bio",
+ "scenes": [
+  {
+   "id": "accroche",
+   "de": "accroche",
+   "type": "eventail",
+   "c": [
+    "#ff5a3c",
+    "#7c2dff",
+    "#ff2d75"
+   ],
+   "accent": "#ffd166",
+   "images": [
+    "accueil.jpg",
+    "site.jpg",
+    "devis.jpg"
+   ]
+  },
+  {
+   "id": "choix",
+   "de": "trouver",
+   "part": [
+    0,
+    0.4
+   ],
+   "type": "choix",
+   "c": [
+    "#0891b2",
+    "#7c5cff",
+    "#22d3ee"
+   ],
+   "accent": "#67e8f9",
+   "titres": [
+    "Quel métier ?",
+    "Où ?"
+   ],
+   "metiers": [
+    "Restaurants et snacks",
+    "Coiffure et beauté",
+    "Artisans du bâtiment"
+   ],
+   "metier": 0,
+   "departement": "69 · Rhône",
+   "bouton": "Trouver mes commerces",
+   "o": [
+    0.55,
+    1.05,
+    1.6
+   ]
+  },
+  {
+   "id": "liste",
+   "de": "trouver",
+   "part": [
+    0.4,
+    1
+   ],
+   "type": "tel",
+   "c": [
+    "#3b5bfd",
+    "#22d3ee",
+    "#7c5cff"
+   ],
+   "accent": "#67e8f9",
+   "image": "accueil.jpg",
+   "defile": [
+    [
+     0,
+     -450
+    ],
+    [
+     28,
+     -450
+    ],
+    [
+     100,
+     -960
+    ]
+   ],
+   "tap": {
+    "x": 250,
+    "y": 517,
+    "o": 0.35
+   },
+   "puces": [
+    {
+     "t": "Réservés pour toi",
+     "x": 560,
+     "y": 640,
+     "o": 1.7,
+     "c": "#3b5bfd"
+    }
+   ]
+  },
+  {
+   "id": "message",
+   "de": "message",
+   "type": "feuille",
+   "c": [
+    "#c026d3",
+    "#ff3d75",
+    "#7c5cff"
+   ],
+   "accent": "#f0abfc",
+   "image": "message.jpg",
+   "w": 760,
+   "y": 290,
+   "ecrit": {
+    "depart": "39%",
+    "o": 0.8,
+    "d": 1.7
+   },
+   "puces": [
+    {
+     "t": "Tu relis, tu envoies",
+     "x": 520,
+     "y": 1070,
+     "o": 3,
+     "c": "#ec4899"
+    }
+   ]
+  },
+  {
+   "id": "maquette",
+   "de": "maquette",
+   "type": "tel",
+   "c": [
+    "#7c5cff",
+    "#ff3d75",
+    "#3b5bfd"
+   ],
+   "accent": "#c4b5fd",
+   "image": "site.jpg",
+   "defile": [
+    [
+     0,
+     0
+    ],
+    [
+     35,
+     0
+    ],
+    [
+     100,
+     -900
+    ]
+   ],
+   "ry0": 18,
+   "ry1": -8,
+   "puces": [
+    {
+     "t": "À son nom",
+     "x": 40,
+     "y": 470,
+     "o": 1.5,
+     "c": "#7c5cff"
+    }
+   ]
+  },
+  {
+   "id": "montrer",
+   "de": "montrer",
+   "type": "tel",
+   "c": [
+    "#ff3d75",
+    "#ffb03c",
+    "#7c5cff"
+   ],
+   "accent": "#ffd166",
+   "image": "site.jpg",
+   "defile": [
+    [
+     0,
+     -900
+    ],
+    [
+     100,
+     -2250
+    ]
+   ],
+   "zoom": 1.12,
+   "puces": [
+    {
+     "t": "Sa carte, ses prix",
+     "x": 40,
+     "y": 700,
+     "o": 1.2,
+     "c": "#f97316"
+    }
+   ]
+  },
+  {
+   "id": "devis",
+   "de": "devis",
+   "type": "feuille",
+   "c": [
+    "#10b981",
+    "#3b5bfd",
+    "#a3e635"
+   ],
+   "accent": "#bef264",
+   "image": "devis.jpg",
+   "w": 860,
+   "y": 300,
+   "tampon": {
+    "t": "Accepté",
+    "x": 50,
+    "y": 560,
+    "o": 1.1
+   },
+   "puces": [
+    {
+     "t": "Devis",
+     "x": 60,
+     "y": 1090,
+     "o": 1.5
+    },
+    {
+     "t": "Mise en ligne",
+     "x": 320,
+     "y": 1090,
+     "o": 2.3,
+     "c": "#3b5bfd"
+    },
+    {
+     "t": "Facture",
+     "x": 740,
+     "y": 1090,
+     "o": 3.1,
+     "c": "#7c5cff"
+    }
+   ]
+  },
+  {
+   "id": "fin",
+   "de": "fin",
+   "type": "fin",
+   "c": [
+    "#7c5cff",
+    "#22d3ee",
+    "#ff3d75"
+   ],
+   "accent": "#ffe14d",
+   "cta": "Commence gratuitement",
+   "garanties": "Sans carte bancaire · lien en bio"
+  }
+ ]
+}
