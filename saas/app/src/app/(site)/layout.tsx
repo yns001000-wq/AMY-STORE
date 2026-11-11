@@ -10,6 +10,7 @@ export default function Site({ children }: { children: React.ReactNode }) {
           <nav className="nav" aria-label="Navigation principale">
             <Link className="lien-sec" href="/#methode">La méthode</Link>
             <Link className="lien-sec" href="/#tarifs">Tarifs</Link>
+            <Link className="lien-sec" href="/abonnement">Abonnement</Link>
             <Link href="/connexion">Connexion</Link>
             <Link className="btn p" href="/connexion?mode=inscription">Commencer</Link>
           </nav>
@@ -21,7 +22,8 @@ export default function Site({ children }: { children: React.ReactNode }) {
           <div><Logo /><p style={{ marginTop: ".8rem", maxWidth: "26rem" }}>L'outil des indépendants qui vendent des sites web aux commerces de leur ville.</p>
             <p>Données entreprises : base Sirene (INSEE), licence ouverte · © contributeurs OpenStreetMap (ODbL)</p></div>
           <div><h4>Produit</h4><ul><li><Link href="/#methode">La méthode</Link></li><li><Link href="/#fonctionnalites">Fonctionnalités</Link></li><li><Link href="/#tarifs">Tarifs</Link></li><li><Link href="/#faq">Questions</Link></li><li><Link href="/connexion">Mon cockpit</Link></li></ul></div>
-          <div><h4>Légal</h4><ul><li><Link href="/mentions-legales">Mentions légales</Link></li><li><Link href="/cgu">CGU</Link></li><li><Link href="/cgv">CGV</Link></li><li><Link href="/confidentialite">Confidentialité</Link></li><li><Link href="/opposition">Retirer mon entreprise</Link></li><li><Link href="/signaler">Signaler un contenu</Link></li><li><Link href="/resilier"><b>Résilier mon abonnement</b></Link></li></ul></div>
+          <div><h4>Abonnement</h4><ul><li><Link href="/abonnement">Gérer mon abonnement</Link></li><li><Link href="/abonnement#gerer">Changer d&apos;offre, factures</Link></li><li><Link href="/resilier"><b>Résilier mon abonnement</b></Link></li><li><Link href="/abonnement#retractation">Me rétracter (14 jours)</Link></li></ul></div>
+          <div><h4>Légal</h4><ul><li><Link href="/mentions-legales">Mentions légales</Link></li><li><Link href="/cgu">CGU</Link></li><li><Link href="/cgv">CGV</Link></li><li><Link href="/confidentialite">Confidentialité</Link></li><li><Link href="/opposition">Retirer mon entreprise</Link></li><li><Link href="/signaler">Signaler un contenu</Link></li></ul></div>
         </div>
       </footer>
     </>

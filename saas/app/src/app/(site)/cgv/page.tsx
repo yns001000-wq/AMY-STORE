@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { AFaire } from "@/components/AFaire";
+import { Info } from "@/components/Info";
+import { EDITEUR as E } from "@/lib/editeur";
 import { ORDRE_PLANS, PLANS } from "@/lib/plans";
 
 export const metadata = { title: "Conditions générales de vente" };
@@ -13,7 +14,7 @@ export default function Cgv() {
       <p className="alerte">Brouillon à faire relire par un avocat avant l&apos;ouverture au public.</p>
 
       <h2>1. Vendeur</h2>
-      <p><AFaire>Prénom NOM</AFaire>, entrepreneur individuel (EI), SIRET <AFaire>SIRET</AFaire>, <AFaire>adresse</AFaire>, contact : <AFaire>e-mail</AFaire>. TVA non applicable, article 293 B du CGI.</p>
+      <p><Info v={E.nom} manque="Prénom NOM" />, entrepreneur individuel (EI), SIREN {E.siren}, <Info v={E.adresse} manque="adresse" />, téléphone : <Info v={E.telephone} manque="téléphone" lien="tel" />, e-mail : <Info v={E.email} manque="e-mail" lien="mail" />. TVA non applicable, article 293 B du CGI.</p>
 
       <h2>2. Offres et prix</h2>
       <ul>
@@ -44,11 +45,12 @@ export default function Cgv() {
       <p>Pour exercer ce droit, vous pouvez :</p>
       <ul>
         <li>cliquer sur le bouton « Me rétracter » dans « Mon abonnement » ;</li>
-        <li>ou nous envoyer le formulaire ci-dessous, ou toute déclaration dénuée d&apos;ambiguïté, par e-mail à <AFaire>e-mail</AFaire>.</li>
+        <li>ou nous envoyer le formulaire ci-dessous, ou toute déclaration dénuée d&apos;ambiguïté, par e-mail à <Info v={E.email} manque="e-mail" lien="mail" />.</li>
+        <li>tout est aussi expliqué sur la page <a href="/abonnement">Abonnement</a>.</li>
       </ul>
       <blockquote className="carte" style={{ margin: "1rem 0" }}>
         <p><b>Formulaire de rétractation</b> (veuillez compléter et renvoyer le présent formulaire uniquement si vous souhaitez vous rétracter du contrat)</p>
-        <p>À l&apos;attention de <AFaire>Prénom NOM, adresse, e-mail</AFaire> :</p>
+        <p>À l&apos;attention de MySite, <Info v={E.nom} manque="Prénom NOM" />, <Info v={E.adresse} manque="adresse" />, <Info v={E.email} manque="e-mail" lien="mail" /> :</p>
         <p>Je vous notifie par la présente ma rétractation du contrat portant sur la prestation de services ci-dessous :</p>
         <p>Abonnement MySite, offre : ……… · Commandé le : ………</p>
         <p>Nom : ……… · Adresse e-mail du compte : ………</p>
@@ -70,8 +72,8 @@ export default function Cgv() {
       <p>Ils restent disponibles dans le Studio et téléchargeables pour être hébergés ailleurs. Il vous appartient d&apos;en informer vos propres clients. Vos devis et factures restent consultables même après un changement d&apos;offre.</p>
 
       <h2>11. Réclamations et médiation</h2>
-      <p>Pour toute réclamation : <AFaire>e-mail</AFaire>.</p>
-      <p>Si aucune solution amiable n&apos;est trouvée, le consommateur peut recourir gratuitement au médiateur de la consommation : <AFaire>nom, adresse et site du médiateur choisi</AFaire>.</p>
+      <p>Pour toute réclamation : <Info v={E.email} manque="e-mail" lien="mail" />.</p>
+      <p>Si aucune solution amiable n&apos;est trouvée, le consommateur peut recourir gratuitement au médiateur de la consommation : <Info v={E.mediateur} manque="nom, adresse et site du médiateur choisi" />.</p>
       <p>Plateforme européenne de règlement des litiges : <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.</p>
 
       <h2>12. Droit applicable</h2>

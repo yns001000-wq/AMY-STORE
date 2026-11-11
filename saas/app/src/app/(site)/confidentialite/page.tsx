@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { AFaire } from "@/components/AFaire";
+import { Info } from "@/components/Info";
+import { EDITEUR as E } from "@/lib/editeur";
 
 export const metadata = { title: "Confidentialité" };
 
@@ -9,7 +11,7 @@ export default function Confidentialite() {
     <article className="legal">
       <h1 style={{ fontSize: "2rem" }}>Politique de confidentialité</h1>
       <p className="note">Version du 11 novembre 2026.</p>
-      <p className="alerte">Brouillon à faire relire avant la mise en ligne. Responsable de traitement : MySite, <AFaire>Prénom NOM, adresse, e-mail</AFaire>.</p>
+      <p className="alerte">Brouillon à faire relire avant la mise en ligne. Responsable de traitement : MySite, <Info v={E.nom} manque="Prénom NOM" />, <Info v={E.adresse} manque="adresse" />, <Info v={E.email} manque="e-mail" lien="mail" />.</p>
 
       <h2>A. Vous êtes utilisateur de MySite</h2>
       <ul>
@@ -49,7 +51,7 @@ export default function Confidentialite() {
 
       <h2>E. Vos droits</h2>
       <p>Vous disposez des droits suivants : accès, rectification, effacement, limitation, opposition et portabilité.</p>
-      <p>Depuis « Mon compte », vous pouvez <b>télécharger toutes vos données</b> et <b>supprimer votre compte</b>. Pour toute autre demande, écrivez à <AFaire>e-mail</AFaire>. Nous répondons sous un mois.</p>
+      <p>Depuis « Mon compte », vous pouvez <b>télécharger toutes vos données</b> et <b>supprimer votre compte</b>. Pour toute autre demande, écrivez à <Info v={E.email} manque="e-mail" lien="mail" />. Nous répondons sous un mois.</p>
       <p>Vous pouvez introduire une réclamation auprès de la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>).</p>
 
       <h2>F. Cookies</h2>
