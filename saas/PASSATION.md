@@ -19,7 +19,7 @@ Bonjour Claude. Je reprends ici un projet commencé dans une autre discussion. V
 ## Ce qu'il reste à faire
 
 1. **Finir le profil Instagram** (voir la section suivante).
-2. **Mettre le site en ligne** : créer mes comptes Supabase, Vercel, Stripe et Resend, puis suivre `saas/app/README.md` (migrations 0001 à 0007, variables d'environnement, prix Stripe, tâches planifiées).
+2. **Mettre le site en ligne** : créer mes comptes Supabase, Vercel, Stripe et Resend, puis suivre `saas/app/README.md` (toutes les migrations du dossier `supabase/migrations`, dans l'ordre, variables d'environnement, prix Stripe, tâches planifiées).
 3. **Compléter les pages légales** avec mon identité et mon SIRET, une fois ma micro-entreprise créée, et choisir un médiateur de la consommation.
 4. **Publier les vidéos**, puis mettre le lien du site dans la bio, avec `?src=instagram` ou `?src=tiktok` à la fin.
 5. **Plus tard** : vidéo de 30 s avec un personnage virtuel (scénario dans `saas/video/scenario-ia/SCENARIO.md`), puis publicité Meta si je valide un budget.
