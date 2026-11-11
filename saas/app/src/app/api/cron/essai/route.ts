@@ -26,7 +26,7 @@ export async function GET(req: Request) {
     const jour = fin.toLocaleDateString("fr-FR", { timeZone: "Europe/Paris", day: "numeric", month: "long" });
     const ok = type === "j2"
       ? await envoyerEmail(email, "Votre essai Premium MySite se termine bientôt",
-        `${bonjour}Votre essai Premium se termine le ${jour}.\n\nSans action de votre part, votre compte repasse en offre Gratuite : aucun prélèvement, et vos prospects, sites et messages restent accessibles.\n\nPour garder les sites sur mesure, les 1 000 prospects par mois et les devis et factures, choisissez une offre ici : ${site}/espace/abonnement\nLes offres sont sans engagement et résiliables en ligne à tout moment.${pied}`)
+        `${bonjour}Votre essai Premium se termine le ${jour}.\n\nSans action de votre part, votre compte repasse en offre Gratuite : aucun prélèvement, et vos prospects, sites et messages restent accessibles.\n\nPour garder les sites sur mesure, les devis et les factures, avec les volumes complets de l'offre, choisissez une offre ici : ${site}/espace/abonnement\nLes offres sont sans engagement et résiliables en ligne à tout moment.${pied}`)
       : await envoyerEmail(email, "Votre essai Premium MySite est terminé",
         `${bonjour}Votre essai Premium est terminé : votre compte est repassé en offre Gratuite, sans aucun prélèvement.\n\nTout ce que vous avez créé reste dans votre cockpit : ${site}/espace\n\nSi vous voulez retrouver les fonctions Premium ou choisir l'offre Pro, c'est ici : ${site}/espace/abonnement${pied}`);
     if (!ok) continue;

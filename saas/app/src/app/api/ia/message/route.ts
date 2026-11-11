@@ -16,15 +16,15 @@ export async function POST(req: Request) {
   if (!p) return NextResponse.json({ erreur: "Prospect introuvable" }, { status: 404 });
   if (p.statut === "refus") return NextResponse.json({ erreur: "Ce prospect ne souhaite plus être contacté." }, { status: 409 });
 
-  const { profil, plan } = await profilEtPlan(session.user.id);
-  if (!(await consommer(session.user.id, plan, "messages_ia", 1))) return NextResponse.json({ erreur: "quota", plan }, { status: 402 });
+  const { profil, plan, essai } = await profilEtPlan(session.user.id);
+  if (!(await consommer(session.user.id, plan, "messages_ia", 1, essai))) return NextResponse.json({ erreur: "quota", plan }, { status: 402 });
   const rendre = () => rembourser(session.user.id, "messages_ia");
 
   const expediteur = `${(profil.prenom as string) || "[votre prénom]"}, création de sites internet pour les commerçants et artisans`;
   try {
     const rep = await anthropic().beta.messages.create({
       model: "claude-opus-5-5",
-      max_tokens: 4000,
+      max_tokens: 1500, // un message, un e-mail ou un script d'appel tient largement ; plafonne aussi le coût (voir COUT_MAX_IA)
       output_config: { effort: "low" },
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",

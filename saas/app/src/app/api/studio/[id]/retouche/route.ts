@@ -9,13 +9,13 @@ export const maxDuration = 180;
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const ctx = await contexteStudio();
   if ("erreur" in ctx) return ctx.erreur;
-  const { session, cap, plan } = ctx;
+  const { session, cap, plan, essai } = ctx;
   if (!cap.effortIA) return NextResponse.json({ erreur: "Les retouches par l'IA sont incluses dès l'offre Pro.", plan }, { status: 402 });
   const site = await chargerSite(session.sb, (await params).id);
   if (!site) return NextResponse.json({ erreur: "Site introuvable" }, { status: 404 });
   const { consigne } = (await req.json().catch(() => ({}))) as { consigne?: string };
   if (!consigne || consigne.trim().length < 3) return NextResponse.json({ erreur: "Décrivez la modification souhaitée." }, { status: 400 });
-  if (!(await consommer(session.user.id, plan, "retouches_ia", 1))) return NextResponse.json({ erreur: "Quota de retouches IA du mois atteint.", plan }, { status: 402 });
+  if (!(await consommer(session.user.id, plan, "retouches_ia", 1, essai))) return NextResponse.json({ erreur: "Quota de retouches IA du mois atteint.", plan }, { status: 402 });
   const rendre = () => rembourser(session.user.id, "retouches_ia");
   const perso = blocPhotosPerso(await photosDuCommerce(session.sb, cap, site.prospect_id));
   try {

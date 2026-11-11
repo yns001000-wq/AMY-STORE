@@ -28,7 +28,7 @@ const LIGNES: [string, (c: CapacitesStudio, q: { sites_ia: number; retouches_ia:
 export default async function ListeStudio() {
   const session = await utilisateurConnecte();
   if (!session) redirect("/connexion");
-  const [{ plan }, conso, { data: sites }] = await Promise.all([
+  const [{ plan, quotas, essai }, conso, { data: sites }] = await Promise.all([
     profilEtPlan(session.user.id), consommation(session.user.id),
     session.sb.from("sites").select("id, type, maj_le, prospect_id, donnees->>nom, donnees->>ville, donnees->>famille").order("maj_le", { ascending: false }).limit(200),
   ]);
@@ -36,7 +36,7 @@ export default async function ListeStudio() {
   return (
     <>
       <div className="barre-haut">
-        <div><p className="note" style={{ margin: "0 0 .3rem" }}>Studio {P.nom} · {conso.sites_ia}/{P.quotas.sites_ia} sites IA · {conso.retouches_ia}/{P.quotas.retouches_ia} retouches ce mois-ci</p><h1>Mes sites</h1></div>
+        <div><p className="note" style={{ margin: "0 0 .3rem" }}>Studio {P.nom}{essai ? " (essai)" : ""} · {conso.sites_ia}/{quotas.sites_ia} sites IA · {conso.retouches_ia}/{quotas.retouches_ia} retouches ce mois-ci</p><h1>Mes sites</h1></div>
         <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}><Link className="btn" href="/espace/studio/photos">Ma banque de photos</Link><Link className="btn" href="/espace">Créer depuis un prospect</Link></div>
       </div>
       {!sites?.length ? (

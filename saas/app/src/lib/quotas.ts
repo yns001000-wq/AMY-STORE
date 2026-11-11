@@ -1,15 +1,17 @@
 import "server-only";
 import { supabaseAdmin } from "./supabase/admin";
-import { limite, planEffectif, type PlanId, type TypeQuota } from "./plans";
+import { limite, planEffectif, quotasEffectifs, type PlanId, type TypeQuota } from "./plans";
 
 export function moisCourant(d = new Date()): string {
   return new Intl.DateTimeFormat("fr-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit" }).format(d).slice(0, 7);
 }
 
-export async function profilEtPlan(userId: string): Promise<{ profil: Record<string, unknown>; plan: PlanId }> {
+/** Profil, offre appliquée, et quotas appliqués. `essai` : compte gratuit en essai Premium (fonctions de Premium, volumes réduits). */
+export async function profilEtPlan(userId: string): Promise<{ profil: Record<string, unknown>; plan: PlanId; essai: boolean; quotas: Record<TypeQuota, number> }> {
   const { data, error } = await supabaseAdmin().from("profils").select("*").eq("id", userId).single();
   if (error || !data) throw new Error("Profil introuvable");
-  return { profil: data, plan: planEffectif(data as { plan: string; essai_fin?: string | null }) };
+  const plan = planEffectif(data as { plan: string; essai_fin?: string | null }), essai = data.plan === "gratuit" && plan === "premium";
+  return { profil: data, plan, essai, quotas: quotasEffectifs(plan, essai) };
 }
 
 export async function consommation(userId: string): Promise<Record<TypeQuota, number>> {
@@ -18,8 +20,8 @@ export async function consommation(userId: string): Promise<Record<TypeQuota, nu
 }
 
 /** Réserve n unités du quota, de façon atomique. false = limite atteinte (rien n'est consommé). */
-export async function consommer(userId: string, plan: PlanId, type: TypeQuota, n: number): Promise<boolean> {
-  const max = limite(plan, type);
+export async function consommer(userId: string, plan: PlanId, type: TypeQuota, n: number, essai = false): Promise<boolean> {
+  const max = limite(plan, type, essai);
   if (max <= 0) return false;
   const { data, error } = await supabaseAdmin().rpc("consommer_quota", { p_user: userId, p_type: type, p_n: n, p_limite: max });
   if (error) throw error;

@@ -40,28 +40,28 @@ export const PLANS: Record<PlanId, Plan> = {
   gratuit: {
     id: "gratuit", nom: "Gratuit", accroche: "Pour découvrir avec vos premiers prospects",
     prixMensuel: 0, prixAnnuel: 0, departements: 1,
-    quotas: { prospects: 15, messages_ia: 10, sites_ia: 0, retouches_ia: 0 },
+    quotas: { prospects: 15, messages_ia: 5, sites_ia: 0, retouches_ia: 0 },
     export: false, facturation: false, mentionMySite: true, utilisateurs: 1,
     studio: { effortIA: null, editionComplete: false, couleursLibres: false, choixModele: false, polices: false, photosPerso: false, versions: 0, filigrane: true, marqueBlanche: false, sitesMax: 3, banquePerso: 0, publications: 0, domainePerso: false },
   },
   pro: {
     id: "pro", nom: "Pro", accroche: "Pour démarcher sérieusement autour de chez vous",
     prixMensuel: 29, prixAnnuel: 290, departements: 3,
-    quotas: { prospects: 300, messages_ia: 300, sites_ia: 10, retouches_ia: 100 },
+    quotas: { prospects: 300, messages_ia: 100, sites_ia: 5, retouches_ia: 12 },
     export: true, facturation: false, mentionMySite: false, utilisateurs: 1,
     studio: { effortIA: "medium", editionComplete: true, couleursLibres: true, choixModele: true, polices: false, photosPerso: false, versions: 5, filigrane: false, marqueBlanche: false, sitesMax: 100, banquePerso: 0, publications: 3, domainePerso: true },
   },
   premium: {
     id: "premium", nom: "Premium", accroche: "Le plus complet pour vendre chaque semaine",
     prixMensuel: 59, prixAnnuel: 590, departements: 10,
-    quotas: { prospects: 1000, messages_ia: 1000, sites_ia: 40, retouches_ia: 400 },
+    quotas: { prospects: 1000, messages_ia: 200, sites_ia: 12, retouches_ia: 22 },
     export: true, facturation: true, mentionMySite: false, utilisateurs: 1, misEnAvant: true,
     studio: { effortIA: "high", editionComplete: true, couleursLibres: true, choixModele: true, polices: true, photosPerso: true, versions: 20, filigrane: false, marqueBlanche: false, sitesMax: 500, banquePerso: 300, publications: 20, domainePerso: true },
   },
   ultra: {
     id: "ultra", nom: "Ultra", accroche: "Pour les agences et les gros volumes",
     prixMensuel: 119, prixAnnuel: 1190, departements: Infinity,
-    quotas: { prospects: 3000, messages_ia: 3000, sites_ia: 120, retouches_ia: 1500 },
+    quotas: { prospects: 3000, messages_ia: 400, sites_ia: 25, retouches_ia: 44 },
     export: true, facturation: true, mentionMySite: false, utilisateurs: 3,
     studio: { effortIA: "xhigh", editionComplete: true, couleursLibres: true, choixModele: true, polices: true, photosPerso: true, versions: 50, filigrane: false, marqueBlanche: true, sitesMax: 2000, banquePerso: 2000, publications: 150, domainePerso: true },
   },
@@ -81,8 +81,34 @@ export function planEffectif(p: { plan: string; essai_fin?: string | null }, mai
   return base;
 }
 
-export function limite(plan: PlanId, type: TypeQuota): number {
-  return PLANS[plan].quotas[type];
+/**
+ * Quotas pendant l'essai Premium gratuit (7 jours, sans carte) : les fonctions de Premium, avec des volumes réduits.
+ * L'essai ne rapporte rien : il doit coûter très peu, même utilisé jusqu'au bout.
+ */
+export const QUOTAS_ESSAI: Record<TypeQuota, number> = { prospects: 100, messages_ia: 20, sites_ia: 2, retouches_ia: 5 };
+
+/** Quotas réellement appliqués : ceux de l'offre, ou ceux de l'essai quand le compte est en essai Premium. */
+export function quotasEffectifs(plan: PlanId, essai = false): Record<TypeQuota, number> {
+  return essai ? QUOTAS_ESSAI : PLANS[plan].quotas;
+}
+
+export function limite(plan: PlanId, type: TypeQuota, essai = false): number {
+  return quotasEffectifs(plan, essai)[type];
+}
+
+/**
+ * Coût maximal de l'IA pour une action, en dollars : chaque appel poussé à sa longueur maximale, au tarif de Claude Opus 5.5
+ * (4 $ par million de jetons lus, 20 $ par million écrits ; relevé le 3 novembre 2026). Le coût réel est en général 2 à 3 fois plus bas.
+ *  - message : 1 500 jetons écrits au plus ;
+ *  - site sur mesure : une étude (8 000) puis une rédaction (16 000) ;
+ *  - retouche : 12 000 jetons écrits au plus.
+ * À recalculer si le modèle, son tarif ou les longueurs maximales changent (voir plans.test.ts : la marge y est vérifiée).
+ */
+export const COUT_MAX_IA: Record<TypeQuota, number> = { prospects: 0, messages_ia: 0.036, sites_ia: 0.53, retouches_ia: 0.27 };
+
+/** Dépense d'IA maximale par mois si tous les quotas sont utilisés jusqu'au bout, en dollars. */
+export function coutMaxIA(quotas: Record<TypeQuota, number>): number {
+  return Math.round((Object.keys(quotas) as TypeQuota[]).reduce((s, t) => s + quotas[t] * COUT_MAX_IA[t], 0) * 100) / 100;
 }
 
 export function departementsAutorises(plan: PlanId, demandes: string[]): string[] {

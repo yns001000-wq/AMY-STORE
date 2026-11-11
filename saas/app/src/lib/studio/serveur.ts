@@ -14,8 +14,8 @@ export interface SiteLigne { id: string; user_id: string; prospect_id: string | 
 export async function contexteStudio() {
   const session = await utilisateurConnecte();
   if (!session) return { erreur: NextResponse.json({ erreur: "Non connecté" }, { status: 401 }) } as const;
-  const { plan } = await profilEtPlan(session.user.id);
-  return { session, plan, cap: PLANS[plan].studio } as const;
+  const { plan, essai } = await profilEtPlan(session.user.id);
+  return { session, plan, essai, cap: PLANS[plan].studio } as const;
 }
 
 /** Lecture d'un site de l'utilisateur (RLS : jamais celui d'un autre). */

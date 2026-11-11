@@ -9,7 +9,7 @@ export const maxDuration = 120;
 export async function POST(req: Request) {
   const ctx = await contexteStudio();
   if ("erreur" in ctx) return ctx.erreur;
-  const { session, cap, plan } = ctx;
+  const { session, cap, plan, essai } = ctx;
   if (!cap.effortIA) return NextResponse.json({ erreur: "Les sites sur mesure par l'IA sont inclus dès l'offre Pro.", plan }, { status: 402 });
   const { prospect_id, precisions } = (await req.json().catch(() => ({}))) as { prospect_id?: string; precisions?: string };
   if (!prospect_id) return NextResponse.json({ erreur: "Requête invalide" }, { status: 400 });
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   if (!p) return NextResponse.json({ erreur: "Prospect introuvable" }, { status: 404 });
   const { count } = await session.sb.from("sites").select("id", { count: "exact", head: true });
   if ((count ?? 0) >= cap.sitesMax) return NextResponse.json({ erreur: `Votre offre conserve ${cap.sitesMax} sites : supprimez-en un ou passez à l'offre supérieure.`, plan }, { status: 402 });
-  if (!(await consommer(session.user.id, plan, "sites_ia", 1))) return NextResponse.json({ erreur: "Quota de sites sur mesure du mois atteint.", plan }, { status: 402 });
+  if (!(await consommer(session.user.id, plan, "sites_ia", 1, essai))) return NextResponse.json({ erreur: "Quota de sites sur mesure du mois atteint.", plan }, { status: 402 });
   const rendre = () => rembourser(session.user.id, "sites_ia");
   const prec = typeof precisions === "string" ? precisions.slice(0, 3000) : "";
   try {

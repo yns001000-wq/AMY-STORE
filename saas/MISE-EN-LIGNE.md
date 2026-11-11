@@ -56,6 +56,22 @@ Après un ajout, il faut redéployer (Vercel → Deployments → « Redeploy »)
 
 Supabase n'envoie que **2 e-mails de confirmation par heure** avec son service d'envoi par défaut. Avant d'ouvrir au public, il faut y brancher Resend (Supabase → Authentication → Emails → SMTP), sinon la troisième personne qui s'inscrit dans l'heure ne recevra pas son e-mail.
 
+## Coût de l'IA et marge
+
+Les quotas sont réglés pour que l'IA ne puisse jamais coûter plus de 40 % de ce qu'une offre rapporte, même si l'abonné utilise tout. Un test automatique le vérifie (`app/src/lib/plans.test.ts`).
+
+| Offre | Messages | Sites sur mesure | Retouches | Coût maximal de l'IA par mois | Recette la plus basse par mois (abonnement annuel) |
+|---|---|---|---|---|---|
+| Gratuit | 5 | 0 | 0 | 0,18 $ | 0 € |
+| Essai Premium (7 jours) | 20 | 2 | 5 | 3,13 $ | 0 € |
+| Pro | 100 | 5 | 12 | 9,49 $ | 24,17 € |
+| Premium | 200 | 12 | 22 | 19,50 $ | 49,17 € |
+| Ultra | 400 | 25 | 44 | 39,53 $ | 99,17 € |
+
+Ces coûts sont des maximums calculés (chaque appel poussé à sa longueur maximale, tarif de Claude Opus 5.5 relevé le 3 novembre 2026), pas des mesures. Le coût réel devrait être 2 à 3 fois plus bas. À recalculer si le modèle ou son tarif change.
+
+Sécurité supplémentaire conseillée : fixer un plafond de dépense mensuel dans la console Anthropic.
+
 ## 5. Avant d'ouvrir au public
 
 - [ ] Micro-entreprise créée, SIRET reçu.

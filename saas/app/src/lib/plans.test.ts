@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { abonnementActif, departementsAutorises, economieAnnuelle, limite, planDepuisPriceId, planEffectif, priceIdStripe, PLANS } from "./plans";
+import { abonnementActif, coutMaxIA, departementsAutorises, economieAnnuelle, limite, ORDRE_PLANS, planDepuisPriceId, planEffectif, priceIdStripe, PLANS, QUOTAS_ESSAI, quotasEffectifs } from "./plans";
 
 const env = { STRIPE_PRICE_PRO_MENSUEL: "price_pro_m", STRIPE_PRICE_PRO_ANNUEL: "price_pro_a", STRIPE_PRICE_PREMIUM_MENSUEL: "price_prem_m", STRIPE_PRICE_ULTRA_ANNUEL: "price_ultra_a" };
 
@@ -8,6 +8,23 @@ describe("offres", () => {
     expect(limite("gratuit", "prospects")).toBeLessThan(limite("pro", "prospects"));
     expect(limite("pro", "sites_ia")).toBeLessThan(limite("premium", "sites_ia"));
     expect(limite("gratuit", "sites_ia")).toBe(0);
+  });
+  it("l'IA ne peut jamais coûter plus de 40 % de ce que rapporte une offre, même utilisée à fond", () => {
+    // Recette mensuelle la plus basse : l'abonnement annuel ramené au mois. Un euro compté pour un dollar (prudent).
+    for (const id of ORDRE_PLANS.filter((p) => p !== "gratuit")) {
+      const recette = PLANS[id].prixAnnuel / 12;
+      expect(coutMaxIA(PLANS[id].quotas), id).toBeLessThanOrEqual(recette * 0.4);
+    }
+  });
+  it("les comptes qui ne paient pas coûtent très peu : gratuit sous 0,20 $ par mois, essai sous 3,50 $", () => {
+    expect(coutMaxIA(PLANS.gratuit.quotas)).toBeLessThanOrEqual(0.2);
+    expect(coutMaxIA(QUOTAS_ESSAI)).toBeLessThanOrEqual(3.5);
+  });
+  it("l'essai donne les fonctions de Premium avec des volumes réduits", () => {
+    expect(quotasEffectifs("premium", true)).toEqual(QUOTAS_ESSAI);
+    expect(quotasEffectifs("premium")).toEqual(PLANS.premium.quotas);
+    expect(limite("premium", "sites_ia", true)).toBeLessThan(limite("premium", "sites_ia"));
+    expect(limite("premium", "sites_ia", true)).toBeGreaterThan(0);
   });
   it("l'annuel offre 2 mois", () => {
     expect(economieAnnuelle("pro")).toBe(58);
