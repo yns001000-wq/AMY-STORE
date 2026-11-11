@@ -19,23 +19,27 @@
    "id": "studio",
    "texte": "Tu changes les textes, les photos et les couleurs, sans une ligne de code.",
    "tts": "Tu changes les textes, les photos et les couleurs, sans une ligne de code.",
-   "prise": 0,
    "comprehension": 0.857
   },
   {
    "id": "rdv",
    "texte": "En rendez-vous, il voit son futur site, sur ton téléphone.",
-   "tts": "En rendez-vous, il voit son futur site, sur ton téléphone."
+   "tts": "En rendez-vous, il voit son futur site, sur ton téléphone.",
+   "comprehension": 0.952
   },
   {
    "id": "academie",
    "texte": "Et si tu débutes, l'Académie t'explique chaque étape.",
-   "tts": "Et si tu débutes, l'Académie t'explique chaque étape."
+   "tts": "Et si tu débutes, l'Académie t'explique chaque étape.",
+   "prise": 0,
+   "comprehension": 1.0
   },
   {
    "id": "fin",
    "texte": "MySite. Commence gratuitement, le lien est en bio.",
-   "tts": "Maï Saïte. Commence gratuitement, le lien est en bio."
+   "tts": "Maï Saïte. Commence gratuitement, le lien est en bio.",
+   "prise": 0,
+   "comprehension": 0.824
   }
  ]
 }
