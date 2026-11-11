@@ -624,3 +624,36 @@ label.mini{font-size:.8rem;flex:1;min-width:0}
 .doc-grille .ed-case input{width:1.1rem;height:1.1rem;flex:none;margin-top:.15rem;accent-color:var(--violet)}
 .doc-grille .ed-case{display:flex;gap:.6rem;align-items:flex-start;font-weight:500;font-size:.9rem}
 .resiliation{border-color:color-mix(in srgb,var(--doux) 40%,var(--ligne))}
+
+/* ---------- Croissance : inscription sur téléphone, premiers pas, essai, suivi ---------- */
+.cases-deps{display:grid;gap:.15rem .9rem;grid-template-columns:repeat(auto-fill,minmax(min(100%,12.5rem),1fr));max-height:15rem;overflow:auto;padding:.6rem;border:1px solid var(--ligne);border-radius:14px}
+.cases-deps .case{font-size:.9rem;font-weight:400;min-height:2.2rem;align-items:center}
+.pas{list-style:none;margin:0;padding:0;display:grid;gap:.7rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,13.5rem),1fr))}
+.pas li a{display:grid;grid-template-columns:auto 1fr;gap:.2rem .7rem;align-items:start;height:100%;padding:.9rem 1rem;border:1px solid var(--ligne);border-radius:16px;background:var(--surface);color:var(--encre);text-decoration:none}
+.pas li a:hover{border-color:var(--violet)}
+.pas .rond{grid-row:span 2;display:grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:50%;font:700 .9rem/1 var(--titre);background:color-mix(in srgb,var(--violet) 12%,transparent);color:var(--violet)}
+.pas .fait .rond{background:var(--vert);color:#fff}.pas .fait a{opacity:.72}.pas .fait strong{text-decoration:line-through}
+.pas strong{font-size:.96rem}.pas small{grid-column:2;color:var(--doux);font-size:.84rem}
+.bandeau-essai{display:flex;flex-wrap:wrap;gap:.8rem 1.2rem;align-items:center;justify-content:space-between;padding:1rem 1.2rem;border-radius:18px;background:var(--degrade);color:#fff;margin-bottom:1.4rem}
+.bandeau-essai p{margin:0;color:rgba(255,255,255,.9)}.bandeau-essai strong{display:block;font:700 1.08rem/1.3 var(--titre);color:#fff}
+.bandeau-essai .btn{background:#fff;color:#2b1c88;border:0}
+.suivi{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,11rem),1fr));margin-bottom:1.4rem}
+.suivi .carte{padding:1.1rem 1.2rem}.suivi b{display:block;font:800 1.9rem/1.1 var(--titre);color:var(--encre)}.suivi small{color:var(--doux)}
+/* Page d'accueil : méthode, vidéo, bouton fixe sur téléphone */
+.methode-grille{display:grid;gap:2rem;align-items:start}
+@media (min-width:60rem){.methode-grille{grid-template-columns:1fr minmax(15rem,19rem)}}
+.methode{list-style:none;margin:0;padding:0;display:grid;gap:.8rem}
+.methode li{display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start;padding:1.1rem 1.2rem}
+.methode .num{display:grid;place-items:center;width:2.4rem;height:2.4rem;border-radius:12px;background:var(--degrade);color:#fff;font:800 1.1rem/1 var(--titre)}
+.methode h3{display:flex;align-items:center;gap:.5rem;margin:0 0 .25rem}.methode h3 svg{width:1.15rem;height:1.15rem;color:var(--violet)}
+.methode p{margin:0;color:var(--doux)}
+.tel-video{margin:0 auto;width:min(100%,19rem);text-align:center}
+.tel-video video{display:block;width:100%;aspect-ratio:9/16;border-radius:30px;border:6px solid var(--encre);background:#0f1222;box-shadow:var(--ombre-forte);object-fit:cover}
+.tel-video figcaption{margin-top:.7rem;font-size:.8rem}
+@media (min-width:60rem){.tel-video{position:sticky;top:5.5rem}}
+.duo{display:grid;gap:1.1rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr))}
+.cta-mobile{display:none}
+@media (max-width:40rem){
+  .cta-mobile{display:block;position:sticky;bottom:0;z-index:20;padding:.7rem 1rem calc(.7rem + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--fond) 92%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--ligne)}
+  .entete .nav .lien-sec{display:none}
+}

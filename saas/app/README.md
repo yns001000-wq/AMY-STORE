@@ -70,6 +70,17 @@ Ce dossier contient le socle de la phase 1. Le plan complet est dans `../PLAN.md
 - **Page publique « Retirer mon entreprise »** (droit d'opposition) : l'entreprise est exclue chez tous les utilisateurs.
 - **Pages légales** en brouillon. Les informations à compléter sont surlignées en jaune.
 
+## Parcours de vente (inscription → abonnement)
+
+- **Page d'accueil** : promesse claire (vendre des sites aux commerces de sa ville), méthode en 5 étapes, vidéo, tarifs, questions. Aucun faux chiffre ni faux avis.
+- **Provenance** : un lien `?src=tiktok` (ou `instagram`, `video2`…) dans la bio est repris à l'inscription, sans cookie. Il apparaît dans « Suivi des ventes ».
+- **Offre choisie** : un clic sur « Choisir Pro » mène à l'inscription, puis directement à l'offre après la configuration.
+- **Inscription sur téléphone** : secteur en cartes, un département en liste, autres départements repliés. Mot de passe oublié disponible.
+- **Premiers pas** : la première recherche part toute seule ; le tableau de bord affiche 4 étapes à cocher.
+- **Essai Premium** (7 jours, sans carte) : proposé dès le premier jour ; deux e-mails d'information au plus (2 jours avant la fin, puis à la fin), désactivables dans « Mon compte ». Tâche planifiée `/api/cron/essai`.
+- **Suivi des ventes** (`/espace/suivi`) : revenu mensuel, abonnés, parcours des inscrits, provenance. Réservé aux adresses de `ADMIN_EMAILS`.
+- Migration `0007_croissance.sql` à exécuter après les précédentes.
+
 ## Conformité légale du SaaS
 - **Résiliation en ligne** (art. L215-1-1 du Code de la consommation, dite « en 3 clics ») :
   - bouton visible « Résilier mon abonnement » dans « Mon abonnement », lien public `/resilier` en bas de toutes les pages ;

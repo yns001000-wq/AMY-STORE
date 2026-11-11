@@ -9,7 +9,7 @@ const fmt = (n: number) => n.toLocaleString("fr-FR");
 /** Bouton de chaque offre : lien d'inscription (site public) ou formulaire de paiement Stripe (espace connecté). */
 function Action({ id, periode, mode, particulier, abonne }: { id: PlanId; periode: Periode; mode: "inscription" | "abonnement"; particulier?: boolean; abonne?: boolean }) {
   const p = id === "premium" ? " p" : "";
-  if (mode === "inscription") return <Link className={`btn bloc${p}`} href="/connexion?mode=inscription">{id === "gratuit" ? "Commencer gratuitement" : "Essayer maintenant"}</Link>;
+  if (mode === "inscription") return <Link className={`btn bloc${p}`} href={id === "gratuit" ? "/connexion?mode=inscription" : `/connexion?mode=inscription&offre=${id}`}>{id === "gratuit" ? "Commencer gratuitement" : `Choisir ${PLANS[id].nom}`}</Link>;
   if (id === "gratuit" || abonne) return null;
   return (
     <form action="/api/stripe/checkout" method="post" className="pile" style={{ gap: ".7rem" }}>
@@ -25,7 +25,7 @@ function Action({ id, periode, mode, particulier, abonne }: { id: PlanId; period
 }
 
 /** Grille des offres, avec bascule mensuel/annuel. */
-export function Tarifs({ mode, planActuel, particulier, abonne }: { mode: "inscription" | "abonnement"; planActuel?: PlanId; particulier?: boolean; abonne?: boolean }) {
+export function Tarifs({ mode, planActuel, particulier, abonne, voulue }: { mode: "inscription" | "abonnement"; planActuel?: PlanId; particulier?: boolean; abonne?: boolean; voulue?: PlanId | null }) {
   const [periode, setPeriode] = useState<Periode>("mensuel");
   return (
     <>
@@ -50,8 +50,8 @@ export function Tarifs({ mode, planActuel, particulier, abonne }: { mode: "inscr
             ...(p.utilisateurs > 1 ? [[true, `${p.utilisateurs} utilisateurs`] as [boolean, string]] : []),
           ];
           return (
-            <article key={id} className={`carte offre${p.misEnAvant ? " avant" : ""}`} aria-labelledby={`offre-${id}`}>
-              {p.misEnAvant && <span className="badge"><Star aria-hidden />Le plus choisi</span>}
+            <article key={id} className={`carte offre${(voulue ? voulue === id : p.misEnAvant) ? " avant" : ""}`} aria-labelledby={`offre-${id}`}>
+              {voulue === id ? <span className="badge"><Star aria-hidden />Votre choix</span> : !voulue && p.misEnAvant && <span className="badge"><Star aria-hidden />Le plus complet</span>}
               <h3 id={`offre-${id}`}>{p.nom}</h3>
               <p className="accroche">{p.accroche}</p>
               <p className="prix"><b>{prix.toLocaleString("fr-FR")} €</b><span>TTC / mois</span></p>

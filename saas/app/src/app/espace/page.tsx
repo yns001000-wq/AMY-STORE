@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Crown, Download, Gift, Lock, Map as IconeCarte, Search, Store, Target, WandSparkles } from "lucide-react";
+import { Check, Crown, Download, Gift, Lock, Map as IconeCarte, Search, Store, Target, WandSparkles } from "lucide-react";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { consommation, profilEtPlan } from "@/lib/quotas";
 import { departementsAutorises, PLANS, type TypeQuota } from "@/lib/plans";
@@ -8,6 +8,8 @@ import { secteurParId } from "@/lib/secteurs";
 import { etape } from "@/lib/pipeline";
 import { nomDepartement } from "@/lib/departements";
 import { BoutonRecherche } from "@/components/BoutonRecherche";
+import { joursRestants, premiersPas } from "@/lib/croissance";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export const metadata = { title: "Mon cockpit" };
 
@@ -31,6 +33,14 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
   const P = PLANS[plan], plein = conso.prospects >= P.quotas.prospects;
   const essaiPossible = profil.plan === "gratuit" && !profil.essai_premium_utilise;
   const enEssai = profil.plan === "gratuit" && plan === "premium";
+  // Premiers pas : comptés sur toute la vie du compte (pas seulement le mois en cours).
+  const admin = supabaseAdmin();
+  const [{ data: total }, { count: nbSites }] = await Promise.all([
+    admin.from("consommation").select("messages_ia").eq("user_id", session.user.id),
+    admin.from("sites").select("id", { count: "exact", head: true }).eq("user_id", session.user.id),
+  ]);
+  const pas = premiersPas({ prospects: prospects?.length ?? 0, messages: (total ?? []).reduce((n, l) => n + (l.messages_ia ?? 0), 0), sites: nbSites ?? 0, payant: profil.plan !== "gratuit", essaiDemarre: !!profil.essai_premium_utilise, premierProspect: prospects?.[prospects.length - 1]?.id });
+  const faits = pas.filter((x) => x.fait).length;
   return (
     <>
       <div className="barre-haut">
@@ -41,6 +51,25 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
         <span className="badge-offre"><Crown aria-hidden />Offre {P.nom}{enEssai ? ` · essai jusqu'au ${new Date(profil.essai_fin as string).toLocaleDateString("fr-FR")}` : ""}</span>
       </div>
       {q.abonnement === "ok" && <p className="alerte ok" role="status">Merci ! Votre abonnement est en cours d&apos;activation : il apparaît ici dans quelques secondes.</p>}
+      {q.essai === "ok" && enEssai && <p className="alerte ok" role="status">Votre essai Premium est lancé : 7 jours, sans carte bancaire. Sans action de votre part, vous repasserez en Gratuit, sans aucun prélèvement.</p>}
+      {enEssai && (
+        <div className="bandeau-essai">
+          <p><strong>Essai Premium : {joursRestants(new Date(profil.essai_fin as string))} jour(s) restant(s)</strong>Pour garder vos 1 000 prospects par mois, les sites sur mesure et les factures, choisissez une offre avant la fin. Sinon, retour automatique au Gratuit.</p>
+          <Link className="btn" href="/espace/abonnement">Garder Premium</Link>
+        </div>
+      )}
+      {essaiPossible && !plein && (prospects?.length ?? 0) > 0 && (
+        <div className="bandeau-essai">
+          <p><strong>7 jours de Premium offerts</strong>1 000 prospects, sites sur mesure rédigés par l&apos;IA, devis et factures. Sans carte bancaire, sans prélèvement à la fin.</p>
+          <form action="/api/essai" method="post"><button className="btn" type="submit">Démarrer l&apos;essai gratuit</button></form>
+        </div>
+      )}
+      {faits < pas.length && (
+        <section className="carte" style={{ marginBottom: "1.4rem" }} aria-label="Premiers pas">
+          <h2 style={{ fontSize: "1.15rem", margin: "0 0 .8rem" }}>Vos premiers pas <span className="note">({faits} sur {pas.length})</span></h2>
+          <ol className="pas">{pas.map((x, i) => <li key={x.id} className={x.fait ? "fait" : ""}><Link href={x.lien}><span className="rond">{x.fait ? <Check size={16} aria-label="fait" /> : i + 1}</span><strong>{x.titre}</strong><small>{x.aide}</small></Link></li>)}</ol>
+        </section>
+      )}
       {ignores > 0 && <p className="alerte">Votre offre couvre {P.departements} département(s) : {ignores} département(s) choisi(s) ne sont pas utilisés.&nbsp;<Link href="/espace/abonnement">Élargir ma zone</Link></p>}
 
       <section className="stats" aria-label="Consommation du mois">
@@ -81,7 +110,7 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
             {PLANS[plan].export
               ? <a className="btn" href="/api/prospects/export" download><Download aria-hidden />Export CSV</a>
               : <Link className="btn" href="/espace/abonnement" title="Inclus dès l'offre Pro"><Lock aria-hidden />Export CSV</Link>}
-            <BoutonRecherche desactive={plein} />
+            <BoutonRecherche desactive={plein} auto={q.bienvenue === "1" && !prospects?.length} />
           </div>
         </div>
         {!prospects?.length ? (

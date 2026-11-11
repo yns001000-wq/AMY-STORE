@@ -14,5 +14,5 @@ export async function POST() {
     const fin = new Date(Date.now() + DUREE_ESSAI_JOURS * 86400000).toISOString();
     await admin.from("profils").update({ essai_premium_utilise: true, essai_fin: fin }).eq("id", session.user.id);
   }
-  return NextResponse.redirect(new URL("/espace", site), 303);
+  return NextResponse.redirect(new URL("/espace?essai=ok", site), 303);
 }

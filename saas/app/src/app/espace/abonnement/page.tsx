@@ -6,6 +6,7 @@ import { PLANS } from "@/lib/plans";
 import { Tarifs } from "@/components/Tarifs";
 import { GestionAbonnement } from "@/components/GestionAbonnement";
 import { retractationPossible } from "@/lib/conformite";
+import { offrePayante } from "@/lib/croissance";
 
 export const metadata = { title: "Mon abonnement" };
 
@@ -19,6 +20,7 @@ export default async function Abonnement({ searchParams }: { searchParams: Promi
     <>
       <div className="barre-haut"><div><p className="note" style={{ margin: "0 0 .3rem" }}>Offre actuelle : {PLANS[plan].nom}</p><h1>Mon abonnement</h1></div></div>
       {q.erreur === "renonciation" && <p className="alerte" role="alert">Pour un accès immédiat, cochez la case de demande d&apos;accès immédiat (ou contactez-nous pour démarrer après le délai de rétractation de 14 jours).</p>}
+      {offrePayante(q.offre) && !abonne && <p className="alerte ok" role="status">Votre cockpit est prêt. Vous aviez choisi l&apos;offre {PLANS[offrePayante(q.offre)!].nom} : validez-la ci-dessous, ou <a href="/espace">commencez en Gratuit</a> et décidez plus tard.</p>}
       {q.annule && <p className="alerte" role="status">Paiement annulé : rien n&apos;a été prélevé.</p>}
       {abonne && (
         <div className="carte upsell" style={{ marginBottom: "1.6rem" }}>
@@ -30,7 +32,7 @@ export default async function Abonnement({ searchParams }: { searchParams: Promi
       )}
       {abonne && <div style={{ marginBottom: "1.6rem" }}><GestionAbonnement offre={PLANS[plan].nom} fin={(profil.periode_fin as string) ?? null} resiliationPrevue={!!profil.resiliation_prevue}
         retractation={(() => { const r = retractationPossible({ particulier: profil.statut_utilisateur !== "professionnel", debut: profil.abonnement_debut ? new Date(profil.abonnement_debut as string) : null, deja: !!profil.retractation_le }); return { ok: r.ok, jusquau: r.jusquau?.toISOString() ?? null }; })()} /></div>}
-      <Tarifs mode="abonnement" planActuel={plan} particulier={profil.statut_utilisateur !== "professionnel"} abonne={abonne} />
+      <Tarifs mode="abonnement" planActuel={plan} particulier={profil.statut_utilisateur !== "professionnel"} abonne={abonne} voulue={abonne ? null : offrePayante(q.offre)} />
       <p className="note" style={{ marginTop: "1.5rem", textAlign: "center" }}>Paiement sécurisé par Stripe · Prix TTC, TVA non applicable (art. 293 B du CGI) · Résiliable à tout moment</p>
     </>
   );

@@ -362,7 +362,7 @@ export function Offres({ changer }: { changer: (p: any) => void }) {
       <div className="barre-haut"><div><p className="note" style={{ margin: "0 0 .3rem" }}>Démo : changez d&apos;offre librement pour voir ce que chacune débloque</p><h1>Mon abonnement</h1></div></div>
       <div className="offres">{ORDRE_PLANS.map((id) => { const P = PLANS[id]; return (
         <div key={id} className={`carte offre${P.misEnAvant ? " avant" : ""}`}>
-          {P.misEnAvant && <span className="badge">Le plus choisi</span>}
+          {P.misEnAvant && <span className="badge">Le plus complet</span>}
           <h3>{P.nom}</h3><p className="accroche">{P.accroche}</p>
           <p className="prix"><b>{P.prixMensuel} €</b><span>/ mois TTC</span></p>
           <ul className="inclus">
