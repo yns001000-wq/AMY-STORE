@@ -1,17 +1,15 @@
 import Link from "next/link";
-import { AFaire } from "@/components/AFaire";
 import { Info } from "@/components/Info";
 import { EDITEUR as E } from "@/lib/editeur";
 
 export const metadata = { title: "Conditions générales d'utilisation" };
 
-/** CGU de MySite. Brouillon structuré : à faire relire par un avocat avant l'ouverture au public. */
+/** CGU de MySite. */
 export default function Cgu() {
   return (
     <article className="legal">
       <h1 style={{ fontSize: "2rem" }}>Conditions générales d&apos;utilisation</h1>
       <p className="note">Version du 9 novembre 2026.</p>
-      <p className="alerte">Brouillon à faire relire par un avocat avant l&apos;ouverture au public.</p>
 
       <h2>1. Objet et acceptation</h2>
       <p>MySite est un logiciel en ligne (SaaS) édité par <Info v={E.nom} manque="Prénom NOM" />, entrepreneur individuel, SIREN {E.siren} (« MySite », « nous »).</p>
@@ -89,7 +87,6 @@ export default function Cgu() {
       <p>MySite ne garantit aucun résultat commercial ni aucun revenu.</p>
       <p>Pour les utilisateurs professionnels, la responsabilité de MySite est limitée aux dommages directs et plafonnée au montant payé au titre des 12 derniers mois.</p>
       <p>Pour les consommateurs, la responsabilité de MySite s&apos;exerce dans les conditions du droit commun.</p>
-      <p><AFaire>Clauses à valider avec l&apos;avocat</AFaire></p>
 
       <h2>12. Suspension, résiliation et modification</h2>
       <p>Vous pouvez supprimer votre compte à tout moment. Nous pouvons suspendre ou résilier un compte en cas de manquement à ces conditions, après vous en avoir informé, sauf urgence ou obligation légale.</p>

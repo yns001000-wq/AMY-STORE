@@ -5,7 +5,9 @@ import { supabaseServeur } from "@/lib/supabase/serveur";
 import { nettoyerSource, offrePayante } from "@/lib/croissance";
 
 const sur = (s: FormDataEntryValue | null) => (typeof s === "string" && s.startsWith("/espace") ? s : "/espace");
-const origineSite = async () => (await headers()).get("origin") ?? process.env.NEXT_PUBLIC_SITE_URL;
+// Adresse de retour des e-mails (confirmation, mot de passe) : toujours celle configurée, jamais l'en-tête Origin envoyé par le navigateur,
+// qu'un attaquant peut falsifier pour recevoir le lien de réinitialisation d'un autre compte.
+const origineSite = async () => process.env.NEXT_PUBLIC_SITE_URL || (await headers()).get("origin") || "";
 
 export async function seConnecter(form: FormData) {
   const sb = await supabaseServeur();

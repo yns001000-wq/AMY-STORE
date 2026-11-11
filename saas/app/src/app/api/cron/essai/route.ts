@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cronAutorise } from "@/lib/securite";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { mailEssaiDu } from "@/lib/croissance";
 import { envoyerEmail, signature } from "@/lib/email";
@@ -9,7 +10,7 @@ import { envoyerEmail, signature } from "@/lib/email";
  * désactivables dans « Mon compte ». Aucun prélèvement n'est lié à l'essai : les messages le rappellent.
  */
 export async function GET(req: Request) {
-  if (!process.env.CRON_SECRET || req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`) return NextResponse.json({ erreur: "Non autorisé" }, { status: 401 });
+  if (!cronAutorise(req)) return NextResponse.json({ erreur: "Non autorisé" }, { status: 401 });
   const admin = supabaseAdmin(), site = process.env.NEXT_PUBLIC_SITE_URL ?? "";
   const depuis = new Date(Date.now() - 4 * 86400000).toISOString();
   const { data } = await admin.from("profils").select("id, prenom, plan, essai_fin, emails_essai, mail_essai_j2_le, mail_essai_fin_le").eq("plan", "gratuit").eq("emails_essai", true).gt("essai_fin", depuis).limit(5000);

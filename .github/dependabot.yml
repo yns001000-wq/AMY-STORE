@@ -1,0 +1,12 @@
+# Mises à jour de sécurité automatiques des dépendances (propositions de correctifs à valider).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /saas/app
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      dependances:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]

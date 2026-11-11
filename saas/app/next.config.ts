@@ -5,6 +5,11 @@ const securite = [
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+  // HTTPS obligatoire pendant 2 ans, y compris sur les sous-domaines
+  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
+  // Aucune page de l'application ne peut être intégrée ailleurs, ni charger de plugin, ni changer l'adresse de base
+  { key: "Content-Security-Policy", value: "frame-ancestors 'none'; object-src 'none'; base-uri 'self'" },
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
 ];
 
 const config: NextConfig = {

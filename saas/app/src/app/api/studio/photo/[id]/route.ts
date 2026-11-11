@@ -31,7 +31,7 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   if (!ID.test(id)) return NextResponse.json({ erreur: "Photo introuvable" }, { status: 404 });
   const { data: ph } = await ctx.session.sb.from("photos_perso").select("chemin").eq("id", id).maybeSingle();
   if (!ph) return NextResponse.json({ erreur: "Photo introuvable" }, { status: 404 });
-  if (!ph.chemin.startsWith(`${ctx.session.user.id}/`)) return NextResponse.json({ erreur: "Interdit" }, { status: 403 });
+  if (!ph.chemin.startsWith(`${ctx.session.user.id}/`) || ph.chemin.includes("..")) return NextResponse.json({ erreur: "Interdit" }, { status: 403 });
   await supabaseAdmin().storage.from("studio").remove([ph.chemin]);
   await ctx.session.sb.from("photos_perso").delete().eq("id", id);
   return NextResponse.json({ ok: true });

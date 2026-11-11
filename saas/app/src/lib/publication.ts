@@ -22,6 +22,19 @@ export function normaliserDomaine(v: string): string | null {
   return d;
 }
 
+/**
+ * Domaines qu'un utilisateur ne peut jamais relier à un site : celui de l'application, le domaine des sous-domaines
+ * MySite, leurs sous-domaines, et les domaines techniques (vercel.app…). Empêche de détourner l'adresse de MySite.
+ */
+export function domaineInterdit(domaine: string, env: Record<string, string | undefined> = process.env): boolean {
+  const d = domaine.toLowerCase().replace(/^www\./, "");
+  let app = "";
+  try { app = env.NEXT_PUBLIC_SITE_URL ? new URL(env.NEXT_PUBLIC_SITE_URL).hostname.toLowerCase() : ""; } catch { app = ""; }
+  const proteges = [app, app.split(".").slice(-2).join("."), env.NEXT_PUBLIC_DOMAINE_SITES ?? "", "vercel.app", "vercel.com", "supabase.co", "mysite.fr", "mysite.site"]
+    .map((x) => x.toLowerCase().replace(/^www\./, "")).filter((x) => x.includes("."));
+  return proteges.some((p) => d === p || d.endsWith(`.${p}`));
+}
+
 /** Domaine « nu » (pizzabella.fr) ou sous-domaine (www.pizzabella.fr) : les réglages DNS diffèrent. */
 export const estApex = (d: string) => d.split(".").length === 2 || /\.(co|com|org|gouv|asso)\.[a-z]{2}$/.test(d) && d.split(".").length === 3;
 

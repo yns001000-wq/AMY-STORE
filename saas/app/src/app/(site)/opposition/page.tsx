@@ -9,7 +9,7 @@ export default async function Opposition({ searchParams }: { searchParams: Promi
         Vous pouvez vous y opposer à tout moment, sans justification (RGPD, article 21).</p>
       <p><strong>Effet immédiat :</strong> votre entreprise est retirée des espaces de tous les utilisateurs et ne sera plus jamais proposée.</p>
       {q.ok && <p className="alerte" role="status">C&apos;est fait : votre entreprise ne sera plus proposée par MySite.</p>}
-      {q.erreur && <p className="alerte" role="alert">Numéro invalide : indiquez un SIREN (9 chiffres) ou un SIRET (14 chiffres).</p>}
+      {q.erreur && <p className="alerte" role="alert">{q.erreur === "trop" ? "Trop de demandes envoyées depuis cette connexion. Réessayez dans une heure, ou écrivez-nous." : "Numéro invalide : indiquez un SIREN (9 chiffres) ou un SIRET (14 chiffres)."}</p>}
       <form className="pile" action="/api/opposition" method="post">
         <label>SIREN ou SIRET de votre entreprise<input name="siren_siret" inputMode="numeric" pattern="[0-9 ]{9,17}" required /></label>
         <label>Téléphone professionnel (facultatif, pour l&apos;exclure aussi)<input name="telephone" type="tel" /></label>

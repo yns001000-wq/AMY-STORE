@@ -5,13 +5,12 @@ import { ORDRE_PLANS, PLANS } from "@/lib/plans";
 
 export const metadata = { title: "Conditions générales de vente" };
 
-/** CGV des abonnements MySite. Brouillon structuré : à faire relire par un avocat avant l'ouverture au public. */
+/** CGV des abonnements MySite. */
 export default function Cgv() {
   return (
     <article className="legal">
       <h1 style={{ fontSize: "2rem" }}>Conditions générales de vente</h1>
       <p className="note">Version du 9 novembre 2026.</p>
-      <p className="alerte">Brouillon à faire relire par un avocat avant l&apos;ouverture au public.</p>
 
       <h2>1. Vendeur</h2>
       <p><Info v={E.nom} manque="Prénom NOM" />, entrepreneur individuel (EI), SIREN {E.siren}, <Info v={E.adresse} manque="adresse" />, téléphone : <Info v={E.telephone} manque="téléphone" lien="tel" />, e-mail : <Info v={E.email} manque="e-mail" lien="mail" />. TVA non applicable, article 293 B du CGI.</p>
