@@ -23,6 +23,9 @@ import { cap, db, plan, sauver } from "./donnees";
 import { naviguer, rafraichir } from "./shims/routeur";
 import { creerDocument } from "./api";
 import { annoncer } from "./annonce";
+import { premiersPas, statistiques } from "../src/lib/croissance";
+import { SECTEURS } from "../src/lib/secteurs";
+import { DEPARTEMENTS } from "../src/lib/departements";
 
 const COULEURS = ["#6d4aff", "#0ea5c6", "#ec4899", "#f97316", "#10b981", "#3b5bfd"];
 const initiales = (n: string) => n.split(/\s+/).filter(Boolean).slice(0, 2).map((m) => m[0]).join("").toUpperCase();
@@ -39,11 +42,23 @@ export function Accueil() {
         <div><p className="note" style={{ margin: "0 0 .3rem" }}>Restauration · Rhône</p><h1>Bonjour {D.profil.prenom} 👋</h1></div>
         <span className="badge-offre"><Crown aria-hidden />Offre {P.nom}</span>
       </div>
+      {plan() === "gratuit" && (
+        <div className="bandeau-essai">
+          <p><strong>7 jours de Premium offerts</strong>1 000 prospects, sites sur mesure rédigés par l&apos;IA, devis et factures. Sans carte bancaire, sans prélèvement à la fin.</p>
+          <button className="btn" type="button" onClick={() => annoncer("Démo : dans l'application, l'essai Premium démarre ici, sans carte bancaire.")}>Démarrer l&apos;essai gratuit</button>
+        </div>
+      )}
+      {(() => { const pas = premiersPas({ prospects: D.prospects.length, messages: plan() === "gratuit" ? 0 : D.conso.messages_ia, sites: plan() === "gratuit" ? 0 : D.sites.length, payant: plan() !== "gratuit", essaiDemarre: false, premierProspect: D.prospects[0]?.id }); const faits = pas.filter((x) => x.fait).length;
+        return faits < pas.length && (
+          <section className="carte" style={{ marginBottom: "1.4rem" }} aria-label="Premiers pas">
+            <h2 style={{ fontSize: "1.15rem", margin: "0 0 .8rem" }}>Vos premiers pas <span className="note">({faits} sur {pas.length})</span></h2>
+            <ol className="pas">{pas.map((x, i) => <li key={x.id} className={x.fait ? "fait" : ""}><Link href={x.lien}><span className="pas-num">{x.fait ? <Check size={16} aria-label="fait" /> : i + 1}</span><strong>{x.titre}</strong><small>{x.aide}</small></Link></li>)}</ol>
+          </section>); })()}
       <section className="stats" aria-label="Consommation du mois">
         {STATS.map(([t, lib, Ico, coul]) => {
           const max = P.quotas[t], v = D.conso[t], pct = max ? Math.min(100, (v / max) * 100) : 100;
           return (
-            <div key={t} className="carte stat">
+            <div key={t} className={`carte stat${max ? "" : " verrou"}`}>
               <span className={`ico pastille ${coul}`} style={{ margin: 0, width: "2.4rem", height: "2.4rem" }}><Ico aria-hidden /></span>
               <p className="note" style={{ margin: 0 }}>{lib} ce mois-ci</p>
               {max ? <><p className="valeur">{v}<small> / {max}</small></p><div className={`jauge${pct >= 100 ? " pleine" : ""}`}><i style={{ width: `${pct}%` }} /></div></>
@@ -381,13 +396,56 @@ export function Offres({ changer }: { changer: (p: any) => void }) {
 
 export function Zone() {
   return (
+    <section className="carte" style={{ maxWidth: "44rem" }}>
+      <span className="surtitre">Dernière étape · 30 secondes</span>
+      <h1 style={{ fontSize: "1.9rem" }}>Qui voulez-vous démarcher ?</h1>
+      <p className="note">Dès que vous validez, MySite cherche vos premiers commerces. Vous pourrez tout modifier ensuite.</p>
+      <form className="pile" onSubmit={(e) => { e.preventDefault(); annoncer("Démo : dans l'application, la première recherche part toute seule après cette étape."); naviguer("/espace"); }}>
+        <fieldset className="choix" style={{ border: 0, padding: 0, margin: 0 }}>
+          <legend style={{ fontWeight: 600, marginBottom: ".5rem", color: "var(--encre)" }}>Type de commerces</legend>
+          {SECTEURS.map((x, k) => <label key={x.id}><input type="radio" name="secteur" defaultChecked={k === 0} /><span>{x.nom}<small className="note" style={{ display: "block", fontWeight: 400 }}>{x.description}</small></span></label>)}
+        </fieldset>
+        <label>Votre département
+          <select defaultValue="69">{DEPARTEMENTS.map(([c, n]) => <option key={c} value={c}>{c} · {n}</option>)}</select>
+        </label>
+        <details><summary style={{ cursor: "pointer", fontWeight: 600 }}>Ajouter d&apos;autres départements (offres payantes)</summary><p className="note" style={{ margin: ".5rem 0" }}>Gratuit : 1 département · Pro : 3 · Premium : 10 · Ultra : France entière.</p></details>
+        <label>Votre prénom (facultatif)<input defaultValue="Noa" maxLength={60} /></label>
+        <button className="btn p grand" type="submit">Trouver mes premiers commerces</button>
+      </form>
+    </section>
+  );
+}
+/** Suivi des ventes : la page réservée au propriétaire, ici avec des chiffres d'exemple. */
+export function Suivi() {
+  const il = (j: number) => new Date(Date.now() - j * 86400000).toISOString();
+  const ex = (n: number, o: object) => Array.from({ length: n }, () => ({ plan: "gratuit", cree_le: il(20), ...o }));
+  const lignes = [...ex(9, { plan: "pro", abonnement_statut: "active", periode: "mensuel", source: "tiktok", cgu_acceptees_le: "x" }), ...ex(4, { plan: "premium", abonnement_statut: "active", periode: "mensuel", source: "instagram", cgu_acceptees_le: "x" }), ...ex(1, { plan: "premium", abonnement_statut: "active", periode: "annuel", source: "tiktok", cgu_acceptees_le: "x", resiliation_prevue: true }),
+    ...ex(6, { essai_fin: il(-3), source: "tiktok", cgu_acceptees_le: "x", cree_le: il(3) }), ...ex(70, { source: "tiktok", cgu_acceptees_le: "x" }), ...ex(38, { source: "instagram", cgu_acceptees_le: "x" }), ...ex(22, { source: "tiktok" }), ...ex(10, {})];
+  const ids = lignes.map((_, k) => String(k)), s = statistiques(lignes, new Set(ids.filter((_, k) => k < 96)), ids);
+  const euros = (n: number) => n.toLocaleString("fr-FR", { style: "currency", currency: "EUR" }), pct = (n: number | null) => (n === null ? "—" : `${Math.round((n / s.inscrits) * 100)} %`);
+  return (
     <>
-      <div className="barre-haut"><div><h1>Secteur et zone</h1></div></div>
-      <div className="carte pile" style={{ maxWidth: "40rem" }}>
-        <p style={{ margin: 0 }}><b>Secteur :</b> restauration (pizzerias, restaurants, snacks, cafés…)</p>
-        <p style={{ margin: 0 }}><b>Zone :</b> Rhône (69)</p>
-        <p className="note" style={{ margin: 0 }}>Démo : dans l&apos;application, vous choisissez votre secteur et vos départements (1 en Gratuit, jusqu&apos;à la France entière en Ultra).</p>
-      </div>
+      <div className="barre-haut"><div><p className="note" style={{ margin: "0 0 .3rem" }}>Visible par vous seul · chiffres d&apos;exemple inventés pour la démo</p><h1>Suivi des ventes</h1></div></div>
+      <section className="suivi">
+        <div className="carte"><b>{euros(s.revenuMensuel)}</b><small>revenu mensuel récurrent</small></div>
+        <div className="carte"><b>{s.payants}</b><small>abonnés payants · Pro {s.abonnes.pro} · Premium {s.abonnes.premium} · Ultra {s.abonnes.ultra}</small></div>
+        <div className="carte"><b>{s.conversion.toLocaleString("fr-FR")} %</b><small>des inscrits sont abonnés</small></div>
+        <div className="carte"><b>{s.essais}</b><small>essais Premium en cours</small></div>
+        <div className="carte"><b>{s.resiliations}</b><small>résiliations prévues</small></div>
+      </section>
+      <section className="carte" style={{ marginBottom: "1.4rem" }}>
+        <h2 style={{ fontSize: "1.15rem" }}>Parcours des inscrits</h2>
+        <div className="table-wrap"><table><thead><tr><th>Étape</th><th>Comptes</th><th>Part des inscrits</th></tr></thead><tbody>
+          <tr><td>Inscrits</td><td>{s.inscrits}</td><td>100 %</td></tr>
+          <tr><td>Ont choisi leur secteur et leur zone</td><td>{s.configures}</td><td>{pct(s.configures)}</td></tr>
+          <tr><td>Ont trouvé au moins un prospect</td><td>{s.actives}</td><td>{pct(s.actives)}</td></tr>
+          <tr><td>Abonnés payants</td><td>{s.payants}</td><td>{pct(s.payants)}</td></tr>
+        </tbody></table></div>
+      </section>
+      <section className="carte">
+        <h2 style={{ fontSize: "1.15rem" }}>D&apos;où viennent les inscrits</h2>
+        <div className="table-wrap"><table><thead><tr><th>Provenance</th><th>Inscrits</th><th>Abonnés</th></tr></thead><tbody>{s.sources.map((x) => <tr key={x.nom}><td>{x.nom}</td><td>{x.inscrits}</td><td>{x.abonnes}</td></tr>)}</tbody></table></div>
+      </section>
     </>
   );
 }

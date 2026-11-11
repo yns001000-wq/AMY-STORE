@@ -6,7 +6,7 @@ let version = 0;
 const abonnes = new Set<() => void>();
 const notifier = () => { version++; abonnes.forEach((f) => f()); };
 
-const VUES: Record<string, string> = { "/espace": "accueil", "/espace/pipeline": "pipeline", "/espace/carte": "carte", "/espace/studio": "studio", "/espace/factures": "factures", "/espace/academie": "academie", "/espace/abonnement": "offres", "/espace/bienvenue": "zone" };
+const VUES: Record<string, string> = { "/espace": "accueil", "/espace/pipeline": "pipeline", "/espace/carte": "carte", "/espace/studio": "studio", "/espace/factures": "factures", "/espace/academie": "academie", "/espace/abonnement": "offres", "/espace/bienvenue": "zone", "/espace/suivi": "suivi" };
 
 export function naviguer(href: string) {
   let c = href.replace(/^https?:\/\/[^/]+/, "").split("?")[0].split("#")[0] || "/espace";

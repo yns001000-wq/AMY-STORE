@@ -32,17 +32,23 @@
   {
    "id": "montrer",
    "texte": "Tu passes le voir, et tu lui montres, sur ton téléphone.",
-   "tts": "Tu passes le voir, et tu lui montres, sur ton téléphone."
+   "tts": "Tu passes le voir, et tu lui montres, sur ton téléphone.",
+   "prise": 0,
+   "comprehension": 0.909
   },
   {
    "id": "devis",
    "texte": "Il est partant ? Devis, mise en ligne, facture : tout est guidé.",
-   "tts": "Il est partant ? Devis, mise en ligne, facture : tout est guidé."
+   "tts": "Il est partant ? Devis, mise en ligne, facture : tout est guidé.",
+   "prise": 1,
+   "comprehension": 1.0
   },
   {
    "id": "fin",
    "texte": "MySite. Commence gratuitement, le lien est en bio.",
-   "tts": "Maï Saïte. Commence gratuitement, le lien est en bio."
+   "tts": "Maï Saïte. Commence gratuitement, le lien est en bio.",
+   "prise": 0,
+   "comprehension": 0.824
   }
  ]
 }

@@ -67,7 +67,7 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
       {faits < pas.length && (
         <section className="carte" style={{ marginBottom: "1.4rem" }} aria-label="Premiers pas">
           <h2 style={{ fontSize: "1.15rem", margin: "0 0 .8rem" }}>Vos premiers pas <span className="note">({faits} sur {pas.length})</span></h2>
-          <ol className="pas">{pas.map((x, i) => <li key={x.id} className={x.fait ? "fait" : ""}><Link href={x.lien}><span className="rond">{x.fait ? <Check size={16} aria-label="fait" /> : i + 1}</span><strong>{x.titre}</strong><small>{x.aide}</small></Link></li>)}</ol>
+          <ol className="pas">{pas.map((x, i) => <li key={x.id} className={x.fait ? "fait" : ""}><Link href={x.lien}><span className="pas-num">{x.fait ? <Check size={16} aria-label="fait" /> : i + 1}</span><strong>{x.titre}</strong><small>{x.aide}</small></Link></li>)}</ol>
         </section>
       )}
       {ignores > 0 && <p className="alerte">Votre offre couvre {P.departements} département(s) : {ignores} département(s) choisi(s) ne sont pas utilisés.&nbsp;<Link href="/espace/abonnement">Élargir ma zone</Link></p>}

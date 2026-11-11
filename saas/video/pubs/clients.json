@@ -4,32 +4,44 @@
   {
    "id": "accroche",
    "texte": "Tu sais faire des sites, mais tu ne sais pas à qui les vendre ?",
-   "tts": "Tu sais faire des sites, mais tu ne sais pas à qui les vendre ?"
+   "tts": "Tu sais faire des sites, mais tu ne sais pas à qui les vendre ?",
+   "prise": 0,
+   "comprehension": 1.0
   },
   {
    "id": "registre",
    "texte": "MySite cherche les commerces de ta zone, dans le registre officiel des entreprises.",
-   "tts": "Maï Saïte cherche les commerces de ta zone, dans le registre officiel des entreprises."
+   "tts": "Maï Saïte cherche les commerces de ta zone, dans le registre officiel des entreprises.",
+   "prise": 0,
+   "comprehension": 0.857
   },
   {
    "id": "reserve",
    "texte": "Chaque commerce est réservé pour toi. Personne d'autre ne le reçoit.",
-   "tts": "Chaque commerce est réservé pour toi. Personne d'autre ne le reçoit."
+   "tts": "Chaque commerce est réservé pour toi. Personne d'autre ne le reçoit.",
+   "prise": 0,
+   "comprehension": 1.0
   },
   {
    "id": "carte",
    "texte": "Sur la carte, tu regroupes tes visites par quartier.",
-   "tts": "Sur la carte, tu regroupes tes visites par quartier."
+   "tts": "Sur la carte, tu regroupes tes visites par quartier.",
+   "prise": 0,
+   "comprehension": 1.0
   },
   {
    "id": "suivi",
    "texte": "Et le suivi te dit qui rappeler, et quand.",
-   "tts": "Et le suivi te dit qui rappeler, et quand."
+   "tts": "Et le suivi te dit qui rappeler, et quand.",
+   "prise": 0,
+   "comprehension": 0.737
   },
   {
    "id": "fin",
    "texte": "MySite. C'est gratuit pour commencer, le lien est en bio.",
-   "tts": "Maï Saïte. C'est gratuit pour commencer, le lien est en bio."
+   "tts": "Maï Saïte. C'est gratuit pour commencer, le lien est en bio.",
+   "prise": 0,
+   "comprehension": 0.87
   }
  ]
 }

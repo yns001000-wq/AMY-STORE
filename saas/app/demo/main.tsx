@@ -31,6 +31,7 @@ function Vue({ chemin }: { chemin: string }) {
   if ((r = m(/^\/espace\/livraison\/(.+)$/))) return <P.Livraison id={r[1]} />;
   if (chemin === "/espace/abonnement") return <P.Offres changer={changerOffre} />;
   if (chemin === "/espace/bienvenue") return <P.Zone />;
+  if (chemin === "/espace/suivi") return <P.Suivi />;
   return <P.Accueil />;
 }
 
