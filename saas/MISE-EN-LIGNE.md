@@ -24,9 +24,9 @@ Quand le compte passera en mode réel, il faudra recréer les mêmes prix en ré
 
 ## 2. Supabase (base de données et comptes des utilisateurs)
 
-- [ ] Créer un compte gratuit sur supabase.com (bouton « Continue with GitHub »).
-- [ ] Créer un projet, région Europe (Paris ou Francfort).
-- [ ] Exécuter les migrations du dossier `app/supabase/migrations`, dans l'ordre.
+- [x] Compte créé, projet actif en Europe (Francfort), référence `dzxqlgcaaqzxemjkodbp`.
+- [x] Les 8 migrations installées (vérifié : 18 tables, toutes protégées par les règles d'accès, espace de stockage « studio », création automatique du profil à l'inscription).
+- [ ] Remplacer le jeton d'accès Supabase à la fin de l'installation (il a été collé dans une discussion).
 
 ## 3. Vercel (hébergement du site)
 
