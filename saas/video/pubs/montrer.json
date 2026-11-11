@@ -6,40 +6,48 @@
    "texte": "Arrête d'expliquer ce qu'est un site. Montre-le.",
    "tts": "Arrête d'expliquer ce qu'est un site. Montre-le.",
    "prise": 0,
-   "comprehension": 1.0
+   "comprehension": 1.0,
+   "duree": 2.977
   },
   {
    "id": "site",
    "texte": "Avec MySite, tu crées la maquette d'un commerce en un clic : sa carte, ses horaires, son bouton pour appeler.",
    "tts": "Avec Maï Saïte, tu crées la maquette d'un commerce en un clic : sa carte, ses horaires, son bouton pour appeler.",
    "prise": 0,
-   "comprehension": 0.927
+   "comprehension": 0.927,
+   "duree": 6.929
   },
   {
    "id": "studio",
    "texte": "Tu changes les textes, les photos et les couleurs, sans une ligne de code.",
    "tts": "Tu changes les textes, les photos et les couleurs, sans une ligne de code.",
-   "comprehension": 0.857
+   "comprehension": 1.0,
+   "prise": 0,
+   "duree": 4.217
   },
   {
    "id": "rdv",
    "texte": "En rendez-vous, il voit son futur site, sur ton téléphone.",
    "tts": "En rendez-vous, il voit son futur site, sur ton téléphone.",
-   "comprehension": 0.952
+   "comprehension": 1.0,
+   "prise": 0,
+   "duree": 3.415
   },
   {
    "id": "academie",
    "texte": "Et si tu débutes, l'Académie t'explique chaque étape.",
    "tts": "Et si tu débutes, l'Académie t'explique chaque étape.",
    "prise": 0,
-   "comprehension": 1.0
+   "comprehension": 1.0,
+   "duree": 2.768
   },
   {
    "id": "fin",
    "texte": "MySite. Commence gratuitement, le lien est en bio.",
    "tts": "Maï Saïte. Commence gratuitement, le lien est en bio.",
    "prise": 0,
-   "comprehension": 0.824
+   "comprehension": 0.824,
+   "duree": 3.824
   }
  ]
 }
