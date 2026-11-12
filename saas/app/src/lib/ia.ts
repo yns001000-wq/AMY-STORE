@@ -7,6 +7,12 @@ export function anthropic(): Anthropic {
   return (client ??= new Anthropic());
 }
 
+/** Note la cause d'un échec de l'IA dans les journaux du serveur (code HTTP et message d'Anthropic ; jamais la clé ni le texte envoyé). */
+export function journaliserErreurIA(ou: string, e: unknown): void {
+  if (e instanceof Anthropic.APIError) console.error(`IA ${ou} : ${e.status ?? "réseau"} ${e.name} · ${String(e.message).slice(0, 300)}`);
+  else console.error(`IA ${ou} :`, e instanceof Error ? e.message.slice(0, 300) : "erreur inconnue");
+}
+
 export type Canal = "sms" | "email" | "appel";
 export const CANAUX: Record<Canal, string> = { sms: "SMS", email: "E-mail", appel: "Script d'appel" };
 

@@ -2,7 +2,7 @@ import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { anthropic } from "../ia";
+import { anthropic, journaliserErreurIA } from "../ia";
 import { MODELE_IA, PLANS, type CapacitesStudio, type PlanId } from "../plans";
 import { utilisateurConnecte } from "../supabase/serveur";
 import { profilEtPlan } from "../quotas";
@@ -50,6 +50,7 @@ export async function demanderIA(prompt: string, effort: "low" | "medium" | "hig
 }
 
 export function erreurIA(e: unknown) {
+  journaliserErreurIA("studio", e);
   if (e instanceof Anthropic.RateLimitError) return NextResponse.json({ erreur: "Trop de demandes : réessayez dans une minute." }, { status: 429 });
   if (e instanceof Anthropic.APIError) return NextResponse.json({ erreur: "Le service d'IA est indisponible pour le moment." }, { status: 502 });
   if (e instanceof SyntaxError || (e instanceof Error && /JSON/.test(e.message))) return NextResponse.json({ erreur: "Réponse de l'IA illisible : réessayez." }, { status: 502 });
