@@ -42,11 +42,16 @@ Quand le compte passera en mode réel, il faudra recréer les mêmes prix en ré
 
 - [x] Clé Anthropic en place : l'IA du site a rédigé un SMS, un e-mail et un script d'appel lors d'un test réel (12 novembre), avec un compte temporaire supprimé ensuite.
 
+- [x] Clé Stripe de test en place. Vérifié le 12 novembre avec un compte temporaire, supprimé ensuite :
+  - le site ouvre la page de paiement Stripe, avec le bon prix et le texte légal ;
+  - un abonnement de test fait passer le compte en Pro ; sa résiliation le ramène en Gratuit.
+  - Non vérifié : la saisie de la carte sur la page Stripe (leur protection bloque les navigateurs automatisés). À faire une fois à la main avec la carte de test `4242 4242 4242 4242`.
+- [x] « Managed Payments » de Stripe coupé pour nos paiements : ce mode, activé par défaut sur les nouveaux comptes, fait de Stripe le vendeur officiel à ta place. Nos CGV te désignent comme vendeur. Si tu préfères que Stripe gère la vente et la TVA (contre des frais plus élevés), il faudra réécrire les CGV.
+
 ### Il manque encore, dans Vercel → Settings → Environment Variables
 
 | Variable | Valeur | Sans elle |
 |---|---|---|
-| `STRIPE_SECRET_KEY` | ta clé secrète Stripe de test (`sk_test_…`) | le paiement ne démarre pas |
 | `ADMIN_EMAILS` | ton adresse e-mail de connexion à MySite | la page « Suivi des ventes » reste cachée |
 | `RESEND_API_KEY`, `EMAIL_EXPEDITEUR` | compte gratuit sur resend.com | pas d'e-mails de service (bienvenue, résiliation, fin d'essai) |
 | `CONTACT_EMAIL`, `EDITEUR_NOM`, `EDITEUR_ADRESSE`, `EDITEUR_TELEPHONE`, `EDITEUR_SIREN`, `MEDIATEUR_CONSOMMATION` | ton identité d'entrepreneur | pages légales incomplètes |
