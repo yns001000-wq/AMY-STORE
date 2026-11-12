@@ -73,7 +73,6 @@ export default function Cgv() {
       <h2>11. Réclamations et médiation</h2>
       <p>Pour toute réclamation : <Info v={E.email} manque="e-mail" lien="mail" />.</p>
       <p>Si aucune solution amiable n&apos;est trouvée, le consommateur peut recourir gratuitement au médiateur de la consommation : <Info v={E.mediateur} manque="nom, adresse et site du médiateur choisi" />.</p>
-      <p>Plateforme européenne de règlement des litiges : <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.</p>
 
       <h2>12. Droit applicable</h2>
       <p>Droit français.</p>
