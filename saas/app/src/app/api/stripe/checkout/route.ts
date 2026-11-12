@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { stripe } from "@/lib/stripe";
+import { causeErreurStripe, stripe } from "@/lib/stripe";
 import { priceIdStripe, type Periode } from "@/lib/plans";
 
 const SITE = () => process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -24,23 +24,30 @@ export async function POST(req: Request) {
     return NextResponse.redirect(new URL("/espace/abonnement?erreur=renonciation", SITE()), 303);
   }
 
-  let client = profil.stripe_customer_id as string | null;
-  if (!client) {
-    const c = await stripe().customers.create({ email: session.user.email ?? undefined, metadata: { user_id: session.user.id } });
-    client = c.id;
-    await admin.from("profils").update({ stripe_customer_id: client }).eq("id", session.user.id);
+  try {
+    let client = profil.stripe_customer_id as string | null;
+    if (!client) {
+      const c = await stripe().customers.create({ email: session.user.email ?? undefined, metadata: { user_id: session.user.id } });
+      client = c.id;
+      await admin.from("profils").update({ stripe_customer_id: client }).eq("id", session.user.id);
+    }
+    const checkout = await stripe().checkout.sessions.create({
+      mode: "subscription",
+      customer: client,
+      client_reference_id: session.user.id,
+      line_items: [{ price, quantity: 1 }],
+      subscription_data: { metadata: { user_id: session.user.id, acces_immediat_demande: profil.statut_utilisateur === "professionnel" ? "professionnel" : "oui" } },
+      allow_promotion_codes: true,
+      custom_text: { submit: { message: "Abonnement sans engagement, renouvelé automatiquement chaque période et résiliable à tout moment depuis « Mon abonnement ». En validant, vous acceptez les CGV et les CGU de MySite." } },
+      locale: "fr",
+      success_url: `${SITE()}/espace?abonnement=ok`,
+      cancel_url: `${SITE()}/espace/abonnement?annule=1`,
+    });
+    return NextResponse.redirect(checkout.url!, 303);
+  } catch (e) {
+    // Jamais de page d'erreur brute : retour à « Mon abonnement » avec un message, et la cause dans les journaux.
+    const cause = causeErreurStripe(e);
+    console.error(`Stripe paiement : ${cause} · ${e instanceof Error ? e.message.slice(0, 300) : "erreur inconnue"}`);
+    return NextResponse.redirect(new URL(`/espace/abonnement?erreur=paiement&cause=${cause}`, SITE()), 303);
   }
-  const checkout = await stripe().checkout.sessions.create({
-    mode: "subscription",
-    customer: client,
-    client_reference_id: session.user.id,
-    line_items: [{ price, quantity: 1 }],
-    subscription_data: { metadata: { user_id: session.user.id, acces_immediat_demande: profil.statut_utilisateur === "professionnel" ? "professionnel" : "oui" } },
-    allow_promotion_codes: true,
-    custom_text: { submit: { message: "Abonnement sans engagement, renouvelé automatiquement chaque période et résiliable à tout moment depuis « Mon abonnement ». En validant, vous acceptez les CGV et les CGU de MySite." } },
-    locale: "fr",
-    success_url: `${SITE()}/espace?abonnement=ok`,
-    cancel_url: `${SITE()}/espace/abonnement?annule=1`,
-  });
-  return NextResponse.redirect(checkout.url!, 303);
 }
