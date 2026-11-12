@@ -31,7 +31,8 @@ Quand le compte passera en mode réel, il faudra recréer les mêmes prix en ré
 ## 3. Vercel (hébergement du site)
 
 - [x] Projet `amy-store` relié au dépôt GitHub (branche `main`, dossier `saas/app`) : chaque envoi sur `main` redéploie le site.
-- [x] Site en ligne : https://amy-store-six.vercel.app
+- [x] Site en ligne : **https://mysite-app.com** (domaine acheté chez Vercel le 12 novembre ; `www.mysite-app.com` redirige vers lui). L'ancienne adresse https://amy-store-six.vercel.app fonctionne toujours.
+- [x] Adresse du site mise à jour dans Vercel, Supabase (liens des e-mails) et le webhook Stripe.
 - [x] Clés Supabase déjà présentes (posées par l'intégration Supabase de Vercel) et pointant vers le bon projet.
 - [x] Variables ajoutées : adresse du site, 6 prix Stripe, secret des tâches planifiées, région Supabase.
 

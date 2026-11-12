@@ -17,7 +17,7 @@ Trois vidéos courtes, chacune avec une accroche différente. Toutes montrent le
 ## À la publication
 
 - Cochez l'option **« contenu généré par IA »** de la plateforme (la voix est synthétique).
-- Mettez un lien différent dans chaque bio pour savoir ce qui marche : `votre-site.fr/?src=tiktok`, `?src=instagram`, `?src=shorts`. Le résultat apparaît dans « Suivi des ventes ».
+- Mettez un lien différent dans chaque bio pour savoir ce qui marche : `mysite-app.com/?src=tiktok`, `?src=instagram`, `?src=shorts`. Le résultat apparaît dans « Suivi des ventes ».
 - Exemple de description : « Comment vendre des sites web aux commerces de ta ville, étape par étape. Gratuit pour commencer, lien en bio. Voix de synthèse. »
 
 ## Voix

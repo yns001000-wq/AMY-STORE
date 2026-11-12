@@ -36,7 +36,7 @@ Gratuit pour commencer 👇
 ## Lien (quand le site sera en ligne)
 
 ```
-https://ton-site.fr/?src=instagram
+https://mysite-app.com/?src=instagram
 ```
 
 ## Photo de profil

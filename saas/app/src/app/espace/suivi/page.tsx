@@ -50,7 +50,7 @@ export default async function Suivi() {
           <thead><tr><th>Provenance</th><th>Inscrits</th><th>Abonnés</th></tr></thead>
           <tbody>{s.sources.map((x) => <tr key={x.nom}><td>{x.nom}</td><td>{x.inscrits}</td><td>{x.abonnes}</td></tr>)}</tbody>
         </table></div> : <p className="note">Aucune inscription pour l&apos;instant.</p>}
-        <p className="note" style={{ marginBottom: 0 }}>Pour savoir quelle vidéo marche, mettez un lien différent dans chaque bio : <code>votre-site.fr/?src=tiktok</code>, <code>?src=instagram</code>, <code>?src=video2</code>… Aucun cookie n&apos;est utilisé.</p>
+        <p className="note" style={{ marginBottom: 0 }}>Pour savoir quelle vidéo marche, mettez un lien différent dans chaque bio : <code>mysite-app.com/?src=tiktok</code>, <code>?src=instagram</code>, <code>?src=video2</code>… Aucun cookie n&apos;est utilisé.</p>
       </section>
     </>
   );
