@@ -33,6 +33,9 @@ export async function POST(req: Request) {
     }
     const checkout = await stripe().checkout.sessions.create({
       mode: "subscription",
+      // « Managed Payments » (Stripe vendeur officiel à votre place) est activé par défaut sur les nouveaux comptes. On le coupe ici :
+      // les CGV désignent l'éditeur de MySite comme vendeur, et ce mode interdit le texte d'information affiché avant le paiement.
+      managed_payments: { enabled: false },
       customer: client,
       client_reference_id: session.user.id,
       line_items: [{ price, quantity: 1 }],
