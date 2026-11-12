@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { consommer, profilEtPlan, rembourser } from "@/lib/quotas";
-import { anthropic, consigneMessage, journaliserErreurIA, type Canal } from "@/lib/ia";
+import { anthropic, causeErreurIA, consigneMessage, journaliserErreurIA, type Canal } from "@/lib/ia";
 import { ajouterJournal } from "@/lib/pipeline";
 import { MODELE_IA } from "@/lib/plans";
 
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     await rendre();
     journaliserErreurIA("message", e);
     if (e instanceof Anthropic.RateLimitError) return NextResponse.json({ erreur: "Trop de demandes : réessayez dans une minute." }, { status: 429 });
-    if (e instanceof Anthropic.APIError) return NextResponse.json({ erreur: "Le service d'IA est indisponible pour le moment." }, { status: 502 });
+    if (e instanceof Anthropic.APIError) return NextResponse.json({ erreur: "Le service d'IA est indisponible pour le moment.", cause: causeErreurIA(e) }, { status: 502 });
     throw e;
   }
 }

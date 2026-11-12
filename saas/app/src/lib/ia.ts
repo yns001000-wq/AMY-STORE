@@ -13,6 +13,18 @@ export function journaliserErreurIA(ou: string, e: unknown): void {
   else console.error(`IA ${ou} :`, e instanceof Error ? e.message.slice(0, 300) : "erreur inconnue");
 }
 
+/** Cause d'un échec, en un mot sans détail sensible : sert au diagnostic (réponse de l'API et journaux). */
+export function causeErreurIA(e: unknown): "cle" | "credit" | "modele" | "requete" | "surcharge" | "reseau" | "autre" {
+  if (!(e instanceof Anthropic.APIError)) return "autre";
+  const m = String(e.message).toLowerCase();
+  if (e.status === 401 || e.status === 403) return "cle";
+  if (m.includes("credit balance") || m.includes("billing")) return "credit";
+  if (e.status === 404) return "modele";
+  if (e.status === 400 || e.status === 422) return "requete";
+  if (e.status === 429 || (e.status ?? 0) >= 500) return "surcharge";
+  return e.status ? "autre" : "reseau";
+}
+
 export type Canal = "sms" | "email" | "appel";
 export const CANAUX: Record<Canal, string> = { sms: "SMS", email: "E-mail", appel: "Script d'appel" };
 
