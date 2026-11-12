@@ -40,12 +40,13 @@ Quand le compte passera en mode réel, il faudra recréer les mêmes prix en ré
 - [x] Webhook Stripe (mode test) vers `/api/stripe/webhook` ; son secret est allé directement dans Vercel, sans être affiché.
 - [x] Adresse du site renseignée dans Supabase (liens de confirmation par e-mail).
 
+- [x] Clé Anthropic en place : l'IA du site a rédigé un SMS, un e-mail et un script d'appel lors d'un test réel (12 novembre), avec un compte temporaire supprimé ensuite.
+
 ### Il manque encore, dans Vercel → Settings → Environment Variables
 
 | Variable | Valeur | Sans elle |
 |---|---|---|
 | `STRIPE_SECRET_KEY` | ta clé secrète Stripe de test (`sk_test_…`) | le paiement ne démarre pas |
-| `ANTHROPIC_API_KEY` | une clé créée sur console.anthropic.com (payant à l'usage) | pas de messages ni de sites rédigés par l'IA |
 | `ADMIN_EMAILS` | ton adresse e-mail de connexion à MySite | la page « Suivi des ventes » reste cachée |
 | `RESEND_API_KEY`, `EMAIL_EXPEDITEUR` | compte gratuit sur resend.com | pas d'e-mails de service (bienvenue, résiliation, fin d'essai) |
 | `CONTACT_EMAIL`, `EDITEUR_NOM`, `EDITEUR_ADRESSE`, `EDITEUR_TELEPHONE`, `EDITEUR_SIREN`, `MEDIATEUR_CONSOMMATION` | ton identité d'entrepreneur | pages légales incomplètes |

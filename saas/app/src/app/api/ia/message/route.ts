@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       messages: [{ role: "user", content: consigneMessage(p, canal!, expediteur) }],
     });
     if (rep.stop_reason === "refusal") { await rendre(); return NextResponse.json({ erreur: "L'IA n'a pas pu rédiger ce message." }, { status: 422 }); }
-    const texte = rep.content.flatMap((b) => (b.type === "text" ? [b.text] : [])).join("\n").trim();
+    const texte = rep.content.flatMap((b) => (b.type === "text" ? [b.text] : [])).join("\n").replace(/\*\*/g, "").trim(); // le message s'affiche dans une zone de texte simple : pas de gras en astérisques
     if (!texte) { await rendre(); return NextResponse.json({ erreur: "Réponse vide, réessayez." }, { status: 502 }); }
     await session.sb.from("prospects").update({ journal: ajouterJournal(p.journal, `Message IA préparé (${canal})`) }).eq("id", id);
     return NextResponse.json({ texte });
