@@ -657,3 +657,6 @@ label.mini{font-size:.8rem;flex:1;min-width:0}
   .cta-mobile{display:block;position:sticky;bottom:0;z-index:20;padding:.7rem 1rem calc(.7rem + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--fond) 92%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--ligne)}
   .entete .nav .lien-sec{display:none}
 }
+
+/* Académie : badge « Dès l'offre Pro » sur une seule ligne */
+.module-tete .badge-offre{white-space:nowrap;flex:none;align-self:flex-start}
