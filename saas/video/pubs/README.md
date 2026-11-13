@@ -24,7 +24,7 @@ Trois vidéos courtes, chacune avec une accroche différente. Toutes montrent le
 
 **Chatterbox multilingue** (Resemble AI, licence MIT), guidé par de vraies voix françaises :
 
-- voix d'homme : un lecteur bénévole de LibriVox (enregistrement du domaine public) ;
+- voix d'homme : un lecteur bénévole de LibriVox (enregistrement du domaine public) ; pour « La méthode », depuis le 13 novembre, un orateur du corpus VoxPopuli (discours du Parlement européen, CC0), choisi parmi 4 voix pour sa clarté et son intonation plus vivante ;
 - voix de femme : le corpus SIWIS (université d'Édimbourg, licence CC BY 4.0).
 
 Chaque phrase est contrôlée par une transcription automatique (Whisper). Les fichiers de référence ne sont pas versionnés.
