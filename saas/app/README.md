@@ -10,7 +10,7 @@ Ce dossier contient le socle de la phase 1. Le plan complet est dans `../PLAN.md
   - quotas du mois et recherche de prospects dans la base Sirene, avec tous les garde-fous RGPD (`src/lib/sourcing.ts`) ;
   - liste des prospects avec liens pour trouver le numéro ;
   - incitation à passer à l'offre supérieure quand la limite est atteinte ;
-  - essai Premium de 7 jours sans carte, une fois par compte.
+  - pas d'essai des offres payantes : l'offre Gratuite, sans limite de durée, sert de découverte.
 - **Abonnement** :
   - Stripe Checkout, avec la case de renonciation au délai de rétractation pour les particuliers ;
   - portail client Stripe pour changer d'offre, consulter les factures, changer de carte ou résilier en 3 clics ;
@@ -76,8 +76,8 @@ Ce dossier contient le socle de la phase 1. Le plan complet est dans `../PLAN.md
 - **Provenance** : un lien `?src=tiktok` (ou `instagram`, `video2`…) dans la bio est repris à l'inscription, sans cookie. Il apparaît dans « Suivi des ventes ».
 - **Offre choisie** : un clic sur « Choisir Pro » mène à l'inscription, puis directement à l'offre après la configuration.
 - **Inscription sur téléphone** : secteur en cartes, un département en liste, autres départements repliés. Mot de passe oublié disponible.
-- **Premiers pas** : la première recherche part toute seule ; le tableau de bord affiche 4 étapes à cocher.
-- **Essai Premium** (7 jours, sans carte) : proposé dès le premier jour ; deux e-mails d'information au plus (2 jours avant la fin, puis à la fin), désactivables dans « Mon compte ». Tâche planifiée `/api/cron/essai`.
+- **Premiers pas** : la première recherche part toute seule ; le tableau de bord affiche 4 étapes à cocher, dont la première leçon gratuite de l'Académie.
+- **Pas d'essai gratuit** des offres payantes : l'offre Gratuite comprend les modules Démarrer et Prospecter de l'Académie pour comprendre la méthode ; l'Académie complète est incluse dès Pro (contrôlé sur la page de leçon et à l'enregistrement de la progression).
 - **Suivi des ventes** (`/espace/suivi`) : revenu mensuel, abonnés, parcours des inscrits, provenance. Réservé aux adresses de `ADMIN_EMAILS`.
 - Migration `0007_croissance.sql` à exécuter après les précédentes.
 

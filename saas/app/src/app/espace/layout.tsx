@@ -13,15 +13,13 @@ const SUIVANTE: Partial<Record<PlanId, PlanId>> = { gratuit: "pro", pro: "premiu
 
 export default async function EspaceLayout({ children }: { children: React.ReactNode }) {
   const session = await utilisateurConnecte();
-  let offre: { titre: string; texte: string; essai: boolean } | null = null, admin = false;
+  let offre: { titre: string; texte: string } | null = null, admin = false;
   if (session) {
     admin = estAdmin(session.user.email);
     try {
-      const { profil, plan } = await profilEtPlan(session.user.id);
-      const essai = profil.plan === "gratuit" && !profil.essai_premium_utilise, enEssai = profil.plan === "gratuit" && plan === "premium";
-      const cible = enEssai ? "premium" : SUIVANTE[plan];
-      if (essai) offre = { titre: "Essai Premium offert", texte: "7 jours, sans carte bancaire. Retour automatique au Gratuit.", essai: true };
-      else if (cible) { const P = PLANS[cible]; offre = { titre: enEssai ? "Garder Premium" : `Passez à ${P.nom}`, texte: `${P.quotas.prospects.toLocaleString("fr-FR")} prospects par mois${P.quotas.sites_ia ? ` et ${P.quotas.sites_ia} sites sur mesure` : ""}. ${P.prixMensuel} € par mois, sans engagement.`, essai: false }; }
+      const { plan } = await profilEtPlan(session.user.id);
+      const cible = SUIVANTE[plan];
+      if (cible) { const P = PLANS[cible]; offre = { titre: `Passez à ${P.nom}`, texte: `${P.quotas.prospects.toLocaleString("fr-FR")} prospects par mois${P.quotas.sites_ia ? ` et ${P.quotas.sites_ia} sites sur mesure` : ""}. ${P.prixMensuel} € par mois, sans engagement.` }; }
     } catch { /* profil pas encore créé : pas d'encart */ }
   }
   return (
@@ -33,7 +31,7 @@ export default async function EspaceLayout({ children }: { children: React.React
           <div className="carte-offre">
             <strong style={{ display: "flex", gap: ".4rem", alignItems: "center" }}><Sparkles size={16} aria-hidden />{offre.titre}</strong>
             <p>{offre.texte}</p>
-            {offre.essai ? <form action="/api/essai" method="post"><button className="btn" type="submit">Démarrer l&apos;essai</button></form> : <Link className="btn" href="/espace/abonnement">Voir les offres</Link>}
+            <Link className="btn" href="/espace/abonnement">Voir les offres</Link>
           </div>
         )}
         <form action={seDeconnecter}><ul className="menu"><li><button type="submit"><LogOut aria-hidden />Déconnexion</button></li></ul></form>

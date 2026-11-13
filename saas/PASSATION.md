@@ -12,7 +12,7 @@ Bonjour Claude. Je reprends ici un projet commencé dans une autre discussion. V
 ## Ce qui est déjà fait
 
 - **Application** (`saas/app`) : Next.js, Supabase, Stripe. Page d'accueil, inscription, tableau de bord, Studio de sites, devis et factures, Académie, résiliation en ligne, pages légales.
-- **Refonte du parcours de vente** : nouvelle page d'accueil, mot de passe oublié, inscription adaptée au téléphone, premiers pas, essai Premium de 7 jours, e-mails de fin d'essai, page « Suivi des ventes ». Maquette : `saas/maquette-refonte.html`.
+- **Refonte du parcours de vente** : nouvelle page d'accueil, mot de passe oublié, inscription adaptée au téléphone, premiers pas, page « Suivi des ventes ». Pas d'essai gratuit des offres payantes ; l'offre Gratuite inclut les deux premiers modules de l'Académie. Maquette : `saas/maquette-refonte.html`.
 - **Trois vidéos verticales** pour TikTok et Instagram (sources dans `saas/video/pubs`, fichiers MP4 déjà téléchargés sur mon PC) : « La méthode », « Trouver des clients », « Montrer ».
 - **Instagram** : compte créé par moi. Textes et photo de profil dans `saas/instagram/`.
 

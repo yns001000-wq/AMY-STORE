@@ -11,13 +11,13 @@ export async function POST() {
   const session = await utilisateurConnecte();
   if (!session) return NextResponse.json({ erreur: "Non connecté" }, { status: 401 });
   const uid = session.user.id;
-  const { profil, plan, essai } = await profilEtPlan(uid);
+  const { profil, plan } = await profilEtPlan(uid);
   const secteur = secteurParId(profil.secteur as string);
   const deps = departementsAutorises(plan, (profil.departements as string[]) ?? []);
   if (!secteur || !deps.length) return NextResponse.json({ erreur: "Choisissez d'abord votre secteur et votre zone." }, { status: 400 });
 
   const deja = await consommation(uid);
-  const reste = limite(plan, "prospects", essai) - deja.prospects;
+  const reste = limite(plan, "prospects") - deja.prospects;
   if (reste <= 0) return NextResponse.json({ erreur: "quota", plan }, { status: 402 });
   const lot = Math.min(reste, 25);
 
@@ -44,7 +44,7 @@ export async function POST() {
   const ok = new Set((obtenus as string[] | null) ?? []);
   const reserves = trouves.filter((p) => ok.has(p.siret));
   if (!reserves.length) return NextResponse.json({ ajoutes: 0, message: "Ces entreprises viennent d'être attribuées à d'autres utilisateurs. Relancez la recherche." });
-  if (!(await consommer(uid, plan, "prospects", reserves.length, essai))) {
+  if (!(await consommer(uid, plan, "prospects", reserves.length))) {
     await admin.from("attributions").delete().in("siret", reserves.map((p) => p.siret)).eq("user_id", uid);
     return NextResponse.json({ erreur: "quota", plan }, { status: 402 });
   }

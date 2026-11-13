@@ -46,6 +46,7 @@ export function Tarifs({ mode, planActuel, particulier, abonne, voulue }: { mode
             [true, "Maquettes express (modèles prêts, sans IA)"],
             [p.quotas.sites_ia > 0, p.quotas.sites_ia ? `${p.quotas.sites_ia} sites sur mesure par l'IA, ${p.quotas.retouches_ia} retouches` : "Sites sur mesure par l'IA"],
             [true, "Pipeline, rappels et carte"],
+            [true, p.academie === "complete" ? "Académie complète (7 modules)" : "Académie : modules Démarrer et Prospecter"],
             [p.export, "Export CSV"],
             [p.facturation, "Devis et factures"],
             ...(p.utilisateurs > 1 ? [[true, `${p.utilisateurs} utilisateurs`] as [boolean, string]] : []),

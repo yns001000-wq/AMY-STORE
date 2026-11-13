@@ -54,7 +54,7 @@ Quand le compte passera en mode réel, il faudra recréer les mêmes prix en ré
 | Variable | Valeur | Sans elle |
 |---|---|---|
 | `ADMIN_EMAILS` | ton adresse e-mail de connexion à MySite | la page « Suivi des ventes » reste cachée |
-| `RESEND_API_KEY`, `EMAIL_EXPEDITEUR` | compte gratuit sur resend.com | pas d'e-mails de service (bienvenue, résiliation, fin d'essai) |
+| `RESEND_API_KEY`, `EMAIL_EXPEDITEUR` | compte gratuit sur resend.com | pas d'e-mails de service (bienvenue, résiliation, rappel de renouvellement annuel) |
 | `CONTACT_EMAIL`, `EDITEUR_NOM`, `EDITEUR_ADRESSE`, `EDITEUR_TELEPHONE`, `EDITEUR_SIREN`, `MEDIATEUR_CONSOMMATION` | ton identité d'entrepreneur | pages légales incomplètes |
 
 Après un ajout, il faut redéployer (Vercel → Deployments → « Redeploy »).
@@ -72,7 +72,6 @@ Les quotas sont réglés pour que l'IA ne puisse jamais coûter plus de 40 % de 
 | Offre | Messages | Sites sur mesure | Retouches | Coût maximal de l'IA par mois | Recette la plus basse par mois (abonnement annuel) |
 |---|---|---|---|---|---|
 | Gratuit | 5 | 0 | 0 | 0,09 $ | 0 € |
-| Essai Premium (7 jours) | 20 | 2 | 5 | 2,09 $ | 0 € |
 | Pro | 100 | 5 | 12 | 6,07 $ | 24,17 € |
 | Premium | 200 | 12 | 22 | 12,93 $ | 49,17 € |
 | Ultra | 400 | 25 | 44 | 26,39 $ | 99,17 € |

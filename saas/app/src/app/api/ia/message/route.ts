@@ -17,8 +17,8 @@ export async function POST(req: Request) {
   if (!p) return NextResponse.json({ erreur: "Prospect introuvable" }, { status: 404 });
   if (p.statut === "refus") return NextResponse.json({ erreur: "Ce prospect ne souhaite plus être contacté." }, { status: 409 });
 
-  const { profil, plan, essai } = await profilEtPlan(session.user.id);
-  if (!(await consommer(session.user.id, plan, "messages_ia", 1, essai))) return NextResponse.json({ erreur: "quota", plan }, { status: 402 });
+  const { profil, plan } = await profilEtPlan(session.user.id);
+  if (!(await consommer(session.user.id, plan, "messages_ia", 1))) return NextResponse.json({ erreur: "quota", plan }, { status: 402 });
   const rendre = () => rembourser(session.user.id, "messages_ia");
 
   const expediteur = `${(profil.prenom as string) || "[votre prénom]"}, création de sites internet pour les commerçants et artisans`;

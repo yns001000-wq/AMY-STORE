@@ -3,12 +3,12 @@ import { redirect } from "next/navigation";
 import { Check, Crown, Download, Gift, Lock, Map as IconeCarte, Search, Store, Target, WandSparkles } from "lucide-react";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { consommation, profilEtPlan } from "@/lib/quotas";
-import { departementsAutorises, PLANS, QUOTAS_ESSAI, type TypeQuota } from "@/lib/plans";
+import { departementsAutorises, PLANS, type TypeQuota } from "@/lib/plans";
 import { secteurParId } from "@/lib/secteurs";
 import { etape } from "@/lib/pipeline";
 import { nomDepartement } from "@/lib/departements";
 import { BoutonRecherche } from "@/components/BoutonRecherche";
-import { joursRestants, premiersPas } from "@/lib/croissance";
+import { premiersPas } from "@/lib/croissance";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export const metadata = { title: "Mon cockpit" };
@@ -31,15 +31,14 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
   const deps = departementsAutorises(plan, (profil.departements as string[]) ?? []);
   const ignores = ((profil.departements as string[]) ?? []).length - deps.length;
   const P = PLANS[plan], plein = conso.prospects >= quotas.prospects;
-  const essaiPossible = profil.plan === "gratuit" && !profil.essai_premium_utilise;
-  const enEssai = profil.plan === "gratuit" && plan === "premium";
   // Premiers pas : comptés sur toute la vie du compte (pas seulement le mois en cours).
   const admin = supabaseAdmin();
-  const [{ data: total }, { count: nbSites }] = await Promise.all([
+  const [{ data: total }, { count: nbSites }, { count: nbLecons }] = await Promise.all([
     admin.from("consommation").select("messages_ia").eq("user_id", session.user.id),
     admin.from("sites").select("id", { count: "exact", head: true }).eq("user_id", session.user.id),
+    admin.from("progression_cours").select("lecon", { count: "exact", head: true }).eq("user_id", session.user.id),
   ]);
-  const pas = premiersPas({ prospects: prospects?.length ?? 0, messages: (total ?? []).reduce((n, l) => n + (l.messages_ia ?? 0), 0), sites: nbSites ?? 0, payant: profil.plan !== "gratuit", essaiDemarre: !!profil.essai_premium_utilise, premierProspect: prospects?.[prospects.length - 1]?.id });
+  const pas = premiersPas({ prospects: prospects?.length ?? 0, messages: (total ?? []).reduce((n, l) => n + (l.messages_ia ?? 0), 0), sites: nbSites ?? 0, lecons: nbLecons ?? 0, premierProspect: prospects?.[prospects.length - 1]?.id });
   const faits = pas.filter((x) => x.fait).length;
   return (
     <>
@@ -48,22 +47,9 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
           <p className="note" style={{ margin: "0 0 .3rem" }}>{secteur?.nom} · {deps.map((d) => nomDepartement(d) ?? d).join(", ")}</p>
           <h1>Bonjour{profil.prenom ? ` ${profil.prenom}` : ""} 👋</h1>
         </div>
-        <span className="badge-offre"><Crown aria-hidden />Offre {P.nom}{enEssai ? ` · essai jusqu'au ${new Date(profil.essai_fin as string).toLocaleDateString("fr-FR")}` : ""}</span>
+        <span className="badge-offre"><Crown aria-hidden />Offre {P.nom}</span>
       </div>
       {q.abonnement === "ok" && <p className="alerte ok" role="status">Merci ! Votre abonnement est en cours d&apos;activation : il apparaît ici dans quelques secondes.</p>}
-      {q.essai === "ok" && enEssai && <p className="alerte ok" role="status">Votre essai Premium est lancé : 7 jours, sans carte bancaire. Sans action de votre part, vous repasserez en Gratuit, sans aucun prélèvement.</p>}
-      {enEssai && (
-        <div className="bandeau-essai">
-          <p><strong>Essai Premium : {joursRestants(new Date(profil.essai_fin as string))} jour(s) restant(s)</strong>Pendant l&apos;essai : {QUOTAS_ESSAI.prospects} prospects, {QUOTAS_ESSAI.messages_ia} messages et {QUOTAS_ESSAI.sites_ia} sites sur mesure. Pour garder les fonctions Premium avec leurs volumes complets, choisissez une offre avant la fin. Sinon, retour automatique au Gratuit.</p>
-          <Link className="btn" href="/espace/abonnement">Garder Premium</Link>
-        </div>
-      )}
-      {essaiPossible && !plein && (prospects?.length ?? 0) > 0 && (
-        <div className="bandeau-essai">
-          <p><strong>7 jours de Premium offerts</strong>Essayez les sites sur mesure rédigés par l&apos;IA, les devis et les factures ({QUOTAS_ESSAI.sites_ia} sites et {QUOTAS_ESSAI.messages_ia} messages pendant l&apos;essai). Sans carte bancaire, sans prélèvement à la fin.</p>
-          <form action="/api/essai" method="post"><button className="btn" type="submit">Démarrer l&apos;essai gratuit</button></form>
-        </div>
-      )}
       {faits < pas.length && (
         <section className="carte" style={{ marginBottom: "1.4rem" }} aria-label="Premiers pas">
           <h2 style={{ fontSize: "1.15rem", margin: "0 0 .8rem" }}>Vos premiers pas <span className="note">({faits} sur {pas.length})</span></h2>
@@ -96,7 +82,6 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
             <p className="note" style={{ margin: 0 }}>Vos prospects et votre historique restent accessibles. Pro : {PLANS.pro.quotas.prospects} par mois et {PLANS.pro.departements} départements. Premium : {PLANS.premium.quotas.prospects.toLocaleString("fr-FR")} par mois et {PLANS.premium.departements} départements.</p>
           </div>
           <div style={{ display: "flex", gap: ".6rem", flexWrap: "wrap" }}>
-            {essaiPossible && <form action="/api/essai" method="post"><button className="btn" type="submit">Essai Premium 7 jours</button></form>}
             <Link className="btn p" href="/espace/abonnement">Voir les offres</Link>
           </div>
         </div>

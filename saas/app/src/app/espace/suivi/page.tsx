@@ -15,7 +15,7 @@ export default async function Suivi() {
   if (!estAdmin(session.user.email)) notFound();
   const admin = supabaseAdmin();
   const [{ data: profils }, { data: actifs }] = await Promise.all([
-    admin.from("profils").select("id, plan, periode, abonnement_statut, essai_fin, cgu_acceptees_le, resiliation_prevue, source, cree_le").limit(20000),
+    admin.from("profils").select("id, plan, periode, abonnement_statut, cgu_acceptees_le, resiliation_prevue, source, cree_le").limit(20000),
     admin.from("consommation").select("user_id").gt("prospects", 0).limit(50000),
   ]);
   const lignes = (profils ?? []) as (LigneProfil & { id: string })[];
@@ -28,7 +28,6 @@ export default async function Suivi() {
         <div className="carte"><b>{euros(s.revenuMensuel)}</b><small>revenu mensuel récurrent (un abonnement annuel compte pour un douzième)</small></div>
         <div className="carte"><b>{s.payants}</b><small>abonnés payants · Pro {s.abonnes.pro} · Premium {s.abonnes.premium} · Ultra {s.abonnes.ultra}</small></div>
         <div className="carte"><b>{s.conversion.toLocaleString("fr-FR")} %</b><small>des inscrits sont abonnés</small></div>
-        <div className="carte"><b>{s.essais}</b><small>essais Premium en cours</small></div>
         <div className="carte"><b>{s.resiliations}</b><small>résiliations prévues en fin de période</small></div>
       </section>
       <section className="carte" style={{ marginBottom: "1.4rem" }}>

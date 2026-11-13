@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LECONS, lecon, MODULES, niveau, progression } from "./cours";
+import { LECONS, lecon, leconOuverte, MODULES, MODULES_GRATUITS, niveau, progression } from "./cours";
 import { missions } from "./missions";
 import { avancement, ETAPES_LIVRAISON } from "../livraison";
 
@@ -50,5 +50,25 @@ describe("Académie", () => {
     expect(avancement({ accord: true, contenus: true }).prochaine?.cle).toBe("domaine");
     const toutes = Object.fromEntries(ETAPES_LIVRAISON.map((e) => [e.cle, true]));
     expect(avancement(toutes).pct).toBe(100);
+  });
+});
+
+describe("Académie selon l'offre", () => {
+  it("l'offre Gratuite ouvre les deux premiers modules, pas les suivants", () => {
+    expect(MODULES_GRATUITS).toEqual(["demarrer", "prospecter"]);
+    expect(leconOuverte("demarrer-statut", false)).toBe(true);
+    expect(leconOuverte("prospecter-visite", false)).toBe(true);
+    expect(leconOuverte("convaincre-maquette", false)).toBe(false);
+    expect(leconOuverte("fideliser-facture", false)).toBe(false);
+    expect(leconOuverte("inconnue", true)).toBe(false);
+  });
+  it("les offres payantes ouvrent tout", () => {
+    expect(LECONS.every((l) => leconOuverte(l.id, true))).toBe(true);
+  });
+  it("la prochaine leçon proposée est toujours une leçon ouverte", () => {
+    const gratuitesFaites = new Set(LECONS.filter((l) => MODULES_GRATUITS.includes(l.module.id)).map((l) => l.id));
+    expect(progression(gratuitesFaites, (id) => leconOuverte(id, false)).prochaine).toBeNull();
+    expect(progression(gratuitesFaites, (id) => leconOuverte(id, true)).prochaine?.id).toBe("convaincre-maquette");
+    expect(progression(new Set(), (id) => leconOuverte(id, false)).prochaine?.id).toBe("demarrer-statut");
   });
 });

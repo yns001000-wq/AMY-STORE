@@ -32,6 +32,8 @@ export interface Plan {
   facturation: boolean;
   mentionMySite: boolean;
   utilisateurs: number;
+  /** Académie : « decouverte » = les modules gratuits (voir MODULES_GRATUITS), « complete » = tous les modules. */
+  academie: "decouverte" | "complete";
   studio: CapacitesStudio;
   misEnAvant?: boolean;
 }
@@ -41,59 +43,45 @@ export const PLANS: Record<PlanId, Plan> = {
     id: "gratuit", nom: "Gratuit", accroche: "Pour découvrir avec vos premiers prospects",
     prixMensuel: 0, prixAnnuel: 0, departements: 1,
     quotas: { prospects: 15, messages_ia: 5, sites_ia: 0, retouches_ia: 0 },
-    export: false, facturation: false, mentionMySite: true, utilisateurs: 1,
+    export: false, facturation: false, mentionMySite: true, utilisateurs: 1, academie: "decouverte",
     studio: { effortIA: null, editionComplete: false, couleursLibres: false, choixModele: false, polices: false, photosPerso: false, versions: 0, filigrane: true, marqueBlanche: false, sitesMax: 3, banquePerso: 0, publications: 0, domainePerso: false },
   },
   pro: {
     id: "pro", nom: "Pro", accroche: "Pour démarcher sérieusement autour de chez vous",
     prixMensuel: 29, prixAnnuel: 290, departements: 3,
     quotas: { prospects: 300, messages_ia: 100, sites_ia: 5, retouches_ia: 12 },
-    export: true, facturation: false, mentionMySite: false, utilisateurs: 1,
+    export: true, facturation: false, mentionMySite: false, utilisateurs: 1, academie: "complete",
     studio: { effortIA: "medium", editionComplete: true, couleursLibres: true, choixModele: true, polices: false, photosPerso: false, versions: 5, filigrane: false, marqueBlanche: false, sitesMax: 100, banquePerso: 0, publications: 3, domainePerso: true },
   },
   premium: {
     id: "premium", nom: "Premium", accroche: "Le plus complet pour vendre chaque semaine",
     prixMensuel: 59, prixAnnuel: 590, departements: 10,
     quotas: { prospects: 1000, messages_ia: 200, sites_ia: 12, retouches_ia: 22 },
-    export: true, facturation: true, mentionMySite: false, utilisateurs: 1, misEnAvant: true,
+    export: true, facturation: true, mentionMySite: false, utilisateurs: 1, academie: "complete", misEnAvant: true,
     studio: { effortIA: "high", editionComplete: true, couleursLibres: true, choixModele: true, polices: true, photosPerso: true, versions: 20, filigrane: false, marqueBlanche: false, sitesMax: 500, banquePerso: 300, publications: 20, domainePerso: true },
   },
   ultra: {
     id: "ultra", nom: "Ultra", accroche: "Pour les agences et les gros volumes",
     prixMensuel: 119, prixAnnuel: 1190, departements: Infinity,
     quotas: { prospects: 3000, messages_ia: 400, sites_ia: 25, retouches_ia: 44 },
-    export: true, facturation: true, mentionMySite: false, utilisateurs: 3,
+    export: true, facturation: true, mentionMySite: false, utilisateurs: 3, academie: "complete",
     studio: { effortIA: "xhigh", editionComplete: true, couleursLibres: true, choixModele: true, polices: true, photosPerso: true, versions: 50, filigrane: false, marqueBlanche: true, sitesMax: 2000, banquePerso: 2000, publications: 150, domainePerso: true },
   },
 };
 
 export const ORDRE_PLANS: PlanId[] = ["gratuit", "pro", "premium", "ultra"];
-export const DUREE_ESSAI_JOURS = 7;
 
 export function estPlan(v: unknown): v is PlanId {
   return typeof v === "string" && (ORDRE_PLANS as string[]).includes(v);
 }
 
-/** Offre réellement appliquée : un essai Premium en cours prime sur le gratuit. */
-export function planEffectif(p: { plan: string; essai_fin?: string | null }, maintenant = new Date()): PlanId {
-  const base: PlanId = estPlan(p.plan) ? p.plan : "gratuit";
-  if (base === "gratuit" && p.essai_fin && new Date(p.essai_fin) > maintenant) return "premium";
-  return base;
+/** Offre réellement appliquée (une valeur inconnue donne le gratuit). Il n'y a pas d'essai gratuit des offres payantes. */
+export function planEffectif(p: { plan: string }): PlanId {
+  return estPlan(p.plan) ? p.plan : "gratuit";
 }
 
-/**
- * Quotas pendant l'essai Premium gratuit (7 jours, sans carte) : les fonctions de Premium, avec des volumes réduits.
- * L'essai ne rapporte rien : il doit coûter très peu, même utilisé jusqu'au bout.
- */
-export const QUOTAS_ESSAI: Record<TypeQuota, number> = { prospects: 100, messages_ia: 20, sites_ia: 2, retouches_ia: 5 };
-
-/** Quotas réellement appliqués : ceux de l'offre, ou ceux de l'essai quand le compte est en essai Premium. */
-export function quotasEffectifs(plan: PlanId, essai = false): Record<TypeQuota, number> {
-  return essai ? QUOTAS_ESSAI : PLANS[plan].quotas;
-}
-
-export function limite(plan: PlanId, type: TypeQuota, essai = false): number {
-  return quotasEffectifs(plan, essai)[type];
+export function limite(plan: PlanId, type: TypeQuota): number {
+  return PLANS[plan].quotas[type];
 }
 
 /** Modèle d'IA par tâche : le plus capable pour le site entier (ce que l'abonné montre à son client), un modèle moitié moins cher pour les tâches courtes. */

@@ -56,8 +56,8 @@ export default async function AbonnementPublic() {
       {E.email && <p><a className="btn" href={`mailto:${E.email}?subject=${sujet}&body=${corps}`}>Envoyer le formulaire par e-mail</a></p>}
       <p className="note">Le droit de rétractation est réservé aux consommateurs. Les professionnels peuvent résilier à tout moment, avec effet à la fin de la période payée.</p>
 
-      <h2 id="essai">Essai gratuit</h2>
-      <p>L&apos;essai Premium de 7 jours se fait sans carte bancaire. À la fin, rien n&apos;est prélevé : le compte repasse automatiquement en offre Gratuite.</p>
+      <h2 id="gratuit">Offre Gratuite</h2>
+      <p>L&apos;offre Gratuite n&apos;a pas de limite de durée et ne demande aucune carte bancaire. Elle permet de découvrir MySite avant de choisir une offre payante. Il n&apos;y a pas d&apos;essai gratuit des offres payantes.</p>
 
       <h2 id="renouvellement">Renouvellement</h2>
       <p>L&apos;abonnement mensuel se renouvelle chaque mois, l&apos;abonnement annuel chaque année. Pour l&apos;annuel, nous vous prévenons par e-mail avant le renouvellement, avec la date limite pour résilier. Toute hausse de prix vous est annoncée au moins 30 jours à l&apos;avance.</p>

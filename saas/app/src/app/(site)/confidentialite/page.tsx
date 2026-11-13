@@ -9,7 +9,7 @@ export default function Confidentialite() {
   return (
     <article className="legal">
       <h1 style={{ fontSize: "2rem" }}>Politique de confidentialité</h1>
-      <p className="note">Version du 11 novembre 2026.</p>
+      <p className="note">Version du 13 novembre 2026.</p>
       <p>Responsable de traitement : MySite, <Info v={E.nom} manque="Prénom NOM" />, <Info v={E.adresse} manque="adresse" />, <Info v={E.email} manque="e-mail" lien="mail" />.</p>
 
       <h2>A. Vous êtes utilisateur de MySite</h2>
@@ -18,7 +18,6 @@ export default function Confidentialite() {
         <li><b>Abonnement et facturation</b> (offre, historique de paiement, factures) : obligation légale. Pièces comptables conservées 10 ans. Votre carte est traitée uniquement par Stripe.</li>
         <li><b>Preuves des démarches</b> (résiliation, rétractation, suppression de compte) : pour pouvoir justifier du respect de vos droits (intérêt légitime et obligation légale), pendant 5 ans.</li>
         <li><b>E-mails de service</b> (bienvenue, confirmations, rappel de reconduction d&apos;un abonnement annuel) : obligations légales et exécution du contrat. Aucune newsletter sans votre accord.</li>
-        <li><b>E-mails sur l&apos;essai Premium</b> (deux au plus : avant la fin de l&apos;essai, puis à la fin) : exécution du contrat et intérêt légitime. Vous pouvez les désactiver dans « Mon compte ».</li>
         <li><b>Provenance de l&apos;inscription</b> (par exemple « tiktok », si le lien que vous avez suivi l&apos;indiquait) : pour savoir quels contenus font connaître MySite (intérêt légitime), pendant la durée du compte. Aucun cookie n&apos;est utilisé pour cela.</li>
         <li><b>Sécurité</b> (journaux techniques) : intérêt légitime, 12 mois au plus.</li>
       </ul>

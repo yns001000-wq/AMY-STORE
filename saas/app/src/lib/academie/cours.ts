@@ -426,6 +426,15 @@ export const MODULES: Module[] = [
 export const LECONS = MODULES.flatMap((m) => m.lecons.map((l) => ({ ...l, module: m })));
 export const lecon = (id: string) => LECONS.find((l) => l.id === id);
 
+/** Modules ouverts à l'offre Gratuite : de quoi comprendre la méthode (se lancer, prospecter) avant de s'abonner. */
+export const MODULES_GRATUITS = ["demarrer", "prospecter"];
+
+/** Une leçon est ouverte si l'offre donne l'Académie complète, ou si elle fait partie des modules gratuits. */
+export function leconOuverte(id: string, complete: boolean): boolean {
+  const l = lecon(id);
+  return !!l && (complete || MODULES_GRATUITS.includes(l.module.id));
+}
+
 /** Niveau selon le pourcentage du parcours terminé. */
 export const NIVEAUX: [number, string][] = [[0, "Débutant"], [25, "Prospecteur"], [50, "Vendeur"], [75, "Expert"], [100, "Maître MySite"]];
 export function niveau(pct: number): { nom: string; suivant: string | null; seuil: number | null } {
@@ -433,11 +442,12 @@ export function niveau(pct: number): { nom: string; suivant: string | null; seui
   return { nom: NIVEAUX[i][1], suivant: NIVEAUX[i + 1]?.[1] ?? null, seuil: NIVEAUX[i + 1]?.[0] ?? null };
 }
 
-export function progression(terminees: Set<string>) {
+/** Avancement dans le parcours. `ouverte` : leçons accessibles avec l'offre (la prochaine leçon proposée en fait partie). */
+export function progression(terminees: Set<string>, ouverte: (id: string) => boolean = () => true) {
   const total = LECONS.length, faites = LECONS.filter((l) => terminees.has(l.id)).length;
   const pct = Math.round((faites / total) * 100);
   const parModule = MODULES.map((m) => ({ id: m.id, pct: Math.round((m.lecons.filter((l) => terminees.has(l.id)).length / m.lecons.length) * 100) }));
-  const prochaine = LECONS.find((l) => !terminees.has(l.id)) ?? null;
+  const prochaine = LECONS.find((l) => !terminees.has(l.id) && ouverte(l.id)) ?? null;
   return { total, faites, pct, parModule, prochaine, niveau: niveau(pct) };
 }
 

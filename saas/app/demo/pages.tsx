@@ -7,7 +7,7 @@ import { ORDRE_PLANS, PLANS, type CapacitesStudio } from "../src/lib/plans";
 import { ETAPES, etape, ajouterJournal, type EntreeJournal } from "../src/lib/pipeline";
 import { FAMILLES, photosPourCommerce } from "../src/lib/studio";
 import { dateFr, euros, LIBELLES, STATUTS, totaux, nettoyerLignes } from "../src/lib/factures";
-import { MODULES, NIVEAUX, LECONS, lecon, progression } from "../src/lib/academie/cours";
+import { MODULES, NIVEAUX, LECONS, lecon, leconOuverte, progression } from "../src/lib/academie/cours";
 import { missions } from "../src/lib/academie/missions";
 import { BoutonRecherche } from "../src/components/BoutonRecherche";
 import { BoutonsStudio } from "../src/components/studio/BoutonsStudio";
@@ -42,13 +42,7 @@ export function Accueil() {
         <div><p className="note" style={{ margin: "0 0 .3rem" }}>Restauration · Rhône</p><h1>Bonjour {D.profil.prenom} 👋</h1></div>
         <span className="badge-offre"><Crown aria-hidden />Offre {P.nom}</span>
       </div>
-      {plan() === "gratuit" && (
-        <div className="bandeau-essai">
-          <p><strong>7 jours de Premium offerts</strong>1 000 prospects, sites sur mesure rédigés par l&apos;IA, devis et factures. Sans carte bancaire, sans prélèvement à la fin.</p>
-          <button className="btn" type="button" onClick={() => annoncer("Démo : dans l'application, l'essai Premium démarre ici, sans carte bancaire.")}>Démarrer l&apos;essai gratuit</button>
-        </div>
-      )}
-      {(() => { const pas = premiersPas({ prospects: D.prospects.length, messages: plan() === "gratuit" ? 0 : D.conso.messages_ia, sites: plan() === "gratuit" ? 0 : D.sites.length, payant: plan() !== "gratuit", essaiDemarre: false, premierProspect: D.prospects[0]?.id }); const faits = pas.filter((x) => x.fait).length;
+      {(() => { const pas = premiersPas({ prospects: D.prospects.length, messages: plan() === "gratuit" ? 0 : D.conso.messages_ia, sites: plan() === "gratuit" ? 0 : D.sites.length, lecons: Object.keys(D.progression).length, premierProspect: D.prospects[0]?.id }); const faits = pas.filter((x) => x.fait).length;
         return faits < pas.length && (
           <section className="carte" style={{ marginBottom: "1.4rem" }} aria-label="Premiers pas">
             <h2 style={{ fontSize: "1.15rem", margin: "0 0 .8rem" }}>Vos premiers pas <span className="note">({faits} sur {pas.length})</span></h2>
@@ -311,7 +305,7 @@ export function Entreprise() {
 
 /* ------------------------------------------------------------ Académie */
 export function Academie() {
-  const D = db(), faites = new Set(Object.keys(D.progression)), P = progression(faites);
+  const D = db(), faites = new Set(Object.keys(D.progression)), complete = PLANS[plan()].academie === "complete", ouverte = (id: string) => leconOuverte(id, complete), P = progression(faites, ouverte);
   const M = missions({ secteur: true, prospects: D.prospects.length, contactes: D.prospects.filter((p) => p.statut !== "nouveau").length, sites: D.sites.length, rdv: D.prospects.filter((p) => ["rdv", "devis", "gagne"].includes(p.statut)).length, devis: D.documents.filter((d) => d.type === "devis" && d.numero).length, publies: D.publications.length, payees: D.documents.filter((d) => d.type === "facture" && d.statut === "payee").length });
   const fait = M.filter((m) => m.fait).length, rayon = 54, circ = 2 * Math.PI * rayon;
   return (
@@ -335,7 +329,7 @@ export function Academie() {
         <section key={m.id} className="carte module" style={{ "--m": m.couleur } as React.CSSProperties}>
           <div className="module-tete"><span className="module-num">{k + 1}</span><div><h2>{m.titre}</h2><p className="note">{m.description}</p></div>{pm === 100 && <span className="module-badge"><GraduationCap aria-hidden /></span>}</div>
           <div className="jauge"><i style={{ width: `${pm}%`, background: m.couleur }} /></div>
-          <ul className="module-lecons">{m.lecons.map((l) => <li key={l.id}><Link href={`/espace/academie/${l.id}`}>{faites.has(l.id) ? <CheckCircle2 aria-hidden className="ok" /> : <PlayCircle aria-hidden />}<span>{l.titre}</span><small>{l.minutes} min</small><ArrowRight aria-hidden className="fleche" /></Link></li>)}</ul>
+          <ul className="module-lecons">{m.lecons.map((l) => <li key={l.id}><Link href={`/espace/academie/${l.id}`}>{faites.has(l.id) ? <CheckCircle2 aria-hidden className="ok" /> : ouverte(l.id) ? <PlayCircle aria-hidden /> : <Lock aria-hidden />}<span>{l.titre}</span><small>{l.minutes} min</small><ArrowRight aria-hidden className="fleche" /></Link></li>)}</ul>
         </section>); })}</div>
     </>
   );
@@ -344,6 +338,18 @@ export function Lecon({ id }: { id: string }) {
   const l = lecon(id);
   if (!l) return <p>Leçon introuvable. <Link href="/espace/academie">Retour</Link></p>;
   const k = LECONS.findIndex((x) => x.id === id), suivante = LECONS[k + 1];
+  if (!leconOuverte(id, PLANS[plan()].academie === "complete")) return (
+    <>
+      <Retour href="/espace/academie" lib="Académie" />
+      <section className="carte" style={{ maxWidth: "44rem", marginTop: ".8rem" }}>
+        <span className="pastille p-violet"><Lock aria-hidden /></span>
+        <h2 style={{ fontSize: "1.4rem" }}>{l.titre} : leçon de l&apos;Académie complète</h2>
+        <p>{l.resume}</p>
+        <p className="note">Incluse dès l&apos;offre Pro. Les modules Démarrer et Prospecter restent ouverts dans l&apos;offre Gratuite. (Démo : changez d&apos;offre en haut de la page.)</p>
+        <Link className="btn p" href="/espace/abonnement">Voir les offres</Link>
+      </section>
+    </>
+  );
   return (
     <>
       <Retour href="/espace/academie" lib="Académie" />
@@ -420,7 +426,7 @@ export function Suivi() {
   const il = (j: number) => new Date(Date.now() - j * 86400000).toISOString();
   const ex = (n: number, o: object) => Array.from({ length: n }, () => ({ plan: "gratuit", cree_le: il(20), ...o }));
   const lignes = [...ex(9, { plan: "pro", abonnement_statut: "active", periode: "mensuel", source: "tiktok", cgu_acceptees_le: "x" }), ...ex(4, { plan: "premium", abonnement_statut: "active", periode: "mensuel", source: "instagram", cgu_acceptees_le: "x" }), ...ex(1, { plan: "premium", abonnement_statut: "active", periode: "annuel", source: "tiktok", cgu_acceptees_le: "x", resiliation_prevue: true }),
-    ...ex(6, { essai_fin: il(-3), source: "tiktok", cgu_acceptees_le: "x", cree_le: il(3) }), ...ex(70, { source: "tiktok", cgu_acceptees_le: "x" }), ...ex(38, { source: "instagram", cgu_acceptees_le: "x" }), ...ex(22, { source: "tiktok" }), ...ex(10, {})];
+    ...ex(6, { source: "tiktok", cgu_acceptees_le: "x", cree_le: il(3) }), ...ex(70, { source: "tiktok", cgu_acceptees_le: "x" }), ...ex(38, { source: "instagram", cgu_acceptees_le: "x" }), ...ex(22, { source: "tiktok" }), ...ex(10, {})];
   const ids = lignes.map((_, k) => String(k)), s = statistiques(lignes, new Set(ids.filter((_, k) => k < 96)), ids);
   const euros = (n: number) => n.toLocaleString("fr-FR", { style: "currency", currency: "EUR" }), pct = (n: number | null) => (n === null ? "—" : `${Math.round((n / s.inscrits) * 100)} %`);
   return (
@@ -430,7 +436,6 @@ export function Suivi() {
         <div className="carte"><b>{euros(s.revenuMensuel)}</b><small>revenu mensuel récurrent</small></div>
         <div className="carte"><b>{s.payants}</b><small>abonnés payants · Pro {s.abonnes.pro} · Premium {s.abonnes.premium} · Ultra {s.abonnes.ultra}</small></div>
         <div className="carte"><b>{s.conversion.toLocaleString("fr-FR")} %</b><small>des inscrits sont abonnés</small></div>
-        <div className="carte"><b>{s.essais}</b><small>essais Premium en cours</small></div>
         <div className="carte"><b>{s.resiliations}</b><small>résiliations prévues</small></div>
       </section>
       <section className="carte" style={{ marginBottom: "1.4rem" }}>

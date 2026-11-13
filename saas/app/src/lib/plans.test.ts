@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { abonnementActif, coutMaxIA, departementsAutorises, economieAnnuelle, limite, ORDRE_PLANS, planDepuisPriceId, planEffectif, priceIdStripe, PLANS, QUOTAS_ESSAI, quotasEffectifs } from "./plans";
+import { abonnementActif, coutMaxIA, departementsAutorises, economieAnnuelle, limite, ORDRE_PLANS, planDepuisPriceId, planEffectif, priceIdStripe, PLANS } from "./plans";
 
 const env = { STRIPE_PRICE_PRO_MENSUEL: "price_pro_m", STRIPE_PRICE_PRO_ANNUEL: "price_pro_a", STRIPE_PRICE_PREMIUM_MENSUEL: "price_prem_m", STRIPE_PRICE_ULTRA_ANNUEL: "price_ultra_a" };
 
@@ -16,15 +16,12 @@ describe("offres", () => {
       expect(coutMaxIA(PLANS[id].quotas), id).toBeLessThanOrEqual(recette * 0.4);
     }
   });
-  it("les comptes qui ne paient pas coûtent très peu : gratuit sous 0,20 $ par mois, essai sous 3,50 $", () => {
+  it("les comptes gratuits coûtent très peu : moins de 0,20 $ par mois", () => {
     expect(coutMaxIA(PLANS.gratuit.quotas)).toBeLessThanOrEqual(0.2);
-    expect(coutMaxIA(QUOTAS_ESSAI)).toBeLessThanOrEqual(3.5);
   });
-  it("l'essai donne les fonctions de Premium avec des volumes réduits", () => {
-    expect(quotasEffectifs("premium", true)).toEqual(QUOTAS_ESSAI);
-    expect(quotasEffectifs("premium")).toEqual(PLANS.premium.quotas);
-    expect(limite("premium", "sites_ia", true)).toBeLessThan(limite("premium", "sites_ia"));
-    expect(limite("premium", "sites_ia", true)).toBeGreaterThan(0);
+  it("l'Académie complète est réservée aux offres payantes", () => {
+    expect(PLANS.gratuit.academie).toBe("decouverte");
+    for (const id of ["pro", "premium", "ultra"] as const) expect(PLANS[id].academie).toBe("complete");
   });
   it("l'annuel offre 2 mois", () => {
     expect(economieAnnuelle("pro")).toBe(58);
@@ -42,12 +39,10 @@ describe("offres", () => {
     expect(planDepuisPriceId("price_inconnu", env)).toBe("gratuit");
     expect(planDepuisPriceId(null, env)).toBe("gratuit");
   });
-  it("l'essai Premium ne s'applique qu'au gratuit et jusqu'à sa date de fin", () => {
-    const now = new Date("2026-11-08T12:00:00Z");
-    expect(planEffectif({ plan: "gratuit", essai_fin: "2026-11-10T00:00:00Z" }, now)).toBe("premium");
-    expect(planEffectif({ plan: "gratuit", essai_fin: "2026-11-01T00:00:00Z" }, now)).toBe("gratuit");
-    expect(planEffectif({ plan: "pro", essai_fin: "2026-11-10T00:00:00Z" }, now)).toBe("pro");
-    expect(planEffectif({ plan: "n'importe quoi" }, now)).toBe("gratuit");
+  it("aucun essai : l'offre appliquée est celle payée, et une valeur inconnue donne le gratuit", () => {
+    expect(planEffectif({ plan: "gratuit" })).toBe("gratuit");
+    expect(planEffectif({ plan: "pro" })).toBe("pro");
+    expect(planEffectif({ plan: "n'importe quoi" })).toBe("gratuit");
   });
   it("seuls active et trialing donnent accès", () => {
     expect(abonnementActif("active")).toBe(true);

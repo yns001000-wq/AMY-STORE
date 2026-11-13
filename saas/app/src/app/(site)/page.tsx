@@ -34,7 +34,7 @@ const FAQ = [
   ["D'où viennent les commerces proposés ?", "Du registre officiel des entreprises (base Sirene de l'INSEE), complété par OpenStreetMap. Les entreprises qui s'opposent à l'usage commercial de leurs données sont exclues automatiquement."],
   ["Les commerces proposés ont-ils déjà un site ?", "Certains, oui : le registre ne le dit pas. Chaque fiche a un lien pour le vérifier en un clic avant de contacter le commerce."],
   ["Faut-il une entreprise pour s'inscrire ?", "Non pour essayer. Pour facturer vos clients, il vous faudra un statut : la micro-entreprise se crée gratuitement en ligne, et l'Académie vous montre comment."],
-  ["L'essai Premium est-il vraiment gratuit ?", "Oui : 7 jours, sans carte bancaire, une fois par compte. Aucun prélèvement à la fin : vous repassez automatiquement en Gratuit."],
+  ["Puis-je essayer avant de payer ?", "Oui, avec l'offre Gratuite, sans limite de durée et sans carte bancaire : vos premiers commerces chaque mois, les maquettes express et les deux premiers modules de l'Académie pour comprendre la méthode."],
   ["Puis-je résilier quand je veux ?", "Oui, en ligne, en quelques clics, sans frais ni justification. La résiliation prend effet à la fin de la période payée, et vos données restent accessibles en offre Gratuite."],
 ];
 
@@ -104,6 +104,7 @@ export default function Accueil() {
             <span className="pastille p-violet"><GraduationCap aria-hidden /></span>
             <h2 style={{ fontSize: "1.6rem" }}>L&apos;Académie : apprenez à vendre un site</h2>
             <p>Des leçons courtes, en vidéo et en texte, avec un quiz et une mission à faire dans l&apos;outil : se lancer en règle, construire son offre, écrire le premier message, réussir la visite, faire le devis, livrer.</p>
+            <p>Les deux premiers modules, <b>Démarrer</b> et <b>Prospecter</b>, sont inclus dans l&apos;offre Gratuite. L&apos;Académie complète est incluse dès l&apos;offre Pro.</p>
             <p className="note" style={{ margin: 0 }}>Informations générales, pas un conseil juridique ou fiscal personnalisé, ni une promesse de revenus.</p>
           </article>
           <article className="carte">

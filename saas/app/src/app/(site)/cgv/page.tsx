@@ -10,7 +10,7 @@ export default function Cgv() {
   return (
     <article className="legal">
       <h1 style={{ fontSize: "2rem" }}>Conditions générales de vente</h1>
-      <p className="note">Version du 9 novembre 2026.</p>
+      <p className="note">Version du 13 novembre 2026.</p>
 
       <h2>1. Vendeur</h2>
       <p><Info v={E.nom} manque="Prénom NOM" />, entrepreneur individuel (EI), SIREN {E.siren}, <Info v={E.adresse} manque="adresse" />, téléphone : <Info v={E.telephone} manque="téléphone" lien="tel" />, e-mail : <Info v={E.email} manque="e-mail" lien="mail" />. TVA non applicable, article 293 B du CGI.</p>
@@ -56,25 +56,23 @@ export default function Cgv() {
         <p>Date : ……… · Signature (en cas d&apos;envoi papier) : ………</p>
       </blockquote>
 
-      <h2>7. Essai Premium</h2>
-      <p>7 jours, une fois par compte, sans carte bancaire. Aucun prélèvement à la fin : le compte repasse automatiquement en offre Gratuite.</p>
 
-      <h2>8. Changement de prix ou d&apos;offre</h2>
+      <h2>7. Changement de prix ou d&apos;offre</h2>
       <p>Vous pouvez changer d&apos;offre à tout moment. Le changement vers une offre supérieure est immédiat, avec un calcul au prorata. Le changement vers une offre inférieure prend effet à la prochaine échéance.</p>
       <p>Toute hausse de prix vous est annoncée au moins 30 jours avant son application. Vous pouvez résilier avant qu&apos;elle ne s&apos;applique.</p>
 
-      <h2>9. Conformité du service</h2>
+      <h2>8. Conformité du service</h2>
       <p>Pour les consommateurs, MySite est tenu de la garantie légale de conformité des contenus et services numériques pendant toute la durée de l&apos;abonnement (articles L224-25-12 et suivants du Code de la consommation). En cas de défaut, contactez-nous : nous le corrigerons ou, à défaut, vous pourrez obtenir une réduction de prix ou la résolution du contrat.</p>
 
-      <h2>10. Fin de l&apos;abonnement : sites en ligne et données</h2>
+      <h2>9. Fin de l&apos;abonnement : sites en ligne et données</h2>
       <p>Les sites publiés avec la mise en ligne en un clic (offres Pro et plus) sont hébergés tant que l&apos;abonnement est actif. Après la fin de l&apos;abonnement, ils restent en ligne 15 jours, puis sont retirés.</p>
       <p>Ils restent disponibles dans le Studio et téléchargeables pour être hébergés ailleurs. Il vous appartient d&apos;en informer vos propres clients. Vos devis et factures restent consultables même après un changement d&apos;offre.</p>
 
-      <h2>11. Réclamations et médiation</h2>
+      <h2>10. Réclamations et médiation</h2>
       <p>Pour toute réclamation : <Info v={E.email} manque="e-mail" lien="mail" />.</p>
       <p>Si aucune solution amiable n&apos;est trouvée, le consommateur peut recourir gratuitement au médiateur de la consommation : <Info v={E.mediateur} manque="nom, adresse et site du médiateur choisi" />.</p>
 
-      <h2>12. Droit applicable</h2>
+      <h2>11. Droit applicable</h2>
       <p>Droit français.</p>
     </article>
   );
