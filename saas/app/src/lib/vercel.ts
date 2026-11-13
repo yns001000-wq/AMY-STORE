@@ -27,6 +27,7 @@ export async function ajouterDomaine(domaine: string): Promise<{ ok: boolean; me
 export async function retirerDomaine(domaine: string): Promise<void> {
   if (!vercelConfigure()) return;
   const p = encodeURIComponent(conf().projet!);
-  await appel("DELETE", `/v9/projects/${p}/domains/${encodeURIComponent(domaine)}`);
+  // Le www d'abord : il redirige vers le domaine principal, que Vercel refuse de retirer tant qu'une redirection pointe vers lui.
   if (domaine.split(".").length === 2) await appel("DELETE", `/v9/projects/${p}/domains/${encodeURIComponent(`www.${domaine}`)}`);
+  await appel("DELETE", `/v9/projects/${p}/domains/${encodeURIComponent(domaine)}`);
 }
