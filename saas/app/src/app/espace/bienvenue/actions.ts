@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { secteurParId } from "@/lib/secteurs";
 import { DEPARTEMENTS } from "@/lib/departements";
-import { envoyerEmail, signature } from "@/lib/email";
+import { envoyerEmail, urlSite } from "@/lib/email";
 import { offrePayante } from "@/lib/croissance";
 
 export async function enregistrerAccueil(form: FormData) {
@@ -26,7 +26,12 @@ export async function enregistrerAccueil(form: FormData) {
   if (!premiere) redirect("/espace");
   // E-mail de bienvenue (message de service : accès au compte et premiers pas). Sans effet si l'envoi d'e-mails n'est pas configuré.
   const site = process.env.NEXT_PUBLIC_SITE_URL ?? "";
-  await envoyerEmail(session.user.email ?? "", "Bienvenue sur MySite : vos 3 premiers pas",
-    `Bonjour${prenom ? ` ${prenom}` : ""},\n\nVotre cockpit est prêt : ${site}/espace\n\nVos 3 premiers pas :\n1. Trouvez vos premiers commerces (un clic sur le tableau de bord).\n2. Ouvrez une fiche : le premier message est rédigé pour ce commerce.\n3. Créez une maquette de site à son nom, à lui montrer.\n\nL'Académie (dans le menu) explique comment vendre un site, étape par étape.\n\nVotre offre Gratuite n'a pas de limite de durée, et elle comprend les deux premiers modules de l'Académie (Démarrer et Prospecter) pour comprendre la méthode.${signature()}`);
+  await envoyerEmail(session.user.email ?? "", "🎉 Bienvenue sur MySite : ton cockpit est prêt", {
+    emoji: "🎉", titre: `Bienvenue sur MySite${prenom ? `, ${prenom}` : ""} !`,
+    paragraphes: ["Ton cockpit est prêt. Voici tes 3 premiers pas pour décrocher ton premier client :"],
+    liste: ["🔎 Trouve tes premiers commerces : un clic sur le tableau de bord.", "💬 Ouvre une fiche : ton premier message est déjà rédigé pour ce commerce.", "📱 Crée une maquette de site à son nom, à lui montrer sur ton téléphone."],
+    bouton: { texte: "Ouvrir mon cockpit", url: urlSite("/espace") },
+    note: "🎓 Ton offre Gratuite n'a pas de limite de durée et comprend les deux premiers modules de l'Académie (Démarrer et Prospecter) pour comprendre la méthode.",
+  });
   redirect(offrePayante(avant?.offre_voulue) ? `/espace/abonnement?offre=${avant!.offre_voulue}` : "/espace?bienvenue=1");
 }

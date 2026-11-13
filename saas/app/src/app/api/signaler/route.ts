@@ -17,6 +17,9 @@ export async function POST(req: Request) {
   const { data, error } = await supabaseAdmin().from("signalements").insert({ url, motif, description, email: email || null, nom: nom || null, bonne_foi: true }).select("id").single();
   if (error) return NextResponse.json({ erreur: "Enregistrement impossible, réessayez." }, { status: 500 });
   if (process.env.CONTACT_EMAIL) await envoyerEmail(process.env.CONTACT_EMAIL, `Signalement ${motif} : ${url}`, `${description}\n\nDe : ${nom || "anonyme"} ${email}\nRéférence : ${data.id}`);
-  if (email) await envoyerEmail(email, "Nous avons bien reçu votre signalement", `Bonjour,\n\nVotre signalement concernant ${url} a bien été reçu (référence ${data.id}). Nous l'examinons et vous informerons de la décision prise.\n\nMySite`);
+  if (email) await envoyerEmail(email, "📩 Nous avons bien reçu ton signalement", {
+    emoji: "📩", titre: "Signalement bien reçu",
+    paragraphes: [`Ton signalement concernant ${url} a bien été reçu (référence ${data.id}).`, "Nous l'examinons et te tiendrons informé de la décision prise. Merci de nous aider à garder MySite sûr. 🙏"],
+  });
   return NextResponse.json({ ok: true, reference: data.id });
 }

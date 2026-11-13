@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { stripe } from "@/lib/stripe";
-import { envoyerEmail, signature } from "@/lib/email";
+import { envoyerEmail, urlSite } from "@/lib/email";
 import { journaliser } from "@/lib/journal";
 import { montantRetractation, retractationPossible } from "@/lib/conformite";
 
@@ -32,7 +32,14 @@ export async function POST() {
   await admin.from("profils").update({ retractation_le: new Date().toISOString(), resiliation_prevue: false }).eq("id", session.user.id);
   await journaliser(session.user.id, session.user.email, "retractation", { abonnement: sub.id, rembourse_centimes: rembourse, retenu_centimes: retenu });
   const euros = (c: number) => (c / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
-  const email = await envoyerEmail(session.user.email ?? "", "Confirmation de votre rétractation MySite",
-    `Bonjour,\n\nNous confirmons votre rétractation. Votre abonnement est arrêté et votre compte repasse en offre Gratuite.\n\nRemboursement : ${euros(rembourse)} (part du service déjà fournie : ${euros(retenu)}), sur la carte utilisée, sous quelques jours.${signature()}`);
+  const email = await envoyerEmail(session.user.email ?? "", "✅ Rétractation de ton abonnement MySite confirmée", {
+    emoji: "✅", titre: "Ta rétractation est bien enregistrée",
+    paragraphes: [
+      "Nous confirmons ta rétractation. Ton abonnement est arrêté et ton compte repasse en offre Gratuite : tes données restent accessibles.",
+      `💶 Remboursement : ${euros(rembourse)} (part du service déjà fournie : ${euros(retenu)}), sur la carte utilisée, sous quelques jours.`,
+    ],
+    bouton: { texte: "Ouvrir MySite", url: urlSite("/espace") },
+    note: "Cet e-mail vaut confirmation de ta rétractation : garde-le.",
+  });
   return NextResponse.json({ ok: true, rembourse, retenu, email });
 }

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { cronAutorise } from "@/lib/securite";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { rappelReconductionDu } from "@/lib/conformite";
-import { envoyerEmail, signature } from "@/lib/email";
+import { envoyerEmail, urlSite } from "@/lib/email";
 import { journaliser } from "@/lib/journal";
 import { PLANS, estPlan } from "@/lib/plans";
 
@@ -21,8 +21,15 @@ export async function GET(req: Request) {
     const { data: u } = await admin.auth.admin.getUserById(p.id);
     const email = u?.user?.email; if (!email) continue;
     const P = estPlan(p.plan) ? PLANS[p.plan] : null;
-    const ok = await envoyerEmail(email, "Votre abonnement MySite sera renouvelé",
-      `Bonjour,\n\nVotre abonnement annuel MySite ${P?.nom ?? ""} sera renouvelé automatiquement le ${fin.toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" })}${P ? `, pour ${P.prixAnnuel} € TTC` : ""}.\n\nVous pouvez l'arrêter sans frais avant cette date : rubrique « Mon abonnement », bouton « Résilier mon abonnement » (${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/resilier).${signature()}`);
+    const ok = await envoyerEmail(email, "📅 Ton abonnement MySite sera bientôt renouvelé", {
+      emoji: "📅", titre: "Ton abonnement annuel arrive à échéance",
+      paragraphes: [
+        `Ton abonnement annuel MySite ${P?.nom ?? ""} sera renouvelé automatiquement le ${fin.toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" })}${P ? `, pour ${P.prixAnnuel} € TTC` : ""}.`,
+        "Tu veux continuer ? Tu n'as rien à faire. 🙌",
+        "Tu préfères arrêter ? Tu peux le faire sans frais avant cette date, depuis « Mon abonnement », bouton « Résilier mon abonnement ».",
+      ],
+      bouton: { texte: "Gérer mon abonnement", url: urlSite("/resilier") },
+    });
     if (!ok) continue;
     await admin.from("profils").update({ rappel_reconduction_pour: fin.toISOString() }).eq("id", p.id);
     await journaliser(p.id, email, "rappel_reconduction", { echeance: fin.toISOString() });

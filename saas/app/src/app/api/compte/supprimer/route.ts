@@ -4,7 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { stripe } from "@/lib/stripe";
 import { retirerDomaine } from "@/lib/vercel";
 import { journaliser } from "@/lib/journal";
-import { envoyerEmail, signature } from "@/lib/email";
+import { envoyerEmail } from "@/lib/email";
 
 /**
  * Droit à l'effacement (RGPD, art. 17) : suppression définitive du compte et de ses données.
@@ -27,6 +27,13 @@ export async function POST(req: Request) {
   await journaliser(uid, email, "suppression_compte", { abonnement_arrete: !!p?.stripe_subscription_id, sites_retires: pubs?.length ?? 0 });
   const { error } = await admin.auth.admin.deleteUser(uid);
   if (error) return NextResponse.json({ erreur: "Suppression impossible pour le moment : contactez-nous." }, { status: 500 });
-  await envoyerEmail(email ?? "", "Votre compte MySite a été supprimé", `Bonjour,\n\nVotre compte MySite et ses données ont été supprimés, comme demandé. Vos factures d'abonnement restent conservées par notre prestataire de paiement pour les obligations comptables.${signature()}`);
+  await envoyerEmail(email ?? "", "👋 Ton compte MySite a été supprimé", {
+    emoji: "👋", titre: "Ton compte a bien été supprimé",
+    paragraphes: [
+      "Ton compte MySite et ses données ont été supprimés, comme demandé.",
+      "Tes factures d'abonnement restent conservées par notre prestataire de paiement, pour les obligations comptables.",
+      "Merci d'avoir essayé MySite. Si tu veux revenir un jour, tu seras le bienvenu. 💜",
+    ],
+  });
   return NextResponse.json({ ok: true });
 }

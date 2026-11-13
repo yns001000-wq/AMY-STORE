@@ -63,6 +63,11 @@ Après un ajout, il faut redéployer (Vercel → Deployments → « Redeploy »)
 
 Supabase n'envoie que **2 e-mails de confirmation par heure** avec son service d'envoi par défaut. Avant d'ouvrir au public, il faut y brancher Resend (Supabase → Authentication → Emails → SMTP), sinon la troisième personne qui s'inscrit dans l'heure ne recevra pas son e-mail.
 
+## E-mails aux couleurs de MySite
+
+- [x] E-mails envoyés par le site (bienvenue, résiliation, rétractation, renouvellement annuel, suppression de compte, signalement) : en-tête « ✨ MySite », emoji, bouton, version texte. Ils partiront dès que Resend est branché (`RESEND_API_KEY`, `EMAIL_EXPEDITEUR=MySite <bonjour@mysite-app.com>`).
+- [ ] E-mails d'inscription et de mot de passe oublié (envoyés par Supabase) : modèles prêts (`app/scripts/modeles-supabase.ts`), mais Supabase refuse de les personnaliser tant qu'il utilise son propre service d'envoi. Ils s'appliqueront une fois Resend branché comme serveur d'envoi de Supabase (nom d'expéditeur « MySite »).
+
 ## Coût de l'IA et marge
 
 Formule mixte : Claude Opus 5.5 rédige les sites sur mesure (ce que l'abonné montre à son client) ; Claude Sonnet 5.5, moitié moins cher, rédige les messages et les retouches.

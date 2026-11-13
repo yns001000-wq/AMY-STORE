@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { stripe } from "@/lib/stripe";
-import { envoyerEmail, signature } from "@/lib/email";
+import { envoyerEmail, urlSite } from "@/lib/email";
 import { journaliser } from "@/lib/journal";
 import { PLANS, estPlan } from "@/lib/plans";
 
@@ -23,7 +23,15 @@ export async function POST() {
   const offre = estPlan(p.plan) ? PLANS[p.plan].nom : String(p.plan);
   await journaliser(session.user.id, session.user.email, "resiliation", { abonnement: sub.id, offre, fin: fin?.toISOString() ?? null });
   const dateFin = fin ? fin.toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" }) : "la fin de la période en cours";
-  const email = await envoyerEmail(session.user.email ?? "", "Confirmation de résiliation de votre abonnement MySite",
-    `Bonjour,\n\nNous confirmons la résiliation de votre abonnement MySite ${offre}, demandée le ${new Date().toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" })}.\n\nVous gardez l'accès à votre offre jusqu'au ${dateFin}. Aucun prélèvement ne sera effectué ensuite : votre compte repassera en offre Gratuite et vos données resteront accessibles.\n\nVous avez changé d'avis ? Vous pouvez reprendre votre abonnement depuis « Mon abonnement » avant cette date.${signature()}`);
+  const email = await envoyerEmail(session.user.email ?? "", "✅ Résiliation de ton abonnement MySite confirmée", {
+    emoji: "✅", titre: "Ta résiliation est bien enregistrée",
+    paragraphes: [
+      `Nous confirmons la résiliation de ton abonnement MySite ${offre}, demandée le ${new Date().toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" })}.`,
+      `Tu gardes l'accès à ton offre jusqu'au ${dateFin}. Aucun prélèvement ne sera effectué ensuite : ton compte repassera en offre Gratuite et tes données resteront accessibles.`,
+      "Tu as changé d'avis ? Tu peux reprendre ton abonnement depuis « Mon abonnement » avant cette date. 💜",
+    ],
+    bouton: { texte: "Voir mon abonnement", url: urlSite("/espace/abonnement") },
+    note: "Cet e-mail vaut confirmation de ta résiliation : garde-le.",
+  });
   return NextResponse.json({ ok: true, fin: fin?.toISOString() ?? null, email });
 }
