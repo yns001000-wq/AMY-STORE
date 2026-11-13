@@ -62,6 +62,12 @@ Après un ajout, il faut redéployer (Vercel → Deployments → « Redeploy »)
 
 Supabase n'envoie que **2 e-mails de confirmation par heure** avec son service d'envoi par défaut. Avant d'ouvrir au public, il faut y brancher Resend (Supabase → Authentication → Emails → SMTP), sinon la troisième personne qui s'inscrit dans l'heure ne recevra pas son e-mail.
 
+## Sites des clients des abonnés
+
+- [x] Chaque site mis en ligne a sa propre adresse : `nom-du-commerce.mysite-app.com` (domaine générique relié au projet). Vérifié le 13 novembre : mise en ligne, page isolée de l'application, mentions légales complètes, retrait.
+- [x] Mentions légales de ces sites : Vercel ne publie aucun numéro de téléphone ; son adresse de contact (vercel.com/help) est indiquée à la place.
+- [ ] Branchement automatique du nom de domaine d'un commerçant : identifiants du projet réglés, il manque `VERCEL_TOKEN` (jeton Vercel à coller par toi dans les variables d'environnement). Sans lui, l'ajout se fait à la main dans Vercel.
+
 ## E-mails aux couleurs de MySite
 
 - [x] Domaine `mysite-app.com` vérifié chez Resend (région Irlande), le 13 novembre.
