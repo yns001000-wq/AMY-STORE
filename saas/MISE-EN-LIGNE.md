@@ -67,7 +67,7 @@ Supabase n'envoie que **2 e-mails de confirmation par heure** avec son service d
 - [x] Domaine `mysite-app.com` vérifié chez Resend (région Irlande), le 13 novembre.
 - [x] E-mails envoyés par le site (bienvenue, résiliation, rétractation, renouvellement annuel, suppression de compte, signalement) : en-tête « ✨ MySite », emoji, bouton, version texte. Expéditeur `MySite <bonjour@mysite-app.com>`, clé d'envoi seule dans Vercel.
 - [x] E-mails d'inscription et de mot de passe oublié : Supabase envoie par Resend (expéditeur « MySite »), avec les modèles MySite (`app/scripts/modeles-supabase.ts`). Limite relevée à 100 e-mails par heure. Vérifié par une inscription de test : e-mail parti et livré.
-- [ ] Clé Resend « configuration » (accès complet) : à supprimer dans Resend, elle ne sert plus.
+- [x] Clé Resend en accès complet supprimée le 13 novembre. Restent : « MySite site (envoi) » et « MySite Supabase (SMTP) », qui ne peuvent qu'envoyer, plus la clé « Onboarding » créée à l'inscription, qui ne sert à rien.
 
 ## Coût de l'IA et marge
 
