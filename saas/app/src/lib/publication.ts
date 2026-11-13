@@ -66,13 +66,15 @@ export interface Mentions {
   realisation?: string;     // « Site réalisé par … » (facultatif)
 }
 
-export interface Hebergeur { nom: string; adresse: string; telephone?: string }
+/** Hébergeur affiché dans les mentions légales des sites publiés. `contact` sert quand l'hébergeur ne publie pas de téléphone (c'est le cas de Vercel). */
+export interface Hebergeur { nom: string; adresse: string; telephone?: string; contact?: string }
 
 export function hebergeurParDefaut(env: Record<string, string | undefined> = process.env): Hebergeur {
   return {
     nom: env.HEBERGEUR_NOM || "Vercel Inc.",
     adresse: env.HEBERGEUR_ADRESSE || "440 N Barranca Ave #4133, Covina, CA 91723, États-Unis",
     telephone: env.HEBERGEUR_TELEPHONE || undefined,
+    contact: env.HEBERGEUR_CONTACT || "https://vercel.com/help",
   };
 }
 
@@ -95,7 +97,7 @@ export function insererMentions(html: string, m: Mentions, heb: Hebergeur, servi
   const lignes = [
     `<p><b>Éditeur</b> : ${h(m.editeur)}${m.forme ? `, ${h(m.forme)}` : ""}${m.siret ? `, SIRET ${h(m.siret)}` : ""}<br>${h(m.adresse)}${m.telephone ? `<br>Tél. ${h(m.telephone)}` : ""}${m.email ? `<br>${h(m.email)}` : ""}</p>`,
     `<p><b>Directeur de la publication</b> : ${h(m.directeur)}</p>`,
-    `<p><b>Hébergeur</b> : ${h(heb.nom)}, ${h(heb.adresse)}${heb.telephone ? `, tél. ${h(heb.telephone)}` : ""}</p>`,
+    `<p><b>Hébergeur</b> : ${h(heb.nom)}, ${h(heb.adresse)}${heb.telephone ? `, tél. ${h(heb.telephone)}` : heb.contact ? `, contact : ${h(heb.contact)}` : ""}</p>`,
     service ? `<p><b>Service de création et d'hébergement</b> : MySite${service.contact ? ` (${h(service.contact)})` : ""}. <a href="${h(service.lienSignalement)}" target="_blank" rel="noopener">Signaler un contenu illicite</a></p>` : "",
     m.realisation ? `<p><b>Réalisation</b> : ${h(m.realisation)}</p>` : "",
     `<p><b>Confidentialité</b> : ce site ne dépose aucun cookie et ne collecte aucune donnée personnelle. La carte Google Maps ne se charge que si vous cliquez pour l'afficher ; Google applique alors sa propre politique de confidentialité. Pour toute question : ${h(m.email || m.telephone || m.adresse)}.</p>`,

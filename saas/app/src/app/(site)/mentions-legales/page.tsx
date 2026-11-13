@@ -14,7 +14,7 @@ export default function Mentions() {
         TVA non applicable, article 293 B du CGI.<br />
         Directeur de la publication : <Info v={E.nom} manque="Prénom NOM" />.</p>
       <h2>Hébergement</h2>
-      <p>Application : Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis. Base de données : Supabase Inc. (serveurs en Union européenne, région <Info v={E.regionSupabase} manque="Francfort ou Paris" />).</p>
+      <p>Application : Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis (contact : <a href="https://vercel.com/help" target="_blank" rel="noopener">vercel.com/help</a>). Base de données : Supabase Inc. (serveurs en Union européenne, région <Info v={E.regionSupabase} manque="Francfort ou Paris" />).</p>
       <h2>Données des entreprises</h2>
       <p>Base Sirene, INSEE, licence ouverte Etalab 2.0, via l&apos;API Recherche d&apos;entreprises. Données OpenStreetMap © contributeurs OpenStreetMap, licence ODbL : la base dérivée est disponible sur demande sous la même licence.</p>
       <h2>Signalement de contenus</h2>

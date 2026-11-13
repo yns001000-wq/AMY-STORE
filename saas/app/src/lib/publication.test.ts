@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ideesDomaines, insererMentions, mentionsManquantes, normaliserDomaine, reglagesDNS, slugDepuis, slugValide, urlPublique } from "./publication";
+import { hebergeurParDefaut, ideesDomaines, insererMentions, mentionsManquantes, normaliserDomaine, reglagesDNS, slugDepuis, slugValide, urlPublique } from "./publication";
 import { rendreSite, siteExpress } from "./studio";
 import { PLANS } from "./plans";
 
@@ -63,5 +63,20 @@ describe("domaineInterdit", () => {
   });
   it("accepte le domaine d'un client", () => {
     for (const d of ["pizzabella.fr", "www.pizzabella.fr", "mysite-pizza.fr"]) expect(domaineInterdit(d, env)).toBe(false);
+  });
+});
+
+describe("hébergeur dans les mentions des sites publiés", () => {
+  const m = { editeur: "Pizza Bella", adresse: "1 rue X, Lyon", directeur: "Jean Martin", telephone: "04 00 00 00 00" };
+  const page = "<html><body><footer><div></div></footer></body></html>";
+  it("affiche un moyen de contact de l'hébergeur quand il ne publie pas de téléphone", () => {
+    const heb = hebergeurParDefaut({});
+    expect(heb.contact).toBe("https://vercel.com/help");
+    expect(insererMentions(page, m, heb)).toContain("Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis, contact : https://vercel.com/help");
+  });
+  it("préfère le téléphone s'il est renseigné", () => {
+    const html = insererMentions(page, m, hebergeurParDefaut({ HEBERGEUR_TELEPHONE: "+1 000" }));
+    expect(html).toContain(", tél. +1 000");
+    expect(html).not.toContain("contact : https://vercel.com/help");
   });
 });
