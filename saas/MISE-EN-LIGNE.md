@@ -66,7 +66,7 @@ Supabase n'envoie que **2 e-mails de confirmation par heure** avec son service d
 
 - [x] Chaque site mis en ligne a sa propre adresse : `nom-du-commerce.mysite-app.com` (domaine générique relié au projet). Vérifié le 13 novembre : mise en ligne, page isolée de l'application, mentions légales complètes, retrait.
 - [x] Mentions légales de ces sites : Vercel ne publie aucun numéro de téléphone ; son adresse de contact (vercel.com/help) est indiquée à la place.
-- [ ] Branchement automatique du nom de domaine d'un commerçant : identifiants du projet réglés, il manque `VERCEL_TOKEN` (jeton Vercel à coller par toi dans les variables d'environnement). Sans lui, l'ajout se fait à la main dans Vercel.
+- [x] Branchement automatique du nom de domaine d'un commerçant : `VERCEL_TOKEN` en place. Vérifié le 13 novembre : à la mise en ligne, le domaine et son www sont ajoutés au projet ; au retrait, ils sont enlevés. Le commerçant doit encore régler ses DNS chez son registraire (instructions affichées à l'abonné).
 
 ## E-mails aux couleurs de MySite
 
