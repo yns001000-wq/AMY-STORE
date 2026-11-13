@@ -54,7 +54,6 @@ Quand le compte passera en mode réel, il faudra recréer les mêmes prix en ré
 | Variable | Valeur | Sans elle |
 |---|---|---|
 | `ADMIN_EMAILS` | ton adresse e-mail de connexion à MySite | la page « Suivi des ventes » reste cachée |
-| `RESEND_API_KEY`, `EMAIL_EXPEDITEUR` | compte gratuit sur resend.com | pas d'e-mails de service (bienvenue, résiliation, rappel de renouvellement annuel) |
 | `CONTACT_EMAIL`, `EDITEUR_NOM`, `EDITEUR_ADRESSE`, `EDITEUR_TELEPHONE`, `EDITEUR_SIREN`, `MEDIATEUR_CONSOMMATION` | ton identité d'entrepreneur | pages légales incomplètes |
 
 Après un ajout, il faut redéployer (Vercel → Deployments → « Redeploy »).
@@ -65,8 +64,10 @@ Supabase n'envoie que **2 e-mails de confirmation par heure** avec son service d
 
 ## E-mails aux couleurs de MySite
 
-- [x] E-mails envoyés par le site (bienvenue, résiliation, rétractation, renouvellement annuel, suppression de compte, signalement) : en-tête « ✨ MySite », emoji, bouton, version texte. Ils partiront dès que Resend est branché (`RESEND_API_KEY`, `EMAIL_EXPEDITEUR=MySite <bonjour@mysite-app.com>`).
-- [ ] E-mails d'inscription et de mot de passe oublié (envoyés par Supabase) : modèles prêts (`app/scripts/modeles-supabase.ts`), mais Supabase refuse de les personnaliser tant qu'il utilise son propre service d'envoi. Ils s'appliqueront une fois Resend branché comme serveur d'envoi de Supabase (nom d'expéditeur « MySite »).
+- [x] Domaine `mysite-app.com` vérifié chez Resend (région Irlande), le 13 novembre.
+- [x] E-mails envoyés par le site (bienvenue, résiliation, rétractation, renouvellement annuel, suppression de compte, signalement) : en-tête « ✨ MySite », emoji, bouton, version texte. Expéditeur `MySite <bonjour@mysite-app.com>`, clé d'envoi seule dans Vercel.
+- [x] E-mails d'inscription et de mot de passe oublié : Supabase envoie par Resend (expéditeur « MySite »), avec les modèles MySite (`app/scripts/modeles-supabase.ts`). Limite relevée à 100 e-mails par heure. Vérifié par une inscription de test : e-mail parti et livré.
+- [ ] Clé Resend « configuration » (accès complet) : à supprimer dans Resend, elle ne sert plus.
 
 ## Coût de l'IA et marge
 
