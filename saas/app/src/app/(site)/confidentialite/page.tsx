@@ -53,7 +53,9 @@ export default function Confidentialite() {
       <p>Vous pouvez introduire une réclamation auprès de la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>).</p>
 
       <h2>F. Cookies</h2>
-      <p>MySite utilise uniquement les cookies strictement nécessaires à la connexion et à la sécurité : aucun consentement n&apos;est requis. Aucun cookie publicitaire ni de mesure d&apos;audience n&apos;est utilisé.</p>
+      <p>MySite utilise les cookies nécessaires à la connexion et à la sécurité. Aucun cookie publicitaire ni de mesure d&apos;audience n&apos;est utilisé.</p>
+      <p><b>Cookie de parrainage</b> (« mysite_parrain ») : déposé uniquement si vous arrivez par le lien de parrainage d&apos;un utilisateur. Il contient seulement le code de ce parrain, pendant 30 jours, pour vous appliquer la réduction de bienvenue et enregistrer le parrainage si vous créez un compte (voir le <Link href="/reglement-parrainage">règlement du parrainage</Link>). Vous pouvez le supprimer à tout moment dans votre navigateur ; vous perdez alors la réduction.</p>
+      <p><b>Parrainage :</b> si vous êtes parrainé, votre parrain voit votre prénom, l&apos;initiale de votre nom et l&apos;étape du parrainage (inscrit, 1er paiement fait, validé ou annulé), jamais votre e-mail ni vos paiements. Pour vérifier qu&apos;il ne s&apos;agit pas d&apos;un auto-parrainage, nous comparons les adresses e-mail et l&apos;empreinte des cartes bancaires fournie par Stripe (intérêt légitime : prévention de la fraude).</p>
       <p>Les sites publiés avec MySite ne déposent aucun cookie. La carte Google Maps ne se charge qu&apos;après un clic du visiteur.</p>
 
       <h2>G. Sécurité</h2>

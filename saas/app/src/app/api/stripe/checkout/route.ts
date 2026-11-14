@@ -3,6 +3,7 @@ import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { causeErreurStripe, stripe } from "@/lib/stripe";
 import { priceIdStripe, type Periode } from "@/lib/plans";
+import { remisePourPaiement } from "@/lib/parrainage-serveur";
 
 const SITE = () => process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -31,6 +32,8 @@ export async function POST(req: Request) {
       client = c.id;
       await admin.from("profils").update({ stripe_customer_id: client }).eq("id", session.user.id);
     }
+    // Filleul neuf : -20 % sur le 1er paiement (coupon « une seule fois »). Stripe n'accepte pas un code promo en plus d'une remise.
+    const remise = await remisePourPaiement(session.user.id, client);
     const checkout = await stripe().checkout.sessions.create({
       mode: "subscription",
       // « Managed Payments » (Stripe vendeur officiel à votre place) est activé par défaut sur les nouveaux comptes. On le coupe ici :
@@ -39,8 +42,8 @@ export async function POST(req: Request) {
       customer: client,
       client_reference_id: session.user.id,
       line_items: [{ price, quantity: 1 }],
-      subscription_data: { metadata: { user_id: session.user.id, acces_immediat_demande: profil.statut_utilisateur === "professionnel" ? "professionnel" : "oui" } },
-      allow_promotion_codes: true,
+      subscription_data: { metadata: { user_id: session.user.id, acces_immediat_demande: profil.statut_utilisateur === "professionnel" ? "professionnel" : "oui", ...(remise ? { parrainage_id: remise.parrainageId } : {}) } },
+      ...(remise ? { discounts: [{ coupon: remise.coupon }] } : { allow_promotion_codes: true }),
       custom_text: { submit: { message: "Abonnement sans engagement, renouvelé automatiquement chaque période et résiliable à tout moment depuis « Mon abonnement ». En validant, vous acceptez les CGV et les CGU de MySite." } },
       locale: "fr",
       success_url: `${SITE()}/espace?abonnement=ok`,

@@ -3,11 +3,13 @@ import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { abonnementActif, planDepuisPriceId } from "@/lib/plans";
+import { facturePayee, finAbonnement, litige, remboursement } from "@/lib/parrainage-serveur";
 
 /**
  * Webhook Stripe : seule source de vérité pour l'offre d'un utilisateur.
  * Signature vérifiée, chaque événement traité une seule fois (table evenements_stripe).
- * Événements à activer dans Stripe : checkout.session.completed, customer.subscription.created/updated/deleted.
+ * Événements à activer dans Stripe : checkout.session.completed, customer.subscription.created/updated/deleted,
+ * et pour le parrainage : invoice.paid, charge.refunded, charge.dispute.created.
  */
 export async function POST(req: Request) {
   const signature = req.headers.get("stripe-signature"), secret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -43,6 +45,14 @@ export async function POST(req: Request) {
       const q = admin.from("profils").update(maj);
       const { error } = userId ? await q.eq("id", userId) : await q.eq("stripe_customer_id", String(sub.customer));
       if (error) throw error;
+      await finAbonnement(sub, supprime);
+    } else if (ev.type === "invoice.paid") {
+      await facturePayee(ev.data.object as Stripe.Invoice);
+    } else if (ev.type === "charge.refunded") {
+      const c = ev.data.object as Stripe.Charge;
+      await remboursement(c, c.metadata?.motif === "retractation_L221-18");
+    } else if (ev.type === "charge.dispute.created") {
+      await litige(ev.data.object as Stripe.Dispute);
     }
   } catch (e) {
     await admin.from("evenements_stripe").delete().eq("id", ev.id); // Stripe réessaiera

@@ -6,6 +6,7 @@ import { profilEtPlan } from "@/lib/quotas";
 import { PLANS } from "@/lib/plans";
 import { LIBELLES, STATUTS } from "@/lib/factures";
 import { EditeurDocument } from "@/components/factures/EditeurDocument";
+import { CarteParrainage } from "@/components/CarteParrainage";
 
 export const metadata = { title: "Document" };
 
@@ -29,6 +30,7 @@ export default async function PageDocument({ params }: { params: Promise<{ id: s
         <div><p className="note" style={{ margin: "0 0 .3rem" }}>{doc.client?.nom || "Client à compléter"}</p><h1>{LIBELLES[doc.type as "devis"]} {doc.numero ?? "(brouillon)"}</h1></div>
         <span className="statut" style={{ color: s.couleur, background: `color-mix(in srgb, ${s.couleur} 14%, transparent)` }}>{s.nom}</span>
       </div>
+      {doc.type === "devis" && doc.statut === "accepte" && <CarteParrainage moment="devis" />}
       <EditeurDocument doc={doc} emetteur={ent} origine={orig ? `${LIBELLES[orig.type as "devis"]} ${orig.numero ?? ""}` : null} peutEmettre={PLANS[plan].facturation} />
     </>
   );

@@ -3,6 +3,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { Check, Minus, Star } from "lucide-react";
 import { ORDRE_PLANS, PLANS, type Periode, type PlanId } from "@/lib/plans";
+import { premierPaiementRemise } from "@/lib/parrainage";
+import { useInvitation } from "./BandeauParrainage";
 
 const fmt = (n: number) => n.toLocaleString("fr-FR");
 
@@ -25,8 +27,11 @@ function Action({ id, periode, mode, particulier, abonne }: { id: PlanId; period
 }
 
 /** Grille des offres, avec bascule mensuel/annuel. */
-export function Tarifs({ mode, planActuel, particulier, abonne, voulue }: { mode: "inscription" | "abonnement"; planActuel?: PlanId; particulier?: boolean; abonne?: boolean; voulue?: PlanId | null }) {
+export function Tarifs({ mode, planActuel, particulier, abonne, voulue, remise }: { mode: "inscription" | "abonnement"; planActuel?: PlanId; particulier?: boolean; abonne?: boolean; voulue?: PlanId | null; remise?: boolean }) {
   const [periode, setPeriode] = useState<Periode>("mensuel");
+  // -20 % sur le 1er paiement : filleul connecté et éligible (vérifié par le serveur), ou visiteur arrivé par un lien de parrainage.
+  const invite = useInvitation();
+  const avecRemise = mode === "abonnement" ? !!remise : !!invite;
   return (
     <>
       <div style={{ display: "flex" }}>
@@ -57,7 +62,11 @@ export function Tarifs({ mode, planActuel, particulier, abonne, voulue }: { mode
               <h3 id={`offre-${id}`}>{p.nom}</h3>
               <p className="accroche">{p.accroche}</p>
               <p className="prix"><b>{prix.toLocaleString("fr-FR", annuel ? { minimumFractionDigits: 2, maximumFractionDigits: 2 } : {})} €</b><span>{annuel ? "/mois" : "TTC / mois"}</span></p>
-              <p className="sous-prix">{annuel ? <>payé <b>{fmt(p.prixAnnuel)} €</b> TTC une fois par an</> : p.prixAnnuel ? "sans engagement" : "pour toujours"}</p>
+              {avecRemise && p.prixMensuel > 0 ? (() => {
+                const plein = annuel ? p.prixAnnuel : p.prixMensuel, reduit = premierPaiementRemise(plein);
+                const f2 = (n: number) => n.toLocaleString("fr-FR", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 });
+                return <p className="sous-prix">1er paiement : <span className="prix-barre" style={{ display: "inline" }}><s>{f2(plein)} €</s><em>{f2(reduit)} €</em></span> (-20 %), puis <b>{f2(plein)} €</b>{annuel ? "/an" : "/mois"}</p>;
+              })() : <p className="sous-prix">{annuel ? <>payé <b>{fmt(p.prixAnnuel)} €</b> TTC une fois par an</> : p.prixAnnuel ? "sans engagement" : "pour toujours"}</p>}
               <ul className="inclus">
                 {lignes.map(([oui, t]) => <li key={t} className={oui ? "" : "non"}>{oui ? <Check aria-hidden /> : <Minus aria-hidden />}<span>{t}</span></li>)}
               </ul>

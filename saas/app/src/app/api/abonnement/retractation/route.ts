@@ -5,6 +5,7 @@ import { stripe } from "@/lib/stripe";
 import { envoyerEmail, urlSite } from "@/lib/email";
 import { journaliser } from "@/lib/journal";
 import { montantRetractation, retractationPossible } from "@/lib/conformite";
+import { annulerFilleul } from "@/lib/parrainage-serveur";
 
 /**
  * Rétractation d'un consommateur dans les 14 jours (art. L221-18) : arrêt immédiat de l'abonnement et remboursement,
@@ -18,6 +19,7 @@ export async function POST() {
   const droit = retractationPossible({ particulier: p?.statut_utilisateur !== "professionnel", debut: p?.abonnement_debut ? new Date(p.abonnement_debut) : null, deja: !!p?.retractation_le });
   if (!droit.ok || !p?.stripe_subscription_id) return NextResponse.json({ erreur: droit.raison ?? "Aucun abonnement en cours." }, { status: 409 });
 
+  await annulerFilleul(session.user.id, "retractation"); // parrainage annulé, sans récompense
   const sub = await stripe().subscriptions.retrieve(p.stripe_subscription_id);
   const item = sub.items.data[0];
   const charges = await stripe().charges.list({ customer: String(p.stripe_customer_id), limit: 1 });

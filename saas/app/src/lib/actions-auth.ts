@@ -1,8 +1,9 @@
 "use server";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { supabaseServeur } from "@/lib/supabase/serveur";
 import { nettoyerSource, offrePayante } from "@/lib/croissance";
+import { COOKIE_PARRAIN, normaliserCode } from "@/lib/parrainage";
 
 const sur = (s: FormDataEntryValue | null) => (typeof s === "string" && s.startsWith("/espace") ? s : "/espace");
 // Adresse de retour des e-mails (confirmation, mot de passe) : toujours celle configurée, jamais l'en-tête Origin envoyé par le navigateur,
@@ -21,10 +22,12 @@ export async function sInscrire(form: FormData) {
   const source = nettoyerSource(form.get("src")), offre = offrePayante(form.get("offre"));
   const retour = new URLSearchParams({ mode: "inscription", ...(offre ? { offre } : {}), ...(source ? { src: source } : {}) });
   if (mdp.length < 10) redirect(`/connexion?${retour}&erreur=mdp`);
+  // Code du parrain : celui du lien suivi (cookie de 30 jours). La base vérifie qu'il existe et refuse l'auto-parrainage.
+  const parrain = normaliserCode((await cookies()).get(COOKIE_PARRAIN)?.value);
   const sb = await supabaseServeur();
   const { error } = await sb.auth.signUp({
     email: String(form.get("email")), password: mdp,
-    options: { emailRedirectTo: `${await origineSite()}/auth/callback?suite=/espace/bienvenue`, data: { ...(source ? { source } : {}), ...(offre ? { offre } : {}) } },
+    options: { emailRedirectTo: `${await origineSite()}/auth/callback?suite=/espace/bienvenue`, data: { ...(source ? { source } : {}), ...(offre ? { offre } : {}), ...(parrain ? { parrain } : {}) } },
   });
   if (error) redirect(`/connexion?${retour}&erreur=inscription`);
   redirect("/connexion?verifier=1");

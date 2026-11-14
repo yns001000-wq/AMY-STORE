@@ -5,6 +5,7 @@ import { CheckCircle2, Copy, ExternalLink, Globe, RefreshCw, Rocket, XCircle } f
 import type { CapacitesStudio } from "@/lib/plans";
 import { slugDepuis } from "@/lib/publication";
 import type { DonneesSite } from "@/lib/studio";
+import { CarteParrainage } from "../CarteParrainage";
 
 interface Etat {
   publie: boolean; slug?: string; domaine?: string | null; url?: string; urlDomaine?: string | null; mentions?: Record<string, string>;
@@ -19,6 +20,7 @@ export function PanneauPublication({ id, d, cap, siret, nonEnregistre, onMessage
   const [m, setM] = useState({ editeur: String(d.nom ?? ""), forme: "", siret: siret ?? "", adresse: [d.adresse, [d.code_postal, d.ville].filter(Boolean).join(" ")].filter(Boolean).join(", "), telephone: String(d.telephone ?? ""), email: String(d.email ?? ""), directeur: "", realisation: "" });
   const [verifie, setVerifie] = useState(false);
   const [charge, setCharge] = useState(false);
+  const [premiere, setPremiere] = useState(false); // 1re mise en ligne de ce site : proposition de parrainage (au plus une fois par semaine)
 
   async function lire() {
     const r = await fetch(`/api/studio/${id}/publier`);
@@ -36,6 +38,7 @@ export function PanneauPublication({ id, d, cap, siret, nonEnregistre, onMessage
       const j = await r.json();
       if (!r.ok) { onMessage({ t: j.erreur ?? "Mise en ligne impossible." }); return; }
       onMessage({ ok: true, t: etat?.publie ? "Site mis à jour en ligne." : "Votre site est en ligne !" });
+      if (!etat?.publie) setPremiere(true);
       if (j.branchement?.startsWith("erreur")) onMessage({ t: `Site en ligne, mais le domaine n'a pas pu être relié automatiquement (${j.branchement}).` });
       await lire();
     } catch { onMessage({ t: "Connexion impossible. Réessayez." }); } finally { setCharge(false); }
@@ -53,6 +56,7 @@ export function PanneauPublication({ id, d, cap, siret, nonEnregistre, onMessage
 
   return (
     <div className="publication">
+      {premiere && <CarteParrainage moment="publication" />}
       {etat?.publie && (
         <div className="en-ligne">
           <p><CheckCircle2 aria-hidden /><b>En ligne</b> depuis le {new Date(etat.maj_le ?? Date.now()).toLocaleDateString("fr-FR")}</p>

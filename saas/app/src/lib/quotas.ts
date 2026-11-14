@@ -10,7 +10,7 @@ export function moisCourant(d = new Date()): string {
 export async function profilEtPlan(userId: string): Promise<{ profil: Record<string, unknown>; plan: PlanId; quotas: Record<TypeQuota, number> }> {
   const { data, error } = await supabaseAdmin().from("profils").select("*").eq("id", userId).single();
   if (error || !data) throw new Error("Profil introuvable");
-  const plan = planEffectif(data as { plan: string });
+  const plan = planEffectif(data as { plan: string; pro_offert_jusqu?: string | null });
   return { profil: data, plan, quotas: PLANS[plan].quotas };
 }
 

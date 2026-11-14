@@ -77,9 +77,14 @@ export function estPlan(v: unknown): v is PlanId {
   return typeof v === "string" && (ORDRE_PLANS as string[]).includes(v);
 }
 
-/** Offre réellement appliquée (une valeur inconnue donne le gratuit). Il n'y a pas d'essai gratuit des offres payantes. */
-export function planEffectif(p: { plan: string }): PlanId {
-  return estPlan(p.plan) ? p.plan : "gratuit";
+/**
+ * Offre réellement appliquée (une valeur inconnue donne le gratuit). Il n'y a pas d'essai gratuit des offres payantes.
+ * Un compte en Gratuit qui a gagné des jours de Pro par le parrainage profite de Pro jusqu'à la date acquise.
+ */
+export function planEffectif(p: { plan: string; pro_offert_jusqu?: string | null }, maintenant = new Date()): PlanId {
+  const plan = estPlan(p.plan) ? p.plan : "gratuit";
+  if (plan === "gratuit" && p.pro_offert_jusqu && new Date(p.pro_offert_jusqu).getTime() > maintenant.getTime()) return "pro";
+  return plan;
 }
 
 export function limite(plan: PlanId, type: TypeQuota): number {

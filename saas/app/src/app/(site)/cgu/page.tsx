@@ -64,6 +64,9 @@ export default function Cgu() {
       <h2>7. Factures et Académie</h2>
       <p>L&apos;outil de devis et factures vous aide à respecter les mentions usuelles. Vous restez responsable de vos documents, de leur conservation (10 ans) et de vos déclarations. Les cours de l&apos;Académie sont donnés à titre informatif : ils ne constituent ni un conseil juridique, fiscal ou comptable personnalisé, ni une promesse de revenus.</p>
 
+      <h2>7 bis. Parrainage</h2>
+      <p>Chaque utilisateur peut inviter d&apos;autres personnes avec son lien personnel, dans les conditions du <Link href="/reglement-parrainage">règlement du parrainage</Link>. Il partage ce lien lui-même et s&apos;engage à ne pas envoyer de messages non sollicités en masse ni à présenter l&apos;offre de façon trompeuse. L&apos;auto-parrainage et toute fraude entraînent l&apos;annulation du parrainage.</p>
+
       <h2>8. Disponibilité du service</h2>
       <p>Nous faisons nos meilleurs efforts pour que le service soit disponible et sécurisé, sans garantie de disponibilité permanente. Des interruptions pour maintenance peuvent avoir lieu, annoncées autant que possible.</p>
 

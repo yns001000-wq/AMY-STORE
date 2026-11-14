@@ -7,6 +7,7 @@ import { Tarifs } from "@/components/Tarifs";
 import { GestionAbonnement } from "@/components/GestionAbonnement";
 import { retractationPossible } from "@/lib/conformite";
 import { offrePayante } from "@/lib/croissance";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export const metadata = { title: "Mon abonnement" };
 
@@ -16,6 +17,10 @@ export default async function Abonnement({ searchParams }: { searchParams: Promi
   const q = await searchParams;
   const { profil, plan } = await profilEtPlan(session.user.id);
   const abonne = Boolean(profil.stripe_subscription_id);
+  // Filleul neuf : la remise de 20 % sera appliquée au paiement (la vérification complète est refaite au moment de payer).
+  const { data: par } = profil.parrain_id && !profil.a_deja_paye ? await supabaseAdmin().from("parrainages").select("statut").eq("filleul_id", session.user.id).maybeSingle() : { data: null };
+  const remise = par?.statut === "inscrit" && !abonne;
+  const proOffert = !abonne && profil.pro_offert_jusqu && new Date(profil.pro_offert_jusqu as string).getTime() > Date.now() ? new Date(profil.pro_offert_jusqu as string) : null;
   return (
     <>
       <div className="barre-haut"><div><p className="note" style={{ margin: "0 0 .3rem" }}>Offre actuelle : {PLANS[plan].nom}</p><h1>Mon abonnement</h1></div></div>
@@ -23,6 +28,8 @@ export default async function Abonnement({ searchParams }: { searchParams: Promi
       {offrePayante(q.offre) && !abonne && <p className="alerte ok" role="status">Votre cockpit est prêt. Vous aviez choisi l&apos;offre {PLANS[offrePayante(q.offre)!].nom} : validez-la ci-dessous, ou <a href="/espace">commencez en Gratuit</a> et décidez plus tard.</p>}
       {q.erreur === "paiement" && <p className="alerte" role="alert">Le paiement n&apos;a pas pu démarrer : rien n&apos;a été prélevé. Réessayez dans un instant ; si le problème continue, contactez-nous.</p>}
       {q.annule && <p className="alerte" role="status">Paiement annulé : rien n&apos;a été prélevé.</p>}
+      {remise && <p className="alerte ok" role="status">🎁 Tu as été invité : -20 % sur ton 1er paiement, appliqués automatiquement. Les paiements suivants sont au prix normal.</p>}
+      {proOffert && <p className="alerte ok" role="status">🎁 Offre Pro offerte grâce au parrainage jusqu&apos;au {proOffert.toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" })}. Rien à payer : ensuite, ton compte repasse en Gratuit.</p>}
       {abonne && (
         <div className="carte upsell" style={{ marginBottom: "1.6rem" }}>
           <span className="pastille p-violet" style={{ margin: 0 }}><CreditCard aria-hidden /></span>
@@ -33,7 +40,7 @@ export default async function Abonnement({ searchParams }: { searchParams: Promi
       )}
       {abonne && <div style={{ marginBottom: "1.6rem" }}><GestionAbonnement offre={PLANS[plan].nom} fin={(profil.periode_fin as string) ?? null} resiliationPrevue={!!profil.resiliation_prevue}
         retractation={(() => { const r = retractationPossible({ particulier: profil.statut_utilisateur !== "professionnel", debut: profil.abonnement_debut ? new Date(profil.abonnement_debut as string) : null, deja: !!profil.retractation_le }); return { ok: r.ok, jusquau: r.jusquau?.toISOString() ?? null }; })()} /></div>}
-      <Tarifs mode="abonnement" planActuel={plan} particulier={profil.statut_utilisateur !== "professionnel"} abonne={abonne} voulue={abonne ? null : offrePayante(q.offre)} />
+      <Tarifs mode="abonnement" planActuel={plan} particulier={profil.statut_utilisateur !== "professionnel"} abonne={abonne} voulue={abonne ? null : offrePayante(q.offre)} remise={remise} />
       <p className="note" style={{ marginTop: "1.5rem", textAlign: "center" }}>Paiement sécurisé par Stripe · Prix TTC, TVA non applicable (art. 293 B du CGI) · Résiliable à tout moment</p>
     </>
   );

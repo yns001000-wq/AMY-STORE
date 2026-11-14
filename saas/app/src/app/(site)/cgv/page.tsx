@@ -61,6 +61,9 @@ export default function Cgv() {
       <p>Vous pouvez changer d&apos;offre à tout moment. Le changement vers une offre supérieure est immédiat, avec un calcul au prorata. Le changement vers une offre inférieure prend effet à la prochaine échéance.</p>
       <p>Toute hausse de prix vous est annoncée au moins 30 jours avant son application. Vous pouvez résilier avant qu&apos;elle ne s&apos;applique.</p>
 
+      <h2>7 bis. Parrainage</h2>
+      <p>Un filleul bénéficie de -20 % sur son 1er paiement (1er mois ou 1re année), une seule fois, s&apos;il n&apos;a jamais été abonné. Le parrain reçoit 29 € de crédit déduit de ses prochaines factures, ou 30 jours de l&apos;offre Pro s&apos;il est en offre Gratuite, dans les conditions du <Link href="/reglement-parrainage">règlement du parrainage</Link>, qui fait partie des présentes CGV. Le crédit n&apos;est ni remboursable en argent, ni transférable.</p>
+
       <h2>8. Conformité du service</h2>
       <p>Pour les consommateurs, MySite est tenu de la garantie légale de conformité des contenus et services numériques pendant toute la durée de l&apos;abonnement (articles L224-25-12 et suivants du Code de la consommation). En cas de défaut, contactez-nous : nous le corrigerons ou, à défaut, vous pourrez obtenir une réduction de prix ou la résolution du contrat.</p>
 

@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { estAdmin, statistiques, type LigneProfil } from "@/lib/croissance";
+import { statsParrainage } from "@/lib/parrainage";
 
 export const metadata = { title: "Suivi des ventes", robots: { index: false } };
 export const dynamic = "force-dynamic";
@@ -14,10 +15,13 @@ export default async function Suivi() {
   if (!session) redirect("/connexion");
   if (!estAdmin(session.user.email)) notFound();
   const admin = supabaseAdmin();
-  const [{ data: profils }, { data: actifs }] = await Promise.all([
+  const [{ data: profils }, { data: actifs }, { data: parr }, { data: recs }] = await Promise.all([
     admin.from("profils").select("id, plan, periode, abonnement_statut, cgu_acceptees_le, resiliation_prevue, source, cree_le").limit(20000),
     admin.from("consommation").select("user_id").gt("prospects", 0).limit(50000),
+    admin.from("parrainages").select("statut, apporte_centimes").limit(50000),
+    admin.from("recompenses_parrainage").select("type, statut, montant_centimes, jours").limit(50000),
   ]);
+  const sp = statsParrainage(parr ?? [], recs ?? []);
   const lignes = (profils ?? []) as (LigneProfil & { id: string })[];
   const s = statistiques(lignes, new Set((actifs ?? []).map((a) => a.user_id as string)), lignes.map((l) => l.id));
   const pct = (n: number | null) => (n === null || !s.inscrits ? "—" : `${Math.round((n / s.inscrits) * 100)} %`);
@@ -42,6 +46,18 @@ export default async function Suivi() {
           </tbody>
         </table></div>
         <p className="note" style={{ marginBottom: 0 }}>Là où le pourcentage chute le plus, c&apos;est l&apos;étape à améliorer en priorité.</p>
+      </section>
+      <section className="carte" style={{ marginBottom: "1.4rem" }}>
+        <h2 style={{ fontSize: "1.15rem" }}>Parrainage</h2>
+        <div className="table-wrap"><table>
+          <tbody>
+            <tr><td>Parrainages (comptes inscrits avec un lien)</td><td>{sp.parrainages}</td></tr>
+            <tr><td>Filleuls ayant payé</td><td>{sp.payants}</td></tr>
+            <tr><td>Parrainages validés · annulés</td><td>{sp.valides} · {sp.annules}</td></tr>
+            <tr><td>Crédit total donné aux parrains</td><td>{euros(sp.creditDonneCentimes / 100)}{sp.joursProOfferts ? ` + ${sp.joursProOfferts} jours de Pro offerts` : ""}</td></tr>
+            <tr><td>Chiffre d&apos;affaires apporté par les filleuls (encaissé, remboursements déduits)</td><td>{euros(sp.caFilleulsCentimes / 100)}</td></tr>
+          </tbody>
+        </table></div>
       </section>
       <section className="carte">
         <h2 style={{ fontSize: "1.15rem" }}>D&apos;où viennent les inscrits</h2>
