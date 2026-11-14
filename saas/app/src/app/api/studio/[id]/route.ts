@@ -21,7 +21,8 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const ctx = await contexteStudio();
   if ("erreur" in ctx) return ctx.erreur;
-  const { error } = await ctx.session.sb.from("sites").delete().eq("id", (await params).id);
+  const { data, error } = await ctx.session.sb.from("sites").delete().eq("id", (await params).id).select("id");
   if (error) return NextResponse.json({ erreur: "Suppression impossible" }, { status: 500 });
+  if (!data?.length) return NextResponse.json({ erreur: "Site introuvable" }, { status: 404 }); // site d'un autre compte ou déjà supprimé
   return NextResponse.json({ ok: true });
 }

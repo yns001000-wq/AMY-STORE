@@ -8,10 +8,11 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
  * Effet immédiat pour TOUS les utilisateurs : retrait des espaces existants et exclusion des recherches futures.
  */
 export async function POST(req: Request) {
-  const form = await req.formData();
+  const site = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const form = await req.formData().catch(() => null); // envoi mal formé : message d'erreur, jamais d'erreur 500
+  if (!form) return NextResponse.redirect(new URL("/opposition?erreur=1", site), 303);
   const id = String(form.get("siren_siret") ?? "").replace(/\s/g, "");
   const tel = String(form.get("telephone") ?? "").replace(/[^\d+]/g, "");
-  const site = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   if (!/^\d{9}(\d{5})?$/.test(id)) return NextResponse.redirect(new URL("/opposition?erreur=1", site), 303);
   const siren = id.slice(0, 9), siret = id.length === 14 ? id : null;
   // Contre les abus : 10 demandes par heure et par connexion.

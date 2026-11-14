@@ -10,7 +10,8 @@ export async function POST(req: Request) {
   if (!session) return NextResponse.redirect(new URL("/connexion", req.url), 303);
   const { plan } = await profilEtPlan(session.user.id);
   if (!PLANS[plan].facturation) return NextResponse.redirect(new URL("/espace/factures", req.url), 303);
-  const f = await req.formData();
+  const f = await req.formData().catch(() => null);
+  if (!f) return NextResponse.redirect(new URL("/espace/factures", req.url), 303);
   const type = f.get("type") === "facture" ? "facture" : "devis";
   const prospectId = String(f.get("prospect_id") ?? "") || null;
   const { data: p } = prospectId ? await session.sb.from("prospects").select("id, nom, adresse, code_postal, ville, siret, email").eq("id", prospectId).maybeSingle() : { data: null };

@@ -11,7 +11,8 @@ const SITE = () => process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 export async function POST(req: Request) {
   const session = await utilisateurConnecte();
   if (!session) return NextResponse.redirect(new URL("/connexion?suite=/espace/abonnement", SITE()), 303);
-  const form = await req.formData();
+  const form = await req.formData().catch(() => null);
+  if (!form) return NextResponse.json({ erreur: "Requête invalide" }, { status: 400 });
   const plan = String(form.get("plan")), periode = String(form.get("periode")) as Periode;
   if (!["pro", "premium", "ultra"].includes(plan) || !["mensuel", "annuel"].includes(periode)) return NextResponse.json({ erreur: "Offre invalide" }, { status: 400 });
   const price = priceIdStripe(plan as "pro" | "premium" | "ultra", periode);
