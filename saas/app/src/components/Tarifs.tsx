@@ -65,7 +65,7 @@ export function Tarifs({ mode, planActuel, particulier, abonne, voulue, remise }
               {avecRemise && p.prixMensuel > 0 ? (() => {
                 const plein = annuel ? p.prixAnnuel : p.prixMensuel, reduit = premierPaiementRemise(plein);
                 const f2 = (n: number) => n.toLocaleString("fr-FR", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 });
-                return <p className="sous-prix">1er paiement : <span className="prix-barre" style={{ display: "inline" }}><s>{f2(plein)} €</s><em>{f2(reduit)} €</em></span> (-20 %), puis <b>{f2(plein)} €</b>{annuel ? "/an" : "/mois"}</p>;
+                return <p className="sous-prix">1er paiement : <span className="prix-barre" style={{ display: "inline" }}><s>{f2(plein)} €</s><em>{f2(reduit)} €</em></span> (-20 %), puis <b style={{ whiteSpace: "nowrap" }}>{f2(plein)} €{annuel ? "/an" : "/mois"}</b></p>;
               })() : <p className="sous-prix">{annuel ? <>payé <b>{fmt(p.prixAnnuel)} €</b> TTC une fois par an</> : p.prixAnnuel ? "sans engagement" : "pour toujours"}</p>}
               <ul className="inclus">
                 {lignes.map(([oui, t]) => <li key={t} className={oui ? "" : "non"}>{oui ? <Check aria-hidden /> : <Minus aria-hidden />}<span>{t}</span></li>)}
