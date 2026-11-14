@@ -15,10 +15,12 @@ def lire(fichier):
     with wave.open(fichier) as w:
         return np.frombuffer(w.readframes(w.getnframes()), dtype="<i2").astype(float) / 32768
 
-for k, sc in enumerate(tl["scenes"]):
-    v = lire(f"{travail}/voix-{k}.wav")
-    i = int(sc["voix"] * SR); voix[i:i + len(v)] += v[: N - i]
-voix /= np.max(np.abs(voix)) / 0.8
+# SANS_VOIX=1 : musique et bruitages seuls (pour ajouter sa propre voix ensuite, par exemple dans CapCut).
+if not os.environ.get("SANS_VOIX"):
+    for k, sc in enumerate(tl["scenes"]):
+        v = lire(f"{travail}/voix-{k}.wav")
+        i = int(sc["voix"] * SR); voix[i:i + len(v)] += v[: N - i]
+    voix /= np.max(np.abs(voix)) / 0.8
 
 # fond lo-fi : accords, basse, batterie légère, grain de vinyle
 GRILLE = [(["F3", "A3", "C4", "E4", "G4"], "F1"), (["E3", "G3", "B3", "D4"], "E1"), (["D3", "F3", "A3", "C4", "E4"], "D2"), (["C3", "E3", "G3", "B3", "D4"], "C2")]

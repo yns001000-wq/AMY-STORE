@@ -8,6 +8,8 @@ const { spawn } = require('child_process');
   const p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
   await p.goto('file://' + __dirname + '/' + nom + '.html', { waitUntil: 'networkidle' });
   await p.evaluate(() => document.fonts.ready);
+  // SANS_SOUS=1 : pas de sous-titres incrustés (pour en ajouter avec un autre outil).
+  if (process.env.SANS_SOUS) await p.addStyleTag({ content: '#zone-sous{display:none!important}' });
   const DUREE = await p.evaluate(() => window.DUREE);
   const ff = spawn('ffmpeg', ['-loglevel', 'error', '-y', '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'mjpeg', '-i', '-',
     '-i', travail + '/mix.wav', '-af', 'loudnorm=I=-14:TP=-1.5:LRA=9',
