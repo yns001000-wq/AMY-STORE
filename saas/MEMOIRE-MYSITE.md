@@ -68,6 +68,7 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 - Académie : cadenas en Gratuit, tout ouvert en Pro (contrôlé côté serveur).
 - Mise en ligne d'un site client sur sa propre adresse, branchement et retrait automatiques du domaine d'un commerçant.
 - 14/11 : mesure en production avec un compte temporaire (supprimé ensuite) : 3 messages, une étude, une rédaction de site (50 s) et 2 retouches réussis. Les coûts exacts sont à lire dans Vercel → Logs → rechercher `IA_USAGE` (lecture impossible depuis Claude Code).
+- 14/11 : revue complète du site en ligne (190 pages vues sur téléphone et ordinateur, en Gratuit et en Pro, 33 API testées sans connexion, étanchéité entre comptes, 90 tests + 89 tests de base de données) : tout est bon, 3 petits défauts corrigés.
 - Pages légales (CGU, CGV, confidentialité, mentions légales) avec le nom et le SIREN.
 
 ## 6. Ce qui reste avant d'ouvrir au public
@@ -79,7 +80,8 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 3. **Médiateur de la consommation** : obligatoire pour vendre aux particuliers. Choix conseillé : **CM2C**, 48 € pour 3 ans, 36 € par médiation (https://www.cm2c.net/inscription-professionnel.php). Pas encore payé.
 4. **Page « Suivi des ventes »** : ajouter mon e-mail dans la variable `ADMIN_EMAILS` de Vercel.
 5. **Sécurité** : remplacer le jeton Supabase et la clé Stripe de test, qui ont été collés en clair dans une discussion ; supprimer la clé Resend « Onboarding » inutile.
-6. Conseillé : relecture des CGV et CGU par un avocat ; Google Search Console ; plafond de dépense dans la console Anthropic.
+6. **DNS : ajouter l'enregistrement DMARC** (`_dmarc`, TXT, `v=DMARC1; p=none;`) pour que les e-mails n'arrivent pas en indésirables.
+7. Conseillé : relecture des CGV et CGU par un avocat ; Google Search Console ; plafond de dépense dans la console Anthropic.
 
 ## 7. En attente de ma décision
 
