@@ -4,58 +4,37 @@
   {
    "id": "accroche",
    "texte": "Vendre un site web à un commerce de ta ville ? Voilà comment ça marche.",
-   "tts": "Vendre un site web à un commerce de ta ville ? Voilà comment ça marche.",
-   "prise": 0,
-   "comprehension": 1.0,
-   "duree": 5.309
+   "tts": "Vendre un site web à un commerce de ta ville ? Voilà comment ça marche."
   },
   {
    "id": "trouver",
    "texte": "Tu choisis un métier et un département. MySite te trouve les commerces, réservés pour toi.",
-   "tts": "Tu choisis un métier et un département. Maï Saïte te trouve les commerces, réservés pour toi.",
-   "prise": 1,
-   "comprehension": 0.875,
-   "duree": 6.283
+   "tts": "Tu choisis un métier et un département. Maï Saïte te trouve les commerces, réservés pour toi."
   },
   {
    "id": "message",
    "texte": "Pour chacun, ton premier message est déjà rédigé. Tu relis, et tu envoies.",
-   "tts": "Pour chacun, ton premier message est déjà rédigé. Tu relis, et tu envoies.",
-   "prise": 0,
-   "comprehension": 0.889,
-   "duree": 4.634
+   "tts": "Pour chacun, ton premier message est déjà rédigé. Tu relis, et tu envoies."
   },
   {
    "id": "maquette",
    "texte": "Un clic, et sa maquette de site est prête, à son nom.",
-   "tts": "Un clic, et sa maquette de site est prête, à son nom.",
-   "prise": 1,
-   "comprehension": 1.0,
-   "duree": 3.734
+   "tts": "Un clic, et sa maquette de site est prête, à son nom."
   },
   {
    "id": "montrer",
    "texte": "Tu passes le voir, et tu lui montres, sur ton téléphone.",
-   "tts": "Tu passes le voir, et tu lui montres, sur ton téléphone.",
-   "prise": 0,
-   "comprehension": 0.909,
-   "duree": 3.018
+   "tts": "Tu passes le voir, et tu lui montres, sur ton téléphone."
   },
   {
    "id": "devis",
    "texte": "Il est partant ? Devis, mise en ligne, facture : tout est guidé.",
-   "tts": "Il est partant ? Devis, mise en ligne, facture : tout est guidé.",
-   "prise": 0,
-   "comprehension": 0.87,
-   "duree": 4.413
+   "tts": "Il est partant ? Devis, mise en ligne, facture : tout est guidé."
   },
   {
    "id": "fin",
    "texte": "MySite. Commence gratuitement, le lien est en bio.",
-   "tts": "Maï Saïte. Commence gratuitement, le lien est en bio.",
-   "prise": 0,
-   "comprehension": 0.824,
-   "duree": 4.405
+   "tts": "Maï Saïte. Commence gratuitement, le lien est en bio."
   }
  ]
 }
