@@ -212,7 +212,8 @@ export function statsParrainage(parrainages: { statut: string; apporte_centimes:
 
 /**
  * Hypothèses du calcul de rentabilité (prudentes) :
- *  - cotisations sociales de la micro-entreprise : 25,6 % du chiffre d'affaires (à faire confirmer par l'Urssaf ou le comptable) ;
+ *  - cotisations sociales de la micro-entreprise : 25,6 % du chiffre d'affaires (taux 2026 des activités libérales BNC, le plus élevé ;
+ *    21,2 % si l'activité relève des prestations de services BIC : le calcul reste alors encore plus favorable) ;
  *  - Stripe : 1,5 % + 0,25 € par paiement par carte européenne ;
  *  - IA : coût maximal de l'offre (tous les quotas utilisés jusqu'au bout), un dollar compté pour un euro.
  * Un crédit sur le solde client ne supporte ni cotisations ni frais Stripe : il coûte ce que l'on aurait encaissé net à sa place.
