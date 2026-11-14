@@ -94,7 +94,7 @@ La qualité de Sonnet sur les messages et les retouches n'a pas encore été com
 
 Sécurité supplémentaire conseillée : fixer un plafond de dépense mensuel dans la console Anthropic.
 
-## Parrainage (branche `parrainage`, pas encore en ligne)
+## Parrainage (en ligne depuis le 14/11/2026, Stripe en mode test)
 
 Règle : « Invite un ami : il a -20 % sur son 1er paiement, et toi tu gagnes 29 € de crédit dès qu'il paie son 2e mois. »
 
@@ -102,9 +102,9 @@ Règle : « Invite un ami : il a -20 % sur son 1er paiement, et toi tu gagnes 29
 - [ ] Avec l'avocat : vérifier si le cookie de parrainage (`mysite_parrain`, 30 jours, déposé seulement après un clic sur un lien de parrainage) demande un consentement selon les règles de la CNIL.
 - [x] Hypothèse du calcul de rentabilité : cotisations de 25,6 % (taux 2026 BNC, le plus élevé ; 21,2 % en BIC). Vérifié le 14/11/2026.
 - [x] Base de données : `supabase/migrations/0009_parrainage.sql` appliquée le 14/11/2026.
-- [ ] Stripe → Webhooks : ajouter les événements `invoice.paid`, `charge.refunded` et `charge.dispute.created` (en plus de ceux déjà actifs).
+- [x] Stripe → Webhooks (mode test) : événements `invoice.paid`, `charge.refunded` et `charge.dispute.created` ajoutés le 14/11. **À refaire sur le webhook du mode réel.**
 - [x] Le coupon Stripe `MYSITE-PARRAINAGE-20` (-20 %, une seule fois) est créé automatiquement au premier paiement d'un filleul, en mode test puis en mode réel.
-- [ ] Vercel : la tâche quotidienne `/api/cron/parrainage` est déclarée dans `vercel.json` (6 h 41 UTC).
+- [x] Vercel : la tâche quotidienne `/api/cron/parrainage` est déclarée dans `vercel.json` (6 h 41 UTC).
 
 ## 5. Avant d'ouvrir au public
 

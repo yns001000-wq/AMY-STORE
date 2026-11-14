@@ -41,6 +41,7 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 - **IA « formule mixte »** : Claude Opus 5.5 rédige les sites sur mesure, Claude Sonnet 5.5 (moitié moins cher) rédige les messages et les retouches. Les quotas garantissent que l'IA ne coûte jamais plus d'environ 27 % de ce que rapporte une offre, même utilisée à fond (vérifié par un test automatique, pire cas : Pro 23,9 %, Premium 25,0 %, Ultra 25,3 %).
 - **Mise en cache des consignes** (en ligne depuis le 14/11) : la partie fixe des consignes est mise en cache chez Anthropic. Gain faible et honnête : environ 1 à 2 % sur un site ou une retouche, rien sur les messages (consigne trop courte pour le cache). Plus de 85 % du coût vient du texte écrit par l'IA, pas de la consigne. Chaque appel écrit une ligne `IA_USAGE` (jetons et coût en dollars) dans les journaux Vercel.
 - **Page des offres** : en annuel, le prix est affiché ramené au mois (« 24,17 €/mois, payé 290 € TTC une fois par an » ; 49,17 € et 99,17 €). Pas de compte à rebours ni de fausse urgence.
+- **Parrainage** (en ligne depuis le 14/11, Stripe en mode test) : « Invite un ami : il a -20 % sur son 1er paiement, et toi tu gagnes 29 € de crédit dès qu'il paie son 2e mois. » Parrain en Gratuit : 30 jours de Pro offerts (cumulables). 12 récompenses par an maximum. Validation : 2e paiement en mensuel, 14 jours après le paiement en annuel. Annulé en cas de rétractation, remboursement, litige ou résiliation avant. Auto-parrainage refusé (même compte, e-mail ou carte). Section « Parrainage » dans le menu, règlement sur `/reglement-parrainage`, chiffres dans « Suivi des ventes ». Rentable même au pire cas (filleul Pro : 25,99 € nets rapportés contre 21,14 € pour le crédit).
 - Les commerces trouvés n'ont pas de téléphone (le registre ne le publie pas) : liens Google Maps et Pages Jaunes sur chaque fiche.
 
 ## 4. Où tout se trouve
@@ -70,6 +71,8 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 - Pages légales (CGU, CGV, confidentialité, mentions légales) avec le nom et le SIREN.
 
 ## 6. Ce qui reste avant d'ouvrir au public
+
+0. **Parrainage** : faire relire le règlement (et les articles 7 bis des CGV et CGU) par l'avocat, avec la question du cookie de parrainage (CNIL). Au passage en mode réel : ajouter `invoice.paid`, `charge.refunded`, `charge.dispute.created` au webhook réel.
 
 1. **Activer Stripe pour les vrais paiements** (moi : identité, IBAN du compte pro). Ensuite : créer les prix réels et le webhook réel, remplacer la clé dans Vercel.
 2. **Adresse dans les mentions légales** : obligatoire ; je ne veux pas afficher mon domicile → **domiciliation** (environ 10 à 30 €/mois, à décider).
