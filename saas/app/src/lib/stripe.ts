@@ -5,7 +5,8 @@ let client: Stripe | null = null;
 export function stripe(): Stripe {
   const cle = process.env.STRIPE_SECRET_KEY;
   if (!cle) throw new Error("STRIPE_SECRET_KEY manquante");
-  return (client ??= new Stripe(cle));
+  // STRIPE_FETCH=1 : client HTTP « fetch » (passe par le proxy de l'environnement de test ; inutile en production).
+  return (client ??= new Stripe(cle, process.env.STRIPE_FETCH === "1" ? { httpClient: Stripe.createFetchHttpClient() } : undefined));
 }
 
 /** Cause d'un échec Stripe, en un mot sans détail sensible : sert au diagnostic (adresse de retour et journaux). */

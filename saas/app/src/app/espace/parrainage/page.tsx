@@ -36,8 +36,10 @@ export default async function Parrainage() {
   // Crédit restant : solde client Stripe (négatif = crédit en faveur de l'abonné).
   let creditRestant = 0;
   if (profil?.stripe_customer_id) {
-    const c = await stripe().customers.retrieve(profil.stripe_customer_id as string).catch(() => null);
-    if (c && !c.deleted && c.balance < 0) creditRestant = -c.balance;
+    try {
+      const c = await stripe().customers.retrieve(profil.stripe_customer_id as string);
+      if (!c.deleted && c.balance < 0) creditRestant = -c.balance;
+    } catch { /* Stripe indisponible : le crédit restant s'affiche à 0 € */ }
   }
   const annee = anneeParis(new Date());
   return (
