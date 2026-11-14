@@ -660,3 +660,4 @@ label.mini{font-size:.8rem;flex:1;min-width:0}
 
 /* Académie : badge « Dès l'offre Pro » sur une seule ligne */
 .module-tete .badge-offre{white-space:nowrap;flex:none;align-self:flex-start}
+.sous-prix b{color:var(--encre);font-weight:700}

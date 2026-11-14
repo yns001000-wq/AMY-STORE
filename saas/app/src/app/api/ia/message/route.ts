@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { consommer, profilEtPlan, rembourser } from "@/lib/quotas";
-import { anthropic, causeErreurIA, consigneMessage, journaliserErreurIA, type Canal } from "@/lib/ia";
+import { appelerIA, causeErreurIA, consigneMessage, journaliserErreurIA, type Canal } from "@/lib/ia";
 import { ajouterJournal } from "@/lib/pipeline";
 import { MODELE_IA } from "@/lib/plans";
 
@@ -23,16 +23,12 @@ export async function POST(req: Request) {
 
   const expediteur = `${(profil.prenom as string) || "[votre prénom]"}, création de sites internet pour les commerçants et artisans`;
   try {
-    const rep = await anthropic().beta.messages.create({
-      model: MODELE_IA.message,
-      max_tokens: 1500, // un message, un e-mail ou un script d'appel tient largement ; plafonne aussi le coût (voir COUT_MAX_IA)
-      output_config: { effort: "low" },
-      betas: ["server-side-fallback-2026-07-01"],
-      fallbacks: "default",
-      messages: [{ role: "user", content: consigneMessage(p, canal!, expediteur) }],
+    const brut = await appelerIA({
+      type: "message", modele: MODELE_IA.message, consigne: consigneMessage(p, canal!, expediteur), effort: "low",
+      maxTokens: 1500, // un message, un e-mail ou un script d'appel tient largement ; plafonne aussi le coût (voir COUT_MAX_IA)
     });
-    if (rep.stop_reason === "refusal") { await rendre(); return NextResponse.json({ erreur: "L'IA n'a pas pu rédiger ce message." }, { status: 422 }); }
-    const texte = rep.content.flatMap((b) => (b.type === "text" ? [b.text] : [])).join("\n").replace(/\*\*/g, "").trim(); // le message s'affiche dans une zone de texte simple : pas de gras en astérisques
+    if (brut === null) { await rendre(); return NextResponse.json({ erreur: "L'IA n'a pas pu rédiger ce message." }, { status: 422 }); }
+    const texte = brut.replace(/\*\*/g, "").trim(); // le message s'affiche dans une zone de texte simple : pas de gras en astérisques
     if (!texte) { await rendre(); return NextResponse.json({ erreur: "Réponse vide, réessayez." }, { status: 502 }); }
     await session.sb.from("prospects").update({ journal: ajouterJournal(p.journal, `Message IA préparé (${canal})`) }).eq("id", id);
     return NextResponse.json({ texte });

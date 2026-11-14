@@ -9,11 +9,11 @@ describe("offres", () => {
     expect(limite("pro", "sites_ia")).toBeLessThan(limite("premium", "sites_ia"));
     expect(limite("gratuit", "sites_ia")).toBe(0);
   });
-  it("l'IA ne peut jamais coûter plus de 40 % de ce que rapporte une offre, même utilisée à fond", () => {
+  it("l'IA ne peut jamais coûter plus de 27 % de ce que rapporte une offre, même utilisée à fond (pire cas, cache compris)", () => {
     // Recette mensuelle la plus basse : l'abonnement annuel ramené au mois. Un euro compté pour un dollar (prudent).
     for (const id of ORDRE_PLANS.filter((p) => p !== "gratuit")) {
       const recette = PLANS[id].prixAnnuel / 12;
-      expect(coutMaxIA(PLANS[id].quotas), id).toBeLessThanOrEqual(recette * 0.4);
+      expect(coutMaxIA(PLANS[id].quotas), id).toBeLessThanOrEqual(recette * 0.27);
     }
   });
   it("les comptes gratuits coûtent très peu : moins de 0,20 $ par mois", () => {

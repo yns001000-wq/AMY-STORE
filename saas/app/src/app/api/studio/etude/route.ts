@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   const rendre = () => rembourser(session.user.id, "sites_ia");
   const prec = typeof precisions === "string" ? precisions.slice(0, 3000) : "";
   try {
-    const texte = await demanderIA(promptEtude(p, prec), cap.effortIA === "xhigh" ? "high" : cap.effortIA, 8000);
+    const texte = await demanderIA("etude", promptEtude(p, prec), cap.effortIA === "xhigh" ? "high" : cap.effortIA, 8000);
     if (!texte) { await rendre(); return NextResponse.json({ erreur: "L'IA n'a pas pu étudier cet établissement." }, { status: 422 }); }
     const e = lireJSON(texte);
     const famille = FAMILLES[e.famille] ? e.famille : familleDepuisMetier(p.metier);

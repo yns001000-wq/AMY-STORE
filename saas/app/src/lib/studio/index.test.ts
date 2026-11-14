@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { PLANS } from "../plans";
-import { appliquerEdition, appliquerIA, blocPhotosPerso, familleDepuisMetier, lireJSON, PALETTES, photosPourCommerce, poserPhotosCommerce, remplacerClesPerso, promptEtude, promptRedaction, rendreSite, siteDepuisIA, siteExpress } from "./index";
+import { appliquerEdition, appliquerIA, promptRetouche, blocPhotosPerso, familleDepuisMetier, lireJSON, PALETTES, photosPourCommerce, poserPhotosCommerce, remplacerClesPerso, promptEtude, promptRedaction, rendreSite, siteDepuisIA, siteExpress } from "./index";
 
 const p = { nom: "Pizza Bella (M. Rossi)", metier: "Pizzeria", ville: "Lyon", code_postal: "69003", adresse: "12 rue Paul Bert 69003 Lyon", telephone: "06 12 34 56 78" };
 const cap = (id: keyof typeof PLANS) => PLANS[id].studio;
@@ -78,11 +78,21 @@ describe("Studio : panneau de modification selon l'offre", () => {
 describe("Studio : IA", () => {
   it("les consignes imposent les règles légales et le doute sur le code d'activité", () => {
     const e = promptEtude(p, "Vraie salle de restaurant");
-    expect(e).toContain("souvent faux");
-    expect(e).toContain("Vraie salle de restaurant");
+    expect(e.systeme).toContain("souvent faux");
+    expect(e.contenu).toContain("Vraie salle de restaurant");
     const r = promptRedaction(p, { type: "Pizzeria au feu de bois", famille: "pizzeria" });
-    expect(r).toContain("Aucun avis");
-    expect(r).toContain("ia-pizzeria-");
+    expect(r.systeme).toContain("Aucun avis");
+    expect(r.systeme).toContain("ia-pizzeria-");
+  });
+  it("la partie fixe (mise en cache) ne contient rien du commerce, et ne dépend que du type de site", () => {
+    const autre = { ...p, nom: "Chez Marco", ville: "Bron", notes: "Four à bois" };
+    const a = promptRedaction(p, { type: "Pizzeria", famille: "pizzeria" }), b = promptRedaction(autre, { type: "Pizzeria napolitaine", famille: "pizzeria" });
+    expect(a.systeme).toBe(b.systeme);
+    expect(a.systeme).not.toContain(p.nom);
+    expect(b.contenu).toContain("Chez Marco");
+    const r1 = promptRetouche(siteDepuisIA(p, "pizzeria", {}), "Plus court"), r2 = promptRetouche(siteDepuisIA(autre, "pizzeria", {}), "Ajoute un menu");
+    expect(r1.systeme).toBe(r2.systeme);
+    expect(r2.contenu).toContain("Ajoute un menu");
   });
   it("lit un JSON entouré de texte et construit le site", () => {
     const j = lireJSON('Voici :\n```json\n{"accueil":{"h1":"Pizzeria","h1_suite":"à Lyon 3e","chapo":"Bienvenue"},"horaires":{"lun":"","mar":"11:45-14:00","mer":"","jeu":"","ven":"","sam":"","dim":""}}\n```');

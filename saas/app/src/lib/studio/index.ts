@@ -5,6 +5,7 @@
  * - édition manuelle filtrée selon les capacités de l'offre.
  */
 import * as M from "./moteur";
+import type { Consigne } from "../cout-ia";
 import { PHOTOS } from "./photos";
 import type { CapacitesStudio } from "../plans";
 
@@ -187,27 +188,29 @@ const CONTEXTE = "MySite aide des indépendants à vendre des sites vitrines aux
 const listePhotos = () => Object.entries(PHOTOS).map(([k, [, l]]) => `- ${k} : ${l}`).join("\n");
 const dossier = (p: ProspectSite) => [`Nom : ${p.nom}`, `Métier déclaré : ${p.metier ?? "?"}`, `Adresse : ${[p.adresse, p.code_postal, p.ville].filter(Boolean).join(" ")}`, `Indices publics : ${p.indices ?? "aucun"}`, `Notes de l'utilisateur : ${(p.notes ?? "aucune").slice(0, 1500)}`].join("\n");
 
-export function promptEtude(p: ProspectSite, precisions?: string): string {
-  return `${CONTEXTE}\n\nTu es l'analyste de MySite. Détermine ce qu'est VRAIMENT cet établissement avant de créer son site. Le code d'activité déclaré est souvent faux (beaucoup de « restauration rapide » sont des restaurants, et inversement) : ne le crois pas sur parole.\n\nDOSSIER\n${dossier(p)}${precisions ? `\nPrécisions de l'utilisateur (source la plus fiable) : ${precisions.slice(0, 3000)}` : ""}\n\n`
+export function promptEtude(p: ProspectSite, precisions?: string): Consigne {
+  const systeme = `${CONTEXTE}\n\nTu es l'analyste de MySite. Détermine ce qu'est VRAIMENT cet établissement avant de créer son site. Le code d'activité déclaré est souvent faux (beaucoup de « restauration rapide » sont des restaurants, et inversement) : ne le crois pas sur parole.\n\n`
     + `Pèse les indices : précisions de l'utilisateur, nom (pizza, kebab, sushi, brasserie, boulangerie…), code d'activité, adresse. Un nom neutre sans autre indice ne permet pas de conclure : confiance 50 ou moins.\n`
     + `FAMILLES : ${Object.entries(FAMILLES).map(([k, f]) => `${k} = ${f.lib}`).join(" ; ")}\n`
     + `Réponds UNIQUEMENT avec un objet JSON : {"type": "libellé précis", "famille": "clé", "confiance": 0-100, "cuisine": "ou vide", "indices": ["…"], "hypotheses": [{"type": "…", "famille": "…", "probabilite": 0-100}], "a_verifier": ["questions pour le gérant"], "resume": "deux phrases"}`;
+  return { systeme, contenu: `DOSSIER\n${dossier(p)}${precisions ? `\nPrécisions de l'utilisateur (source la plus fiable) : ${precisions.slice(0, 3000)}` : ""}` };
 }
 
-export function promptRedaction(p: ProspectSite, etude: { type: string; famille: string; cuisine?: string; precisions?: string }, perso = ""): string {
+export function promptRedaction(p: ProspectSite, etude: { type: string; famille: string; cuisine?: string; precisions?: string }, perso = ""): Consigne {
   const F = FAMILLES[etude.famille] ?? FAMILLES.artisan;
-  return `${CONTEXTE}\n\nTu es directeur artistique et rédacteur web senior. Tu prépares la MAQUETTE d'un site vitrine sur mesure (non publiée) pour la montrer au gérant. Niveau attendu : site d'agence. Le site est une vitrine : l'action principale est d'appeler.\n\n`
-    + `ÉTABLISSEMENT\n${dossier(p)}\nÉTUDE VALIDÉE : ${etude.type} (famille « ${etude.famille} » : ${F.lib})${etude.cuisine ? ` · cuisine : ${etude.cuisine}` : ""}${etude.precisions ? `\nPrécisions : ${etude.precisions.slice(0, 3000)}` : ""}\n\n`
-    + perso
+  const systeme = `${CONTEXTE}\n\nTu es directeur artistique et rédacteur web senior. Tu prépares la MAQUETTE d'un site vitrine sur mesure (non publiée) pour la montrer au gérant. Niveau attendu : site d'agence. Le site est une vitrine : l'action principale est d'appeler.\n\n`
     + `PHOTOS DE LA BANQUE (clés) : utilise une photo uniquement si elle montre exactement ce plat ou ce lieu ; sinon laisse "".\n${listePhotos()}\n\n`
     + `RÈGLES : français impeccable, vouvoiement, phrases courtes et concrètes ; métier et ville dans le h1 et la meta description. Carte ou services COMPLETS et crédibles pour ce type précis (3 à 5 onglets, 4 à 10 articles, prix réalistes en euros). Aucun fait invérifiable présenté comme vrai : liste-les dans a_verifier. Aucun avis, aucune note, aucune statistique.\n`
     + `Réponds UNIQUEMENT avec un objet JSON : {"activite", "marque_sous", "title", "meta_description", "couleurs": {"principal": "#…", "accent": "#…"}, "accueil": {"h1", "h1_suite", "chapo", "atouts": [4], "etiquette": {"gros", "texte"}, "photo"}, "defilant": [6], "vedettes": {"surtitre", "titre", "articles": [{"nom", "desc", "prix", "photo"}]}, "offre": {"nav": "${F.offre} ou mieux", "surtitre", "titre", "texte", "onglets": [{"nom", "articles": [{"nom", "desc", "prix"${F.repas ? "" : ", \"duree\""}}]}], "pied"}, "maison": {"surtitre", "titre", "texte", "engagements": [3 {"titre", "texte", "icone": "${ICONES.join("|")}"}], "signature", "photos": []}, "bande": null ou {"surtitre", "titre", "texte", "articles": [3 {"titre", "photo"}]}, "infos": {"texte", "acces": [], "bon_a_savoir": []}, "horaires": {"lun": "HH:MM-HH:MM,HH:MM-HH:MM" ou "", … "dim"}, "faq": [5 {"q", "r"}], "final": {"titre", "texte"}, "a_verifier": []}`;
+  const contenu = `ÉTABLISSEMENT\n${dossier(p)}\nÉTUDE VALIDÉE : ${etude.type} (famille « ${etude.famille} » : ${F.lib})${etude.cuisine ? ` · cuisine : ${etude.cuisine}` : ""}${etude.precisions ? `\nPrécisions : ${etude.precisions.slice(0, 3000)}` : ""}\n\n${perso}`.trim();
+  return { systeme, contenu };
 }
 
-export function promptRetouche(d: DonneesSite, consigne: string, perso = ""): string {
+export function promptRetouche(d: DonneesSite, consigne: string, perso = ""): Consigne {
   const copie = { ...d }; for (const k of ["telephone", "email", "adresse", "code_postal", "ville", "nom", "maquette"]) delete copie[k];
-  return `${CONTEXTE}\n\nTu retouches la MAQUETTE d'un site vitrine. Données actuelles (JSON) :\n${JSON.stringify(copie)}\n\n${perso}Photos de la banque (clés) :\n${listePhotos()}\nFamilles : ${Object.keys(FAMILLES).join(", ")}. Sections masquables : defilant, vedettes, maison, bande, faq, plan.\n\nDemande de l'utilisateur : ${consigne.slice(0, 2000)}\n\n`
+  const systeme = `${CONTEXTE}\n\nTu retouches la MAQUETTE d'un site vitrine.\n\nPhotos de la banque (clés) :\n${listePhotos()}\nFamilles : ${Object.keys(FAMILLES).join(", ")}. Sections masquables : defilant, vedettes, maison, bande, faq, plan.\n\n`
     + `Règles : français impeccable, vouvoiement, aucun fait inventé présenté comme vrai, aucun avis ni statistique. Garde le métier et la ville dans le h1.\nRéponds UNIQUEMENT avec un objet JSON : {"modifications": {seulement les blocs de premier niveau à changer, chacun donné EN ENTIER au même format}, "explication": "une phrase"}`;
+  return { systeme, contenu: `Données actuelles (JSON) :\n${JSON.stringify(copie)}\n\n${perso}Demande de l'utilisateur : ${consigne.slice(0, 2000)}` };
 }
 
 /** Applique une proposition de l'IA (blocs filtrés par l'offre), puis complète les photos manquantes. */

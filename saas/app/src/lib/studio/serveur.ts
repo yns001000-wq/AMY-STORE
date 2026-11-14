@@ -2,7 +2,8 @@ import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { anthropic, causeErreurIA, journaliserErreurIA } from "../ia";
+import { appelerIA, causeErreurIA, journaliserErreurIA, type TypeIA } from "../ia";
+import type { Consigne } from "../cout-ia";
 import { MODELE_IA, PLANS, type CapacitesStudio, type PlanId } from "../plans";
 import { utilisateurConnecte } from "../supabase/serveur";
 import { profilEtPlan } from "../quotas";
@@ -35,18 +36,8 @@ export async function archiverVersion(sb: SupabaseClient, site: SiteLigne, cap: 
 }
 
 /** Appel à Claude pour le Studio. Renvoie le texte, ou null si l'IA refuse ou ne répond rien. */
-export async function demanderIA(prompt: string, effort: "low" | "medium" | "high" | "xhigh", maxTokens = 16000, modele: string = MODELE_IA.site): Promise<string | null> {
-  const rep = await anthropic().beta.messages.create({
-    model: modele,
-    max_tokens: maxTokens,
-    output_config: { effort },
-    betas: ["server-side-fallback-2026-07-01"],
-    fallbacks: "default",
-    messages: [{ role: "user", content: prompt }],
-  });
-  if (rep.stop_reason === "refusal") return null;
-  const t = rep.content.flatMap((b) => (b.type === "text" ? [b.text] : [])).join("\n").trim();
-  return t || null;
+export async function demanderIA(type: TypeIA, consigne: Consigne, effort: "low" | "medium" | "high" | "xhigh", maxTokens = 16000, modele: string = MODELE_IA.site): Promise<string | null> {
+  return appelerIA({ type, modele, consigne, maxTokens, effort });
 }
 
 export function erreurIA(e: unknown) {

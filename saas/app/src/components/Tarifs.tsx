@@ -56,8 +56,8 @@ export function Tarifs({ mode, planActuel, particulier, abonne, voulue }: { mode
               {voulue === id ? <span className="badge"><Star aria-hidden />Votre choix</span> : !voulue && p.misEnAvant && <span className="badge"><Star aria-hidden />Le plus complet</span>}
               <h3 id={`offre-${id}`}>{p.nom}</h3>
               <p className="accroche">{p.accroche}</p>
-              <p className="prix"><b>{prix.toLocaleString("fr-FR")} €</b><span>TTC / mois</span></p>
-              <p className="sous-prix">{annuel ? `soit ${fmt(p.prixAnnuel)} € facturés par an` : p.prixAnnuel ? "sans engagement" : "pour toujours"}</p>
+              <p className="prix"><b>{prix.toLocaleString("fr-FR", annuel ? { minimumFractionDigits: 2, maximumFractionDigits: 2 } : {})} €</b><span>{annuel ? "/mois" : "TTC / mois"}</span></p>
+              <p className="sous-prix">{annuel ? <>payé <b>{fmt(p.prixAnnuel)} €</b> TTC une fois par an</> : p.prixAnnuel ? "sans engagement" : "pour toujours"}</p>
               <ul className="inclus">
                 {lignes.map(([oui, t]) => <li key={t} className={oui ? "" : "non"}>{oui ? <Check aria-hidden /> : <Minus aria-hidden />}<span>{t}</span></li>)}
               </ul>

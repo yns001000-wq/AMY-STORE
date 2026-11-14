@@ -30,7 +30,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const echec = async (r: NextResponse) => { if (dernierEssai) await rembourser(session.user.id, "sites_ia"); return r; };
   const perso = blocPhotosPerso(await photosDuCommerce(session.sb, cap, site.prospect_id));
   try {
-    const texte = await demanderIA(promptRedaction(prospect, choix, perso.texte), cap.effortIA, 16000);
+    const texte = await demanderIA("site", promptRedaction(prospect, choix, perso.texte), cap.effortIA, 16000);
     if (!texte) return echec(NextResponse.json({ erreur: "L'IA n'a pas pu rédiger ce site." }, { status: 422 }));
     const red = remplacerClesPerso(lireJSON(texte), perso.cles);
     const donnees = siteDepuisIA(prospect, famille, red, red.horaires);
