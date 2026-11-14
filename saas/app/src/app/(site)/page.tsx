@@ -93,7 +93,6 @@ export default function Accueil() {
         </div>
       </section>
 
-<<<<<<< HEAD
       <section className="pa-bloc pa-gris pa-academie">
         <div>
           <h2>Jamais vendu de site&nbsp;?<br /><span className="degrade-texte">On vous apprend.</span></h2>
@@ -103,26 +102,6 @@ export default function Accueil() {
         <div className="pa-tel pa-petit-tel">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/accueil/academie.webp" width={640} height={1382} alt="" loading="lazy" decoding="async" />
-=======
-      <section className="conteneur" aria-label="Secteurs disponibles">
-        <ul className="secteurs">{SECTEURS.map(([Ico, t]) => <li key={t}><Ico aria-hidden />{t}</li>)}</ul>
-      </section>
-
-      <section className="bloc" id="methode">
-        <div className="conteneur">
-          <div className="tete"><span className="surtitre"><Rocket aria-hidden />La méthode</span><h2>Cinq étapes, un seul outil</h2><p>Du premier contact à la facture payée, vous savez toujours quoi faire ensuite.</p></div>
-          <div className="methode-grille">
-            <ol className="methode">
-              {METHODE.map(({ ico: Ico, t, d }, i) => <li key={t} className="carte"><span className="num">{i + 1}</span><div><h3><Ico aria-hidden />{t}</h3><p>{d}</p></div></li>)}
-            </ol>
-            <figure className="tel-video">
-              <video controls playsInline preload="none" poster="/video/mysite-methode.jpg" aria-label="Vidéo : comment fonctionne MySite, en 40 secondes">
-                <source src="/video/mysite-methode.mp4" type="video/mp4" />
-              </video>
-              <figcaption className="note">La méthode en 40 secondes. Écrans de démonstration, données d&apos;exemple.</figcaption>
-            </figure>
-          </div>
->>>>>>> origin/main
         </div>
       </section>
 
