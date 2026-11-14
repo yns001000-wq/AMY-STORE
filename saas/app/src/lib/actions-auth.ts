@@ -20,10 +20,11 @@ export async function seConnecter(form: FormData) {
 export async function sInscrire(form: FormData) {
   const mdp = String(form.get("mdp"));
   const source = nettoyerSource(form.get("src")), offre = offrePayante(form.get("offre"));
-  const retour = new URLSearchParams({ mode: "inscription", ...(offre ? { offre } : {}), ...(source ? { src: source } : {}) });
+  // Code du parrain : celui du lien suivi (transmis par le formulaire) ou de l'invitation gardée avec l'accord du visiteur (cookie).
+  // La base vérifie qu'il existe et refuse l'auto-parrainage.
+  const parrain = normaliserCode(form.get("ref")) ?? normaliserCode((await cookies()).get(COOKIE_PARRAIN)?.value);
+  const retour = new URLSearchParams({ mode: "inscription", ...(offre ? { offre } : {}), ...(source ? { src: source } : {}), ...(parrain ? { ref: parrain } : {}) });
   if (mdp.length < 10) redirect(`/connexion?${retour}&erreur=mdp`);
-  // Code du parrain : celui du lien suivi (cookie de 30 jours). La base vérifie qu'il existe et refuse l'auto-parrainage.
-  const parrain = normaliserCode((await cookies()).get(COOKIE_PARRAIN)?.value);
   const sb = await supabaseServeur();
   const { error } = await sb.auth.signUp({
     email: String(form.get("email")), password: mdp,

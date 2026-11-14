@@ -9,9 +9,9 @@ import { useInvitation } from "./BandeauParrainage";
 const fmt = (n: number) => n.toLocaleString("fr-FR");
 
 /** Bouton de chaque offre : lien d'inscription (site public) ou formulaire de paiement Stripe (espace connecté). */
-function Action({ id, periode, mode, particulier, abonne }: { id: PlanId; periode: Periode; mode: "inscription" | "abonnement"; particulier?: boolean; abonne?: boolean }) {
+function Action({ id, periode, mode, particulier, abonne, refCode }: { id: PlanId; periode: Periode; mode: "inscription" | "abonnement"; particulier?: boolean; abonne?: boolean; refCode?: string }) {
   const p = id === "premium" ? " p" : "";
-  if (mode === "inscription") return <Link className={`btn bloc${p}`} href={id === "gratuit" ? "/connexion?mode=inscription" : `/connexion?mode=inscription&offre=${id}`}>{id === "gratuit" ? "Commencer gratuitement" : `Choisir ${PLANS[id].nom}`}</Link>;
+  if (mode === "inscription") return <Link className={`btn bloc${p}`} href={`/connexion?mode=inscription${id === "gratuit" ? "" : `&offre=${id}`}${refCode ? `&ref=${encodeURIComponent(refCode)}` : ""}`}>{id === "gratuit" ? "Commencer gratuitement" : `Choisir ${PLANS[id].nom}`}</Link>;
   if (id === "gratuit" || abonne) return null;
   return (
     <form action="/api/stripe/checkout" method="post" className="pile" style={{ gap: ".7rem" }}>
@@ -70,7 +70,7 @@ export function Tarifs({ mode, planActuel, particulier, abonne, voulue, remise }
               <ul className="inclus">
                 {lignes.map(([oui, t]) => <li key={t} className={oui ? "" : "non"}>{oui ? <Check aria-hidden /> : <Minus aria-hidden />}<span>{t}</span></li>)}
               </ul>
-              <div className="pied-offre">{planActuel === id ? <span className="badge-offre">Votre offre actuelle</span> : <Action id={id} periode={periode} mode={mode} particulier={particulier} abonne={abonne} />}</div>
+              <div className="pied-offre">{planActuel === id ? <span className="badge-offre">Votre offre actuelle</span> : <Action id={id} periode={periode} mode={mode} particulier={particulier} abonne={abonne} refCode={invite?.code} />}</div>
             </article>
           );
         })}

@@ -9,7 +9,7 @@ export default function Confidentialite() {
   return (
     <article className="legal">
       <h1 style={{ fontSize: "2rem" }}>Politique de confidentialité</h1>
-      <p className="note">Version du 13 novembre 2026.</p>
+      <p className="note">Version du 14 novembre 2026.</p>
       <p>Responsable de traitement : MySite, <Info v={E.nom} manque="Prénom NOM" />, <Info v={E.adresse} manque="adresse" />, <Info v={E.email} manque="e-mail" lien="mail" />.</p>
 
       <h2>A. Vous êtes utilisateur de MySite</h2>
@@ -54,8 +54,13 @@ export default function Confidentialite() {
 
       <h2>F. Cookies</h2>
       <p>MySite utilise les cookies nécessaires à la connexion et à la sécurité. Aucun cookie publicitaire ni de mesure d&apos;audience n&apos;est utilisé.</p>
-      <p><b>Cookie de parrainage</b> (« mysite_parrain ») : déposé uniquement si vous arrivez par le lien de parrainage d&apos;un utilisateur. Il contient seulement le code de ce parrain, pendant 30 jours, pour vous appliquer la réduction de bienvenue et enregistrer le parrainage si vous créez un compte (voir le <Link href="/reglement-parrainage">règlement du parrainage</Link>). Vous pouvez le supprimer à tout moment dans votre navigateur ; vous perdez alors la réduction.</p>
-      <p><b>Parrainage :</b> si vous êtes parrainé, votre parrain voit votre prénom, l&apos;initiale de votre nom et l&apos;étape du parrainage (inscrit, 1er paiement fait, validé ou annulé), jamais votre e-mail ni vos paiements. Pour vérifier qu&apos;il ne s&apos;agit pas d&apos;un auto-parrainage, nous comparons les adresses e-mail et l&apos;empreinte des cartes bancaires fournie par Stripe (intérêt légitime : prévention de la fraude).</p>
+      <p><b>Cookie de parrainage</b> (« mysite_parrain ») : déposé <b>seulement si vous cliquez sur « Garder mon invitation 30 jours »</b> après être arrivé par le lien de parrainage d&apos;un utilisateur (consentement, art. 82 de la loi Informatique et Libertés). Il contient uniquement le code de ce parrain, pendant 30 jours, pour vous appliquer la réduction de bienvenue et enregistrer le parrainage si vous créez un compte. Vous pouvez le retirer à tout moment (bouton « Retirer » du bandeau, ou réglages de votre navigateur). Sans ce cookie, l&apos;invitation fonctionne quand même pendant votre visite, par le lien suivi.</p>
+      <p><b>Parrainage</b> (voir le <Link href="/reglement-parrainage">règlement</Link>) :</p>
+      <ul>
+        <li>si vous êtes parrainé, votre parrain voit votre prénom, l&apos;initiale de votre nom, la date de votre inscription et l&apos;étape du parrainage (inscrit, 1er paiement fait, validé ou annulé), jamais votre e-mail ni vos paiements. Base légale : l&apos;exécution du programme auquel vous participez en vous inscrivant avec son lien (art. 6.1.b du RGPD) ;</li>
+        <li>pour refuser l&apos;auto-parrainage, nous comparons les adresses e-mail et l&apos;empreinte des cartes bancaires fournie par Stripe. Les empreintes sont seulement comparées, jamais enregistrées par MySite. Base légale : notre intérêt légitime à prévenir la fraude (art. 6.1.f et considérant 47 du RGPD). Une annulation peut être contestée par e-mail : elle est alors réexaminée par une personne (art. 22 du RGPD) ;</li>
+        <li>conservation : pendant la durée des comptes concernés ; les traces de paiement suivent les durées légales de conservation des pièces comptables.</li>
+      </ul>
       <p>Les sites publiés avec MySite ne déposent aucun cookie. La carte Google Maps ne se charge qu&apos;après un clic du visiteur.</p>
 
       <h2>G. Sécurité</h2>

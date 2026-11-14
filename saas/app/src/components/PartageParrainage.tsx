@@ -37,9 +37,9 @@ export function PartageParrainage({ lien, code }: { lien: string; code: string }
         {natif && <button type="button" className="btn" onClick={() => navigator.share({ text: message }).catch(() => {})}><Share2 aria-hidden />Partager</button>}
         <a className="btn" href={`https://wa.me/?text=${texte}`} target="_blank" rel="noopener"><MessageCircle aria-hidden />WhatsApp</a>
         <a className="btn" href={`sms:?&body=${texte}`}><MessageSquareText aria-hidden />SMS</a>
-        <a className="btn" href={`mailto:?subject=${encodeURIComponent("-20 % sur MySite avec mon lien")}&body=${texte}`}><Mail aria-hidden />E-mail</a>
+        <a className="btn" href={`mailto:?subject=${encodeURIComponent("-20 % sur MySite avec mon lien de parrainage")}&body=${texte}`}><Mail aria-hidden />E-mail</a>
       </div>
-      <p className="note" style={{ margin: 0 }}>Rien ne part tout seul : c&apos;est toi qui envoies le message, à qui tu veux.</p>
+      <p className="note" style={{ margin: 0 }}>Rien ne part tout seul : c&apos;est toi qui envoies le message, aux personnes de ton choix (pas d&apos;envoi en masse). Si tu publies ton lien sur les réseaux sociaux, indique que c&apos;est un lien de parrainage. En partageant ton lien, tu acceptes le <a href="/reglement-parrainage">règlement du parrainage</a>.</p>
     </section>
   );
 }

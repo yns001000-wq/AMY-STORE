@@ -9,7 +9,7 @@ export default function Cgu() {
   return (
     <article className="legal">
       <h1 style={{ fontSize: "2rem" }}>Conditions générales d&apos;utilisation</h1>
-      <p className="note">Version du 9 novembre 2026.</p>
+      <p className="note">Version du 14 novembre 2026.</p>
 
       <h2>1. Objet et acceptation</h2>
       <p>MySite est un logiciel en ligne (SaaS) édité par <Info v={E.nom} manque="Prénom NOM" />, entrepreneur individuel, SIREN {E.siren} (« MySite », « nous »).</p>
@@ -65,7 +65,7 @@ export default function Cgu() {
       <p>L&apos;outil de devis et factures vous aide à respecter les mentions usuelles. Vous restez responsable de vos documents, de leur conservation (10 ans) et de vos déclarations. Les cours de l&apos;Académie sont donnés à titre informatif : ils ne constituent ni un conseil juridique, fiscal ou comptable personnalisé, ni une promesse de revenus.</p>
 
       <h2>7 bis. Parrainage</h2>
-      <p>Chaque utilisateur peut inviter d&apos;autres personnes avec son lien personnel, dans les conditions du <Link href="/reglement-parrainage">règlement du parrainage</Link>. Il partage ce lien lui-même et s&apos;engage à ne pas envoyer de messages non sollicités en masse ni à présenter l&apos;offre de façon trompeuse. L&apos;auto-parrainage et toute fraude entraînent l&apos;annulation du parrainage.</p>
+      <p>Chaque utilisateur peut inviter d&apos;autres personnes avec son lien personnel, dans les conditions du <Link href="/reglement-parrainage">règlement du parrainage</Link>. Il partage ce lien lui-même, indique qu&apos;il s&apos;agit d&apos;un lien de parrainage qui lui rapporte un avantage, et s&apos;engage à ne pas envoyer de messages non sollicités en masse ni à présenter l&apos;offre de façon trompeuse. L&apos;auto-parrainage et toute fraude entraînent l&apos;annulation du parrainage.</p>
 
       <h2>8. Disponibilité du service</h2>
       <p>Nous faisons nos meilleurs efforts pour que le service soit disponible et sécurisé, sans garantie de disponibilité permanente. Des interruptions pour maintenance peuvent avoir lieu, annoncées autant que possible.</p>

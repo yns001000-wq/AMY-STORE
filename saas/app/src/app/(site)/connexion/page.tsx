@@ -3,6 +3,9 @@ import { ArrowRight, GraduationCap, MapPin, ShieldCheck, Store, WandSparkles } f
 import { demanderNouveauMotDePasse, seConnecter, sInscrire } from "@/lib/actions-auth";
 import { nettoyerSource, offrePayante } from "@/lib/croissance";
 import { PLANS } from "@/lib/plans";
+import { cookies } from "next/headers";
+import { COOKIE_PARRAIN, normaliserCode } from "@/lib/parrainage";
+import { parrainDuCode } from "@/lib/parrainage-serveur";
 
 export const metadata = { title: "Connexion", robots: { index: false } };
 
@@ -13,8 +16,9 @@ const ERREURS: Record<string, string> = {
 
 export default async function Connexion({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const q = await searchParams, inscription = q.mode === "inscription", oubli = q.mode === "oubli";
-  const offre = offrePayante(q.offre), src = nettoyerSource(q.src);
-  const suiteInscription = `/connexion?${new URLSearchParams({ mode: "inscription", ...(offre ? { offre } : {}), ...(src ? { src } : {}) })}`;
+  const offre = offrePayante(q.offre), src = nettoyerSource(q.src), ref = normaliserCode(q.ref) ?? normaliserCode((await cookies()).get(COOKIE_PARRAIN)?.value);
+  const parrain = inscription && ref ? await parrainDuCode(ref).catch(() => null) : null;
+  const suiteInscription = `/connexion?${new URLSearchParams({ mode: "inscription", ...(offre ? { offre } : {}), ...(src ? { src } : {}), ...(ref ? { ref } : {}) })}`;
   return (
     <div className="auth">
       <aside className="auth-visuel">
@@ -46,7 +50,8 @@ export default async function Connexion({ searchParams }: { searchParams: Promis
             {q.erreur && <p className="alerte" role="alert">{ERREURS[q.erreur] ?? "Une erreur est survenue."}</p>}
             <form className="pile" action={inscription ? sInscrire : seConnecter}>
               <input type="hidden" name="suite" value={q.suite ?? ""} />
-              {inscription && <><input type="hidden" name="offre" value={offre ?? ""} /><input type="hidden" name="src" value={src ?? ""} /></>}
+              {inscription && <><input type="hidden" name="offre" value={offre ?? ""} /><input type="hidden" name="src" value={src ?? ""} /><input type="hidden" name="ref" value={parrain ? ref ?? "" : ""} /></>}
+              {parrain && <p className="note" style={{ margin: 0 }}>🎁 Invité par <b>{parrain.prenom}</b> : -20 % sur ton 1er paiement si tu t&apos;abonnes. Ton parrain verra ton prénom, l&apos;initiale de ton nom et l&apos;avancement du parrainage (jamais ton e-mail ni tes paiements). <Link href="/reglement-parrainage">Règlement</Link></p>}
               <label>E-mail<input name="email" type="email" autoComplete="email" inputMode="email" placeholder="vous@exemple.fr" required /></label>
               <label>Mot de passe<input name="mdp" type="password" autoComplete={inscription ? "new-password" : "current-password"} minLength={inscription ? 10 : undefined} placeholder={inscription ? "10 caractères minimum" : ""} required /></label>
               <button className="btn p bloc grand" type="submit">{inscription ? "Créer mon compte gratuit" : "Me connecter"} <ArrowRight aria-hidden /></button>

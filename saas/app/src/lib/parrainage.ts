@@ -48,8 +48,12 @@ export function normaliserCode(v: unknown): string | null {
 
 export const lienParrainage = (site: string, code: string) => `${site.replace(/\/$/, "")}/?ref=${encodeURIComponent(code)}`;
 
+/**
+ * Message proposé au parrain. Il dit clairement que c'est un lien de parrainage et que le parrain y gagne quelque chose :
+ * l'intention commerciale ne doit pas être cachée (art. L121-3 du Code de la consommation ; loi n° 2023-451 sur l'influence commerciale).
+ */
 export const messagePartage = (lien: string) =>
-  `J'utilise MySite pour trouver des commerces et leur vendre des sites. Avec mon lien, tu as -20 % sur ton premier paiement : ${lien}`;
+  `J'utilise MySite pour trouver des commerces et leur vendre des sites. Avec mon lien de parrainage, tu as -20 % sur ton premier paiement (et je reçois un avantage si tu t'abonnes) : ${lien}`;
 
 /** « Prénom + initiale du nom » : jamais le nom complet ni l'e-mail d'un filleul. */
 export function nomAffiche(prenom: string | null | undefined, rang: number): string {

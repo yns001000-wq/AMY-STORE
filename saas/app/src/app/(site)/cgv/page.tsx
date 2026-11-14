@@ -10,7 +10,7 @@ export default function Cgv() {
   return (
     <article className="legal">
       <h1 style={{ fontSize: "2rem" }}>Conditions générales de vente</h1>
-      <p className="note">Version du 13 novembre 2026.</p>
+      <p className="note">Version du 14 novembre 2026.</p>
 
       <h2>1. Vendeur</h2>
       <p><Info v={E.nom} manque="Prénom NOM" />, entrepreneur individuel (EI), SIREN {E.siren}, <Info v={E.adresse} manque="adresse" />, téléphone : <Info v={E.telephone} manque="téléphone" lien="tel" />, e-mail : <Info v={E.email} manque="e-mail" lien="mail" />. TVA non applicable, article 293 B du CGI.</p>

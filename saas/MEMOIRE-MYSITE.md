@@ -72,7 +72,7 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 
 ## 6. Ce qui reste avant d'ouvrir au public
 
-0. **Parrainage** : faire relire le règlement (et les articles 7 bis des CGV et CGU) par l'avocat, avec la question du cookie de parrainage (CNIL). Au passage en mode réel : ajouter `invoice.paid`, `charge.refunded`, `charge.dispute.created` au webhook réel.
+0. **Parrainage** : auto-audit juridique fait (`saas/AUDIT-JURIDIQUE-PARRAINAGE.md`, cookie passé au consentement). Reste : relecture par l'avocat (4 questions en fin d'audit). Au passage en mode réel : ajouter `invoice.paid`, `charge.refunded`, `charge.dispute.created` au webhook réel.
 
 1. **Activer Stripe pour les vrais paiements** (moi : identité, IBAN du compte pro). Ensuite : créer les prix réels et le webhook réel, remplacer la clé dans Vercel.
 2. **Adresse dans les mentions légales** : obligatoire ; je ne veux pas afficher mon domicile → **domiciliation** (environ 10 à 30 €/mois, à décider).

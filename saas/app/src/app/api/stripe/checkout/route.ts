@@ -44,7 +44,7 @@ export async function POST(req: Request) {
       line_items: [{ price, quantity: 1 }],
       subscription_data: { metadata: { user_id: session.user.id, acces_immediat_demande: profil.statut_utilisateur === "professionnel" ? "professionnel" : "oui", ...(remise ? { parrainage_id: remise.parrainageId } : {}) } },
       ...(remise ? { discounts: [{ coupon: remise.coupon }] } : { allow_promotion_codes: true }),
-      custom_text: { submit: { message: "Abonnement sans engagement, renouvelé automatiquement chaque période et résiliable à tout moment depuis « Mon abonnement ». En validant, vous acceptez les CGV et les CGU de MySite." } },
+      custom_text: { submit: { message: `${remise ? `Parrainage : -20 % sur ce 1er paiement uniquement, puis prix normal à chaque ${periode === "annuel" ? "année" : "mois"}. ` : ""}Abonnement sans engagement, renouvelé automatiquement chaque période et résiliable à tout moment depuis « Mon abonnement ». En validant, vous acceptez les CGV et les CGU de MySite.` } },
       locale: "fr",
       success_url: `${SITE()}/espace?abonnement=ok`,
       cancel_url: `${SITE()}/espace/abonnement?annule=1`,
