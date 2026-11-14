@@ -38,7 +38,9 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 | Ultra | 119 €/mois ou 1 190 €/an | 3 000 | 400 | 25 | 44 | France | Complète + marque blanche, 3 utilisateurs |
 
 - **Pas d'essai gratuit** des offres payantes (supprimé le 13/11) : l'offre Gratuite sert de découverte.
-- **IA « formule mixte »** : Claude Opus 5.5 rédige les sites sur mesure, Claude Sonnet 5.5 (moitié moins cher) rédige les messages et les retouches. Les quotas garantissent que l'IA ne coûte jamais plus d'environ 27 % de ce que rapporte une offre, même utilisée à fond (vérifié par un test automatique).
+- **IA « formule mixte »** : Claude Opus 5.5 rédige les sites sur mesure, Claude Sonnet 5.5 (moitié moins cher) rédige les messages et les retouches. Les quotas garantissent que l'IA ne coûte jamais plus d'environ 27 % de ce que rapporte une offre, même utilisée à fond (vérifié par un test automatique, pire cas : Pro 23,9 %, Premium 25,0 %, Ultra 25,3 %).
+- **Mise en cache des consignes** (en ligne depuis le 14/11) : la partie fixe des consignes est mise en cache chez Anthropic. Gain faible et honnête : environ 1 à 2 % sur un site ou une retouche, rien sur les messages (consigne trop courte pour le cache). Plus de 85 % du coût vient du texte écrit par l'IA, pas de la consigne. Chaque appel écrit une ligne `IA_USAGE` (jetons et coût en dollars) dans les journaux Vercel.
+- **Page des offres** : en annuel, le prix est affiché ramené au mois (« 24,17 €/mois, payé 290 € TTC une fois par an » ; 49,17 € et 99,17 €). Pas de compte à rebours ni de fausse urgence.
 - Les commerces trouvés n'ont pas de téléphone (le registre ne le publie pas) : liens Google Maps et Pages Jaunes sur chaque fiche.
 
 ## 4. Où tout se trouve
@@ -64,6 +66,7 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 - Paiement de test : l'offre s'active, la résiliation ramène en Gratuit. Rétractation de 14 jours avec remboursement au prorata, automatique.
 - Académie : cadenas en Gratuit, tout ouvert en Pro (contrôlé côté serveur).
 - Mise en ligne d'un site client sur sa propre adresse, branchement et retrait automatiques du domaine d'un commerçant.
+- 14/11 : mesure en production avec un compte temporaire (supprimé ensuite) : 3 messages, une étude, une rédaction de site (50 s) et 2 retouches réussis. Les coûts exacts sont à lire dans Vercel → Logs → rechercher `IA_USAGE` (lecture impossible depuis Claude Code).
 - Pages légales (CGU, CGV, confidentialité, mentions légales) avec le nom et le SIREN.
 
 ## 6. Ce qui reste avant d'ouvrir au public
@@ -77,7 +80,7 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 
 ## 7. En attente de ma décision
 
-- **Nouvelle page d'accueil** (style épuré inspiré d'Apple, pensée pour le téléphone) : prête sur la branche `claude/automated-revenue-machine-nt8psg`, pas encore en ligne. À valider avant de la passer sur `main`.
+- **Nouvelle page d'accueil** (style épuré inspiré d'Apple, pensée pour le téléphone) : prête sur la branche `claude/automated-revenue-machine-nt8psg`, pas encore en ligne. À valider avant de la passer sur `main`. Attention : cette branche date d'avant la mise en cache et les prix annuels au mois ; il faudra la fusionner avec `main`.
 
 ## 8. Marketing en format organique
 
