@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>MySite, publicité</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800;900&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ease:cubic-bezier(.16,1,.3,1);--rebond:cubic-bezier(.34,1.56,.64,1);--coupe:cubic-bezier(.7,0,.2,1)}
+*{box-sizing:border-box}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#07070d;color:#fff;font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased}
+
+/* ---------- scènes : la nouvelle pousse l'ancienne, chacune avec ses couleurs ---------- */
+.sc{position:absolute;inset:0;overflow:hidden;animation:entre .7s var(--ease) var(--s) both,sort .55s cubic-bezier(.6,0,.9,.4) var(--f) forwards}
+.sc:first-of-type{animation:sort .55s cubic-bezier(.6,0,.9,.4) var(--f) forwards}
+@keyframes entre{from{opacity:0;transform:scale(1.35) rotate(-2deg);filter:blur(22px) brightness(1.8)}to{opacity:1;transform:none;filter:none}}
+@keyframes sort{to{opacity:0;transform:scale(.82) rotate(1.5deg);filter:blur(14px);visibility:hidden}}
+/* éclair lumineux à chaque changement de scène */
+.eclair{position:absolute;inset:0;z-index:60;pointer-events:none;background:radial-gradient(60% 45% at 50% 45%,rgba(255,255,255,.85),rgba(255,255,255,0) 70%);opacity:0;animation:eclair .5s ease-out var(--t) both}
+@keyframes eclair{0%{opacity:0}25%{opacity:.75}100%{opacity:0}}
+/* caméra : lente poussée et dérive pendant toute la scène */
+.camera{position:absolute;inset:0;animation:pousse var(--d) linear var(--s) both}
+@keyframes pousse{from{transform:scale(1) translate(0,0)}to{transform:scale(1.07) translate(var(--dx,-14px),var(--dy,-22px))}}
+/* poussières lumineuses, vignette et grain sur toute la vidéo */
+.poussiere{position:absolute;inset:0;z-index:30;pointer-events:none;overflow:hidden}
+.poussiere i{position:absolute;width:var(--t);height:var(--t);border-radius:50%;background:#fff;opacity:0;filter:blur(1px);box-shadow:0 0 12px rgba(255,255,255,.8);animation:flotteP var(--duree) linear var(--retard) infinite}
+@keyframes flotteP{0%{opacity:0;transform:translateY(0)}15%{opacity:var(--o)}85%{opacity:var(--o)}100%{opacity:0;transform:translateY(-520px) translateX(var(--x))}}
+.vignette{position:absolute;inset:0;z-index:55;pointer-events:none;background:radial-gradient(120% 90% at 50% 45%,transparent 55%,rgba(0,0,0,.55))}
+.grain-global{position:absolute;inset:-50%;z-index:56;pointer-events:none;opacity:.06;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");animation:grainG .5s steps(3) infinite}
+@keyframes grainG{33%{transform:translate(3%,-2%)}66%{transform:translate(-2%,3%)}}
+/* reflet qui balaie l'écran du téléphone */
+.brille{position:absolute;inset:-30%;z-index:3;pointer-events:none;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.55) 50%,transparent 60%);transform:translateX(-120%);animation:brille 1.1s ease-in-out calc(var(--s) + 1.05s) both}
+@keyframes brille{to{transform:translateX(120%)}}
+.ciel{position:absolute;inset:-12%;background:radial-gradient(60% 40% at 18% 12%,var(--c1),transparent 70%),radial-gradient(55% 45% at 88% 55%,var(--c2),transparent 70%),radial-gradient(70% 50% at 35% 100%,var(--c3),transparent 70%),#0a0916;animation:respire 8s ease-in-out var(--s) infinite alternate}
+@keyframes respire{to{transform:scale(1.14) rotate(5deg)}}
+.trame{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.16) 2px,transparent 2.5px);background-size:54px 54px;mask-image:radial-gradient(ellipse at 50% 40%,#000 20%,transparent 72%);-webkit-mask-image:radial-gradient(ellipse at 50% 40%,#000 20%,transparent 72%);animation:trame 14s linear var(--s) infinite}
+@keyframes trame{to{background-position:54px 108px}}
+.halo{position:absolute;left:50%;top:760px;width:1000px;height:1000px;margin:-500px 0 0 -500px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.28),transparent 62%);animation:halo 3.2s ease-in-out var(--s) infinite alternate}
+@keyframes halo{to{transform:scale(1.18);opacity:.6}}
+.plateau{position:absolute;inset:0;perspective:1900px;animation:camera .9s var(--ease) var(--s) both}
+@keyframes camera{from{transform:scale(1.22);filter:blur(14px);opacity:0}}
+
+/* ---------- briques d'animation ---------- */
+.pop{animation:pop .6s var(--rebond) calc(var(--s) + var(--o,0s)) both}@keyframes pop{from{opacity:0;transform:scale(.3) rotate(-8deg)}}
+.flotte{animation:pop .6s var(--rebond) calc(var(--s) + var(--o,0s)) both,flotte 2.6s ease-in-out calc(var(--s) + var(--o,0s) + .6s) infinite alternate}
+@keyframes flotte{to{translate:0 -18px}}
+
+/* ---------- en-tête ---------- */
+.marque{position:absolute;left:50%;top:136px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;padding:10px 22px 10px 10px;border-radius:99px;font:800 26px/1 Unbounded;z-index:50;background:rgba(10,9,22,.55);border:1.5px solid rgba(255,255,255,.22);backdrop-filter:blur(14px)}
+.logo{width:44px;height:44px;border-radius:14px;background:conic-gradient(from 200deg,#7c5cff,#3b5bfd,#22d3ee,#a3e635,#7c5cff);display:grid;place-items:center}
+.logo svg{width:26px;height:26px}
+.prog{position:absolute;left:60px;right:60px;top:104px;display:flex;gap:8px;z-index:50}
+.prog i{flex:var(--poids);height:7px;border-radius:9px;background:rgba(255,255,255,.2);overflow:hidden}
+.prog b{display:block;height:100%;width:0;border-radius:9px;background:#fff}
+.mention{position:absolute;left:0;right:0;top:1585px;text-align:center;font:600 21px/1 Inter;color:rgba(255,255,255,.62);z-index:45;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+
+/* ---------- sous-titres ---------- */
+.sous{position:absolute;left:40px;right:40px;top:1240px;height:300px;display:flex;align-items:center;justify-content:center;text-align:center;z-index:40}
+.sous p{margin:0;font:900 86px/1.04 Unbounded;letter-spacing:-.035em;text-transform:uppercase;transform-origin:50% 60%}
+.sous span{display:inline-block;margin:0 .17em;color:#fff;-webkit-text-stroke:14px #0a0916;paint-order:stroke fill;text-shadow:0 10px 0 rgba(0,0,0,.5)}
+.sous span.actif{color:var(--accent,#ffe14d);transform:scale(1.08)}
+
+/* ---------- téléphone avec un vrai écran de l'application ---------- */
+.tel{position:absolute;left:50%;top:228px;width:590px;height:1130px;margin-left:-295px;border-radius:78px;background:#0d0d16;padding:16px;box-shadow:0 0 0 3px rgba(255,255,255,.28),0 0 110px -10px var(--c1),0 80px 130px -30px #000;transform-style:preserve-3d;animation:arrive 1s var(--ease) calc(var(--s) + .05s) both,bascule var(--d) ease-in-out calc(var(--s) + 1s) both}
+@keyframes arrive{from{opacity:0;transform:translateY(520px) rotateX(38deg) rotateY(var(--ry0,-30deg)) scale(.7)}to{transform:rotateY(var(--ry0,-14deg)) rotateX(5deg)}}
+@keyframes bascule{from{transform:rotateY(var(--ry0,-14deg)) rotateX(5deg)}to{transform:rotateY(var(--ry1,10deg)) rotateX(2deg) scale(var(--zoom,1.04))}}
+.tel .ecran{position:relative;width:100%;height:100%;border-radius:62px;overflow:hidden;background:#f7f7fb}
+.tel .ecran img{position:absolute;left:0;top:0;width:100%;display:block}
+.tel .encoche{position:absolute;left:50%;top:26px;width:150px;height:40px;margin-left:-75px;border-radius:22px;background:#0d0d16;z-index:3}
+.tel .reflet{position:absolute;inset:0;border-radius:62px;background:linear-gradient(115deg,rgba(255,255,255,.26),transparent 28%,transparent 70%,rgba(255,255,255,.1));z-index:2;pointer-events:none}
+/* doigt : arrive, appuie, onde */
+.doigt{position:absolute;width:86px;height:86px;margin:-43px 0 0 -43px;border-radius:50%;background:rgba(255,255,255,.92);border:5px solid var(--c1);box-shadow:0 14px 34px -6px rgba(0,0,0,.6);z-index:4;opacity:0;animation:doigt 1.5s var(--ease) calc(var(--s) + var(--o)) both}
+@keyframes doigt{0%{opacity:0;transform:translate(160px,240px) scale(1.2)}35%{opacity:1;transform:none}48%{transform:scale(.72)}60%{transform:none;opacity:1}100%{opacity:0;transform:scale(1.1)}}
+.onde{position:absolute;width:86px;height:86px;margin:-43px 0 0 -43px;border-radius:50%;border:7px solid var(--c1);z-index:4;opacity:0;animation:onde .8s ease-out calc(var(--s) + var(--o) + .7s) both}
+@keyframes onde{0%{opacity:.95;transform:scale(.6)}100%{opacity:0;transform:scale(4.2)}}
+/* cadre lumineux qui désigne une zone de l'écran */
+.cadre{position:absolute;border-radius:22px;border:6px solid var(--accent);box-shadow:0 0 0 2000px rgba(10,9,22,.38),0 0 40px var(--accent);z-index:2;opacity:0;animation:cadre var(--dc,2.2s) ease calc(var(--s) + var(--o)) both}
+@keyframes cadre{0%{opacity:0;transform:scale(1.25)}14%,82%{opacity:1;transform:none}100%{opacity:0}}
+
+/* étiquettes autour du téléphone */
+.puce{position:absolute;transform-style:preserve-3d;display:flex;align-items:center;gap:14px;padding:20px 28px;border-radius:24px;font:800 33px/1.1 Inter;white-space:nowrap;color:#0a0916;background:#fff;box-shadow:0 24px 50px -14px rgba(0,0,0,.75),0 0 0 4px rgba(255,255,255,.25);z-index:20}
+.puce i{flex:none;width:44px;height:44px;border-radius:14px;background:var(--p,#10b981);display:grid;place-items:center}
+.puce i svg{width:26px;height:26px}
+
+/* carte flottante (document, message) */
+.feuille{position:absolute;left:50%;border-radius:36px;overflow:hidden;background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.3),0 0 100px -14px var(--c1),0 80px 130px -30px #000;animation:feuille 1s var(--ease) calc(var(--s) + .05s) both,penche var(--d) ease-in-out calc(var(--s) + 1s) both}
+@keyframes feuille{from{opacity:0;transform:translateY(-300px) rotateX(-70deg) scale(.8)}to{transform:rotateX(6deg) rotateY(-8deg)}}
+@keyframes penche{from{transform:rotateX(6deg) rotateY(-8deg)}to{transform:rotateX(2deg) rotateY(7deg) scale(1.05)}}
+.feuille img{display:block;width:100%}
+.feuille .voile{position:absolute;left:0;right:0;bottom:0;top:var(--depart,34%);background:#fff;transform-origin:bottom;animation:ecrit var(--de,2s) steps(7) calc(var(--s) + var(--o,.9s)) both}
+@keyframes ecrit{to{transform:scaleY(0)}}
+.tampon{position:absolute;padding:18px 28px;border:8px solid #10b981;border-radius:20px;color:#10b981;font:900 54px/1 Unbounded;text-transform:uppercase;background:rgba(255,255,255,.94);z-index:5;animation:tampon .4s cubic-bezier(.2,1.5,.4,1) calc(var(--s) + var(--o)) both}
+@keyframes tampon{from{opacity:0;transform:scale(3.2) rotate(-30deg)}to{opacity:1;transform:rotate(-9deg)}}
+
+/* accroche : éventail de vrais écrans */
+.eventail .volet{position:absolute;left:50%;top:330px;width:440px;height:860px;margin-left:-220px;border-radius:52px;overflow:hidden;background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.3),0 60px 110px -30px #000;transform-origin:50% 120%;animation:volet 1.1s var(--rebond) calc(var(--s) + var(--o)) both,respireVolet 3s ease-in-out calc(var(--s) + 1.3s) infinite alternate}
+.eventail .volet img{width:100%;display:block}
+@keyframes volet{from{opacity:0;transform:translateY(700px) rotate(0) scale(.6)}to{transform:rotate(var(--a)) translateY(var(--y,0))}}
+@keyframes respireVolet{to{translate:0 -16px}}
+.gros{position:absolute;left:0;right:0;text-align:center;font:900 150px/1 Unbounded;letter-spacing:-.06em;background:linear-gradient(180deg,#fff,var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 18px 36px rgba(0,0,0,.55));z-index:25}
+
+/* choix du métier et du département */
+.panneau{position:absolute;left:110px;right:110px;top:300px;padding:44px;border-radius:44px;background:#fff;color:#0f1222;box-shadow:0 0 100px -14px var(--c1),0 80px 130px -30px #000;animation:feuille 1s var(--ease) calc(var(--s) + .05s) both}
+.panneau h3{margin:0 0 22px;font:800 34px/1 Unbounded;letter-spacing:-.03em}
+.panneau .opt{display:flex;align-items:center;gap:18px;margin-top:14px;padding:24px 26px;border-radius:24px;border:3px solid #e4e6f0;font:700 34px/1.1 Inter}
+.panneau .opt em{flex:none;width:40px;height:40px;border-radius:50%;border:4px solid #c9cde0}
+.panneau .opt.choisi{animation:choisi .35s ease calc(var(--s) + var(--o)) both}
+.panneau .opt.choisi em{animation:coche .35s ease calc(var(--s) + var(--o)) both}
+@keyframes choisi{to{border-color:#6d4aff;background:#f1edff;box-shadow:0 0 0 6px rgba(109,74,255,.18)}}
+@keyframes coche{to{border-color:#6d4aff;background:#6d4aff;box-shadow:inset 0 0 0 7px #fff}}
+.panneau .aller{margin-top:26px;padding:30px 0;border-radius:99px;text-align:center;color:#fff;font:800 36px/1 Inter;background:linear-gradient(120deg,#6d4aff,#3b5bfd 50%,#0ea5c6);animation:appui .4s ease calc(var(--s) + var(--o)) both}
+@keyframes appui{50%{transform:scale(.9)}}
+
+/* fin */
+.logo-geant{position:absolute;left:50%;top:330px;width:280px;height:280px;margin-left:-140px;border-radius:84px;background:conic-gradient(from 200deg,#7c5cff,#3b5bfd,#22d3ee,#a3e635,#7c5cff);display:grid;place-items:center;box-shadow:0 0 120px -10px rgba(124,92,255,.9),0 50px 100px -30px #000}
+.logo-geant svg{width:150px;height:150px}
+.nom{position:absolute;left:0;right:0;top:660px;text-align:center;font:900 150px/1 Unbounded;letter-spacing:-.06em}
+.nom span{display:inline-block;background:linear-gradient(180deg,#fff,#c4b5fd);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:lettre .7s var(--rebond) calc(var(--s) + .35s + var(--k) * .06s) both}
+@keyframes lettre{from{opacity:0;transform:translateY(120px) rotate(14deg)}}
+.cta{position:absolute;left:50%;top:880px;width:820px;margin-left:-410px;padding:40px 0;border-radius:99px;text-align:center;font:900 46px/1 Unbounded;letter-spacing:-.03em;color:#0b0820;background:linear-gradient(120deg,#fff,#e9e4ff);box-shadow:0 0 80px -10px rgba(255,255,255,.7)}
+.garanties{position:absolute;left:0;right:0;top:1040px;text-align:center;font:700 34px/1.5 Inter;color:rgba(255,255,255,.9)}
+.fondu-fin{position:absolute;inset:0;background:#07070d;opacity:0;animation:fondu .5s ease var(--fin) forwards;z-index:70}
+@keyframes fondu{to{opacity:1}}
+.puce.flotte{animation:popP .7s var(--rebond) calc(var(--s) + var(--o,0s)) both,flotte 2.6s ease-in-out calc(var(--s) + var(--o,0s) + .7s) infinite alternate}
+@keyframes popP{from{opacity:0;transform:perspective(600px) rotateX(70deg) translateY(60px) scale(.6)}}
+.puce::after{content:"";position:absolute;inset:-6px;border-radius:30px;border:4px solid var(--p,#10b981);opacity:0;animation:anneau 1s ease-out calc(var(--s) + var(--o,0s) + .3s) both}
+@keyframes anneau{0%{opacity:.9;transform:scale(.9)}100%{opacity:0;transform:scale(1.35)}}
+/* fin : brillance sur le logo, bouton qui pulse, flèche vers la bio */
+.logo-geant{animation:logoArrive .9s var(--rebond) calc(var(--s) + .1s) both}
+@keyframes logoArrive{from{opacity:0;transform:scale(.2) rotate(-25deg)}}
+.logo-geant::after{content:"";position:absolute;inset:0;border-radius:84px;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.7) 50%,transparent 65%);transform:translateX(-130%);animation:brille 1.2s ease-in-out calc(var(--s) + 1.1s) both;overflow:hidden}
+.logo-geant{overflow:hidden}
+.cta{animation:pop .6s var(--rebond) calc(var(--s) + .9s) both,pulse 1.1s ease-in-out calc(var(--s) + 1.6s) infinite}
+@keyframes pulse{50%{transform:scale(1.05);box-shadow:0 0 110px -10px rgba(255,255,255,.95)}}
+.fleche-bio{position:absolute;left:50%;top:1130px;width:120px;margin-left:-60px;text-align:center;font:900 96px/1 Inter;color:#fff;animation:pop .5s var(--rebond) calc(var(--s) + 1.5s) both,descend .7s ease-in-out calc(var(--s) + 2s) infinite alternate}
+@keyframes descend{to{transform:translateY(34px)}}
+.confetti{position:absolute;width:18px;height:10px;border-radius:3px;opacity:0;animation:confetti 1.6s cubic-bezier(.1,.7,.3,1) calc(var(--s) + var(--o)) forwards}
+@keyframes confetti{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(var(--r))}}
+/* sous-titres : les mots apparaissent un par un, le mot dit ressort */
+.sous span{opacity:.0;transform:translateY(24px) scale(.85);transition:none}
+.sous span.dit{opacity:1;transform:none}
+.sous span.actif{color:var(--accent,#ffe14d);transform:scale(1.12) rotate(-2deg)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="etoiles" viewBox="0 0 24 24"><path fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9.94 14.06A2 2 0 0 0 8.5 12.62L3.36 11.3a.5.5 0 0 1 0-.96L8.5 9.02A2 2 0 0 0 9.94 7.58l1.32-5.14a.5.5 0 0 1 .96 0l1.32 5.14a2 2 0 0 0 1.44 1.44l5.14 1.32a.5.5 0 0 1 0 .96l-5.14 1.32a2 2 0 0 0-1.44 1.44l-1.32 5.14a.5.5 0 0 1-.96 0zM20 3v4M22 5h-4M4 17v2M5 18H3"/></symbol>
+  <symbol id="coche" viewBox="0 0 24 24"><path fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+</defs></svg>
+<div id="scenes"></div>
+<div class="prog" id="prog"></div>
+<div class="marque"><span class="logo"><svg><use href="#etoiles"/></svg></span>MySite</div>
+<div class="sous" id="zone-sous"><p id="sous"></p></div>
+<div class="mention">Écrans de démonstration · données d'exemple · voix de synthèse</div>
+<div class="poussiere" id="poussiere"></div><div class="vignette"></div><div class="grain-global"></div>
+<div class="fondu-fin" id="fondu"></div>
+
+<script>
+const PUB = @@PUB@@;
+const TL = PUB.timeline;
+const h = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; };
+const puces = (l = []) => l.map(p => `<div class="puce flotte" style="left:${p.x}px;top:${p.y}px;--o:${p.o}s;--p:${p.c || "#10b981"}"><i><svg><use href="#coche"/></svg></i>${p.t}</div>`).join("");
+let styles = "";
+
+PUB.scenes.forEach((s, k) => {
+  const T = s, suivante = PUB.scenes[k + 1], f = suivante ? suivante.debut : 999, d = (T.fin - T.debut).toFixed(2);
+  let corps = "";
+  if (s.type === "eventail") {
+    corps = `<div class="eventail">${s.images.map((img, i) => `<div class="volet" style="--o:${0.12 + i * 0.13}s;--a:${[-16, 0, 16][i]}deg;--y:${[40, -30, 40][i]}px;z-index:${i === 1 ? 3 : 1};margin-left:${[-470, -220, 30][i]}px"><img src="images/${img}" alt=""></div>`).join("")}</div>`
+      + (s.gros ? `<div class="gros pop" style="top:${s.grosY || 250}px;--o:${s.grosO || 0.5}s;font-size:${s.grosTaille || 150}px">${s.gros}</div>` : "");
+  } else if (s.type === "tel") {
+    const nom = `defile-${s.id}`;
+    styles += `@keyframes ${nom}{${s.defile.map(([p, y]) => `${p}%{transform:translateY(${y}px)}`).join("")}}`;
+    corps = `<div class="tel" style="--d:${d}s;--ry0:${s.ry0 ?? -14}deg;--ry1:${s.ry1 ?? 10}deg;--zoom:${s.zoom ?? 1.04}"><div class="ecran">
+        <img src="images/${s.image}" alt="" style="animation:${nom} ${d}s cubic-bezier(.65,0,.35,1) calc(var(--s) + .3s) both">
+        ${(s.cadres || []).map(c => `<div class="cadre" style="left:${c.x}px;top:${c.y}px;width:${c.w}px;height:${c.h}px;--o:${c.o}s;--dc:${c.d || 2.2}s"></div>`).join("")}
+        ${s.tap ? `<div class="doigt" style="left:${s.tap.x}px;top:${s.tap.y}px;--o:${s.tap.o}s"></div><div class="onde" style="left:${s.tap.x}px;top:${s.tap.y}px;--o:${s.tap.o}s"></div>` : ""}
+        <div class="reflet"></div><div class="brille"></div></div><div class="encoche"></div></div>${puces(s.puces)}`;
+  } else if (s.type === "feuille") {
+    corps = `<div class="feuille" style="--d:${d}s;top:${s.y}px;width:${s.w}px;margin-left:${-s.w / 2}px"><img src="images/${s.image}" alt="">
+        ${s.ecrit ? `<div class="voile" style="--depart:${s.ecrit.depart};--o:${s.ecrit.o}s;--de:${s.ecrit.d}s"></div>` : ""}
+        ${s.tampon ? `<div class="tampon" style="right:${s.tampon.x}px;top:${s.tampon.y}px;--o:${s.tampon.o}s">${s.tampon.t}</div>` : ""}</div>${puces(s.puces)}`;
+  } else if (s.type === "choix") {
+    corps = `<div class="panneau"><h3>${s.titres[0]}</h3>${s.metiers.map((m, i) => `<div class="opt${i === s.metier ? " choisi" : ""}" style="--o:${s.o[0]}s"><em></em>${m}</div>`).join("")}
+        <h3 style="margin-top:34px">${s.titres[1]}</h3><div class="opt choisi" style="--o:${s.o[1]}s"><em></em>${s.departement}</div>
+        <div class="aller" style="--o:${s.o[2]}s">${s.bouton}</div></div>${puces(s.puces)}`;
+  } else if (s.type === "fin") {
+    corps = `<div class="logo-geant pop" style="--o:.1s"><svg><use href="#etoiles"/></svg></div>
+      <div class="nom">${[..."MySite"].map((c, i) => `<span style="--k:${i}">${c}</span>`).join("")}</div>
+      <div class="cta">${s.cta}</div><div class="garanties pop" style="--o:1.3s">${s.garanties}</div><div class="fleche-bio">↓</div>${Array.from({ length: 40 }, (_, i) => { const a = (i / 40) * Math.PI * 2, d = 260 + ((i * 53) % 280); return `<i class="confetti" style="left:540px;top:520px;background:${["#7c5cff", "#22d3ee", "#a3e635", "#ff3d75", "#ffe14d", "#fff"][i % 6]};--o:1.05s;--x:${Math.round(Math.cos(a) * d)}px;--y:${Math.round(Math.sin(a) * d - 120)}px;--r:${(i * 97) % 720}deg"></i>`; }).join("")}`;
+  }
+  document.getElementById("scenes").appendChild(h(`<section class="sc" style="--s:${T.debut}s;--f:${f}s;--c1:${s.c[0]};--c2:${s.c[1]};--c3:${s.c[2]};--accent:${s.accent}"><div class="ciel"></div><div class="trame"></div><div class="halo"></div><div class="camera" style="--d:${(f - T.debut + 0.6).toFixed(2)}s;--dx:${k % 2 ? 16 : -16}px;--dy:${k % 3 ? -20 : -28}px"><div class="plateau">${corps}</div></div></section>`));
+  if (k) document.getElementById("scenes").appendChild(h(`<div class="eclair" style="--t:${(T.debut - 0.08).toFixed(2)}s"></div>`));
+  document.getElementById("prog").appendChild(h(`<i style="--poids:${(T.fin - T.debut).toFixed(2)}"><b></b></i>`));
+});
+document.head.appendChild(Object.assign(document.createElement("style"), { textContent: styles }));
+// poussières : positions pseudo-aléatoires mais identiques à chaque rendu
+document.getElementById("poussiere").innerHTML = Array.from({ length: 26 }, (_, i) => `<i style="left:${(i * 137) % 1040 + 20}px;top:${(i * 241) % 1500 + 300}px;--t:${4 + (i % 4) * 2}px;--o:${0.25 + (i % 5) * 0.1};--duree:${6 + (i % 5)}s;--retard:${-(i * 0.7)}s;--x:${(i % 2 ? 1 : -1) * (20 + (i % 7) * 10)}px"></i>`).join("");
+document.getElementById("fondu").style.setProperty("--fin", (TL.total - 0.4) + "s");
+
+// Sous-titres : mots répartis selon leur longueur, regroupés par 1 à 3 mots (coupure sur la ponctuation)
+const ACCENTS = {}; PUB.scenes.forEach(s => { ACCENTS[s.de] ??= s.accent; });
+const MOTS_CLES = new RegExp(`^(${PUB.motsCles})$`, "i");
+const blocs = [];
+TL.scenes.forEach(s => {
+  const mots = s.texte.replace(/\s+([?!:;])/g, " $1").split(/ +/);
+  const poids = mots.map(m => m.replace(/[^\p{L}\d]/gu, "").length + 2 + (/[.?!:]$/.test(m) ? 7 : /,$/.test(m) ? 4 : 0));
+  const total = poids.reduce((a, b) => a + b, 0); let c = 0;
+  const debuts = s.heures && s.heures.length === mots.length ? s.heures : poids.map(p => { const d = s.voix + (c / total) * s.duree; c += p; return d; });
+  let bloc = null;
+  mots.forEach((m, i) => {
+    if (bloc && (bloc.mots.join(" ") + " " + m).length > 13) bloc = null;
+    if (!bloc) { bloc = { scene: s, mots: [], debuts: [] }; blocs.push(bloc); }
+    bloc.mots.push(m); bloc.debuts.push(debuts[i]);
+    if (/[.?!:,]$/.test(m) || bloc.mots.length >= 3) bloc = null;
+  });
+});
+blocs.forEach(b => { b.debut = b.debuts[0]; });
+blocs.forEach((b, i) => { const suivant = blocs[i + 1]; b.fin = suivant && suivant.scene === b.scene ? suivant.debut : (b.scene.finVoix ?? b.scene.voix + b.scene.duree) + 0.3; });
+const el = document.getElementById("sous"), zone = document.getElementById("zone-sous"), barres = [...document.querySelectorAll("#prog b")];
+const fx = (a, b, t) => Math.min(1, Math.max(0, (t - a) / (b - a)));
+const dos = x => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+let courant = null;
+function maj(t){
+  const b = blocs.find(x => t >= x.debut && t < x.fin) || null;
+  if (b !== courant) { courant = b; el.innerHTML = b ? b.mots.map(m => `<span>${m}</span>`).join(" ") : ""; if (b) { const n = b.mots.join(" ").length, long = Math.max(...b.mots.map(m => m.length)); el.style.fontSize = (long > 11 ? 60 : n > 18 || long > 9 ? 68 : n > 13 ? 76 : 86) + "px"; } }
+  if (b) {
+    zone.style.setProperty("--accent", ACCENTS[b.scene.id]);
+    const p = dos(fx(b.debut, b.debut + 0.2, t)), sortie = fx(b.fin - 0.07, b.fin, t);
+    el.style.transform = `scale(${0.6 + 0.4 * p}) rotate(${(1 - p) * -5}deg) translateY(${(1 - p) * 36}px)`;
+    el.style.opacity = String(Math.min(1, p * 1.5) * (1 - sortie));
+    [...el.children].forEach((sp, i) => { const fin = i + 1 < b.debuts.length ? b.debuts[i + 1] : b.fin; const actif = t >= b.debuts[i] && t < fin; sp.className = (t >= b.debuts[i] ? "dit " : "") + (actif || MOTS_CLES.test(b.mots[i].replace(/[^\p{L}]/gu, "")) && t >= b.debuts[i] ? "actif" : ""); });
+  }
+  PUB.scenes.forEach((s, i) => { barres[i].style.width = (100 * fx(s.debut, s.fin, t)) + "%"; });
+}
+window.rendre = function(t){ document.getAnimations().forEach(a => { a.pause(); a.currentTime = t * 1000; }); maj(t); };
+window.DUREE = TL.total;
+if (!navigator.webdriver) { const d = performance.now(); (function b(){ window.rendre(((performance.now() - d) / 1000) % TL.total); requestAnimationFrame(b); })(); }
+</script>
+</body>
+</html>
