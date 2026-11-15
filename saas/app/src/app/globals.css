@@ -728,3 +728,20 @@ label.mini{font-size:.8rem;flex:1;min-width:0}
 .cell-ouvrir{text-align:right;white-space:nowrap}
 .cell-ouvrir .btn{border-color:color-mix(in srgb,var(--violet) 35%,var(--ligne));color:var(--violet)}
 @media (max-width:40rem){.table-wrap td.cell-ouvrir{padding-top:.6rem;text-align:left}.cell-ouvrir .btn{width:100%;min-height:2.7rem;background:color-mix(in srgb,var(--violet) 8%,var(--surface))}}
+
+/* ---------- Réactivité au toucher ---------- */
+/* Pas d'attente du « double appui » sur téléphone, pas de flash gris ; retour visuel immédiat à l'appui. */
+html{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.btn:active,.menu a:active,.menu button:active,.ticket:active,.cell-ouvrir a:active{transform:scale(.97);transition:transform .06s}
+.menu a:active,.menu button:active{background:color-mix(in srgb,var(--violet) 12%,transparent)}
+/* Écran de chargement (squelette) affiché dès l'appui */
+.chargement{display:grid;gap:1rem;animation:apparait .15s ease-out}
+.sq{border-radius:14px;background:linear-gradient(90deg,var(--surface-2) 25%,color-mix(in srgb,var(--violet) 7%,var(--surface-2)) 50%,var(--surface-2) 75%);background-size:200% 100%;animation:reflet 1.1s linear infinite}
+.sq-titre{height:2.2rem;width:min(60%,18rem)}
+.sq-ligne{height:1rem;width:min(85%,28rem)}
+.sq-grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.8rem}
+.sq-carte{height:5.5rem}
+.sq-bloc{height:14rem}
+@keyframes reflet{to{background-position:-200% 0}}
+@keyframes apparait{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.sq{animation:none}.chargement{animation:none}}

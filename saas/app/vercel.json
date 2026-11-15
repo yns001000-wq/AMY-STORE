@@ -1,6 +1,15 @@
 {
+  "regions": [
+    "fra1"
+  ],
   "crons": [
-    { "path": "/api/cron/reconduction", "schedule": "17 8 * * *" },
-    { "path": "/api/cron/parrainage", "schedule": "41 6 * * *" }
+    {
+      "path": "/api/cron/reconduction",
+      "schedule": "17 8 * * *"
+    },
+    {
+      "path": "/api/cron/parrainage",
+      "schedule": "41 6 * * *"
+    }
   ]
 }

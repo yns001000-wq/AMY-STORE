@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { cache } from "react";
 
 /** Client Supabase côté serveur, au nom de l'utilisateur connecté (les règles RLS s'appliquent). */
 export async function supabaseServeur() {
@@ -16,9 +17,12 @@ export async function supabaseServeur() {
   });
 }
 
-/** Utilisateur connecté (vérifié auprès de Supabase), ou null. */
-export async function utilisateurConnecte() {
+/**
+ * Utilisateur connecté (vérifié auprès de Supabase), ou null.
+ * Mis en cache le temps d'un affichage : le menu (layout) et la page partagent la même vérification au lieu d'en faire deux.
+ */
+export const utilisateurConnecte = cache(async () => {
   const sb = await supabaseServeur();
   const { data } = await sb.auth.getUser();
   return data.user ? { sb, user: data.user } : null;
-}
+});

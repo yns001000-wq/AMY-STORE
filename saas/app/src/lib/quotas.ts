@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { supabaseAdmin } from "./supabase/admin";
 import { limite, planEffectif, PLANS, type PlanId, type TypeQuota } from "./plans";
 
@@ -6,13 +7,13 @@ export function moisCourant(d = new Date()): string {
   return new Intl.DateTimeFormat("fr-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit" }).format(d).slice(0, 7);
 }
 
-/** Profil, offre appliquée et quotas de cette offre. */
-export async function profilEtPlan(userId: string): Promise<{ profil: Record<string, unknown>; plan: PlanId; quotas: Record<TypeQuota, number> }> {
+/** Profil, offre appliquée et quotas de cette offre (lu une seule fois par affichage, partagé entre le menu et la page). */
+export const profilEtPlan = cache(async (userId: string): Promise<{ profil: Record<string, unknown>; plan: PlanId; quotas: Record<TypeQuota, number> }> => {
   const { data, error } = await supabaseAdmin().from("profils").select("*").eq("id", userId).single();
   if (error || !data) throw new Error("Profil introuvable");
   const plan = planEffectif(data as { plan: string; pro_offert_jusqu?: string | null });
   return { profil: data, plan, quotas: PLANS[plan].quotas };
-}
+});
 
 export async function consommation(userId: string): Promise<Record<TypeQuota, number>> {
   const { data } = await supabaseAdmin().from("consommation").select("prospects, messages_ia, sites_ia, retouches_ia").eq("user_id", userId).eq("mois", moisCourant()).maybeSingle();

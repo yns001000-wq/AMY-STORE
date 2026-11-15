@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { CircleUser, Columns3, CreditCard, Gift, GraduationCap, LayoutDashboard, LayoutTemplate, Map as IconeCarte, ReceiptText, Settings2 } from "lucide-react";
 
@@ -7,9 +8,13 @@ const LIENS = [["/espace", "Tableau de bord", LayoutDashboard], ["/espace/pipeli
 
 export function MenuApp() {
   const chemin = usePathname();
+  // Le lien touché est mis en valeur tout de suite, sans attendre la réponse du serveur.
+  const [vers, setVers] = useState<string | null>(null);
+  useEffect(() => { setVers(null); }, [chemin]);
+  const actif = vers ?? chemin;
   return (
     <ul className="menu">
-      {LIENS.map(([href, t, Ico]) => <li key={href}><Link href={href} aria-current={chemin === href || (href !== "/espace" && chemin.startsWith(href + "/")) ? "page" : undefined}><Ico aria-hidden />{t}</Link></li>)}
+      {LIENS.map(([href, t, Ico]) => <li key={href}><Link href={href} onClick={() => href !== chemin && setVers(href)} aria-current={actif === href || (href !== "/espace" && actif.startsWith(href + "/")) ? "page" : undefined}><Ico aria-hidden />{t}</Link></li>)}
     </ul>
   );
 }
