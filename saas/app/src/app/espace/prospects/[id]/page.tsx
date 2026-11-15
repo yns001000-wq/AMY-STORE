@@ -9,6 +9,7 @@ import { BoutonsStudio } from "@/components/studio/BoutonsStudio";
 import { ConclureVente } from "@/components/ConclureVente";
 import { consommation, profilEtPlan } from "@/lib/quotas";
 import { PLANS } from "@/lib/plans";
+import { familleDepuisMetier } from "@/lib/studio";
 
 export const metadata = { title: "Fiche prospect" };
 
@@ -66,7 +67,7 @@ export default async function FicheProspect({ params }: { params: Promise<{ id: 
           </form>
         </div>
         <div style={{ display: "grid", gap: "1.2rem", alignContent: "start" }}>
-          <BoutonsStudio prospectId={p.id} sites={sites ?? []} ia={!!PLANS[plan].studio.effortIA} restants={Math.max(0, quotas.sites_ia - conso.sites_ia)} />
+          <BoutonsStudio prospectId={p.id} sites={sites ?? []} ia={!!PLANS[plan].studio.effortIA} restants={Math.max(0, quotas.sites_ia - conso.sites_ia)} famille={familleDepuisMetier(p.metier)} nom={p.nom} />
           <ConclureVente prospectId={p.id} docs={docs ?? []} facturation={PLANS[plan].facturation} />
           <GenerateurMessage id={p.id} bloque={p.statut === "refus" ? "Ce prospect a demandé à ne plus être contacté." : undefined} />
           <div className="carte">

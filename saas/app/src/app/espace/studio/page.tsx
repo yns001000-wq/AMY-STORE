@@ -5,6 +5,7 @@ import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { consommation, profilEtPlan } from "@/lib/quotas";
 import { ORDRE_PLANS, PLANS, type CapacitesStudio } from "@/lib/plans";
 import { FAMILLES } from "@/lib/studio";
+import { SitesSurMesure } from "@/components/studio/SitesSurMesure";
 
 export const metadata = { title: "Studio" };
 
@@ -55,6 +56,7 @@ export default async function ListeStudio() {
           })}
         </ul>
       )}
+      {!P.studio.effortIA && <div className="carte" style={{ marginTop: "1.6rem" }}><SitesSurMesure /></div>}
       <div className="carte" style={{ marginTop: "1.6rem" }}>
         <div className="tableau-entete"><h2>La puissance du Studio selon l&apos;offre</h2><Link className="btn" href="/espace/abonnement">Changer d&apos;offre</Link></div>
         <div className="table-wrap">

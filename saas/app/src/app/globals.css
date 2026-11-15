@@ -745,3 +745,53 @@ html{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 @keyframes reflet{to{background-position:-200% 0}}
 @keyframes apparait{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.sq{animation:none}.chargement{animation:none}}
+
+/* ---------- Sites sur mesure verrouillés (offre Gratuite) ---------- */
+.sur-mesure{display:grid;gap:.7rem;min-width:0}
+.sur-mesure-tete{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem}
+.sur-mesure-tete strong{display:inline-flex;align-items:center;gap:.4rem;color:var(--encre)}
+.sur-mesure-tete strong svg{width:1.05rem;height:1.05rem;color:var(--violet)}
+.sur-mesure-liste{list-style:none;margin:0;padding:.2rem .1rem .6rem;display:grid;grid-auto-flow:column;grid-auto-columns:min(70%,13rem);gap:.7rem;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.sur-mesure-liste li{scroll-snap-align:start}
+@media (min-width:60rem){.sur-mesure-liste{grid-auto-flow:row;grid-template-columns:repeat(auto-fill,minmax(11rem,1fr));overflow:visible}}
+.sur-mesure-carte{display:grid;gap:.55rem;width:100%;text-align:left;padding:.55rem;border:1px solid var(--ligne);border-radius:var(--r-sm);background:var(--surface);color:inherit;font:inherit;cursor:pointer;transition:transform .12s,border-color .2s,box-shadow .2s}
+.sur-mesure-carte:hover{border-color:color-mix(in srgb,var(--violet) 45%,var(--ligne));box-shadow:var(--ombre)}
+.sur-mesure-carte:active{transform:scale(.97)}
+.sur-mesure-vignette{position:relative;display:grid;place-items:center;aspect-ratio:16/10;border-radius:10px;color:#fff;overflow:hidden}
+.sur-mesure-vignette>svg{width:2rem;height:2rem;opacity:.95;filter:blur(.3px)}
+.sur-mesure-vignette.petite{width:3.2rem;aspect-ratio:1;justify-self:center}
+.sur-mesure-vignette.petite>svg{width:1.5rem;height:1.5rem}
+.sur-mesure-faux{position:absolute;left:.55rem;right:.55rem;bottom:.5rem;display:grid;gap:3px}
+.sur-mesure-faux i{display:block;height:4px;border-radius:2px;background:rgba(255,255,255,.35)}
+.sur-mesure-faux i:nth-child(2){width:70%}.sur-mesure-faux i:nth-child(3){width:45%}
+.sur-mesure-vignette .cadenas{position:absolute;top:.45rem;right:.45rem;display:grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:50%;background:rgba(255,255,255,.95);color:var(--violet);box-shadow:0 4px 12px rgba(0,0,0,.25);animation:cadenas 2.6s ease-in-out infinite}
+.sur-mesure-vignette .cadenas svg{width:1rem;height:1rem}
+.sur-mesure-carte:hover .cadenas,.sur-mesure-carte:focus-visible .cadenas{animation:secoue .5s ease-in-out}
+@keyframes cadenas{0%,85%,100%{transform:scale(1)}92%{transform:scale(1.12)}}
+@keyframes secoue{0%,100%{transform:rotate(0)}25%{transform:rotate(-14deg)}75%{transform:rotate(14deg)}}
+.sur-mesure-texte{display:grid;gap:.1rem;padding:0 .15rem .15rem}
+.sur-mesure-texte b{color:var(--encre);font-size:.92rem}
+.sur-mesure-texte small{color:var(--doux);font-size:.78rem;line-height:1.35}
+/* Fenêtre des offres : en bas de l'écran sur téléphone, au centre sur ordinateur */
+.fenetre-offres{border:0;padding:0;background:transparent;max-width:min(44rem,calc(100vw - 2rem));width:100%;color:var(--texte)}
+.fenetre-offres::backdrop{background:rgba(10,12,30,.55);backdrop-filter:blur(3px)}
+.fenetre-offres[open]{animation:monte .22s ease-out}
+.fenetre-corps{position:relative;display:grid;gap:.9rem;background:var(--surface);border-radius:var(--r);padding:1.4rem 1.2rem 1.2rem;box-shadow:var(--ombre-forte);max-height:calc(100dvh - 2rem);overflow:auto}
+.fenetre-corps h2{font-size:1.3rem;margin:0;text-align:center}
+.fenetre-corps>.note{margin:0;text-align:center}
+.fenetre-fermer{position:absolute;top:.7rem;right:.7rem}
+.fenetre-offres-grille{display:grid;gap:.8rem}
+@media (min-width:40rem){.fenetre-offres-grille{grid-template-columns:1fr 1fr}}
+.offre-mini{position:relative;display:grid;gap:.5rem;align-content:start;border:1px solid var(--ligne);border-radius:var(--r-sm);padding:1.1rem 1rem 1rem}
+.offre-mini.avant{border:2px solid var(--violet)}
+.offre-mini-badge{position:absolute;top:-.7rem;left:1rem;font:700 .72rem/1 var(--ui);padding:.3rem .6rem;border-radius:999px;background:var(--degrade);color:#fff}
+.offre-mini h3{margin:0;font-size:1.15rem}
+.offre-mini-prix{margin:0;color:var(--doux);font-size:.88rem}.offre-mini-prix b{font:800 1.5rem/1 var(--titre);color:var(--encre)}
+.offre-mini ul{list-style:none;margin:0;padding:0;display:grid;gap:.35rem;font-size:.88rem}
+.offre-mini li{display:flex;gap:.4rem;align-items:flex-start}.offre-mini li svg{width:1rem;height:1rem;color:var(--vert);flex:none;margin-top:.15rem}
+@media (max-width:40rem){
+  .fenetre-offres{max-width:100vw;margin:auto 0 0;}
+  .fenetre-corps{border-radius:var(--r) var(--r) 0 0;max-height:88dvh;padding-bottom:calc(1.2rem + env(safe-area-inset-bottom))}
+}
+@keyframes monte{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.sur-mesure-vignette .cadenas{animation:none}.fenetre-offres[open]{animation:none}}

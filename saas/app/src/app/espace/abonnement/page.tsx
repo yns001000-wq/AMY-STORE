@@ -25,7 +25,8 @@ export default async function Abonnement({ searchParams }: { searchParams: Promi
     <>
       <div className="barre-haut"><div><p className="note" style={{ margin: "0 0 .3rem" }}>Offre actuelle : {PLANS[plan].nom}</p><h1>Mon abonnement</h1></div></div>
       {q.erreur === "renonciation" && <p className="alerte" role="alert">Pour un accès immédiat, cochez la case de demande d&apos;accès immédiat (ou contactez-nous pour démarrer après le délai de rétractation de 14 jours).</p>}
-      {offrePayante(q.offre) && !abonne && <p className="alerte ok" role="status">Votre cockpit est prêt. Vous aviez choisi l&apos;offre {PLANS[offrePayante(q.offre)!].nom} : validez-la ci-dessous, ou <a href="/espace">commencez en Gratuit</a> et décidez plus tard.</p>}
+      {offrePayante(q.offre) && !abonne && q.depuis === "sur-mesure" && <p className="alerte ok" role="status">✨ Les sites sur mesure par l&apos;IA sont inclus dans l&apos;offre {PLANS[offrePayante(q.offre)!].nom} : valide-la ci-dessous pour les débloquer tout de suite.</p>}
+      {offrePayante(q.offre) && !abonne && q.depuis !== "sur-mesure" && <p className="alerte ok" role="status">Votre cockpit est prêt. Vous aviez choisi l&apos;offre {PLANS[offrePayante(q.offre)!].nom} : validez-la ci-dessous, ou <a href="/espace">commencez en Gratuit</a> et décidez plus tard.</p>}
       {q.erreur === "paiement" && <p className="alerte" role="alert">Le paiement n&apos;a pas pu démarrer : rien n&apos;a été prélevé. Réessayez dans un instant ; si le problème continue, contactez-nous.</p>}
       {q.annule && <p className="alerte" role="status">Paiement annulé : rien n&apos;a été prélevé.</p>}
       {remise && <p className="alerte ok" role="status">🎁 Tu as été invité : -20 % sur ton 1er paiement, appliqués automatiquement. Les paiements suivants sont au prix normal.</p>}
