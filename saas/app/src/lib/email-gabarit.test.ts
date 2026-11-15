@@ -22,6 +22,10 @@ describe("gabarit des e-mails", () => {
   it("retire un bouton dont l'adresse n'est pas sûre, garde les modèles Supabase", () => {
     expect(emailHtml({ emoji: "x", titre: "t", paragraphes: [], bouton: { texte: "Clic", url: "javascript:alert(1)" } }, pied)).not.toContain("javascript:");
     expect(emailHtml({ emoji: "x", titre: "t", paragraphes: [], bouton: { texte: "Confirmer", url: "{{ .ConfirmationURL }}" } }, pied)).toContain('href="{{ .ConfirmationURL }}"');
+    // lien par jeton (marche dans le navigateur de l'appli de messagerie) : accepté ; une adresse non https reste refusée
+    const jeton = "https://mysite-app.com/auth/confirm?token_hash={{ .TokenHash }}&type=email";
+    expect(emailHtml({ emoji: "x", titre: "t", paragraphes: [], bouton: { texte: "Confirmer", url: jeton } }, pied)).toContain(`href="${jeton}"`);
+    expect(emailHtml({ emoji: "x", titre: "t", paragraphes: [], bouton: { texte: "x", url: "javascript:{{ .TokenHash }}" } }, pied)).not.toContain("javascript:");
   });
   it("produit une version texte équivalente", () => {
     const t = emailTexte({ emoji: "✅", titre: "Confirmé", paragraphes: ["Ligne"], liste: ["A"], bouton: { texte: "Voir", url: "https://mysite-app.com" }, note: "Garde-le" }, pied);

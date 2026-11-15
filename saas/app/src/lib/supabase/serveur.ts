@@ -5,6 +5,8 @@ import { cookies } from "next/headers";
 export async function supabaseServeur() {
   const jar = await cookies();
   return createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
+    // Session gardée 400 jours (réglage par défaut), renouvelée à chaque visite ; cookie réservé au HTTPS en production.
+    cookieOptions: { secure: (process.env.NEXT_PUBLIC_SITE_URL ?? "").startsWith("https://") },
     cookies: {
       getAll: () => jar.getAll(),
       setAll: (liste) => {

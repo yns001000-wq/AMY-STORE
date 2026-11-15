@@ -23,7 +23,9 @@ export function echapper(s: string): string {
 
 /** Adresse de bouton : https uniquement (ou un modèle Supabase « {{ .X }} ») ; sinon le bouton est retiré. */
 function urlSure(u: string): string | null {
-  return /^https:\/\/[^\s"'<>]+$/.test(u) || /^\{\{ \.[A-Za-z]+ \}\}$/.test(u) ? u : null;
+  // Les variables Supabase « {{ .X }} » sont permises à l'intérieur d'une adresse https (ex. lien de confirmation par jeton).
+  const sansVariables = u.replace(/\{\{ \.[A-Za-z]+ \}\}/g, "x");
+  return /^https:\/\/[^\s"'<>]+$/.test(sansVariables) || /^\{\{ \.[A-Za-z]+ \}\}$/.test(u) ? u : null;
 }
 
 const POLICE = "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";

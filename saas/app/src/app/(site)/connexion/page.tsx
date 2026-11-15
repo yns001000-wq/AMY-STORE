@@ -10,7 +10,7 @@ import { parrainDuCode } from "@/lib/parrainage-serveur";
 export const metadata = { title: "Connexion", robots: { index: false } };
 
 const ERREURS: Record<string, string> = {
-  identifiants: "E-mail ou mot de passe incorrect.", mdp: "Le mot de passe doit faire au moins 10 caractères.",
+  identifiants: "E-mail ou mot de passe incorrect.", mdp: "Le mot de passe doit faire au moins 6 caractères.",
   inscription: "Inscription impossible : cette adresse est peut-être déjà utilisée.", lien: "Ce lien a expiré : demandez-en un nouveau.",
 };
 
@@ -53,7 +53,7 @@ export default async function Connexion({ searchParams }: { searchParams: Promis
               {inscription && <><input type="hidden" name="offre" value={offre ?? ""} /><input type="hidden" name="src" value={src ?? ""} /><input type="hidden" name="ref" value={parrain ? ref ?? "" : ""} /></>}
               {parrain && <p className="note" style={{ margin: 0 }}>🎁 Invité par <b>{parrain.prenom}</b> : -20 % sur ton 1er paiement si tu t&apos;abonnes. Ton parrain verra ton prénom, l&apos;initiale de ton nom et l&apos;avancement du parrainage (jamais ton e-mail ni tes paiements). <Link href="/reglement-parrainage">Règlement</Link></p>}
               <label>E-mail<input name="email" type="email" autoComplete="email" inputMode="email" placeholder="vous@exemple.fr" required /></label>
-              <label>Mot de passe<input name="mdp" type="password" autoComplete={inscription ? "new-password" : "current-password"} minLength={inscription ? 10 : undefined} placeholder={inscription ? "10 caractères minimum" : ""} required /></label>
+              <label>Mot de passe<input name="mdp" type="password" autoComplete={inscription ? "new-password" : "current-password"} minLength={inscription ? 6 : undefined} placeholder={inscription ? "6 caractères minimum" : ""} required /></label>
               <button className="btn p bloc grand" type="submit">{inscription ? "Créer mon compte gratuit" : "Me connecter"} <ArrowRight aria-hidden /></button>
             </form>
             {!inscription && <p className="note" style={{ marginTop: ".9rem", textAlign: "center" }}><Link href="/connexion?mode=oubli">Mot de passe oublié ?</Link></p>}

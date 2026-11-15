@@ -16,9 +16,13 @@ export async function proxy(req: NextRequest) {
   }
   // Le code d'un lien de parrainage (?ref=CODE) n'est jamais gardé automatiquement : le cookie n'est déposé que si le visiteur
   // l'accepte (bandeau « Garder mon invitation »), car la CNIL ne l'exempte pas de consentement (FAQ cookies, question 13).
-  if (!PROTEGE.test(req.nextUrl.pathname)) return NextResponse.next();
+  const chemin = req.nextUrl.pathname;
+  // Page d'accueil : vérifiée seulement si un cookie de session existe (visiteur déjà connecté), pour l'emmener dans son cockpit.
+  const sessionPresente = req.cookies.getAll().some((c) => c.name.startsWith("sb-") && c.name.includes("-auth-token"));
+  if (!PROTEGE.test(chemin) && !(chemin === "/" && sessionPresente)) return NextResponse.next();
   let res = NextResponse.next({ request: req });
   const sb = createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
+    cookieOptions: { secure: req.nextUrl.protocol === "https:" },
     cookies: {
       getAll: () => req.cookies.getAll(),
       setAll: (liste) => {
@@ -29,9 +33,18 @@ export async function proxy(req: NextRequest) {
     },
   });
   const { data } = await sb.auth.getUser();
-  if (!data.user && req.nextUrl.pathname.startsWith("/espace")) {
-    const url = req.nextUrl.clone(); url.pathname = "/connexion"; url.searchParams.set("suite", req.nextUrl.pathname);
-    return NextResponse.redirect(url);
+  // Redirection en gardant les cookies de session rafraîchis à l'instant.
+  const vers = (url: URL) => { const r = NextResponse.redirect(url); res.cookies.getAll().forEach((c) => r.cookies.set(c)); return r; };
+  if (!data.user && chemin.startsWith("/espace")) {
+    const url = req.nextUrl.clone(); url.pathname = "/connexion"; url.search = ""; url.searchParams.set("suite", chemin);
+    return vers(url);
+  }
+  // Déjà connecté : l'accueil et la page de connexion mènent directement au cockpit (on reste connecté, sans ressaisir son mot de passe).
+  const q = req.nextUrl.searchParams;
+  if (data.user && (chemin === "/" || (chemin === "/connexion" && q.get("mode") !== "oubli"))) {
+    const suite = q.get("suite"), url = req.nextUrl.clone();
+    url.pathname = suite && suite.startsWith("/espace") ? suite : "/espace"; url.search = "";
+    return vers(url);
   }
   return res;
 }

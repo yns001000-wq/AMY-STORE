@@ -5,6 +5,8 @@ import { supabaseServeur } from "@/lib/supabase/serveur";
 import { nettoyerSource, offrePayante } from "@/lib/croissance";
 import { COOKIE_PARRAIN, normaliserCode } from "@/lib/parrainage";
 
+/** Longueur minimale du mot de passe (la même règle est réglée dans Supabase : password_min_length = 6). */
+const MDP_MIN = 6;
 const sur = (s: FormDataEntryValue | null) => (typeof s === "string" && s.startsWith("/espace") ? s : "/espace");
 // Adresse de retour des e-mails (confirmation, mot de passe) : toujours celle configurée, jamais l'en-tête Origin envoyé par le navigateur,
 // qu'un attaquant peut falsifier pour recevoir le lien de réinitialisation d'un autre compte.
@@ -24,7 +26,7 @@ export async function sInscrire(form: FormData) {
   // La base vérifie qu'il existe et refuse l'auto-parrainage.
   const parrain = normaliserCode(form.get("ref")) ?? normaliserCode((await cookies()).get(COOKIE_PARRAIN)?.value);
   const retour = new URLSearchParams({ mode: "inscription", ...(offre ? { offre } : {}), ...(source ? { src: source } : {}), ...(parrain ? { ref: parrain } : {}) });
-  if (mdp.length < 10) redirect(`/connexion?${retour}&erreur=mdp`);
+  if (mdp.length < MDP_MIN) redirect(`/connexion?${retour}&erreur=mdp`);
   const sb = await supabaseServeur();
   const { error } = await sb.auth.signUp({
     email: String(form.get("email")), password: mdp,
@@ -43,7 +45,7 @@ export async function demanderNouveauMotDePasse(form: FormData) {
 
 export async function changerMotDePasse(form: FormData) {
   const mdp = String(form.get("mdp"));
-  if (mdp.length < 10) redirect("/espace/compte/mot-de-passe?erreur=mdp");
+  if (mdp.length < MDP_MIN) redirect("/espace/compte/mot-de-passe?erreur=mdp");
   const sb = await supabaseServeur();
   const { error } = await sb.auth.updateUser({ password: mdp });
   if (error) redirect("/espace/compte/mot-de-passe?erreur=1");
