@@ -722,3 +722,9 @@ label.mini{font-size:.8rem;flex:1;min-width:0}
 .bandeau-choix{font-size:.8rem;color:var(--doux)}
 .bandeau-choix button{font:inherit;font-weight:700;color:var(--violet);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
 .bandeau-choix button.garder{color:#fff;background:var(--rose);border-radius:999px;padding:.25rem .7rem;text-decoration:none}
+/* Bouton « Ouvrir » de la liste des prospects : à droite sur ordinateur, sur toute la largeur de la carte sur téléphone */
+.btn.petit{min-height:2.3rem;padding:.45rem .95rem;font-size:.86rem;gap:.3rem}
+.btn.petit svg{width:1rem;height:1rem}
+.cell-ouvrir{text-align:right;white-space:nowrap}
+.cell-ouvrir .btn{border-color:color-mix(in srgb,var(--violet) 35%,var(--ligne));color:var(--violet)}
+@media (max-width:40rem){.table-wrap td.cell-ouvrir{padding-top:.6rem;text-align:left}.cell-ouvrir .btn{width:100%;min-height:2.7rem;background:color-mix(in srgb,var(--violet) 8%,var(--surface))}}

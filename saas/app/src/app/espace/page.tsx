@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Check, Crown, Download, Gift, Lock, Map as IconeCarte, Search, Store, Target, WandSparkles } from "lucide-react";
+import { Check, ChevronRight, Crown, Download, Gift, Lock, Map as IconeCarte, Search, Store, Target, WandSparkles } from "lucide-react";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { consommation, profilEtPlan } from "@/lib/quotas";
 import { departementsAutorises, PLANS, type TypeQuota } from "@/lib/plans";
@@ -103,7 +103,7 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
         ) : (
           <div className="table-wrap">
             <table>
-              <thead><tr><th>Entreprise</th><th>Métier</th><th>Ville</th><th>Statut</th><th>Téléphone</th></tr></thead>
+              <thead><tr><th>Entreprise</th><th>Métier</th><th>Ville</th><th>Statut</th><th>Téléphone</th><th><span className="cache">Fiche</span></th></tr></thead>
               <tbody>
                 {prospects.map((p, i) => {
                   const recherche = encodeURIComponent(`${p.nom} ${p.ville ?? ""}`);
@@ -114,6 +114,7 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
                       <td>{p.ville} <span className="note">{p.code_postal}</span></td>
                       <td><span className="statut" style={{ color: etape(p.statut).couleur, background: `color-mix(in srgb, ${etape(p.statut).couleur} 14%, transparent)` }}>{etape(p.statut).nom}</span></td>
                       <td>{p.telephone ?? <span className="liens-num"><a href={`https://www.google.com/maps/search/?api=1&query=${recherche}`} target="_blank" rel="noopener">Maps</a><a href={`https://www.pagesjaunes.fr/annuaire/chercherlespros?quoiqui=${encodeURIComponent(p.nom)}&ou=${encodeURIComponent(p.ville ?? "")}`} target="_blank" rel="noopener">Pages Jaunes</a></span>}</td>
+                      <td className="cell-ouvrir"><Link className="btn petit" href={`/espace/prospects/${p.id}`} aria-label={`Ouvrir la fiche de ${p.nom}`}>Ouvrir<ChevronRight aria-hidden /></Link></td>
                     </tr>
                   );
                 })}
