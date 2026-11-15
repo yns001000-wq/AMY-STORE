@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--violet:#6d4aff;--deg:linear-gradient(120deg,#6d4aff 0%,#3b5bfd 45%,#0ea5c6 100%)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1504px;height:1120px;overflow:hidden;background:#000;font-family:Inter,system-ui,sans-serif}
+#fond{position:absolute;inset:0;width:1504px;height:1120px}
+#voile{position:absolute;left:0;right:0;bottom:0;height:300px;background:linear-gradient(transparent,rgba(0,0,0,.55))}
+.abs{position:absolute;will-change:transform,opacity}
+/* étiquettes et cartes en haut à gauche */
+.carte{left:44px;top:44px;background:rgba(255,255,255,.96);border-radius:26px;padding:22px 30px;box-shadow:0 24px 60px -18px rgba(0,0,0,.55);display:flex;align-items:center;gap:20px;font-family:"Plus Jakarta Sans"}
+.carte .ico{width:74px;height:74px;border-radius:20px;display:grid;place-items:center;font-size:40px;background:var(--deg)}
+.carte b{display:block;font-size:64px;line-height:1;color:#0f1222;letter-spacing:-.03em}
+.carte small{display:block;font-size:26px;font-weight:700;color:#5f6680;margin-top:6px}
+.tampon{left:70px;top:190px;font-family:"Plus Jakarta Sans";font-weight:800;font-size:56px;color:#e11d48;border:7px solid #e11d48;border-radius:18px;padding:6px 22px;background:rgba(255,255,255,.9);transform-origin:center}
+.chip{left:44px;top:150px;max-width:640px;background:rgba(255,255,255,.97);border-radius:24px;padding:20px 26px;box-shadow:0 24px 60px -18px rgba(0,0,0,.55);font-family:"Plus Jakarta Sans"}
+.chip b{display:block;font-size:38px;line-height:1.15;color:#0f1222;letter-spacing:-.02em}
+.chip small{display:block;font-size:25px;font-weight:600;color:#5f6680;margin-top:8px;font-family:Inter}
+.chip i{font-style:normal;background:var(--deg);-webkit-background-clip:text;background-clip:text;color:transparent}
+#logo{left:44px;top:44px;display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.97);border-radius:999px;padding:12px 26px 12px 12px;box-shadow:0 16px 40px -14px rgba(0,0,0,.5);font-family:"Plus Jakarta Sans";font-weight:800;font-size:36px;color:#0f1222}
+#logo span{width:54px;height:54px;border-radius:16px;background:var(--deg);display:grid;place-items:center;color:#fff;font-size:30px}
+/* téléphone */
+#tel{left:0;top:0;width:430px;height:900px;border-radius:64px;background:#0d0f1a;padding:16px;box-shadow:0 50px 90px -30px rgba(0,0,0,.75),0 0 0 3px #2a2e45 inset;transform-origin:0 0}
+#tel .ecran{position:relative;width:100%;height:100%;border-radius:50px;overflow:hidden;background:#fff}
+#tel .ecran img{position:absolute;left:0;top:52px;width:100%;will-change:transform,opacity}
+#tel .encoche{position:absolute;left:50%;top:26px;width:120px;height:34px;margin-left:-60px;border-radius:20px;background:#0d0f1a;z-index:5}
+#tel .eclat{position:absolute;inset:0;border-radius:50px;background:linear-gradient(115deg,rgba(255,255,255,.18),transparent 35%);pointer-events:none;z-index:4}
+#doigt{width:64px;height:64px;border-radius:50%;background:rgba(109,74,255,.35);border:4px solid #fff;box-shadow:0 0 0 10px rgba(109,74,255,.18)}
+#mention{right:28px;bottom:16px;font:600 19px Inter;color:rgba(255,255,255,.85);text-shadow:0 1px 3px rgba(0,0,0,.8)}
+/* sous-titres */
+#sous{left:120px;right:120px;bottom:64px;transition:none;text-align:center;font-family:"Plus Jakarta Sans";font-weight:800;font-size:46px;line-height:1.2;color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.55),0 0 24px rgba(0,0,0,.6)}
+#sous em{font-style:normal;color:#c4b5fd}
+/* fin */
+#fin{left:44px;top:44px;width:560px;background:rgba(255,255,255,.97);border-radius:30px;padding:30px 32px;box-shadow:0 30px 70px -20px rgba(0,0,0,.6);font-family:"Plus Jakarta Sans"}
+#fin .l{display:flex;align-items:center;gap:16px;font-size:46px;font-weight:800;color:#0f1222}
+#fin .l span{width:66px;height:66px;border-radius:18px;background:var(--deg);display:grid;place-items:center;color:#fff;font-size:36px}
+#fin .u{margin-top:18px;font-size:40px;font-weight:800;background:var(--deg);-webkit-background-clip:text;background-clip:text;color:transparent}
+#fin .b{margin-top:16px;display:inline-block;font-size:30px;font-weight:800;color:#fff;background:var(--deg);border-radius:999px;padding:12px 26px}
+#fin small{display:block;margin-top:14px;font:600 24px Inter;color:#5f6680}
+.sansSous #sous,.sansSous #voile{display:none}
+</style></head>
+<body>
+<img id="fond" alt="">
+<div id="voile"></div>
+
+<div class="abs carte" id="c40"><div class="ico">🚪</div><div><b id="n40">0</b><small>commerces démarchés à pied</small></div></div>
+<div class="abs tampon" id="t0">0 site vendu</div>
+<div class="abs carte" id="c15"><div class="ico">📍</div><div><b id="n15">0</b><small>commerces trouvés, sans bouger</small></div></div>
+
+<div class="abs" id="logo"><span>✦</span>MySite</div>
+<div class="abs chip" id="k1"><b>Le <i>registre officiel</i> des entreprises</b><small>Les commerces de ta ville, sur une carte, en 1 clic</small></div>
+<div class="abs chip" id="k2"><b>Le <i>premier message</i> est rédigé</b><small>SMS, e-mail ou script d'appel, à son nom</small></div>
+<div class="abs chip" id="k3"><b>La <i>maquette</i> au nom du commerce</b><small>Créée en quelques secondes</small></div>
+<div class="abs chip" id="k4"><b>« Le restaurant d'en bas » <i>✓</i></b><small>Son futur site, prêt à lui montrer</small></div>
+<div class="abs chip" id="k5"><b>Demain : <i>la boulangerie</i> 🥐</b><small>Une maquette par commerce</small></div>
+<div class="abs chip" id="k6"><b>Fini les <i>prospectus</i> 📄</b><small>Tu arrives avec son site, pas avec un flyer</small></div>
+<div class="abs chip" id="k7"><b>L'<i>Académie</i> est incluse 🎓</b><small>Apprendre à vendre, pas à pas</small></div>
+
+<div class="abs" id="tel"><div class="ecran">
+  <img id="e-carte" src="ecrans/carte.jpg"><img id="e-accueil" src="ecrans/accueil.jpg"><img id="e-message" src="ecrans/message.jpg">
+  <img id="e-restaurant" src="ecrans/restaurant.jpg"><img id="e-patisserie" src="ecrans/patisserie.jpg"><img id="e-academie" src="ecrans/academie.jpg">
+  <div class="encoche"></div><div class="eclat"></div>
+</div></div>
+<div class="abs" id="doigt"></div>
+
+<div class="abs" id="fin"><div class="l"><span>✦</span>MySite</div><div class="u">mysite-app.com</div><div class="b">Lien en bio</div><small>Gratuit pour commencer · sans carte bancaire</small></div>
+
+<div class="abs" id="mention">Écrans réels de l'application MySite · données d'exemple</div>
+<div class="abs" id="sous"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ease = (x) => { x = clamp(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const sortie = (x) => { x = clamp(x); return 1 - Math.pow(1 - x, 3); };
+const ressort = (x) => { x = clamp(x); return 1 + 2.2 * Math.pow(x - 1, 3) + 1.2 * Math.pow(x - 1, 2); };
+/** apparition (entrée à a, sortie à b), renvoie 0..1 */
+const fenetre = (t, a, b, d = .35) => clamp(Math.min((t - a) / d, (b - t) / d));
+function pose(el, o, x, y, s = 1, r = 0) { el.style.opacity = o; el.style.transform = `translate(${x}px,${y}px) scale(${s}) rotate(${r}deg)`; el.style.visibility = o > 0.001 ? "visible" : "hidden"; }
+
+// Sous-titres (texte corrigé, temps de la voix)
+const SOUS = [
+  [2.0, 5.4, "40 commerces, à pied.<br>Personne ne veut de site web."],
+  [8.5, 10.6, "Moi, j'en ai trouvé 15, sans me lever."],
+  [12.6, 14.1, "Comment ça, 15 ?"],
+  [14.2, 18.0, "<em>MySite</em>. Il trouve les commerces de la ville<br>dans le registre officiel."],
+  [19.2, 20.9, "Et tu leur écris quoi ?"],
+  [21.0, 23.7, "Rien. Il écrit le premier message. Tranquille."],
+  [24.9, 27.9, "Et il fabrique la maquette<br>au nom du commerce."],
+  [33.2, 37.7, "C'est le restaurant d'en bas, ça.<br>Il est beau."],
+  [39.2, 40.5, "Demain, tu fais le boulanger."],
+  [40.9, 42.8, "Et toi, range tes papiers."],
+  [47.8, 50.0, "Le lien est en bio."],
+  [50.4, 52.4, "Il y a même l'<em>Académie</em> pour apprendre."],
+];
+
+// Position du téléphone dans le temps : [t, x, y, échelle, rotation, opacité]
+const TEL = [
+  [13.6, 1620, 120, 1, 8, 1], [14.3, 1040, 112, 1, 0, 1], [27.9, 1040, 112, 1, 0, 1],
+  [28.6, 1190, 470, .6, 0, 1], [32.2, 1190, 470, .6, 0, 1], [32.9, 1040, 112, 1, 0, 1], [38.0, 1040, 112, 1, 0, 1],
+  [38.6, 1620, 160, 1, 8, 1], [38.95, 1620, 400, .7, 6, 1], [39.4, 1150, 300, .78, -3, 1], [40.7, 1150, 300, .78, -3, 1], [41.2, 1620, 400, .7, 8, 1],
+  [50.0, 1620, 120, 1, 8, 1], [50.6, 1040, 112, 1, 0, 1], [60, 1040, 112, 1, 0, 1],
+];
+function telA(t) {
+  if (t <= TEL[0][0]) return TEL[0];
+  for (let i = 1; i < TEL.length; i++) if (t <= TEL[i][0]) {
+    const a = TEL[i - 1], b = TEL[i], k = ease((t - a[0]) / (b[0] - a[0]));
+    return a.map((v, j) => v + (b[j] - v) * k);
+  }
+  return TEL[TEL.length - 1];
+}
+// Écrans : [id, début, fin, défilement (fraction de la hauteur visible), ...]
+const H = 816; // hauteur de l'écran
+function ecran(id, t, a, b, defile) {
+  const el = $(id), o = clamp(Math.min((t - a) / .3, (b - t) / .3));
+  const img = el; const hImg = img.naturalHeight * (398 / img.naturalWidth);
+  const y = -defile(t) * Math.max(0, hImg - H);
+  img.style.opacity = o; img.style.transform = `translateY(${y}px)`; img.style.visibility = o > 0 ? "visible" : "hidden";
+}
+const lin = (t, a, b, v0, v1) => v0 + (v1 - v0) * ease((t - a) / (b - a));
+
+window.rendre = (t) => {
+  // sous-titres
+  const s = SOUS.find(([a, b]) => t >= a && t <= b);
+  $("sous").innerHTML = s ? s[2] : ""; $("sous").style.opacity = s ? fenetre(t, s[0], s[1], .12) : 0;
+
+  // 1. 40 portes, 0 site vendu
+  const o40 = fenetre(t, 1.6, 7.0, .4);
+  pose($("c40"), o40, (1 - sortie((t - 1.6) / .5)) * -60, 0, .9 + .1 * ressort((t - 1.6) / .6));
+  $("n40").textContent = Math.round(40 * ease((t - 2.0) / 2.2));
+  const ot = fenetre(t, 4.3, 7.0, .2);
+  pose($("t0"), ot, 0, 0, 1 + 1.4 * (1 - sortie((t - 4.3) / .28)), -8);
+
+  // 2. 15 commerces trouvés
+  pose($("c15"), fenetre(t, 8.6, 12.6, .4), 0, (1 - sortie((t - 8.6) / .5)) * -40, .9 + .1 * ressort((t - 8.6) / .6));
+  $("n15").textContent = Math.round(15 * ease((t - 8.9) / 1.4));
+
+  // logo MySite dès qu'il est nommé
+  const ol = fenetre(t, 14.2, 47.6, .4);
+  pose($("logo"), ol, 0, (1 - sortie((t - 14.2) / .5)) * -30, 1);
+
+  // étiquettes
+  const K = [["k1", 14.6, 19.0], ["k2", 21.0, 24.7], ["k3", 25.0, 28.4], ["k4", 33.4, 38.2], ["k5", 39.3, 40.85], ["k6", 41.0, 43.6], ["k7", 50.6, 60]];
+  for (const [id, a, b] of K) { const o = fenetre(t, a, b, .3); pose($(id), o, (1 - sortie((t - a) / .45)) * -50, 0, 1); }
+
+  // téléphone
+  const [_, x, y, sc, r] = telA(t);
+  const vis = (t > 13.6 && t < 41.3) || t > 50.0;
+  pose($("tel"), vis ? 1 : 0, x, y, sc, r);
+  ecran("e-carte", t, 13.5, 16.5, (t) => lin(t, 14.6, 16.4, 0, .25));
+  ecran("e-accueil", t, 16.3, 19.4, (t) => lin(t, 16.6, 19.2, .35, .62));
+  ecran("e-message", t, 19.3, 24.9, () => 0);
+  // maquette : se « construit » (flou → net) puis défile ; on revient en haut quand la grand-mère la découvre
+  ecran("e-restaurant", t, 24.8, 38.7, (t) => t < 32.5 ? lin(t, 26.4, 31.5, 0, .2) : lin(t, 33.4, 37.8, 0, .1));
+  const flou = clamp(1 - (t - 24.8) / 1.1) * 14; $("e-restaurant").style.filter = flou > .1 ? `blur(${flou}px) saturate(${1 - flou / 30})` : "none";
+  ecran("e-patisserie", t, 38.8, 41.3, (t) => lin(t, 39.5, 40.8, 0, .06));
+  ecran("e-academie", t, 50.0, 60, (t) => lin(t, 51.0, 53.0, 0, .12));
+
+  // doigt qui touche « Trouver de nouveaux prospects » puis « Rédiger avec l'IA »
+  const tap = (a) => { const k = (t - a) / .6; return k > 0 && k < 1 ? Math.sin(k * Math.PI) : 0; };
+  const d1 = tap(16.9), d2 = tap(20.2);
+  const dO = Math.max(d1, d2);
+  const dx = d2 > 0 ? 1040 + 215 : 1040 + 215, dy = d2 > 0 ? 112 + 150 : 112 + 480;
+  pose($("doigt"), dO, dx - 32, dy - 32, .7 + .3 * dO);
+
+  // sous-titres décalés à gauche quand le téléphone grand format est à l'écran (jamais cachés par lui)
+  const grand = vis && sc > .9 && x < 1300;
+  const so = $("sous"); so.style.left = grand ? "50px" : "120px"; so.style.right = grand ? "500px" : "120px"; so.style.fontSize = grand ? "42px" : "46px";
+  // mention « écrans réels » quand le téléphone est visible
+  $("mention").style.opacity = vis ? .95 : 0;
+
+  // fin
+  pose($("fin"), fenetre(t, 47.7, 60, .45), 0, (1 - sortie((t - 47.7) / .6)) * 40, .94 + .06 * ressort((t - 47.7) / .7));
+};
+window.poserFond = (src) => new Promise((ok) => { const f = $("fond"); f.onload = () => ok(); f.onerror = () => ok(); f.src = src; });
+window.DUREE = 53.2;
+if (location.search.includes("sansSous")) document.body.classList.add("sansSous");
+</script>
+</body></html>
