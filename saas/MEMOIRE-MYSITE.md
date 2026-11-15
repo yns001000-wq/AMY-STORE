@@ -70,6 +70,7 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 - 14/11 : mesure en production avec un compte temporaire (supprimé ensuite) : 3 messages, une étude, une rédaction de site (50 s) et 2 retouches réussis. Les coûts exacts sont à lire dans Vercel → Logs → rechercher `IA_USAGE` (lecture impossible depuis Claude Code).
 - 14/11 : revue complète du site en ligne (190 pages vues sur téléphone et ordinateur, en Gratuit et en Pro, 33 API testées sans connexion, étanchéité entre comptes, 90 tests + 89 tests de base de données) : tout est bon, 3 petits défauts corrigés.
 - 15/11 : connexion sur téléphone réparée (les liens des e-mails marchent dans n'importe quel navigateur, y compris celui de Gmail ou Mail), un utilisateur connecté va directement dans son cockpit et reste connecté 400 jours, mot de passe de 6 caractères minimum.
+- 15/11 : fluidité sur téléphone : serveurs passés à Francfort (à côté de la base), écran de chargement instantané, réaction à l'appui en 50 ms au lieu d'environ 1 s. Liste des prospects : bouton « Ouvrir » sur chaque ligne.
 - Pages légales (CGU, CGV, confidentialité, mentions légales) avec le nom et le SIREN.
 
 ## 6. Ce qui reste avant d'ouvrir au public
