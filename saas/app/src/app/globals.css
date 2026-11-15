@@ -1,6 +1,6 @@
 /* ===================== MySite : système visuel ===================== */
 :root{
-  --fond:#f7f7fb; --fond-2:#eef0f8; --surface:#ffffff; --surface-2:#f4f5fa; --encre:#0f1222; --texte:#2b3045; --doux:#5f6680; --ligne:#e4e6f0;
+  --fond:#ffffff; --fond-2:#f6f7fb; --surface:#ffffff; --surface-2:#f5f6fa; --encre:#0f1222; --texte:#2b3045; --doux:#5f6680; --ligne:#e6e8f1;
   --violet:#6d4aff; --violet-2:#5432e8; --indigo:#3b5bfd; --cyan:#0ea5c6; --vert:#10b981; --rose:#ec4899; --orange:#f97316; --jaune:#f5b70a;
   --degrade:linear-gradient(120deg,#6d4aff 0%,#3b5bfd 45%,#0ea5c6 100%);
   --degrade-chaud:linear-gradient(120deg,#f97316,#ec4899 60%,#6d4aff);
@@ -9,11 +9,12 @@
   --titre:var(--police-titre),system-ui,sans-serif; --ui:var(--police-ui),system-ui,-apple-system,"Segoe UI",sans-serif;
   color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root{
+/* Fond blanc partout, même si le téléphone est en mode sombre. Zones sombres choisies : classe .theme-sombre (pied de page…). */
+.theme-sombre{
   --fond:#0b0d17; --fond-2:#11142a; --surface:#141831; --surface-2:#1a1f3d; --encre:#f3f4ff; --texte:#d6d9ee; --doux:#9aa0c2; --ligne:#262b4f;
   --ombre:0 1px 2px rgba(0,0,0,.3),0 16px 40px -16px rgba(0,0,0,.6); --ombre-forte:0 30px 70px -25px rgba(109,74,255,.45);
-  --ok:#34d399; --alerte:#fbbf24; color-scheme:dark;
-}}
+  --ok:#34d399; --alerte:#fbbf24; color-scheme:dark; background:var(--fond); color:var(--texte);
+}
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--fond);color:var(--texte);font:16px/1.65 var(--ui);-webkit-font-smoothing:antialiased}
@@ -148,7 +149,7 @@ section.bloc{padding:clamp(3.5rem,7vw,6rem) 0}
 .appel .btn{background:#fff;color:#2b1c88;border:0}
 
 /* pied */
-.pied{border-top:1px solid var(--ligne);margin-top:4rem;padding:2.5rem 0 3rem;font-size:.9rem;color:var(--doux)}
+.pied{border-top:1px solid var(--ligne);margin-top:4rem;padding:3rem 0 3.5rem;font-size:.9rem;color:var(--doux)}
 .pied .conteneur{display:grid;gap:1.5rem}
 @media (min-width:52rem){.pied .conteneur{grid-template-columns:1.4fr 1fr 1fr 1fr}}
 .pied ul{list-style:none;padding:0;margin:0;display:grid;gap:.4rem}.pied a{color:var(--texte);text-decoration:none}.pied a:hover{color:var(--violet)}
@@ -181,7 +182,6 @@ input[type=checkbox],input[type=radio]{width:1.15rem;height:1.15rem;margin-top:.
 /* pages légales */
 .legal{max-width:48rem;margin:2.5rem auto}.legal h2{margin-top:2rem;font-size:1.35rem}.legal li{margin-bottom:.35rem}
 .a-completer{background:#fff1b8;color:#5a4500;padding:0 .3rem;border-radius:5px}
-@media (prefers-color-scheme:dark){.a-completer{background:#4a3c00;color:#ffe9a3}}
 
 /* ===================== Espace connecté (application) ===================== */
 .app{display:grid;min-height:100vh}
@@ -795,3 +795,26 @@ html{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 }
 @keyframes monte{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.sur-mesure-vignette .cadenas{animation:none}.fenetre-offres[open]{animation:none}}
+
+/* ---------- Fond blanc : finitions ---------- */
+/* Sur fond blanc, les cartes se détachent par une bordure nette et une ombre douce ; le menu latéral par une teinte très légère. */
+.cote{background:var(--fond-2)}
+.carte{border-color:var(--ligne)}
+th{background:var(--fond-2)}
+
+/* ---------- Menu de l'espace sur téléphone : une barre compacte qu'on fait défiler du doigt ---------- */
+@media (max-width:60rem){
+  .cote{position:sticky;top:0;z-index:40;display:grid;grid-template-columns:1fr auto;align-items:center;gap:.45rem .6rem;padding:.6rem .8rem .5rem;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:saturate(1.5) blur(12px);-webkit-backdrop-filter:saturate(1.5) blur(12px)}
+  .cote>.marque{grid-row:1;grid-column:1}
+  .cote>form{grid-row:1;grid-column:2}
+  .cote>form .menu button{padding:.45rem .6rem;font-size:.82rem;color:var(--doux)}
+  .cote>nav{grid-column:1/-1;display:flex;gap:.3rem;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 -.8rem;padding:0 .8rem .15rem;scroll-snap-type:x proximity}
+  .cote>nav::-webkit-scrollbar{display:none}
+  .cote>nav .menu{flex-wrap:nowrap;gap:.3rem}
+  .cote>nav .menu li{scroll-snap-align:start}
+  .cote>nav .menu a{white-space:nowrap;padding:.5rem .8rem;font-size:.86rem;border-radius:999px;background:var(--surface-2);gap:.4rem}
+  .cote>nav .menu a[aria-current="page"]{background:var(--violet);color:#fff}
+  .cote>nav .menu svg{width:1rem;height:1rem}
+}
+/* Lien « Débloquer » des cartes du tableau de bord : jamais coupé */
+.valeur a{white-space:nowrap}

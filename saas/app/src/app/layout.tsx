@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: { type: "website", locale: "fr_FR", siteName: "MySite", title: "Vendez des sites web aux commerces de votre ville", description: DESCRIPTION, url: "/" },
   twitter: { card: "summary_large_image", title: "Vendez des sites web aux commerces de votre ville", description: DESCRIPTION },
 };
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: [{ media: "(prefers-color-scheme: light)", color: "#f7f7fb" }, { media: "(prefers-color-scheme: dark)", color: "#0b0d17" }] };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#ffffff", colorScheme: "light" };
 
 export default function Racine({ children }: { children: React.ReactNode }) {
   return (

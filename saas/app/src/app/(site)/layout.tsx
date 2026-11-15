@@ -19,7 +19,7 @@ export default function Site({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <main>{children}</main>
-      <footer className="pied">
+      <footer className="pied theme-sombre">
         <div className="conteneur">
           <div><Logo /><p style={{ marginTop: ".8rem", maxWidth: "26rem" }}>L'outil des indépendants qui vendent des sites web aux commerces de leur ville.</p>
             <p>Données entreprises : base Sirene (INSEE), licence ouverte · © contributeurs OpenStreetMap (ODbL)</p></div>
