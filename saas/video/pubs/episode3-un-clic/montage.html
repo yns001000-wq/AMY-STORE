@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--violet:#6d4aff;--deg:linear-gradient(120deg,#6d4aff 0%,#3b5bfd 45%,#0ea5c6 100%)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1504px;height:1120px;overflow:hidden;background:#000;font-family:Inter,system-ui,sans-serif}
+#fond{position:absolute;inset:0;width:1504px;height:1120px}
+#voile{position:absolute;left:0;right:0;bottom:0;height:300px;background:linear-gradient(transparent,rgba(0,0,0,.55))}
+.abs{position:absolute;will-change:transform,opacity}
+/* étiquettes et cartes en haut à gauche */
+.carte{left:44px;top:44px;background:rgba(255,255,255,.96);border-radius:26px;padding:22px 30px;box-shadow:0 24px 60px -18px rgba(0,0,0,.55);display:flex;align-items:center;gap:20px;font-family:"Plus Jakarta Sans"}
+.carte .ico{width:74px;height:74px;border-radius:20px;display:grid;place-items:center;font-size:40px;background:var(--deg)}
+.carte b{display:block;font-size:64px;line-height:1;color:#0f1222;letter-spacing:-.03em}
+.carte small{display:block;font-size:26px;font-weight:700;color:#5f6680;margin-top:6px}
+.tampon{left:70px;top:190px;font-family:"Plus Jakarta Sans";font-weight:800;font-size:56px;color:#e11d48;border:7px solid #e11d48;border-radius:18px;padding:6px 22px;background:rgba(255,255,255,.9);transform-origin:center}
+.chip{left:44px;top:150px;max-width:640px;background:rgba(255,255,255,.97);border-radius:24px;padding:20px 26px;box-shadow:0 24px 60px -18px rgba(0,0,0,.55);font-family:"Plus Jakarta Sans"}
+.chip b{display:block;font-size:38px;line-height:1.15;color:#0f1222;letter-spacing:-.02em}
+.chip small{display:block;font-size:25px;font-weight:600;color:#5f6680;margin-top:8px;font-family:Inter}
+.chip i{font-style:normal;background:var(--deg);-webkit-background-clip:text;background-clip:text;color:transparent}
+#logo{left:44px;top:44px;display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.97);border-radius:999px;padding:12px 26px 12px 12px;box-shadow:0 16px 40px -14px rgba(0,0,0,.5);font-family:"Plus Jakarta Sans";font-weight:800;font-size:36px;color:#0f1222}
+#logo span{width:54px;height:54px;border-radius:16px;background:var(--deg);display:grid;place-items:center;color:#fff;font-size:30px}
+/* téléphone */
+#tel{left:0;top:0;width:430px;height:900px;border-radius:64px;background:#0d0f1a;padding:16px;box-shadow:0 50px 90px -30px rgba(0,0,0,.75),0 0 0 3px #2a2e45 inset;transform-origin:0 0}
+#tel .ecran{position:relative;width:100%;height:100%;border-radius:50px;overflow:hidden;background:#fff}
+#tel .ecran img{position:absolute;left:0;top:52px;width:100%;will-change:transform,opacity}
+#tel .encoche{position:absolute;left:50%;top:26px;width:120px;height:34px;margin-left:-60px;border-radius:20px;background:#0d0f1a;z-index:5}
+#tel .eclat{position:absolute;inset:0;border-radius:50px;background:linear-gradient(115deg,rgba(255,255,255,.18),transparent 35%);pointer-events:none;z-index:4}
+#doigt{width:64px;height:64px;border-radius:50%;background:rgba(109,74,255,.35);border:4px solid #fff;box-shadow:0 0 0 10px rgba(109,74,255,.18)}
+#mention{right:28px;bottom:16px;font:600 19px Inter;color:rgba(255,255,255,.85);text-shadow:0 1px 3px rgba(0,0,0,.8)}
+/* sous-titres */
+#sous{left:120px;right:120px;bottom:64px;transition:none;text-align:center;font-family:"Plus Jakarta Sans";font-weight:800;font-size:46px;line-height:1.2;color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.55),0 0 24px rgba(0,0,0,.6)}
+#sous em{font-style:normal;color:#c4b5fd}
+/* fin */
+#fin{left:44px;top:44px;width:560px;background:rgba(255,255,255,.97);border-radius:30px;padding:30px 32px;box-shadow:0 30px 70px -20px rgba(0,0,0,.6);font-family:"Plus Jakarta Sans"}
+#fin .l{display:flex;align-items:center;gap:16px;font-size:46px;font-weight:800;color:#0f1222}
+#fin .l span{width:66px;height:66px;border-radius:18px;background:var(--deg);display:grid;place-items:center;color:#fff;font-size:36px}
+#fin .u{margin-top:18px;font-size:40px;font-weight:800;background:var(--deg);-webkit-background-clip:text;background-clip:text;color:transparent}
+#fin .b{margin-top:16px;display:inline-block;font-size:30px;font-weight:800;color:#fff;background:var(--deg);border-radius:999px;padding:12px 26px}
+#fin small{display:block;margin-top:14px;font:600 24px Inter;color:#5f6680}
+.sansSous #sous,.sansSous #voile{display:none}
+</style></head>
+
+</head><body>
+<style>
+#toast{position:absolute;left:28px;right:28px;top:120px;z-index:6;background:#ecfdf5;border:2px solid #10b981;border-radius:22px;padding:18px 20px;font-family:"Plus Jakarta Sans";box-shadow:0 18px 40px -16px rgba(16,185,129,.6)}
+#toast b{display:block;font-size:27px;color:#065f46}
+#toast small{display:block;font:600 17px Inter;color:#047857;margin-top:6px;word-break:break-all}
+.duo{display:flex;gap:16px;align-items:center}
+.duo .x{font-size:44px;font-weight:800;color:#e11d48;text-decoration:line-through;text-decoration-thickness:5px}
+.duo .v{font-size:44px;font-weight:800;color:#059669}
+</style>
+<img id="fond" alt="">
+<div id="voile"></div>
+<div class="abs carte" id="c21"><div class="ico">⏳</div><div><b><span id="n21">0</span> jours</b><small>sur le site du boulanger</small></div></div>
+<div class="abs carte" id="c1"><div class="ico">⚡</div><div><b>1 clic</b><small>fait ce matin</small></div></div>
+<div class="abs" id="logo"><span>✦</span>MySite</div>
+<div class="abs chip" id="k1"><b><i>Un clic</i> : la maquette express</b><small>Gratuite, au nom du commerce</small></div>
+<div class="abs chip" id="k2"><b>La <i>maquette</i> au nom du commerce</b><small>« Boulangerie du Parc », prête à lui montrer</small></div>
+<div class="abs chip" id="k3"><b>21 jours de <i>clavier</i>…</b><small>… contre 1 clic</small></div>
+<div class="abs chip" id="k4"><b>Encore un clic : <i>en ligne</i> 🚀</b><small>boulangerie-du-parc-marseille.mysite-app.com</small></div>
+<div class="abs chip" id="k5"><div class="duo"><span class="x">3 semaines</span><span class="v">1 clic ✓</span></div></div>
+<div class="abs chip" id="k6"><b>La <i>maquette express</i> est gratuite</b><small>Au nom du commerce, en 1 clic</small></div>
+<div class="abs chip" id="k7"><b>L'<i>Académie</i> t'apprend le reste 🎓</b><small>Prospecter, montrer, vendre, pas à pas</small></div>
+<div class="abs" id="tel"><div class="ecran">
+  <img id="e-fiche" src="ecrans/fiche.jpg"><img id="e-patisserie" src="ecrans/patisserie.jpg"><img id="e-publier" src="ecrans/publier.jpg"><img id="e-academie" src="ecrans/academie.jpg">
+  <div id="toast"><b>✓ Site en ligne</b><small>boulangerie-du-parc-marseille.mysite-app.com</small></div>
+  <div class="encoche"></div><div class="eclat"></div>
+</div></div>
+<div class="abs" id="doigt"></div>
+<div class="abs" id="fin"><div class="l"><span>✦</span>MySite</div><div class="u">mysite-app.com</div><div class="b">Lien en bio</div><small>Commence gratuitement · sans carte bancaire</small></div>
+<div class="abs" id="mention">Écrans réels de l'application MySite · données d'exemple</div>
+<div class="abs" id="sous"></div>
+<script>
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ease = (x) => { x = clamp(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const sortie = (x) => { x = clamp(x); return 1 - Math.pow(1 - x, 3); };
+const ressort = (x) => { x = clamp(x); return 1 + 2.2 * Math.pow(x - 1, 3) + 1.2 * Math.pow(x - 1, 2); };
+const fenetre = (t, a, b, d = .35) => clamp(Math.min((t - a) / d, (b - t) / d));
+function pose(el, o, x, y, s = 1, r = 0) { el.style.opacity = o; el.style.transform = `translate(${x}px,${y}px) scale(${s}) rotate(${r}deg)`; el.style.visibility = o > 0.001 ? "visible" : "hidden"; }
+const lin = (t, a, b, v0, v1) => v0 + (v1 - v0) * ease((t - a) / (b - a));
+
+const SOUS = [
+  [2.5, 5.6, "Trois semaines que je fais le site du boulanger.<br>Trois semaines."],
+  [8.5, 10.0, "Moi, je l'ai fait ce matin."],
+  [14.7, 15.8, "En combien de temps ?"],
+  [15.9, 17.2, "Un clic."],
+  [20.2, 22.9, "<em>MySite</em> crée la maquette au nom du commerce."],
+  [25.5, 28.5, "Trois semaines que j'entends ce clavier !"],
+  [31.1, 33.0, "C'est toi qui as fait ça, mon fils ?"],
+  [33.1, 36.1, "Un clic, Tata.<br>Encore un clic et il est en ligne."],
+  [37.0, 38.5, "Trois semaines !"],
+  [38.8, 41.3, "Amar ! Fais-moi ça !"],
+  [46.2, 47.6, "Le lien est en bio."],
+  [47.8, 50.8, "Commence gratuitement,<br>l'<em>Académie</em> t'apprend le reste."],
+];
+const TEL = [
+  [15.1, 1620, 120, 1, 8], [15.7, 1040, 112, 1, 0], [23.1, 1040, 112, 1, 0], [23.7, 1620, 160, 1, 8],
+  [29.9, 1620, 520, .6, 8], [30.5, 1190, 470, .6, 0], [33.2, 1190, 470, .6, 0], [33.8, 1040, 112, 1, 0], [37.0, 1040, 112, 1, 0], [37.6, 1620, 160, 1, 8],
+  [48.7, 1620, 120, 1, 8], [49.3, 1040, 112, 1, 0], [60, 1040, 112, 1, 0],
+];
+function telA(t) {
+  if (t <= TEL[0][0]) return TEL[0];
+  for (let i = 1; i < TEL.length; i++) if (t <= TEL[i][0]) { const a = TEL[i - 1], b = TEL[i], k = ease((t - a[0]) / (b[0] - a[0])); return a.map((v, j) => v + (b[j] - v) * k); }
+  return TEL[TEL.length - 1];
+}
+const H = 816;
+function ecran(id, o, defile) {
+  const img = $(id); const hImg = img.naturalHeight * (398 / img.naturalWidth);
+  img.style.opacity = o; img.style.visibility = o > 0 ? "visible" : "hidden";
+  img.style.transform = `translateY(${-defile * Math.max(0, hImg - H)}px)`;
+}
+window.rendre = (t) => {
+  const s = SOUS.find(([a, b]) => t >= a && t <= b);
+  $("sous").innerHTML = s ? s[2] : ""; $("sous").style.opacity = s ? fenetre(t, s[0], s[1], .12) : 0;
+
+  pose($("c21"), fenetre(t, 2.4, 7.4, .4), (1 - sortie((t - 2.4) / .5)) * -60, 0, .9 + .1 * ressort((t - 2.4) / .6));
+  $("n21").textContent = Math.round(21 * ease((t - 2.7) / 2.4));
+  pose($("c1"), fenetre(t, 8.7, 13.0, .35), 0, 0, .6 + .4 * ressort((t - 8.7) / .55));
+
+  pose($("logo"), fenetre(t, 20.2, 46.0, .4), 0, (1 - sortie((t - 20.2) / .5)) * -30, 1);
+  const K = [["k1", 16.2, 20.0], ["k2", 20.4, 23.6], ["k3", 25.7, 28.8], ["k4", 35.2, 37.3], ["k5", 37.65, 41.6], ["k6", 41.8, 45.8], ["k7", 49.4, 60]];
+  for (const [id, a, b] of K) pose($(id), fenetre(t, a, b, .3), (1 - sortie((t - a) / .45)) * -50, 0, 1);
+  // avant le logo, les étiquettes montent d'un cran (pas de logo au-dessus)
+  for (const id of ["k1"]) $(id).style.top = t < 20.2 ? "44px" : "150px";
+  for (const id of ["k3", "k5", "k6"]) $(id).style.top = (t > 20.2 && t < 46) ? "150px" : "44px";
+  $("k7").style.top = "470px"; // sous la carte de fin
+
+  const [, x, y, sc, r] = telA(t);
+  const vis = (t > 15.1 && t < 23.7) || (t > 29.9 && t < 37.6) || t > 48.7;
+  pose($("tel"), vis ? 1 : 0, x, y, sc, r);
+  const fiche = clamp(Math.min((t - 15.1) / .2, (17.0 - t) / .3));
+  ecran("e-fiche", fiche, 0);
+  const oP = Math.max(clamp(Math.min((t - 16.7) / .3, (23.8 - t) / .3)), clamp(Math.min((t - 29.8) / .2, (34.0 - t) / .3)));
+  const dP = t < 26 ? lin(t, 18.4, 22.8, 0, .18) : lin(t, 31.0, 33.4, 0, .05);
+  ecran("e-patisserie", oP, dP);
+  const flou = clamp(1 - (t - 16.8) / 1.1) * 14; $("e-patisserie").style.filter = (t < 18 && flou > .1) ? `blur(${flou}px)` : "none";
+  ecran("e-publier", clamp(Math.min((t - 33.7) / .3, (37.7 - t) / .3)), lin(t, 33.9, 34.65, 0, 1));
+  ecran("e-academie", clamp((t - 48.7) / .3), lin(t, 50.0, 52.0, 0, .12));
+  const oT = fenetre(t, 35.15, 37.7, .2); const to = $("toast"); to.style.opacity = oT; to.style.visibility = oT > 0 ? "visible" : "hidden"; to.style.transform = `translateY(${(1 - sortie((t - 35.15) / .35)) * -30}px) scale(${.9 + .1 * ressort((t - 35.15) / .4)})`;
+
+  const tap = (a) => { const k = (t - a) / .55; return k > 0 && k < 1 ? Math.sin(k * Math.PI) : 0; };
+  const d1 = tap(15.85), d2 = tap(34.7);
+  const dO = Math.max(d1, d2);
+  const [dx, dy] = d2 > 0 ? [1255, 872] : [1269, 566];
+  pose($("doigt"), dO, dx - 32, dy - 32, .7 + .3 * dO);
+
+  const grand = vis && sc > .9 && x < 1300;
+  const so = $("sous"); so.style.left = grand ? "50px" : "120px"; so.style.right = grand ? "500px" : "120px"; so.style.fontSize = grand ? "42px" : "46px";
+  $("mention").style.opacity = vis ? .95 : 0;
+  pose($("fin"), fenetre(t, 46.1, 60, .45), 0, (1 - sortie((t - 46.1) / .6)) * 40, .94 + .06 * ressort((t - 46.1) / .7));
+};
+window.poserFond = (src) => new Promise((ok) => { const f = $("fond"); f.onload = () => ok(); f.onerror = () => ok(); f.src = src; });
+if (location.search.includes("sansSous")) document.body.classList.add("sansSous");
+</script>
+
+</body></html>
