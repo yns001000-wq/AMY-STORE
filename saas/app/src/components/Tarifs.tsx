@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Check, Minus, Star } from "lucide-react";
 import { ORDRE_PLANS, PLANS, type Periode, type PlanId } from "@/lib/plans";
 import { premierPaiementRemise } from "@/lib/parrainage";
+import { prixParJour } from "@/lib/limites";
 import { useInvitation } from "./BandeauParrainage";
 
 const fmt = (n: number) => n.toLocaleString("fr-FR");
@@ -48,7 +49,7 @@ export function Tarifs({ mode, planActuel, particulier, abonne, voulue, remise }
             [true, Number.isFinite(p.departements) ? `${p.departements} département${p.departements > 1 ? "s" : ""}` : "France entière"],
             [true, `${fmt(p.quotas.prospects)} prospects par mois`],
             [true, `${fmt(p.quotas.messages_ia)} messages rédigés par l'IA`],
-            [true, "Maquettes express (modèles prêts, sans IA)"],
+            [true, id === "gratuit" ? `${p.studio.sitesMax} maquettes express (modèles prêts, sans IA)` : `Maquettes express : ${p.studio.sitesMax.toLocaleString("fr-FR")} conservées`],
             [p.quotas.sites_ia > 0, p.quotas.sites_ia ? `${p.quotas.sites_ia} sites sur mesure par l'IA, ${p.quotas.retouches_ia} retouches` : "Sites sur mesure par l'IA"],
             [true, "Pipeline, rappels et carte"],
             [true, p.academie === "complete" ? "Académie complète (7 modules)" : "Académie : modules Démarrer et Prospecter"],
@@ -66,7 +67,7 @@ export function Tarifs({ mode, planActuel, particulier, abonne, voulue, remise }
                 const plein = annuel ? p.prixAnnuel : p.prixMensuel, reduit = premierPaiementRemise(plein);
                 const f2 = (n: number) => n.toLocaleString("fr-FR", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 });
                 return <p className="sous-prix">1er paiement : <span className="prix-barre" style={{ display: "inline" }}><s>{f2(plein)} €</s><em>{f2(reduit)} €</em></span> (-20 %), puis <b style={{ whiteSpace: "nowrap" }}>{f2(plein)} €{annuel ? "/an" : "/mois"}</b></p>;
-              })() : <p className="sous-prix">{annuel ? <>payé <b>{fmt(p.prixAnnuel)} €</b> TTC une fois par an</> : p.prixAnnuel ? "sans engagement" : "pour toujours"}</p>}
+              })() : <p className="sous-prix">{annuel ? <>payé <b>{fmt(p.prixAnnuel)} €</b> TTC une fois par an</> : p.prixAnnuel ? `sans engagement · ${prixParJour(p.prixMensuel)}` : "pour toujours"}</p>}
               <ul className="inclus">
                 {lignes.map(([oui, t]) => <li key={t} className={oui ? "" : "non"}>{oui ? <Check aria-hidden /> : <Minus aria-hidden />}<span>{t}</span></li>)}
               </ul>

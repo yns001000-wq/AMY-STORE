@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { consommer, rembourser } from "@/lib/quotas";
+import { consommer, rembourser, reponseLimite } from "@/lib/quotas";
 import { MODELE_IA } from "@/lib/plans";
 import { archiverVersion, chargerSite, contexteStudio, demanderIA, erreurIA, photosDuCommerce } from "@/lib/studio/serveur";
 import { appliquerIA, blocPhotosPerso, lireJSON, promptRetouche, remplacerClesPerso } from "@/lib/studio";
@@ -16,7 +16,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   if (!site) return NextResponse.json({ erreur: "Site introuvable" }, { status: 404 });
   const { consigne } = (await req.json().catch(() => ({}))) as { consigne?: string };
   if (!consigne || consigne.trim().length < 3) return NextResponse.json({ erreur: "Décrivez la modification souhaitée." }, { status: 400 });
-  if (!(await consommer(session.user.id, plan, "retouches_ia", 1))) return NextResponse.json({ erreur: "Quota de retouches IA du mois atteint.", plan }, { status: 402 });
+  if (!(await consommer(session.user.id, plan, "retouches_ia", 1))) return reponseLimite("retouches_ia", plan, "Quota de retouches IA du mois atteint.");
   const rendre = () => rembourser(session.user.id, "retouches_ia");
   const perso = blocPhotosPerso(await photosDuCommerce(session.sb, cap, site.prospect_id));
   try {

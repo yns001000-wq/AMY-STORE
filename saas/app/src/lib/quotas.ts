@@ -33,3 +33,16 @@ export async function consommer(userId: string, plan: PlanId, type: TypeQuota, n
 export async function rembourser(userId: string, type: TypeQuota): Promise<void> {
   await supabaseAdmin().rpc("rembourser_quota", { p_user: userId, p_type: type });
 }
+
+/** État des limites de l'utilisateur : compteurs du mois et mois gratuit épuisé (toutes créations bloquées jusqu'au 1er). */
+export async function etatLimites(userId: string) {
+  const { compteurs, moisGratuitEpuise } = await import("./limites");
+  const [{ plan, quotas }, conso] = await Promise.all([profilEtPlan(userId), consommation(userId)]);
+  const c = compteurs(quotas, conso);
+  return { plan, quotas, conso, c, moisEpuise: moisGratuitEpuise(plan, c) };
+}
+
+/** Réponse 402 standard d'une limite atteinte : l'appli ouvre la page « limite atteinte » correspondante. */
+export function reponseLimite(type: "prospects" | "messages_ia" | "sites_ia" | "retouches_ia" | "sites" | "mois", plan: PlanId, message?: string) {
+  return Response.json({ erreur: "limite", type, plan, message: message ?? "Limite de votre offre atteinte." }, { status: 402 });
+}

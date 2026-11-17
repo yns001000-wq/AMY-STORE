@@ -18,6 +18,7 @@ export function BoutonsStudio({ prospectId, sites, ia, restants, famille, nom }:
     try {
       const r = await fetch(mode === "express" ? "/api/studio" : "/api/studio/etude", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ prospect_id: prospectId, precisions }) });
       const j = await r.json();
+      if (r.status === 402 && j.erreur === "limite") { router.push(`/espace/limite?type=${j.type}`); return; } // limite atteinte : page dédiée
       if (!r.ok) { setEtat({ erreur: j.erreur ?? "Création impossible." }); return; }
       router.push(`/espace/studio/${j.id}`);
     } catch { setEtat({ erreur: "Connexion impossible. Réessayez." }); }

@@ -820,3 +820,24 @@ th{background:var(--fond-2)}
 .valeur a{white-space:nowrap}
 /* Page courte sur téléphone (ex. Pipeline vide) : la barre de menu ne s'étire pas sur la hauteur de l'écran */
 @media (max-width:60rem){.app{align-content:start}}
+
+/* ---------- Limite de l'offre atteinte ---------- */
+.limite{display:grid;gap:1.2rem;max-width:42rem;margin:0 auto}
+.limite-tete{text-align:center;display:grid;justify-items:center;gap:.2rem}
+.limite-tete .pastille{margin-bottom:.6rem}
+.limite-tete h1{font-size:clamp(1.6rem,6vw,2.3rem);margin:0 0 .3rem}
+.limite-tete p{margin:.2rem 0;max-width:34rem;font-size:1.02rem}
+.limite-attente{background:color-mix(in srgb,var(--orange) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--orange) 30%,var(--ligne));border-radius:999px;padding:.45rem 1rem;font-size:.95rem!important;color:var(--encre)}
+.limite-offre{position:relative;display:grid;gap:.8rem;border:2px solid var(--violet);padding-top:1.6rem}
+.limite-offre h2{display:flex;align-items:center;gap:.5rem;margin:0;font-size:1.45rem}
+.limite-offre h2 svg{color:var(--violet)}
+.limite-prix{margin:0;color:var(--doux)}.limite-prix b{font:800 2rem/1 var(--titre);color:var(--encre)}.limite-prix span{color:var(--vert);font-weight:700}
+.limite-offre ul{list-style:none;margin:0;padding:0;display:grid;gap:.45rem}
+.limite-offre li{display:flex;gap:.5rem;align-items:flex-start;color:var(--encre)}.limite-offre li svg{width:1.1rem;height:1.1rem;color:var(--vert);flex:none;margin-top:.2rem}
+.limite-parrain,.limite-attendre{display:flex;gap:1rem;align-items:flex-start}
+.limite-parrain .pastille,.limite-attendre .pastille{margin:0;flex:none}
+.limite-parrain h2,.limite-attendre h2{font-size:1.15rem;margin:0 0 .4rem}
+.limite-parrain p{margin:0 0 .8rem}
+.bandeau-limite{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem 1rem;margin:0 0 1.2rem;padding:.7rem 1rem;border-radius:14px;background:color-mix(in srgb,var(--violet) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--violet) 30%,var(--ligne));color:var(--encre);font-size:.93rem}
+.bandeau-limite a{font-weight:700;white-space:nowrap}
+.dernier-essai{margin:.8rem 0 0;padding:.6rem .9rem;border-radius:12px;background:color-mix(in srgb,var(--jaune) 14%,var(--surface));font-size:.9rem;color:var(--encre)}

@@ -6,6 +6,7 @@ import { consommation, profilEtPlan } from "@/lib/quotas";
 import { libelleOffre, ORDRE_PLANS, PLANS, type CapacitesStudio } from "@/lib/plans";
 import { FAMILLES } from "@/lib/studio";
 import { SitesSurMesure } from "@/components/studio/SitesSurMesure";
+import { BandeauLimite } from "@/components/BandeauLimite";
 
 export const metadata = { title: "Studio" };
 
@@ -40,6 +41,7 @@ export default async function ListeStudio() {
         <div><p className="note" style={{ margin: "0 0 .3rem" }}>Studio · {libelleOffre(plan)} · {conso.sites_ia}/{quotas.sites_ia} sites IA · {conso.retouches_ia}/{quotas.retouches_ia} retouches ce mois-ci</p><h1>Mes sites</h1></div>
         <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}><Link className="btn" href="/espace/studio/photos">Ma banque de photos</Link><Link className="btn" href="/espace">Créer depuis un prospect</Link></div>
       </div>
+      <BandeauLimite userId={session.user.id} />
       {!sites?.length ? (
         <div className="carte vide"><LayoutTemplate aria-hidden /><h2>Aucun site pour l&apos;instant</h2><p className="note">Ouvrez la fiche d&apos;un prospect et créez sa maquette en un clic : c&apos;est l&apos;argument qui fait signer.</p><Link className="btn p" href="/espace">Voir mes prospects</Link></div>
       ) : (

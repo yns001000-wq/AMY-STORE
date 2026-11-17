@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { consommation, consommer, profilEtPlan } from "@/lib/quotas";
+import { consommation, consommer, etatLimites, profilEtPlan, reponseLimite } from "@/lib/quotas";
 import { departementsAutorises, limite } from "@/lib/plans";
 import { secteurParId } from "@/lib/secteurs";
 import { chercherProspects } from "@/lib/sourcing";
@@ -16,9 +16,11 @@ export async function POST() {
   const deps = departementsAutorises(plan, (profil.departements as string[]) ?? []);
   if (!secteur || !deps.length) return NextResponse.json({ erreur: "Choisissez d'abord votre secteur et votre zone." }, { status: 400 });
 
+  const etat = await etatLimites(uid);
+  if (etat.moisEpuise) return reponseLimite("mois", plan);
   const deja = await consommation(uid);
   const reste = limite(plan, "prospects") - deja.prospects;
-  if (reste <= 0) return NextResponse.json({ erreur: "quota", plan }, { status: 402 });
+  if (reste <= 0) return reponseLimite("prospects", plan);
   const lot = Math.min(reste, 25);
 
   const admin = supabaseAdmin();
@@ -46,7 +48,7 @@ export async function POST() {
   if (!reserves.length) return NextResponse.json({ ajoutes: 0, message: "Ces entreprises viennent d'être attribuées à d'autres utilisateurs. Relancez la recherche." });
   if (!(await consommer(uid, plan, "prospects", reserves.length))) {
     await admin.from("attributions").delete().in("siret", reserves.map((p) => p.siret)).eq("user_id", uid);
-    return NextResponse.json({ erreur: "quota", plan }, { status: 402 });
+    return reponseLimite("prospects", plan);
   }
 
   const { error } = await admin.from("prospects").insert(reserves.map((p) => ({

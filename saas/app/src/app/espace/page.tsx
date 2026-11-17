@@ -8,6 +8,8 @@ import { secteurParId } from "@/lib/secteurs";
 import { etape } from "@/lib/pipeline";
 import { nomDepartement } from "@/lib/departements";
 import { BoutonRecherche } from "@/components/BoutonRecherche";
+import { BandeauLimite } from "@/components/BandeauLimite";
+import { moisGratuitEpuise, compteurs as etatCompteurs } from "@/lib/limites";
 import { premiersPas } from "@/lib/croissance";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
@@ -31,6 +33,7 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
   const deps = departementsAutorises(plan, (profil.departements as string[]) ?? []);
   const ignores = ((profil.departements as string[]) ?? []).length - deps.length;
   const P = PLANS[plan], plein = conso.prospects >= quotas.prospects;
+  const moisEpuise = moisGratuitEpuise(plan, etatCompteurs(quotas, conso));
   // Premiers pas : comptés sur toute la vie du compte (pas seulement le mois en cours).
   const admin = supabaseAdmin();
   const [{ data: total }, { count: nbSites }, { count: nbLecons }] = await Promise.all([
@@ -49,6 +52,7 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
         </div>
         <span className="badge-offre"><Crown aria-hidden />{libelleOffre(plan)}</span>
       </div>
+      <BandeauLimite userId={session.user.id} />
       {q.abonnement === "ok" && <p className="alerte ok" role="status">Merci ! Votre abonnement est en cours d&apos;activation : il apparaît ici dans quelques secondes.</p>}
       {faits < pas.length && (
         <section className="carte" style={{ marginBottom: "1.4rem" }} aria-label="Premiers pas">
@@ -74,18 +78,6 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
         })}
       </section>
 
-      {plein && (
-        <div className="carte upsell">
-          <span className="pastille p-orange" style={{ margin: 0 }}><Gift aria-hidden /></span>
-          <div>
-            <h2 style={{ fontSize: "1.2rem", margin: "0 0 .3rem" }}>Vos {quotas.prospects} prospects du mois sont utilisés</h2>
-            <p className="note" style={{ margin: 0 }}>Vos prospects et votre historique restent accessibles. Pro : {PLANS.pro.quotas.prospects} par mois et {PLANS.pro.departements} départements. Premium : {PLANS.premium.quotas.prospects.toLocaleString("fr-FR")} par mois et {PLANS.premium.departements} départements.</p>
-          </div>
-          <div style={{ display: "flex", gap: ".6rem", flexWrap: "wrap" }}>
-            <Link className="btn p" href="/espace/abonnement">Voir les offres</Link>
-          </div>
-        </div>
-      )}
 
       <section className="carte">
         <div className="tableau-entete">
@@ -95,7 +87,7 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
             {PLANS[plan].export
               ? <a className="btn" href="/api/prospects/export" download><Download aria-hidden />Export CSV</a>
               : <Link className="btn" href="/espace/abonnement" title="Inclus dès l'offre Pro"><Lock aria-hidden />Export CSV</Link>}
-            <BoutonRecherche desactive={plein} auto={q.bienvenue === "1" && !prospects?.length} />
+            <BoutonRecherche desactive={plein} limite={moisEpuise ? "mois" : plein ? "prospects" : undefined} auto={q.bienvenue === "1" && !prospects?.length} />
           </div>
         </div>
         {!prospects?.length ? (

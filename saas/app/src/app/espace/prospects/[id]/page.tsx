@@ -5,6 +5,7 @@ import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { ETAPES, etape, type EntreeJournal } from "@/lib/pipeline";
 import { changerStatut, enregistrerSuivi, noterEchange, supprimerProspect } from "@/lib/actions-prospects";
 import { GenerateurMessage } from "@/components/GenerateurMessage";
+import { BandeauLimite } from "@/components/BandeauLimite";
 import { BoutonsStudio } from "@/components/studio/BoutonsStudio";
 import { ConclureVente } from "@/components/ConclureVente";
 import { consommation, profilEtPlan } from "@/lib/quotas";
@@ -34,6 +35,7 @@ export default async function FicheProspect({ params }: { params: Promise<{ id: 
         <div><p className="note" style={{ margin: "0 0 .3rem" }}>{p.metier} · {p.ville} {p.code_postal}</p><h1>{p.nom}</h1></div>
         <span className="statut" style={{ color: e.couleur, background: `color-mix(in srgb, ${e.couleur} 14%, transparent)`, fontSize: ".9rem" }}>{e.nom}</span>
       </div>
+      <BandeauLimite userId={session.user.id} />
 
       <form action={changerStatut} className="carte" style={{ marginBottom: "1.2rem" }}>
         <input type="hidden" name="id" value={p.id} />

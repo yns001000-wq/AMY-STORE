@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
-import { consommer, profilEtPlan, rembourser } from "@/lib/quotas";
+import { consommer, etatLimites, profilEtPlan, rembourser, reponseLimite } from "@/lib/quotas";
 import { appelerIA, causeErreurIA, consigneMessage, journaliserErreurIA, type Canal } from "@/lib/ia";
 import { ajouterJournal } from "@/lib/pipeline";
 import { MODELE_IA } from "@/lib/plans";
@@ -18,7 +18,10 @@ export async function POST(req: Request) {
   if (p.statut === "refus") return NextResponse.json({ erreur: "Ce prospect ne souhaite plus être contacté." }, { status: 409 });
 
   const { profil, plan } = await profilEtPlan(session.user.id);
-  if (!(await consommer(session.user.id, plan, "messages_ia", 1))) return NextResponse.json({ erreur: "quota", plan }, { status: 402 });
+  const etat = await etatLimites(session.user.id);
+  if (etat.moisEpuise) return reponseLimite("mois", plan);
+  if (!(await consommer(session.user.id, plan, "messages_ia", 1))) return reponseLimite("messages_ia", plan);
+  const reste = Math.max(0, etat.c.messages_ia.reste - 1);
   const rendre = () => rembourser(session.user.id, "messages_ia");
 
   const expediteur = `${(profil.prenom as string) || "[votre prénom]"}, création de sites internet pour les commerçants et artisans`;
@@ -31,7 +34,7 @@ export async function POST(req: Request) {
     const texte = brut.replace(/\*\*/g, "").trim(); // le message s'affiche dans une zone de texte simple : pas de gras en astérisques
     if (!texte) { await rendre(); return NextResponse.json({ erreur: "Réponse vide, réessayez." }, { status: 502 }); }
     await session.sb.from("prospects").update({ journal: ajouterJournal(p.journal, `Message IA préparé (${canal})`) }).eq("id", id);
-    return NextResponse.json({ texte });
+    return NextResponse.json({ texte, reste, max: etat.c.messages_ia.max, plan });
   } catch (e) {
     await rendre();
     journaliserErreurIA("message", e);

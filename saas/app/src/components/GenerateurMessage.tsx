@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Copy, Mail, MessageSquare, PhoneCall, WandSparkles } from "lucide-react";
 
 const CANAUX = [["sms", "SMS", MessageSquare], ["email", "E-mail", Mail], ["appel", "Script d'appel", PhoneCall]] as const;
@@ -7,15 +9,16 @@ const CANAUX = [["sms", "SMS", MessageSquare], ["email", "E-mail", Mail], ["appe
 /** Rédaction IA d'un message pour ce prospect. L'utilisateur relit, copie et envoie lui-même : rien ne part automatiquement. */
 export function GenerateurMessage({ id, bloque }: { id: string; bloque?: string }) {
   const [canal, setCanal] = useState<"sms" | "email" | "appel">("sms");
-  const [etat, setEtat] = useState<{ charge?: boolean; texte?: string; erreur?: string }>({});
+  const router = useRouter();
+  const [etat, setEtat] = useState<{ charge?: boolean; texte?: string; erreur?: string; reste?: number; plan?: string }>({});
   async function rediger() {
     setEtat({ charge: true });
     try {
       const r = await fetch("/api/ia/message", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, canal }) });
       const d = await r.json();
-      if (r.status === 402) setEtat({ erreur: "Quota de messages IA du mois atteint : passez à l'offre supérieure pour continuer." });
+      if (r.status === 402) { router.push(`/espace/limite?type=${d.type ?? "messages_ia"}`); return; } // limite atteinte : page dédiée
       else if (!r.ok) setEtat({ erreur: d.erreur ?? "La rédaction n'a pas abouti." });
-      else setEtat({ texte: d.texte });
+      else setEtat({ texte: d.texte, reste: d.reste, plan: d.plan });
     } catch { setEtat({ erreur: "Connexion impossible. Réessayez." }); }
   }
   return (
@@ -31,6 +34,9 @@ export function GenerateurMessage({ id, bloque }: { id: string; bloque?: string 
           <label style={{ marginTop: "1rem" }}>Votre message (modifiable)<textarea rows={canal === "appel" ? 12 : 7} defaultValue={etat.texte} id="texte-ia" /></label>
           <button className="btn" type="button" style={{ marginTop: ".6rem" }} onClick={() => { const t = (document.getElementById("texte-ia") as HTMLTextAreaElement).value; navigator.clipboard?.writeText(t); }}><Copy aria-hidden />Copier</button>
           <p className="note" style={{ marginTop: ".6rem" }}>Relisez avant d&apos;envoyer : vous en êtes l&apos;expéditeur. Rien n&apos;est envoyé automatiquement.</p>
+          {/* Prévenir avant la limite, sans fausse urgence : l'information exacte, et où voir la suite. */}
+          {etat.reste === 1 && <p className="dernier-essai">Plus qu&apos;1 message {etat.plan === "gratuit" ? "gratuit " : ""}ce mois-ci. <Link href="/espace/abonnement">Voir les offres</Link></p>}
+          {etat.reste === 0 && <p className="dernier-essai">C&apos;était votre dernier message du mois. <Link href="/espace/limite?type=messages_ia">Voir comment continuer</Link></p>}
         </>}
       </>}
     </div>

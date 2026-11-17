@@ -93,6 +93,7 @@ export function EditeurStudio({ id, initial, etude: etude0, plan, cap, versions,
     try {
       const r = await fetch(`/api/studio/${id}/retouche`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ consigne }) });
       const j = await r.json();
+      if (r.status === 402 && j.erreur === "limite") { router.push(`/espace/limite?type=${j.type}`); return; } // limite atteinte : page dédiée
       if (!r.ok) { setMsg({ t: j.erreur ?? "La retouche n'a pas abouti." }); return; }
       pile.current.push(d); setD(j.donnees); setUtilise((u) => u + 1); setConsigne("");
       setExplication(j.explication || "Retouche appliquée.");

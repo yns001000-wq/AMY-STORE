@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { consommer, rembourser } from "@/lib/quotas";
+import { consommer, rembourser, reponseLimite } from "@/lib/quotas";
 import { contexteStudio, demanderIA, erreurIA } from "@/lib/studio/serveur";
 import { FAMILLES, familleDepuisMetier, lireJSON, promptEtude, siteExpress } from "@/lib/studio";
 
@@ -16,8 +16,8 @@ export async function POST(req: Request) {
   const { data: p } = await session.sb.from("prospects").select("id, nom, metier, ville, code_postal, adresse, telephone, email, indices, notes").eq("id", prospect_id).maybeSingle();
   if (!p) return NextResponse.json({ erreur: "Prospect introuvable" }, { status: 404 });
   const { count } = await session.sb.from("sites").select("id", { count: "exact", head: true });
-  if ((count ?? 0) >= cap.sitesMax) return NextResponse.json({ erreur: `Votre offre conserve ${cap.sitesMax} sites : supprimez-en un ou passez à l'offre supérieure.`, plan }, { status: 402 });
-  if (!(await consommer(session.user.id, plan, "sites_ia", 1))) return NextResponse.json({ erreur: "Quota de sites sur mesure du mois atteint.", plan }, { status: 402 });
+  if ((count ?? 0) >= cap.sitesMax) return reponseLimite("sites", plan, `Votre offre conserve ${cap.sitesMax} sites : supprimez-en un ou passez à l'offre supérieure.`);
+  if (!(await consommer(session.user.id, plan, "sites_ia", 1))) return reponseLimite("sites_ia", plan, "Quota de sites sur mesure du mois atteint.");
   const rendre = () => rembourser(session.user.id, "sites_ia");
   const prec = typeof precisions === "string" ? precisions.slice(0, 3000) : "";
   try {
