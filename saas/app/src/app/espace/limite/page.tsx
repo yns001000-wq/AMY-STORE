@@ -28,10 +28,11 @@ export default async function Limite({ searchParams }: { searchParams: Promise<R
     session.sb.from("prospects").select("id", { count: "exact", head: true }).eq("statut", "nouveau"),
     session.sb.from("sites").select("id", { count: "exact", head: true }),
   ]);
+  const s = (n: number) => (n > 1 ? "s" : "");
   const bilan = [
-    c.prospects.utilise ? `${c.prospects.utilise} commerce${c.prospects.utilise > 1 ? "s" : ""} trouvé${c.prospects.utilise > 1 ? "s" : ""}` : null,
-    c.messages_ia.utilise ? `${c.messages_ia.utilise} message${c.messages_ia.utilise > 1 ? "s" : ""} rédigé${c.messages_ia.utilise > 1 ? "s" : ""}` : null,
-    maquettes ? `${maquettes} maquette${maquettes > 1 ? "s" : ""} créée${maquettes > 1 ? "s" : ""}` : null,
+    c.prospects.utilise ? `trouvé ${c.prospects.utilise} commerce${s(c.prospects.utilise)}` : null,
+    c.messages_ia.utilise ? `rédigé ${c.messages_ia.utilise} message${s(c.messages_ia.utilise)}` : null,
+    maquettes ? `créé ${maquettes} maquette${s(maquettes)}` : null,
   ].filter(Boolean) as string[];
 
   const P = suivante ? PLANS[suivante] : null;
