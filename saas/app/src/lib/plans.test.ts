@@ -50,3 +50,16 @@ describe("offres", () => {
     expect(abonnementActif("canceled")).toBe(false);
   });
 });
+
+describe("Stripe : passage du mode test au mode réel", () => {
+  const env = { STRIPE_PRICE_PRO_MENSUEL: "price_test_pro", STRIPE_PRICE_PRO_MENSUEL_LIVE: "price_live_pro" };
+  it("prend les prix de test avec une clé de test, les prix réels avec une clé live", () => {
+    expect(priceIdStripe("pro", "mensuel", { ...env, STRIPE_SECRET_KEY: "sk_test_x" })).toBe("price_test_pro");
+    expect(priceIdStripe("pro", "mensuel", { ...env, STRIPE_SECRET_KEY: "sk_live_x" })).toBe("price_live_pro");
+    expect(priceIdStripe("premium", "mensuel", { ...env, STRIPE_SECRET_KEY: "sk_live_x" })).toBeUndefined(); // jamais un prix de test en réel
+  });
+  it("reconnaît l'offre d'un abonnement réel comme d'un abonnement de test", () => {
+    expect(planDepuisPriceId("price_live_pro", env)).toBe("pro");
+    expect(planDepuisPriceId("price_test_pro", env)).toBe("pro");
+  });
+});

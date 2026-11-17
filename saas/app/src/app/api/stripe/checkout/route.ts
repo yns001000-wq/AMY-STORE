@@ -30,6 +30,8 @@ export async function POST(req: Request) {
 
   try {
     let client = profil.stripe_customer_id as string | null;
+    // Client créé dans l'autre mode (test ↔ réel) : introuvable ici, on en crée un nouveau.
+    if (client) { try { const c = await stripe().customers.retrieve(client); if (c.deleted) client = null; } catch { client = null; } }
     if (!client) {
       const c = await stripe().customers.create({ email: session.user.email ?? undefined, metadata: { user_id: session.user.id } });
       client = c.id;
