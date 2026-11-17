@@ -10,6 +10,8 @@ export async function POST() {
   if (!session) return NextResponse.redirect(new URL("/connexion", site), 303);
   const { data } = await supabaseAdmin().from("profils").select("stripe_customer_id").eq("id", session.user.id).single();
   if (!data?.stripe_customer_id) return NextResponse.redirect(new URL("/espace/abonnement", site), 303);
-  const portail = await stripe().billingPortal.sessions.create({ customer: data.stripe_customer_id, return_url: `${site}/espace/abonnement`, locale: "fr" });
+  // En mode réel, Stripe exige une configuration d'espace client : celle créée par l'API (STRIPE_PORTAIL_CONFIG), sinon celle par défaut.
+  const configuration = process.env.STRIPE_PORTAIL_CONFIG || undefined;
+  const portail = await stripe().billingPortal.sessions.create({ customer: data.stripe_customer_id, return_url: `${site}/espace/abonnement`, locale: "fr", ...(configuration ? { configuration } : {}) });
   return NextResponse.redirect(portail.url, 303);
 }

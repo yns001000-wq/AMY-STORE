@@ -17,3 +17,13 @@ export function causeErreurStripe(e: unknown): "cle" | "prix" | "requete" | "res
   if (e instanceof Error && /STRIPE_SECRET_KEY/.test(e.message)) return "cle";
   return "autre";
 }
+
+/**
+ * Date d'ouverture des ventes réelles (début d'activité déclaré au guichet unique : 18/11/2026).
+ * Avant cette date, aucun paiement réel n'est accepté, même si la clé Stripe « live » est déjà en place.
+ * Le mode test n'est jamais bloqué.
+ */
+export const OUVERTURE_VENTES = new Date(process.env.OUVERTURE_VENTES ?? "2026-11-18T00:00:00+01:00");
+export function ventesOuvertes(maintenant = new Date(), cle = process.env.STRIPE_SECRET_KEY ?? ""): boolean {
+  return !cle.startsWith("sk_live") || maintenant.getTime() >= OUVERTURE_VENTES.getTime();
+}

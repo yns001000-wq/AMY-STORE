@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { causeErreurStripe, stripe } from "@/lib/stripe";
+import { causeErreurStripe, stripe, ventesOuvertes } from "@/lib/stripe";
 import { priceIdStripe, type Periode } from "@/lib/plans";
 import { remisePourPaiement } from "@/lib/parrainage-serveur";
 
@@ -11,6 +11,8 @@ const SITE = () => process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 export async function POST(req: Request) {
   const session = await utilisateurConnecte();
   if (!session) return NextResponse.redirect(new URL("/connexion?suite=/espace/abonnement", SITE()), 303);
+  // Pas de vente réelle avant le début d'activité déclaré.
+  if (!ventesOuvertes()) return NextResponse.redirect(new URL("/espace/abonnement?erreur=bientot", SITE()), 303);
   const form = await req.formData().catch(() => null);
   if (!form) return NextResponse.json({ erreur: "Requête invalide" }, { status: 400 });
   const plan = String(form.get("plan")), periode = String(form.get("periode")) as Periode;
