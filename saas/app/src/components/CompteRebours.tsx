@@ -15,7 +15,7 @@ export function CompteRebours({ compact }: { compact?: boolean }) {
   if (!reste) return null;
   return (
     <div className={`compte-rebours${compact ? " compact" : ""}`} role="timer" aria-live="off">
-      <p className="cr-titre"><Hourglass aria-hidden /><b>Prix de lancement</b> jusqu&apos;au 30 novembre</p>
+      <p className="cr-titre"><Hourglass aria-hidden /><span><b>Prix de lancement</b> jusqu&apos;au 30 novembre</span></p>
       <div className="cr-cases" suppressHydrationWarning>
         <span><b suppressHydrationWarning>{reste.jours}</b><small>jours</small></span>
         <span><b suppressHydrationWarning>{d2(reste.heures)}</b><small>heures</small></span>
