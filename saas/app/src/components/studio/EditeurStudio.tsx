@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { contenuMetier } from "@/lib/studio/contenus";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -17,7 +18,12 @@ const ONGLETS: [Onglet, string, typeof Type][] = [
   ["ia", "IA", WandSparkles], ["textes", "Textes", Type], ["style", "Style", Palette], ["sections", "Sections", LayoutList], ["carte", "Carte", ListChecks],
   ["horaires", "Horaires", Clock], ["faq", "FAQ", CircleHelp], ["photos", "Photos", ImageIcon], ["versions", "Versions", History], ["telecharger", "Publier", Rocket],
 ];
-const SUGGESTIONS = ["Ajoute une formule du midi", "Rends le ton plus chic", "Mets en avant la livraison et la vente à emporter", "Raccourcis tous les textes", "Ajoute une catégorie Boissons à la carte", "Écris une FAQ plus complète"];
+/** Suggestions et nom de l'onglet « carte » : adaptés au métier du site (une boulangerie n'a pas de devis, un plombier pas de formule du midi). */
+const EXEMPLE_CONSIGNE: Record<string, string> = {
+  pizzeria: "Ex. ajoute une pizza calzone à 13,90 €", rapide: "Ex. ajoute un menu étudiant à 9,90 € avec boisson", restaurant: "Ex. ajoute une formule midi à 17,90 € avec entrée et plat",
+  asiatique: "Ex. ajoute un menu midi à 12,90 € avec soupe miso", cafe: "Ex. ajoute un brunch du dimanche à 19 €", patisserie: "Ex. ajoute la galette des rois à 18 € pour 6 personnes",
+  traiteur: "Ex. ajoute un plateau repas entreprise à 16,50 €", beaute: "Ex. ajoute un balayage à partir de 70 €", artisan: "Ex. ajoute le dépannage d'urgence 7 jours sur 7",
+};
 const HORAIRE = /^\d\d:\d\d-\d\d:\d\d(,\d\d:\d\d-\d\d:\d\d)*$/;
 
 export interface VersionResume { id: number; libelle: string | null; cree_le: string }
@@ -27,6 +33,7 @@ interface Props { id: string; initial: DonneesSite; etude: Etude | null; plan: P
 export function EditeurStudio({ id, initial, etude: etude0, plan, cap, versions, retouches, photosPerso, prospectId, siret }: Props) {
   const router = useRouter();
   const [d, setD] = useState<DonneesSite>(initial);
+  const metierC = contenuMetier(d.famille);
   const [modifies, setModifies] = useState<Set<string>>(new Set());
   const [onglet, setOnglet] = useState<Onglet>(cap.effortIA ? "ia" : "textes");
   const [vue, setVue] = useState<"ordi" | "mobile">("ordi");
@@ -149,15 +156,15 @@ export function EditeurStudio({ id, initial, etude: etude0, plan, cap, versions,
 
       <section className="studio-panneau" aria-label="Panneau de modification">
         <nav className="studio-onglets" aria-label="Rubriques">
-          {ONGLETS.map(([o, lib, Ico]) => <button key={o} type="button" aria-pressed={onglet === o} onClick={() => setOnglet(o)}><Ico aria-hidden />{lib}</button>)}
+          {ONGLETS.map(([o, lib, Ico]) => <button key={o} type="button" aria-pressed={onglet === o} onClick={() => setOnglet(o)}><Ico aria-hidden />{o === "carte" ? metierC.ongletCarte : lib}</button>)}
         </nav>
 
         <div className="studio-contenu">
           {onglet === "ia" && (
             <Verrou ok={!!cap.effortIA} offre="Pro" titre="Retouches par l'IA">
               <p className="note">Décrivez ce que vous voulez changer, en français courant. L&apos;IA modifie les rubriques concernées et garde l&apos;historique.</p>
-              <textarea rows={4} value={consigne} onChange={(e) => setConsigne(e.target.value)} placeholder="Ex. ajoute une formule midi à 13,90 € avec plat et dessert" maxLength={2000} />
-              <div className="puces">{SUGGESTIONS.map((s) => <button key={s} type="button" onClick={() => setConsigne(s)}>{s}</button>)}</div>
+              <textarea rows={4} value={consigne} onChange={(e) => setConsigne(e.target.value)} placeholder={EXEMPLE_CONSIGNE[d.famille ?? ""] ?? EXEMPLE_CONSIGNE.artisan} maxLength={2000} />
+              <div className="puces">{metierC.suggestions.map((s) => <button key={s} type="button" onClick={() => setConsigne(s)}>{s}</button>)}</div>
               <button type="button" className="btn p bloc" onClick={retoucher} disabled={!!occupe || consigne.trim().length < 3 || restant <= 0}><WandSparkles aria-hidden />Appliquer avec l&apos;IA</button>
               <p className="note">{cap.effortIA ? `${restant} retouche${restant > 1 ? "s" : ""} restante${restant > 1 ? "s" : ""} ce mois-ci · réflexion ${({ medium: "standard", high: "approfondie", xhigh: "maximale" } as const)[cap.effortIA]}` : "Retouches IA incluses dès l'offre Pro."}</p>
               {explication && <p className="alerte ok">{explication}</p>}

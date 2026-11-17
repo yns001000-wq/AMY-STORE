@@ -4,6 +4,7 @@
  * - étude d'établissement, rédaction et retouches par l'IA (selon l'offre) ;
  * - édition manuelle filtrée selon les capacités de l'offre.
  */
+import { contenuMetier } from "./contenus";
 import * as M from "./moteur";
 import type { Consigne } from "../cout-ia";
 import { PHOTOS } from "./photos";
@@ -73,24 +74,19 @@ const HORAIRES_TYPE: Record<string, Record<string, string>> = {
 export function siteExpress(p: ProspectSite, famille = familleDepuisMetier(p.metier)): DonneesSite {
   const F = FAMILLES[famille] ?? FAMILLES.artisan, v = p.ville || "votre ville";
   const repas = F.repas, metier = p.metier || F.lib.split(",")[0];
-  const offre = repas
-    ? { nav: "La carte", surtitre: "Fait maison", titre: "La carte", texte: "Carte d'exemple : à remplacer par la vôtre.", pied: "Prix TTC. Allergènes sur demande.",
-        onglets: [{ nom: "Nos plats", articles: [{ nom: "Plat signature", desc: "Votre spécialité, décrite en une phrase.", prix: 14 }, { nom: "Plat du moment", desc: "Selon le marché et la saison.", prix: 12.5 }, { nom: "Formule midi", desc: "Plat et boisson.", prix: 13.9 }] },
-          { nom: "Desserts", articles: [{ nom: "Dessert maison", desc: "La gourmandise de la maison.", prix: 5.5 }] }] }
-    : { nav: F.offre, surtitre: "Nos prestations", titre: F.offre, texte: "Prestations et tarifs d'exemple : à remplacer par les vôtres.", pied: "Devis gratuit et sans engagement.",
-        onglets: [{ nom: "Prestations", articles: [{ nom: "Prestation principale", desc: "Ce que vous faites le mieux.", prix: "Sur devis" }, { nom: "Intervention rapide", desc: "Pour les besoins urgents.", prix: "Dès 60 €" }, { nom: "Conseil et devis", desc: "On étudie votre besoin ensemble.", prix: "Gratuit" }] }] };
+  const C = contenuMetier(famille), offre = C.offre;
   const d = moteur.normaliserSM({
     activite: metier, title: `${p.nom} · ${metier} à ${v}`, meta_description: `${p.nom}, ${metier.toLowerCase()} à ${v}. Horaires, adresse et contact.`,
-    accueil: { h1: metier, h1_suite: `à ${v}`, chapo: `${p.nom} vous accueille à ${v}. Une présentation claire, vos horaires et votre numéro accessibles en un geste depuis un téléphone.`, atouts: repas ? ["Fait maison", "Sur place", "À emporter", "Accueil chaleureux"] : ["Devis gratuit", "Travail soigné", "Réponse rapide", "Prix annoncé"], etiquette: null, photo: "" },
-    defilant: [`${metier} à ${v}`, "Accueil chaleureux", repas ? "Produits frais" : "Devis gratuit", "Appelez-nous", "Près de chez vous"],
-    vedettes: { surtitre: "À découvrir", titre: "Nos incontournables", articles: offre.onglets[0].articles.slice(0, 3).map((a) => ({ ...a, photo: "" })) },
+    accueil: { h1: metier, h1_suite: `à ${v}`, chapo: `${p.nom} vous accueille à ${v}. Une présentation claire, vos horaires et votre numéro accessibles en un geste depuis un téléphone.`, atouts: C.atouts, etiquette: null, photo: "" },
+    defilant: [`${metier} à ${v}`, ...C.defilant],
+    vedettes: { surtitre: "À découvrir", titre: "Nos incontournables", articles: offre.onglets.flatMap((o) => o.articles).slice(0, 3).map((a) => ({ ...a, photo: "" })) },
     offre,
-    maison: { surtitre: "La maison", titre: `${p.nom}, à ${v}`, texte: "Présentez ici votre histoire, votre façon de travailler et ce que vos clients apprécient. (Texte d'exemple.)", engagements: [{ titre: "Qualité", texte: "Un travail soigné, sans compromis.", icone: "etoile" }, { titre: "Proximité", texte: "Une adresse de quartier, à votre écoute.", icone: "coeur" }], signature: "À bientôt !", photos: [] },
+    maison: { surtitre: "La maison", titre: `${p.nom}, à ${v}`, texte: "Présentez ici votre histoire, votre façon de travailler et ce que vos clients apprécient. (Texte d'exemple.)", engagements: C.engagements, signature: "À bientôt !", photos: [] },
     bande: null,
-    infos: { texte: `Retrouvez-nous à ${v}.`, acces: [], bon_a_savoir: repas ? ["Sur place et à emporter", "Paiement par carte"] : ["Devis gratuit", "Paiement par carte ou virement"] },
-    horaires: repas ? HORAIRES_TYPE.repas : famille === "patisserie" || famille === "cafe" ? HORAIRES_TYPE.boutique : famille === "beaute" ? HORAIRES_TYPE.salon : HORAIRES_TYPE.artisan,
-    faq: [{ q: "Comment vous joindre ?", r: "Par téléphone aux heures d'ouverture, ou par e-mail." }, { q: "Où vous trouver ?", r: `À ${v} : l'adresse et l'itinéraire sont en bas de page.` }],
-    final: { titre: "Une question ? Appelez-nous.", texte: "Nous vous répondons avec plaisir." },
+    infos: { texte: `Retrouvez-nous à ${v}.`, acces: [], bon_a_savoir: C.bonASavoir },
+    horaires: repas ? (famille === "cafe" ? HORAIRES_TYPE.boutique : HORAIRES_TYPE.repas) : famille === "patisserie" ? HORAIRES_TYPE.boutique : famille === "beaute" ? HORAIRES_TYPE.salon : HORAIRES_TYPE.artisan,
+    faq: [...C.faq, { q: "Comment vous joindre ?", r: "Par téléphone aux heures d'ouverture, ou par e-mail." }, { q: "Où vous trouver ?", r: `À ${v} : l'adresse et l'itinéraire sont en bas de page.` }],
+    final: C.final,
     a_verifier: ["Tous les textes, prix et horaires sont des exemples à remplacer"],
   }, baseSite(p, famille));
   return moteur.completerPhotosSM(d, p);
