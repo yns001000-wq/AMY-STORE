@@ -72,6 +72,7 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 - 15/11 : connexion sur téléphone réparée (les liens des e-mails marchent dans n'importe quel navigateur, y compris celui de Gmail ou Mail), un utilisateur connecté va directement dans son cockpit et reste connecté 400 jours, mot de passe de 6 caractères minimum.
 - 15/11 : fluidité sur téléphone : serveurs passés à Francfort (à côté de la base), écran de chargement instantané, réaction à l'appui en 50 ms au lieu d'environ 1 s. Liste des prospects : bouton « Ouvrir » sur chaque ligne.
 - 17/11 : Studio, la maquette express a un contenu d'exemple propre à chaque métier (plus de « devis » pour une boulangerie ; pain et gâteaux pour une boulangerie, tarifs et rendez-vous pour une coiffure, vraies pizzas…), et l'éditeur s'adapte (nom de l'onglet, suggestions de retouches). Petits défauts corrigés : « Offre gratuite », SIRET masqué s'il manque, menu mobile sur les pages courtes.
+- 17/11 : offre Gratuite, quand une limite tombe, l'appli ouvre une page « limite atteinte » (bilan du mois, offre suivante en chiffres exacts, parrainage, date de remise à zéro). Mois gratuit épuisé (commerces et messages utilisés) : recherche, messages et nouvelles maquettes en pause jusqu'au 1er du mois ; les données restent consultables. Avertissement « plus qu'1 message », prix par jour sur la page des offres. Analyse : `saas/MARKETING-OFFRES.md` (prix conservés).
 - Pages légales (CGU, CGV, confidentialité, mentions légales) avec le nom et le SIREN.
 
 ## 6. Ce qui reste avant d'ouvrir au public
