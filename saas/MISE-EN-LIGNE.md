@@ -107,6 +107,21 @@ Règle : « Invite un ami : il a -20 % sur son 1er paiement, et toi tu gagnes 29
 - [x] Le coupon Stripe `MYSITE-PARRAINAGE-20` (-20 %, une seule fois) est créé automatiquement au premier paiement d'un filleul, en mode test puis en mode réel.
 - [x] Vercel : la tâche quotidienne `/api/cron/parrainage` est déclarée dans `vercel.json` (6 h 41 UTC).
 
+## Stripe en mode réel (préparé le 17/11/2026)
+
+Fait :
+- [x] Clé live enregistrée pour Claude (proxy de l'environnement, jamais affichée).
+- [x] Prix réels : Pro (existant), Premium et Ultra, mensuel et annuel → variables Vercel `STRIPE_PRICE_*_LIVE`.
+- [x] Webhook réel `https://mysite-app.com/api/stripe/webhook` (7 événements, dont parrainage) → secret dans `STRIPE_WEBHOOK_SECRET_LIVE`.
+- [x] Espace client réel (changer d'offre, carte, factures, résiliation en fin de période) → `STRIPE_PORTAIL_CONFIG_LIVE`.
+- [x] Coupon réel `MYSITE-PARRAINAGE-20`.
+- [x] Le site bascule tout seul dès que `STRIPE_SECRET_KEY` est une clé `sk_live` ; aucune vente réelle avant le 18/11/2026 (début d'activité).
+
+À faire par toi :
+- [ ] Stripe : terminer l'activation du compte (au 17/11, les paiements par carte sont encore « inactifs »).
+- [ ] Vercel → Settings → Environment Variables : remplacer `STRIPE_SECRET_KEY` (Production) par la clé `sk_live_…`, puis prévenir Claude pour le redéploiement et la vérification.
+- [ ] Mentions légales : adresse (domiciliation) et médiateur de la consommation, obligatoires pour vendre.
+
 ## 5. Avant d'ouvrir au public
 
 - [ ] Micro-entreprise créée, SIRET reçu.
