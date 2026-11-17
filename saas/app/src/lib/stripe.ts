@@ -25,5 +25,5 @@ export function causeErreurStripe(e: unknown): "cle" | "prix" | "requete" | "res
  */
 export const OUVERTURE_VENTES = new Date(process.env.OUVERTURE_VENTES ?? "2026-11-18T00:00:00+01:00");
 export function ventesOuvertes(maintenant = new Date(), cle = process.env.STRIPE_SECRET_KEY ?? ""): boolean {
-  return !cle.startsWith("sk_live") || maintenant.getTime() >= OUVERTURE_VENTES.getTime();
+  return !/^(sk|rk)_live_/.test(cle) || maintenant.getTime() >= OUVERTURE_VENTES.getTime();
 }

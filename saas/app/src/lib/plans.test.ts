@@ -57,6 +57,7 @@ describe("Stripe : passage du mode test au mode réel", () => {
     expect(priceIdStripe("pro", "mensuel", { ...env, STRIPE_SECRET_KEY: "sk_test_x" })).toBe("price_test_pro");
     expect(priceIdStripe("pro", "mensuel", { ...env, STRIPE_SECRET_KEY: "sk_live_x" })).toBe("price_live_pro");
     expect(priceIdStripe("premium", "mensuel", { ...env, STRIPE_SECRET_KEY: "sk_live_x" })).toBeUndefined(); // jamais un prix de test en réel
+    expect(priceIdStripe("pro", "mensuel", { ...env, STRIPE_SECRET_KEY: "rk_live_x" })).toBe("price_live_pro"); // clé restreinte réelle
   });
   it("reconnaît l'offre d'un abonnement réel comme d'un abonnement de test", () => {
     expect(planDepuisPriceId("price_live_pro", env)).toBe("pro");

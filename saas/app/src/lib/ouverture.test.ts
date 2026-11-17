@@ -7,5 +7,6 @@ describe("ouverture des ventes réelles", () => {
     expect(ventesOuvertes(new Date("2026-11-17T22:59:00Z"), "sk_live_x")).toBe(false);
     expect(ventesOuvertes(new Date("2026-11-17T23:00:00Z"), "sk_live_x")).toBe(true); // minuit à Paris
     expect(ventesOuvertes(new Date("2026-11-01T10:00:00Z"), "sk_test_x")).toBe(true);
+    expect(ventesOuvertes(new Date("2026-11-17T12:00:00Z"), "rk_live_x")).toBe(false); // clé restreinte réelle
   });
 });

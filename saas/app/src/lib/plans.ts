@@ -118,7 +118,7 @@ export function economieAnnuelle(plan: PlanId): number {
 }
 
 /** Stripe en mode réel (clé « sk_live ») : les identifiants réels sont rangés à part, avec le suffixe _LIVE, pour un passage sans coupure. */
-export const stripeReel = (env: Record<string, string | undefined> = process.env) => (env.STRIPE_SECRET_KEY ?? "").startsWith("sk_live");
+export const stripeReel = (env: Record<string, string | undefined> = process.env) => /^(sk|rk)_live_/.test(env.STRIPE_SECRET_KEY ?? ""); // clé secrète ou restreinte
 
 /** Correspondance offre/période vers identifiant de prix Stripe (configuré dans l'environnement ; _LIVE en mode réel). */
 export function priceIdStripe(plan: Exclude<PlanId, "gratuit">, periode: Periode, env: Record<string, string | undefined> = process.env): string | undefined {

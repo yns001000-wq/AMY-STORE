@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { abonnementActif, planDepuisPriceId } from "@/lib/plans";
+import { abonnementActif, planDepuisPriceId, stripeReel } from "@/lib/plans";
 import { facturePayee, finAbonnement, litige, remboursement } from "@/lib/parrainage-serveur";
 
 /**
@@ -14,7 +14,7 @@ import { facturePayee, finAbonnement, litige, remboursement } from "@/lib/parrai
 export async function POST(req: Request) {
   // Secret du webhook réel (_LIVE) en mode réel, sinon celui du mode test.
   const signature = req.headers.get("stripe-signature");
-  const secret = (process.env.STRIPE_SECRET_KEY ?? "").startsWith("sk_live") ? process.env.STRIPE_WEBHOOK_SECRET_LIVE : process.env.STRIPE_WEBHOOK_SECRET;
+  const secret = stripeReel() ? process.env.STRIPE_WEBHOOK_SECRET_LIVE : process.env.STRIPE_WEBHOOK_SECRET;
   if (!signature || !secret) return NextResponse.json({ erreur: "Signature manquante" }, { status: 400 });
   let ev: Stripe.Event;
   try { ev = stripe().webhooks.constructEvent(await req.text(), signature, secret); }
