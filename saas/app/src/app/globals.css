@@ -841,3 +841,16 @@ th{background:var(--fond-2)}
 .bandeau-limite{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem 1rem;margin:0 0 1.2rem;padding:.7rem 1rem;border-radius:14px;background:color-mix(in srgb,var(--violet) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--violet) 30%,var(--ligne));color:var(--encre);font-size:.93rem}
 .bandeau-limite a{font-weight:700;white-space:nowrap}
 .dernier-essai{margin:.8rem 0 0;padding:.6rem .9rem;border-radius:12px;background:color-mix(in srgb,var(--jaune) 14%,var(--surface));font-size:.9rem;color:var(--encre)}
+
+/* ---------- Prix de lancement (compte à rebours réel jusqu'au 1er décembre 2026) ---------- */
+.compte-rebours{display:grid;justify-items:center;gap:.6rem;text-align:center;margin:0 0 1.4rem;padding:1.1rem 1.2rem;border-radius:var(--r);background:linear-gradient(120deg,color-mix(in srgb,var(--orange) 12%,var(--surface)),color-mix(in srgb,var(--rose) 10%,var(--surface)));border:1px solid color-mix(in srgb,var(--orange) 35%,var(--ligne));color:var(--encre)}
+.cr-titre{display:flex;align-items:center;gap:.45rem;margin:0;font-size:1rem}
+.cr-titre svg{width:1.1rem;height:1.1rem;color:var(--orange)}
+.cr-cases{display:flex;gap:.5rem}
+.cr-cases span{display:grid;justify-items:center;min-width:3.6rem;padding:.45rem .5rem;border-radius:12px;background:var(--surface);box-shadow:var(--ombre)}
+.cr-cases b{font:800 1.6rem/1 var(--titre);color:var(--encre);font-variant-numeric:tabular-nums}
+.cr-cases small{font-size:.7rem;color:var(--doux);text-transform:uppercase;letter-spacing:.06em;margin-top:.2rem}
+.cr-texte{margin:0;max-width:40rem;font-size:.92rem;color:var(--texte)}
+.compte-rebours.compact{padding:.7rem .9rem;margin:0}
+.compte-rebours.compact .cr-cases b{font-size:1.2rem}.compte-rebours.compact .cr-cases span{min-width:2.9rem}
+.prix-futur{margin:.1rem 0 .4rem;font-size:.8rem;font-weight:700;color:color-mix(in srgb,var(--orange) 75%,var(--encre))}

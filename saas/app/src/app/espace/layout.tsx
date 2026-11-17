@@ -7,6 +7,7 @@ import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { profilEtPlan } from "@/lib/quotas";
 import { estAdmin } from "@/lib/croissance";
 import { PLANS, type PlanId } from "@/lib/plans";
+import { prixOffre } from "@/lib/lancement";
 
 /** Encart du menu : toujours l'offre juste au-dessus de celle de l'utilisateur (rien en Ultra). */
 const SUIVANTE: Partial<Record<PlanId, PlanId>> = { gratuit: "pro", pro: "premium", premium: "ultra" };
@@ -19,7 +20,7 @@ export default async function EspaceLayout({ children }: { children: React.React
     try {
       const { plan } = await profilEtPlan(session.user.id);
       const cible = SUIVANTE[plan];
-      if (cible) { const P = PLANS[cible]; offre = { titre: `Passez à ${P.nom}`, texte: `${P.quotas.prospects.toLocaleString("fr-FR")} prospects par mois${P.quotas.sites_ia ? ` et ${P.quotas.sites_ia} sites sur mesure` : ""}. ${P.prixMensuel} € par mois, sans engagement.` }; }
+      if (cible) { const P = PLANS[cible]; offre = { titre: `Passez à ${P.nom}`, texte: `${P.quotas.prospects.toLocaleString("fr-FR")} prospects par mois${P.quotas.sites_ia ? ` et ${P.quotas.sites_ia} sites sur mesure` : ""}. ${prixOffre(cible, "mensuel")} € par mois, sans engagement.` }; }
     } catch { /* profil pas encore créé : pas d'encart */ }
   }
   return (

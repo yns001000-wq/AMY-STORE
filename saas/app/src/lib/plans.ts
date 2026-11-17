@@ -120,12 +120,18 @@ export function economieAnnuelle(plan: PlanId): number {
   return Math.max(0, p.prixMensuel * 12 - p.prixAnnuel);
 }
 
+/** Fin des prix de lancement (voir lancement.ts) : ensuite, les nouveaux abonnés paient les nouveaux prix (identifiants _APRES). */
+export const FIN_LANCEMENT = new Date("2026-12-01T00:00:00+01:00");
+
 /** Stripe en mode réel (clé « sk_live ») : les identifiants réels sont rangés à part, avec le suffixe _LIVE, pour un passage sans coupure. */
 export const stripeReel = (env: Record<string, string | undefined> = process.env) => /^(sk|rk)_live_/.test(env.STRIPE_SECRET_KEY ?? ""); // clé secrète ou restreinte
 
 /** Correspondance offre/période vers identifiant de prix Stripe (configuré dans l'environnement ; _LIVE en mode réel). */
-export function priceIdStripe(plan: Exclude<PlanId, "gratuit">, periode: Periode, env: Record<string, string | undefined> = process.env): string | undefined {
-  return env[`STRIPE_PRICE_${plan.toUpperCase()}_${periode.toUpperCase()}${stripeReel(env) ? "_LIVE" : ""}`];
+export function priceIdStripe(plan: Exclude<PlanId, "gratuit">, periode: Periode, env: Record<string, string | undefined> = process.env, maintenant = new Date()): string | undefined {
+  const base = `STRIPE_PRICE_${plan.toUpperCase()}_${periode.toUpperCase()}${stripeReel(env) ? "_LIVE" : ""}`;
+  // Après le lancement : prix nouveaux pour les nouveaux abonnés (les abonnements existants gardent leur prix chez Stripe).
+  if (maintenant.getTime() >= FIN_LANCEMENT.getTime() && env[`${base}_APRES`]) return env[`${base}_APRES`];
+  return env[base];
 }
 
 /** Inverse : retrouve l'offre à partir de l'identifiant de prix reçu de Stripe. Inconnu = gratuit (jamais d'accès offert par erreur). */
@@ -133,7 +139,7 @@ export function planDepuisPriceId(priceId: string | null | undefined, env: Recor
   if (!priceId) return "gratuit";
   for (const plan of ["pro", "premium", "ultra"] as const) {
     for (const periode of ["mensuel", "annuel"] as const) {
-      for (const suffixe of ["", "_LIVE"]) if (env[`STRIPE_PRICE_${plan.toUpperCase()}_${periode.toUpperCase()}${suffixe}`] === priceId) return plan;
+      for (const suffixe of ["", "_LIVE", "_APRES", "_LIVE_APRES"]) if (env[`STRIPE_PRICE_${plan.toUpperCase()}_${periode.toUpperCase()}${suffixe}`] === priceId) return plan;
     }
   }
   return "gratuit";

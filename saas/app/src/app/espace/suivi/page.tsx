@@ -16,7 +16,7 @@ export default async function Suivi() {
   if (!estAdmin(session.user.email)) notFound();
   const admin = supabaseAdmin();
   const [{ data: profils }, { data: actifs }, { data: parr }, { data: recs }] = await Promise.all([
-    admin.from("profils").select("id, plan, periode, abonnement_statut, cgu_acceptees_le, resiliation_prevue, source, cree_le").limit(20000),
+    admin.from("profils").select("id, plan, periode, abonnement_debut, abonnement_statut, cgu_acceptees_le, resiliation_prevue, source, cree_le").limit(20000),
     admin.from("consommation").select("user_id").gt("prospects", 0).limit(50000),
     admin.from("parrainages").select("statut, apporte_centimes").limit(50000),
     admin.from("recompenses_parrainage").select("type, statut, montant_centimes, jours").limit(50000),

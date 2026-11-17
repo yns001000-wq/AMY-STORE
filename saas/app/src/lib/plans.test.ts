@@ -64,3 +64,13 @@ describe("Stripe : passage du mode test au mode réel", () => {
     expect(planDepuisPriceId("price_test_pro", env)).toBe("pro");
   });
 });
+
+describe("Stripe : nouveaux prix après le lancement", () => {
+  const env = { STRIPE_SECRET_KEY: "sk_live_x", STRIPE_PRICE_PRO_MENSUEL_LIVE: "p_lancement", STRIPE_PRICE_PRO_MENSUEL_LIVE_APRES: "p_apres" };
+  it("prix de lancement jusqu'au 30/11, nouveau prix ensuite, et l'offre reste reconnue", () => {
+    expect(priceIdStripe("pro", "mensuel", env, new Date("2026-11-30T22:00:00Z"))).toBe("p_lancement");
+    expect(priceIdStripe("pro", "mensuel", env, new Date("2026-12-01T08:00:00Z"))).toBe("p_apres");
+    expect(planDepuisPriceId("p_apres", env)).toBe("pro");
+    expect(planDepuisPriceId("p_lancement", env)).toBe("pro");
+  });
+});

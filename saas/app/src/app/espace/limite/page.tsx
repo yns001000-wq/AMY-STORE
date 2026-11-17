@@ -4,6 +4,8 @@ import { CalendarClock, Check, Gift, Rocket, Sparkles } from "lucide-react";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { etatLimites } from "@/lib/quotas";
 import { PLANS } from "@/lib/plans";
+import { enLancement, PRIX_APRES, prixOffre } from "@/lib/lancement";
+import { CompteRebours } from "@/components/CompteRebours";
 import { argumentsOffre, estTypeLimite, libelleRemise, moisEnCours, OFFRE_SUIVANTE, prixParJour, prochaineRemiseAZero, titreLimite, type TypeLimite } from "@/lib/limites";
 
 export const metadata = { title: "Limite de votre offre atteinte" };
@@ -53,7 +55,8 @@ export default async function Limite({ searchParams }: { searchParams: Promise<R
         <section className="carte limite-offre" aria-labelledby="titre-suite">
           <span className="offre-mini-badge">Pour continuer dès maintenant</span>
           <h2 id="titre-suite"><Rocket aria-hidden />Passez à {P.nom}</h2>
-          <p className="limite-prix"><b>{P.prixMensuel} €</b> TTC / mois · <span>{prixParJour(P.prixMensuel)}</span></p>
+          <p className="limite-prix"><b>{prixOffre(suivante, "mensuel")} €</b> TTC / mois · <span>{prixParJour(prixOffre(suivante, "mensuel"))}</span></p>
+          {enLancement() && <><CompteRebours compact /><p className="note" style={{ margin: 0 }}>Prix de lancement : {PRIX_APRES[suivante].mensuel} € par mois pour les nouveaux abonnés à partir du 1er décembre. En vous abonnant avant, vous gardez {prixOffre(suivante, "mensuel")} € tant que vous restez abonné.</p></>}
           <ul>{args.map((a) => <li key={a}><Check aria-hidden />{a}</li>)}</ul>
           <Link className="btn p bloc grand" href={`/espace/abonnement?offre=${suivante}&depuis=limite`}>Passer à {P.nom}</Link>
           <p className="note" style={{ margin: 0, textAlign: "center" }}>Sans engagement, résiliable à tout moment. {suivante !== "ultra" && <Link href="/espace/abonnement">Voir toutes les offres</Link>}</p>

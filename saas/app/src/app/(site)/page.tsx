@@ -4,6 +4,7 @@ import { Tarifs } from "@/components/Tarifs";
 import { ApercuCockpit } from "@/components/ApercuCockpit";
 import { Provenance } from "@/components/Provenance";
 import { PLANS } from "@/lib/plans";
+import { prixOffre } from "@/lib/lancement";
 
 const METHODE = [
   { ico: Search, t: "Trouver", d: "Vous choisissez un métier et un département. MySite cherche les commerces indépendants dans le registre officiel des entreprises, et vous les réserve." },
@@ -39,7 +40,7 @@ const FAQ = [
 ];
 
 export default function Accueil() {
-  const pro = PLANS.pro.prixMensuel, exemple = 490;
+  const pro = prixOffre("pro", "mensuel"), exemple = 490;
   return (
     <>
       <Provenance />

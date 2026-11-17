@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { CakeSlice, Check, Coffee, Lock, Pizza, Sandwich, Scissors, Sparkles, UtensilsCrossed, Wrench, X, type LucideIcon } from "lucide-react";
 import { PLANS } from "@/lib/plans";
+import { enLancement, PRIX_APRES, prixOffre } from "@/lib/lancement";
 
 /** Les sites sur mesure proposés (même familles et couleurs que le moteur du Studio). */
 const MODELES: { famille: string; titre: string; detail: string; principal: string; accent: string; Icone: LucideIcon }[] = [
@@ -71,7 +72,7 @@ export function SitesSurMesure({ famille, nom }: { famille?: string | null; nom?
                   <section key={o.id} className={`offre-mini${o.id === "pro" ? " avant" : ""}`} aria-labelledby={`mini-${o.id}`}>
                     <span className="offre-mini-badge">{o.badge}</span>
                     <h3 id={`mini-${o.id}`}>{P.nom}</h3>
-                    <p className="offre-mini-prix"><b>{P.prixMensuel} €</b> TTC / mois</p>
+                    <p className="offre-mini-prix"><b>{prixOffre(o.id, "mensuel")} €</b> TTC / mois{enLancement() && <small className="prix-futur" style={{ display: "block" }}>Prix de lancement · {PRIX_APRES[o.id].mensuel} € dès le 1er décembre</small>}</p>
                     <ul>{o.points().map((t) => <li key={t}><Check aria-hidden />{t}</li>)}</ul>
                     <Link className={`btn bloc${o.id === "pro" ? " p" : ""}`} href={`/espace/abonnement?offre=${o.id}&depuis=sur-mesure`}>Choisir {P.nom}</Link>
                   </section>

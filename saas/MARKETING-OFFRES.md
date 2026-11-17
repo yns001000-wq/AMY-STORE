@@ -1,5 +1,12 @@
 # Offres et passage à l'abonnement : analyse et choix (17/11/2026)
 
+## Prix de lancement (décidé le 17/11/2026)
+
+- Jusqu'au **30 novembre 2026** inclus : Pro 29 €, Premium 59 €, Ultra 119 € par mois (290 / 590 / 1 190 € par an).
+- À partir du **1er décembre 2026** (minuit, Paris), pour les **nouveaux** abonnés : Pro 35 €, Premium 69 €, Ultra 139 € par mois (350 / 690 / 1 390 € par an).
+- **Prix garanti** : toute personne abonnée avant le 1er décembre garde le prix de lancement tant qu'elle reste abonnée (écrit dans les CGV, article 2).
+- Compte à rebours **réel** sur la page des offres et la page de limite : il se termine le 1er décembre et disparaît, sans jamais recommencer. La hausse s'applique automatiquement (prix Stripe `_APRES`, espace client dédié). Une fausse limite de temps serait une pratique commerciale trompeuse (art. L121-4 du Code de la consommation).
+
 ## La grille actuelle
 
 | | Gratuit | Pro | Premium | Ultra |

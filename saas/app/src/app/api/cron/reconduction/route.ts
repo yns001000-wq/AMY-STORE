@@ -5,6 +5,7 @@ import { rappelReconductionDu } from "@/lib/conformite";
 import { envoyerEmail, urlSite } from "@/lib/email";
 import { journaliser } from "@/lib/journal";
 import { PLANS, estPlan } from "@/lib/plans";
+import { prixOffre } from "@/lib/lancement";
 
 /**
  * À appeler une fois par jour (Vercel Cron, en-tête Authorization: Bearer CRON_SECRET).
@@ -13,7 +14,7 @@ import { PLANS, estPlan } from "@/lib/plans";
 export async function GET(req: Request) {
   if (!cronAutorise(req)) return NextResponse.json({ erreur: "Non autorisé" }, { status: 401 });
   const admin = supabaseAdmin();
-  const { data } = await admin.from("profils").select("id, plan, periode, periode_fin, resiliation_prevue, rappel_reconduction_pour").eq("periode", "annuel").not("periode_fin", "is", null).limit(5000);
+  const { data } = await admin.from("profils").select("id, plan, periode, periode_fin, resiliation_prevue, rappel_reconduction_pour, abonnement_debut").eq("periode", "annuel").not("periode_fin", "is", null).limit(5000);
   let envoyes = 0;
   for (const p of data ?? []) {
     const fin = new Date(p.periode_fin as string);
@@ -24,7 +25,7 @@ export async function GET(req: Request) {
     const ok = await envoyerEmail(email, "📅 Ton abonnement MySite sera bientôt renouvelé", {
       emoji: "📅", titre: "Ton abonnement annuel arrive à échéance",
       paragraphes: [
-        `Ton abonnement annuel MySite ${P?.nom ?? ""} sera renouvelé automatiquement le ${fin.toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" })}${P ? `, pour ${P.prixAnnuel} € TTC` : ""}.`,
+        `Ton abonnement annuel MySite ${P?.nom ?? ""} sera renouvelé automatiquement le ${fin.toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" })}${P && estPlan(p.plan) ? `, pour ${prixOffre(p.plan, "annuel", fin, p.abonnement_debut ? new Date(p.abonnement_debut as string) : null).toLocaleString("fr-FR")} € TTC` : ""}.`,
         "Tu veux continuer ? Tu n'as rien à faire. 🙌",
         "Tu préfères arrêter ? Tu peux le faire sans frais avant cette date, depuis « Mon abonnement », bouton « Résilier mon abonnement ».",
       ],

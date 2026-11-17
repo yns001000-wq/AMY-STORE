@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Info } from "@/components/Info";
 import { EDITEUR as E } from "@/lib/editeur";
 import { ORDRE_PLANS, PLANS } from "@/lib/plans";
+import { PRIX_APRES } from "@/lib/lancement";
 
 export const metadata = { title: "Conditions générales de vente" };
 
@@ -10,7 +11,7 @@ export default function Cgv() {
   return (
     <article className="legal">
       <h1 style={{ fontSize: "2rem" }}>Conditions générales de vente</h1>
-      <p className="note">Version du 14 novembre 2026.</p>
+      <p className="note">Version du 17 novembre 2026.</p>
 
       <h2>1. Vendeur</h2>
       <p><Info v={E.nom} manque="Prénom NOM" />, entrepreneur individuel (EI), SIREN {E.siren}, <Info v={E.adresse} manque="adresse" />, téléphone : <Info v={E.telephone} manque="téléphone" lien="tel" />, e-mail : <Info v={E.email} manque="e-mail" lien="mail" />. TVA non applicable, article 293 B du CGI.</p>
@@ -18,8 +19,9 @@ export default function Cgv() {
       <h2>2. Offres et prix</h2>
       <ul>
         <li>Gratuit : 0 €, sans limite de durée, avec les quotas indiqués sur la page Tarifs.</li>
-        {ORDRE_PLANS.filter((id) => id !== "gratuit").map((id) => <li key={id}>{PLANS[id].nom} : {PLANS[id].prixMensuel} € TTC par mois, ou {PLANS[id].prixAnnuel} € TTC par an.</li>)}
+        {ORDRE_PLANS.filter((id) => id !== "gratuit").map((id) => <li key={id}>{PLANS[id].nom} : {PLANS[id].prixMensuel} € TTC par mois, ou {PLANS[id].prixAnnuel} € TTC par an, pour tout abonnement souscrit jusqu&apos;au 30 novembre 2026 inclus (prix de lancement) ; {PRIX_APRES[id].mensuel} € TTC par mois, ou {PRIX_APRES[id].annuel.toLocaleString("fr-FR")} € TTC par an, pour tout abonnement souscrit à partir du 1er décembre 2026.</li>)}
       </ul>
+      <p><b>Prix de lancement garanti :</b> un abonnement souscrit au prix de lancement conserve ce prix, au même rythme de paiement, tant qu&apos;il n&apos;est pas résilié, y compris lors de ses renouvellements. Un changement d&apos;offre est facturé au prix de lancement de la nouvelle offre. Après une résiliation, un nouvel abonnement est facturé au prix en vigueur à sa date.</p>
       <p>Le contenu de chaque offre (quotas mensuels, fonctions) est décrit sur la page Tarifs avant la commande. Les quotas se renouvellent chaque mois civil et ne se reportent pas.</p>
 
       <h2>3. Commande, paiement et factures</h2>

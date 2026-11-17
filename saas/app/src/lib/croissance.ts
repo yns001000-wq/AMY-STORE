@@ -1,5 +1,6 @@
 /** Règles de croissance, sans effet de bord (testées) : provenance, premiers pas, chiffres du tableau de suivi. */
 import { PLANS, abonnementActif, estPlan, type PlanId } from "./plans";
+import { prixOffre } from "./lancement";
 
 const JOUR = 86400000;
 
@@ -27,7 +28,7 @@ export function premiersPas(e: { prospects: number; messages: number; sites: num
   ];
 }
 
-export interface LigneProfil { plan: string; periode?: string | null; abonnement_statut?: string | null; cgu_acceptees_le?: string | null; resiliation_prevue?: boolean | null; source?: string | null; cree_le: string }
+export interface LigneProfil { plan: string; abonnement_debut?: string | null; periode?: string | null; abonnement_statut?: string | null; cgu_acceptees_le?: string | null; resiliation_prevue?: boolean | null; source?: string | null; cree_le: string }
 
 /** Chiffres du tableau de suivi du propriétaire. Le revenu mensuel compte un abonnement annuel pour un douzième. */
 export function statistiques(profils: LigneProfil[], actifs: Set<string> | null, ids: string[] | null, maintenant = new Date()) {
@@ -41,7 +42,9 @@ export function statistiques(profils: LigneProfil[], actifs: Set<string> | null,
     if (paye) {
       const P = PLANS[p.plan as PlanId];
       abonnes[p.plan]++;
-      revenuMensuel += p.periode === "annuel" ? P.prixAnnuel / 12 : P.prixMensuel;
+      // Prix réellement payé : celui de lancement pour un abonnement commencé avant le 1er décembre 2026 (prix garanti).
+      const debut = p.abonnement_debut ? new Date(p.abonnement_debut) : null;
+      revenuMensuel += p.periode === "annuel" ? prixOffre(p.plan as PlanId, "annuel", maintenant, debut) / 12 : prixOffre(p.plan as PlanId, "mensuel", maintenant, debut);
       if (p.resiliation_prevue) resiliations++;
     }
     if (p.cgu_acceptees_le) configures++;

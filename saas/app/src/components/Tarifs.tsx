@@ -5,6 +5,8 @@ import { Check, Minus, Star } from "lucide-react";
 import { ORDRE_PLANS, PLANS, type Periode, type PlanId } from "@/lib/plans";
 import { premierPaiementRemise } from "@/lib/parrainage";
 import { prixParJour } from "@/lib/limites";
+import { enLancement, PRIX_APRES, prixOffre } from "@/lib/lancement";
+import { CompteRebours } from "./CompteRebours";
 import { useInvitation } from "./BandeauParrainage";
 
 const fmt = (n: number) => n.toLocaleString("fr-FR");
@@ -33,8 +35,10 @@ export function Tarifs({ mode, planActuel, particulier, abonne, voulue, remise }
   // -20 % sur le 1er paiement : filleul connecté et éligible (vérifié par le serveur), ou visiteur arrivé par un lien de parrainage.
   const invite = useInvitation();
   const avecRemise = mode === "abonnement" ? !!remise : !!invite;
+  const lancement = enLancement();
   return (
     <>
+      <CompteRebours />
       <div style={{ display: "flex" }}>
         <div className="bascule" role="group" aria-label="Période de facturation">
           <button type="button" aria-pressed={periode === "mensuel"} onClick={() => setPeriode("mensuel")}>Mensuel</button>
@@ -43,7 +47,10 @@ export function Tarifs({ mode, planActuel, particulier, abonne, voulue, remise }
       </div>
       <div className="offres">
         {ORDRE_PLANS.map((id) => {
-          const p = PLANS[id], annuel = periode === "annuel" && p.prixAnnuel > 0;
+          const p0 = PLANS[id];
+          // Prix du moment : lancement jusqu'au 30/11, nouveaux prix ensuite (voir lib/lancement.ts).
+          const p = { ...p0, prixMensuel: prixOffre(id, "mensuel"), prixAnnuel: prixOffre(id, "annuel") };
+          const annuel = periode === "annuel" && p.prixAnnuel > 0;
           const prix = annuel ? Math.round((p.prixAnnuel / 12) * 100) / 100 : p.prixMensuel;
           const lignes: [boolean, string][] = [
             [true, Number.isFinite(p.departements) ? `${p.departements} département${p.departements > 1 ? "s" : ""}` : "France entière"],
@@ -68,6 +75,7 @@ export function Tarifs({ mode, planActuel, particulier, abonne, voulue, remise }
                 const f2 = (n: number) => n.toLocaleString("fr-FR", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 });
                 return <p className="sous-prix">1er paiement : <span className="prix-barre" style={{ display: "inline" }}><s>{f2(plein)} €</s><em>{f2(reduit)} €</em></span> (-20 %), puis <b style={{ whiteSpace: "nowrap" }}>{f2(plein)} €{annuel ? "/an" : "/mois"}</b></p>;
               })() : <p className="sous-prix">{annuel ? <>payé <b>{fmt(p.prixAnnuel)} €</b> TTC une fois par an</> : p.prixAnnuel ? `sans engagement · ${prixParJour(p.prixMensuel)}` : "pour toujours"}</p>}
+              {lancement && id !== "gratuit" && <p className="prix-futur">Prix de lancement · {annuel ? `${PRIX_APRES[id].annuel.toLocaleString("fr-FR")} €/an` : `${PRIX_APRES[id].mensuel} €/mois`} à partir du 1er décembre</p>}
               <ul className="inclus">
                 {lignes.map(([oui, t]) => <li key={t} className={oui ? "" : "non"}>{oui ? <Check aria-hidden /> : <Minus aria-hidden />}<span>{t}</span></li>)}
               </ul>
