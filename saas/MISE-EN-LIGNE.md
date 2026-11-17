@@ -120,7 +120,8 @@ Fait :
 À faire par toi :
 - [ ] Stripe : terminer l'activation du compte (au 17/11, les paiements par carte sont encore « inactifs »).
 - [ ] Vercel → Settings → Environment Variables : remplacer `STRIPE_SECRET_KEY` (Production) par la clé `sk_live_…`, puis prévenir Claude pour le redéploiement et la vérification.
-- [ ] Mentions légales : adresse (domiciliation) et médiateur de la consommation, obligatoires pour vendre.
+- [x] Mentions légales : adresse affichée (17/11, sans numéro).
+- [ ] Médiateur de la consommation (obligatoire pour vendre aux particuliers) : variable `MEDIATEUR_CONSOMMATION` dans Vercel.
 
 ## 5. Avant d'ouvrir au public
 
