@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { Check, ChevronRight, Crown, Download, Gift, Lock, Map as IconeCarte, Search, Store, Target, WandSparkles } from "lucide-react";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { consommation, profilEtPlan } from "@/lib/quotas";
-import { departementsAutorises, PLANS, type TypeQuota } from "@/lib/plans";
+import { departementsAutorises, libelleOffre, PLANS, type TypeQuota } from "@/lib/plans";
 import { secteurParId } from "@/lib/secteurs";
 import { etape } from "@/lib/pipeline";
 import { nomDepartement } from "@/lib/departements";
@@ -47,7 +47,7 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
           <p className="note" style={{ margin: "0 0 .3rem" }}>{secteur?.nom} · {deps.map((d) => nomDepartement(d) ?? d).join(", ")}</p>
           <h1>Bonjour{profil.prenom ? ` ${profil.prenom}` : ""} 👋</h1>
         </div>
-        <span className="badge-offre"><Crown aria-hidden />Offre {P.nom}</span>
+        <span className="badge-offre"><Crown aria-hidden />{libelleOffre(plan)}</span>
       </div>
       {q.abonnement === "ok" && <p className="alerte ok" role="status">Merci ! Votre abonnement est en cours d&apos;activation : il apparaît ici dans quelques secondes.</p>}
       {faits < pas.length && (

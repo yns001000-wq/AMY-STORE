@@ -818,3 +818,5 @@ th{background:var(--fond-2)}
 }
 /* Lien « Débloquer » des cartes du tableau de bord : jamais coupé */
 .valeur a{white-space:nowrap}
+/* Page courte sur téléphone (ex. Pipeline vide) : la barre de menu ne s'étire pas sur la hauteur de l'écran */
+@media (max-width:60rem){.app{align-content:start}}

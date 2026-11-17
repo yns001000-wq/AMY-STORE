@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { consommation, profilEtPlan } from "@/lib/quotas";
-import { PLANS } from "@/lib/plans";
+import { PLANS, libelleOffre } from "@/lib/plans";
 import { FAMILLES } from "@/lib/studio";
 import { photosDuCommerce } from "@/lib/studio/serveur";
 import { EditeurStudio } from "@/components/studio/EditeurStudio";
@@ -33,7 +33,7 @@ export default async function PageStudio({ params }: { params: Promise<{ id: str
           <Link href={site.prospect_id ? `/espace/prospects/${site.prospect_id}` : "/espace/studio"} className="note" style={{ display: "inline-flex", gap: ".3rem", alignItems: "center", textDecoration: "none" }}><ArrowLeft size={16} aria-hidden />{site.prospect_id ? "Fiche du prospect" : "Mes sites"}</Link>
           <h1 style={{ marginTop: ".3rem" }}>{site.donnees?.nom ?? "Site"}</h1>
         </div>
-        <span className="badge-offre">{site.type === "ia" ? "Sur mesure" : "Maquette express"} · {FAMILLES[site.donnees?.famille]?.lib.split(" (")[0] ?? ""} · Studio {PLANS[plan].nom}</span>
+        <span className="badge-offre">{site.type === "ia" ? "Sur mesure" : "Maquette express"} · {FAMILLES[site.donnees?.famille]?.lib.split(" (")[0] ?? ""} · {libelleOffre(plan)}</span>
       </div>
       <EditeurStudio id={site.id} initial={site.donnees} etude={(site.etude as Etude) ?? null} plan={plan} cap={cap}
         versions={versions ?? []} retouches={{ utilise: conso.retouches_ia, max: quotas.retouches_ia }}

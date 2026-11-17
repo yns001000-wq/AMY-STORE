@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { Check, LayoutTemplate, Lock, Minus } from "lucide-react";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { consommation, profilEtPlan } from "@/lib/quotas";
-import { ORDRE_PLANS, PLANS, type CapacitesStudio } from "@/lib/plans";
+import { libelleOffre, ORDRE_PLANS, PLANS, type CapacitesStudio } from "@/lib/plans";
 import { FAMILLES } from "@/lib/studio";
 import { SitesSurMesure } from "@/components/studio/SitesSurMesure";
 
@@ -37,7 +37,7 @@ export default async function ListeStudio() {
   return (
     <>
       <div className="barre-haut">
-        <div><p className="note" style={{ margin: "0 0 .3rem" }}>Studio {P.nom} · {conso.sites_ia}/{quotas.sites_ia} sites IA · {conso.retouches_ia}/{quotas.retouches_ia} retouches ce mois-ci</p><h1>Mes sites</h1></div>
+        <div><p className="note" style={{ margin: "0 0 .3rem" }}>Studio · {libelleOffre(plan)} · {conso.sites_ia}/{quotas.sites_ia} sites IA · {conso.retouches_ia}/{quotas.retouches_ia} retouches ce mois-ci</p><h1>Mes sites</h1></div>
         <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}><Link className="btn" href="/espace/studio/photos">Ma banque de photos</Link><Link className="btn" href="/espace">Créer depuis un prospect</Link></div>
       </div>
       {!sites?.length ? (

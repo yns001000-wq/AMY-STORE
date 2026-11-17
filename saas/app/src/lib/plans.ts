@@ -73,6 +73,9 @@ export const PLANS: Record<PlanId, Plan> = {
 
 export const ORDRE_PLANS: PlanId[] = ["gratuit", "pro", "premium", "ultra"];
 
+/** « Offre gratuite », « Offre Pro »… (accord correct pour l'offre Gratuite). */
+export const libelleOffre = (plan: PlanId) => (plan === "gratuit" ? "Offre gratuite" : `Offre ${PLANS[plan].nom}`);
+
 export function estPlan(v: unknown): v is PlanId {
   return typeof v === "string" && (ORDRE_PLANS as string[]).includes(v);
 }
