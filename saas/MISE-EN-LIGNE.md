@@ -121,7 +121,7 @@ Fait :
 - [ ] Stripe : terminer l'activation du compte (au 17/11, les paiements par carte sont encore « inactifs »).
 - [ ] Vercel → Settings → Environment Variables : remplacer `STRIPE_SECRET_KEY` (Production) par la clé `sk_live_…`, puis prévenir Claude pour le redéploiement et la vérification.
 - [x] Mentions légales : adresse affichée (17/11, sans numéro).
-- [ ] Médiateur de la consommation (obligatoire pour vendre aux particuliers) : affiché « adhésion en cours » depuis le 17/11 ; à remplacer par le nom et le site du médiateur (variable `MEDIATEUR_CONSOMMATION` dans Vercel) dès l'inscription (CM2C conseillé).
+- [ ] Médiateur de la consommation (obligatoire pour vendre aux particuliers) : affiché « adhésion en cours auprès du CM2C » depuis le 17/11 ; à l'inscription validée, remplacer par les coordonnées complètes du CM2C (variable `MEDIATEUR_CONSOMMATION` dans Vercel).
 
 ## 5. Avant d'ouvrir au public
 

@@ -79,7 +79,7 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 
 1. **Stripe réel : préparé le 17/11** (prix, webhook, espace client, coupon créés ; variables `_LIVE` dans Vercel ; ventes bloquées avant le 18/11). Reste à moi : finir l'activation du compte Stripe (paiements encore « inactifs ») et mettre la clé `sk_live` dans `STRIPE_SECRET_KEY` sur Vercel.
 2. **Adresse dans les mentions légales** : faite le 17/11 (rue et ville du siège, sans le numéro, à ma demande ; réglée dans Vercel, variable `EDITEUR_ADRESSE`, jamais dans le code).
-3. **Médiateur de la consommation** : affiché « adhésion en cours » depuis le 17/11 ; à remplacer dès l'inscription. Obligatoire pour vendre aux particuliers. Choix conseillé : **CM2C**, 48 € pour 3 ans, 36 € par médiation (https://www.cm2c.net/inscription-professionnel.php). Pas encore payé.
+3. **Médiateur de la consommation** : CM2C choisi, adhésion à faire sur cm2c.net (48 € pour 3 ans) ; affiché « adhésion en cours auprès du CM2C » en attendant. Obligatoire pour vendre aux particuliers. Choix conseillé : **CM2C**, 48 € pour 3 ans, 36 € par médiation (https://www.cm2c.net/inscription-professionnel.php). Pas encore payé.
 4. **Page « Suivi des ventes »** : ajouter mon e-mail dans la variable `ADMIN_EMAILS` de Vercel.
 5. **Sécurité** : remplacer le jeton Supabase et la clé Stripe de test, qui ont été collés en clair dans une discussion ; supprimer la clé Resend « Onboarding » inutile.
 6. **DNS : ajouter l'enregistrement DMARC** (`_dmarc`, TXT, `v=DMARC1; p=none;`) pour que les e-mails n'arrivent pas en indésirables.
