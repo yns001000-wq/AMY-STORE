@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { BandeauParrainage } from "@/components/BandeauParrainage";
+import { MesureAudience } from "@/components/MesureAudience";
 
 export default function Site({ children }: { children: React.ReactNode }) {
   return (
     <>
       <BandeauParrainage />
+      <MesureAudience />
       <header className="entete">
         <div className="conteneur">
           <Logo />

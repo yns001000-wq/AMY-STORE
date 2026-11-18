@@ -40,7 +40,7 @@ export default function Confidentialite() {
       <h2>D. Destinataires et sous-traitants</h2>
       <ul>
         <li><b>Supabase</b> : base de données et authentification, serveurs dans l&apos;Union européenne.</li>
-        <li><b>Vercel</b> : hébergement de l&apos;application et des sites publiés (États-Unis, Data Privacy Framework et clauses contractuelles types).</li>
+        <li><b>Vercel</b> : hébergement de l&apos;application et des sites publiés, mesure d&apos;audience sans cookie (États-Unis, Data Privacy Framework et clauses contractuelles types).</li>
         <li><b>Stripe</b> : paiement et factures (Data Privacy Framework et clauses contractuelles types).</li>
         <li><b>Anthropic</b> : rédaction automatique des messages et des sites (États-Unis, clauses contractuelles types). Les données envoyées ne servent pas à entraîner ses modèles.</li>
         <li><b>Resend</b> : envoi des e-mails de service, s&apos;il est activé.</li>
@@ -54,6 +54,7 @@ export default function Confidentialite() {
 
       <h2>F. Cookies</h2>
       <p>MySite utilise les cookies nécessaires à la connexion et à la sécurité. Aucun cookie publicitaire ni de mesure d&apos;audience n&apos;est utilisé.</p>
+      <p><b>Mesure d&apos;audience sans cookie</b> : les pages de MySite (hors sites publiés pour vos clients) sont mesurées avec Vercel Web Analytics, pour connaître le nombre de visites, les pages consultées, la provenance (site d&apos;origine), le pays et le type d&apos;appareil. Aucun cookie n&apos;est déposé et aucun identifiant n&apos;est conservé : chaque visiteur est reconnu seulement le jour même, par une empreinte calculée qui est effacée au bout de 24 heures. Les adresses des pages sont envoyées sans leurs paramètres ni identifiants. Les résultats sont uniquement des chiffres globaux, consultés par l&apos;éditeur seul. Base légale : notre intérêt légitime à mesurer la fréquentation du site (art. 6.1.f du RGPD) ; vous pouvez vous y opposer en écrivant à l&apos;adresse indiquée en E ou en bloquant le script avec votre navigateur.</p>
       <p><b>Cookie de parrainage</b> (« mysite_parrain ») : déposé <b>seulement si vous cliquez sur « Garder mon invitation 30 jours »</b> après être arrivé par le lien de parrainage d&apos;un utilisateur (consentement, art. 82 de la loi Informatique et Libertés). Il contient uniquement le code de ce parrain, pendant 30 jours, pour vous appliquer la réduction de bienvenue et enregistrer le parrainage si vous créez un compte. Vous pouvez le retirer à tout moment (bouton « Retirer » du bandeau, ou réglages de votre navigateur). Sans ce cookie, l&apos;invitation fonctionne quand même pendant votre visite, par le lien suivi.</p>
       <p><b>Parrainage</b> (voir le <Link href="/reglement-parrainage">règlement</Link>) :</p>
       <ul>

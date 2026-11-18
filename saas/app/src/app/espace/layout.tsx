@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ChartNoAxesCombined, LogOut, Sparkles } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { MenuApp } from "@/components/MenuApp";
+import { MesureAudience } from "@/components/MesureAudience";
 import { seDeconnecter } from "@/lib/actions-auth";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { profilEtPlan } from "@/lib/quotas";
@@ -25,6 +26,7 @@ export default async function EspaceLayout({ children }: { children: React.React
   }
   return (
     <div className="app">
+      <MesureAudience />
       <aside className="cote">
         <Logo />
         <nav aria-label="Menu du cockpit"><MenuApp />{admin && <ul className="menu"><li><Link href="/espace/suivi"><ChartNoAxesCombined aria-hidden />Suivi des ventes</Link></li></ul>}</nav>
