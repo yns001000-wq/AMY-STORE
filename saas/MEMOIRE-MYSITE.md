@@ -116,5 +116,5 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 
 ## Mesure d'audience (18/11/2026)
 - `@vercel/analytics` (composant `MesureAudience`) sur la vitrine `(site)` et `espace` seulement, jamais sur les sites publiés (`/s`, `/d`). Sans cookie ; adresses envoyées sans paramètres et avec les identifiants remplacés par [id]. Politique de confidentialité mise à jour (section F + Vercel en D).
-- En attente : activer Web Analytics dans le tableau de bord Vercel (Projet → Analytics → Enable), puis redéployer. Le script `/_vercel/insights/script.js` renvoyait 404 tant que ce n'était pas activé.
+- Activé par l'utilisatrice le 18/11 (offre Vercel Pro), redéployé : script 200, vue envoyée (POST /_vercel/insights/view 200, adresse nettoyée), aucun cookie. Une vue de test (/connexion) a été comptée ce jour-là. Les navigateurs automatisés (webdriver) ne sont pas comptés.
 - Aucun chiffre de vues avant cette date (rien n'était mesuré).
