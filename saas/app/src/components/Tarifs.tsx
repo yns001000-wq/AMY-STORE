@@ -12,7 +12,7 @@ import { useInvitation } from "./BandeauParrainage";
 const fmt = (n: number) => n.toLocaleString("fr-FR");
 
 /** Bouton de chaque offre : lien d'inscription (site public) ou formulaire de paiement Stripe (espace connecté). */
-function Action({ id, periode, mode, particulier, abonne, refCode }: { id: PlanId; periode: Periode; mode: "inscription" | "abonnement"; particulier?: boolean; abonne?: boolean; refCode?: string }) {
+function Action({ id, periode, mode, particulier, abonne, refCode, remise }: { id: PlanId; periode: Periode; mode: "inscription" | "abonnement"; particulier?: boolean; abonne?: boolean; refCode?: string; remise?: boolean }) {
   const p = id === "premium" ? " p" : "";
   if (mode === "inscription") return <Link className={`btn bloc${p}`} href={`/connexion?mode=inscription${id === "gratuit" ? "" : `&offre=${id}`}${refCode ? `&ref=${encodeURIComponent(refCode)}` : ""}`}>{id === "gratuit" ? "Commencer gratuitement" : `Choisir ${PLANS[id].nom}`}</Link>;
   if (id === "gratuit" || abonne) return null;
@@ -23,7 +23,7 @@ function Action({ id, periode, mode, particulier, abonne, refCode }: { id: PlanI
         <label className="case" style={{ fontSize: ".8rem" }}><input type="checkbox" name="renonciation" value="oui" required />
           <span className="note" style={{ fontSize: ".8rem" }}>Je demande l&apos;accès immédiat au service. Si je me rétracte dans les 14 jours, je serai remboursé, déduction faite de la part du service déjà fournie (art. L221-25 C. conso.).</span></label>
       )}
-      <p className="note" style={{ fontSize: ".78rem", margin: 0 }}>Sans engagement · renouvelé automatiquement chaque {periode === "annuel" ? "année" : "mois"} · résiliable à tout moment en ligne.</p>
+      <p className="note" style={{ fontSize: ".78rem", margin: 0 }}>{remise && <>Parrainage : -20 % sur le 1er paiement uniquement, puis prix normal. </>}Sans engagement · renouvelé automatiquement chaque {periode === "annuel" ? "année" : "mois"} · résiliable à tout moment en ligne. En continuant, vous acceptez les <Link href="/cgv">CGV</Link> et les <Link href="/cgu">CGU</Link>. Paiement sécurisé par Stripe, revendeur officiel.</p>
       <button className={`btn bloc${p}`} type="submit">Passer à {PLANS[id].nom}</button>
     </form>
   );
@@ -79,7 +79,7 @@ export function Tarifs({ mode, planActuel, particulier, abonne, voulue, remise }
               <ul className="inclus">
                 {lignes.map(([oui, t]) => <li key={t} className={oui ? "" : "non"}>{oui ? <Check aria-hidden /> : <Minus aria-hidden />}<span>{t}</span></li>)}
               </ul>
-              <div className="pied-offre">{planActuel === id ? <span className="badge-offre">Votre offre actuelle</span> : <Action id={id} periode={periode} mode={mode} particulier={particulier} abonne={abonne} refCode={invite?.code} />}</div>
+              <div className="pied-offre">{planActuel === id ? <span className="badge-offre">Votre offre actuelle</span> : <Action id={id} periode={periode} mode={mode} particulier={particulier} abonne={abonne} refCode={invite?.code} remise={mode === "abonnement" && !!remise} />}</div>
             </article>
           );
         })}

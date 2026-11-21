@@ -41,15 +41,13 @@ export async function POST(req: Request) {
     const remise = await remisePourPaiement(session.user.id, client);
     const checkout = await stripe().checkout.sessions.create({
       mode: "subscription",
-      // « Managed Payments » (Stripe vendeur officiel à votre place) est activé par défaut sur les nouveaux comptes. On le coupe ici :
-      // les CGV désignent l'éditeur de MySite comme vendeur, et ce mode interdit le texte d'information affiché avant le paiement.
-      managed_payments: { enabled: false },
+      // « Managed Payments » reste activé (choix de l'éditrice, 21/11/2026) : Stripe est le revendeur officiel et gère TVA, fraude et litiges.
+      // Ce mode refuse `custom_text` : l'information avant paiement (renouvellement, CGV, remise) est affichée sur « Mon abonnement », au-dessus du bouton.
       customer: client,
       client_reference_id: session.user.id,
       line_items: [{ price, quantity: 1 }],
       subscription_data: { metadata: { user_id: session.user.id, acces_immediat_demande: profil.statut_utilisateur === "professionnel" ? "professionnel" : "oui", ...(remise ? { parrainage_id: remise.parrainageId } : {}) } },
       ...(remise ? { discounts: [{ coupon: remise.coupon }] } : { allow_promotion_codes: true }),
-      custom_text: { submit: { message: `${remise ? `Parrainage : -20 % sur ce 1er paiement uniquement, puis prix normal à chaque ${periode === "annuel" ? "année" : "mois"}. ` : ""}Abonnement sans engagement, renouvelé automatiquement chaque période et résiliable à tout moment depuis « Mon abonnement ». En validant, vous acceptez les CGV et les CGU de MySite.` } },
       locale: "fr",
       success_url: `${SITE()}/espace?abonnement=ok`,
       cancel_url: `${SITE()}/espace/abonnement?annule=1`,

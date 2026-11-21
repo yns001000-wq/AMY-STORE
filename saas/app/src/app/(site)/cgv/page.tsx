@@ -25,7 +25,7 @@ export default function Cgv() {
       <p>Le contenu de chaque offre (quotas mensuels, fonctions) est décrit sur la page Tarifs avant la commande. Les quotas se renouvellent chaque mois civil et ne se reportent pas.</p>
 
       <h2>3. Commande, paiement et factures</h2>
-      <p>La commande se fait en ligne depuis « Mon abonnement ». Le paiement par carte est traité par Stripe. MySite n&apos;a jamais accès à votre numéro de carte. Une facture est émise à chaque paiement et reste téléchargeable dans votre espace (« Changer d&apos;offre, factures, carte »).</p>
+      <p>La commande se fait en ligne depuis « Mon abonnement ». Le paiement est traité par Stripe, qui intervient comme <b>revendeur officiel</b> (service « Managed Payments ») : Stripe encaisse le paiement, émet la facture, calcule et reverse la TVA éventuellement due, et traite les éventuelles contestations de paiement. Le nom de l&apos;entité Stripe concernée et ses conditions sont indiqués sur la page de paiement. Les prix affichés sont des prix TTC : aucune taxe ne s&apos;y ajoute. MySite n&apos;a jamais accès à votre numéro de carte. Les factures restent téléchargeables dans votre espace (« Changer d&apos;offre, factures, carte »). Le service lui-même (accès, assistance, résiliation, rétractation) reste fourni par l&apos;éditeur de MySite selon les présentes CGV.</p>
 
       <h2>4. Durée et renouvellement</h2>
       <p>L&apos;abonnement est <b>sans engagement</b>. Il est conclu pour un mois ou un an et se renouvelle automatiquement pour la même durée, jusqu&apos;à sa résiliation.</p>
