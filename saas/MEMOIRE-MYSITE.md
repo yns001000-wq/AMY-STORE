@@ -126,3 +126,6 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 - Vérifié : « Passer à Pro » mensuel et annuel sur mysite-app.com → session Checkout réelle 29 € / 290 €, carte proposée, expirée sans paiement. Affichage de la page Stripe non vérifiable depuis le conteneur (le proxy perturbe Stripe dans le navigateur).
 - À vérifier au 1er vrai paiement : webhook (abonnement activé dans l'appli), facture, espace client Stripe.
 - Test réel à 0 € (21/11, coupon 100 % supprimé ensuite) : abonnement Pro réel → webhook → profil « pro » ; espace client Stripe OK ; résilier / reprendre depuis le site OK (clé de production) ; résiliation → retour gratuit. Clients, coupons et comptes de test supprimés. Restent 2 factures à 0 € (VN4UZ7SM-0001 et -0002) dans Stripe, non supprimables. Une demande d'approbation Stripe (apreq_61Vnaoq8…) créée par la clé de l'agent est à refuser. Non testé : vrai paiement par carte et remboursement.
+
+## Confirmation d'e-mail désactivée (21/11/2026)
+- Accord de l'utilisatrice. Supabase `mailer_autoconfirm=true` ; inscription → /espace/bienvenue directement (actions-auth.ts, repli « vérifiez votre boîte » si réactivée). 2 inscrits du 21/11 confirmés manuellement. Testé sur le site en ligne (mobile). Surveiller les faux comptes 1-2 semaines ; réactiver si abus.
