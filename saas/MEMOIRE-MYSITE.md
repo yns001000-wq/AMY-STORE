@@ -118,3 +118,10 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 - `@vercel/analytics` (composant `MesureAudience`) sur la vitrine `(site)` et `espace` seulement, jamais sur les sites publiés (`/s`, `/d`). Sans cookie ; adresses envoyées sans paramètres et avec les identifiants remplacés par [id]. Politique de confidentialité mise à jour (section F + Vercel en D).
 - Activé par l'utilisatrice le 18/11 (offre Vercel Pro), redéployé : script 200, vue envoyée (POST /_vercel/insights/view 200, adresse nettoyée), aucun cookie. Une vue de test (/connexion) a été comptée ce jour-là. Les navigateurs automatisés (webdriver) ne sont pas comptés.
 - Aucun chiffre de vues avant cette date (rien n'était mesuré).
+
+## Paiement réel débloqué (21/11/2026)
+- Cause : le compte Stripe utilise « Managed Payments » (Stripe revendeur officiel), activé par défaut ; `card_payments` reste inactif dans ce mode, c'est normal. Le code forçait `managed_payments: false` → aucun moyen de paiement.
+- Choix de l'utilisatrice : garder Managed Payments (commission Stripe supplémentaire acceptée).
+- Fait : code fiscal `txcd_10103001` (SaaS usage professionnel) sur les 3 produits ; les 12 prix passés en `tax_behavior=inclusive` (le prix affiché reste TTC) ; `custom_text` retiré (refusé par ce mode), texte d'information déplacé au-dessus du bouton (Tarifs.tsx) ; CGV article 3 mise à jour.
+- Vérifié : « Passer à Pro » mensuel et annuel sur mysite-app.com → session Checkout réelle 29 € / 290 €, carte proposée, expirée sans paiement. Affichage de la page Stripe non vérifiable depuis le conteneur (le proxy perturbe Stripe dans le navigateur).
+- À vérifier au 1er vrai paiement : webhook (abonnement activé dans l'appli), facture, espace client Stripe.
