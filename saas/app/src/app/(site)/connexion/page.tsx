@@ -36,8 +36,8 @@ export default async function Connexion({ searchParams }: { searchParams: Promis
         <section className="carte">
           {oubli ? <>
             <h1 style={{ fontSize: "1.8rem" }}>Mot de passe oublié</h1>
-            <p className="note">Indiquez votre e-mail : vous recevrez un lien pour choisir un nouveau mot de passe.</p>
-            {q.envoye && <p className="alerte ok" role="status">Si un compte existe avec cette adresse, un e-mail vient de partir. Pensez à regarder dans les indésirables.</p>}
+            <p className="note">Indiquez votre e-mail : vous recevrez un lien pour choisir un nouveau mot de passe. <b>Le message peut arriver dans les indésirables (spam) : pensez à vérifier ce dossier.</b></p>
+            {q.envoye && <p className="alerte ok" role="status">Si un compte existe avec cette adresse, un e-mail vient de partir (expéditeur : MySite). <b>Rien reçu d&apos;ici quelques minutes ? Vérifiez vos indésirables (spam)</b> et marquez le message comme « non indésirable ».</p>}
             <form className="pile" action={demanderNouveauMotDePasse}>
               <label>E-mail<input name="email" type="email" autoComplete="email" inputMode="email" placeholder="vous@exemple.fr" required /></label>
               <button className="btn p bloc grand" type="submit">Recevoir le lien <ArrowRight aria-hidden /></button>
@@ -46,7 +46,7 @@ export default async function Connexion({ searchParams }: { searchParams: Promis
           </> : <>
             <h1 style={{ fontSize: "1.8rem" }}>{inscription ? "Créer mon compte" : "Bon retour !"}</h1>
             <p className="note">{inscription ? (offre ? `Compte gratuit d'abord : vous choisirez l'offre ${PLANS[offre].nom} juste après, sans obligation.` : "Gratuit, sans carte bancaire. 1 minute.") : "Connectez-vous à votre cockpit."}</p>
-            {q.verifier && <p className="alerte ok" role="status">Dernière étape : un e-mail de confirmation vient de vous être envoyé. Cliquez sur le lien pour ouvrir votre cockpit (regardez aussi dans les indésirables).</p>}
+            {q.verifier && <p className="alerte ok" role="status">Dernière étape : un e-mail de confirmation vient de vous être envoyé. Cliquez sur le lien pour ouvrir votre cockpit (<b>vérifiez aussi vos indésirables</b>).</p>}
             {q.erreur && <p className="alerte" role="alert">{ERREURS[q.erreur] ?? "Une erreur est survenue."}</p>}
             <form className="pile" action={inscription ? sInscrire : seConnecter}>
               <input type="hidden" name="suite" value={q.suite ?? ""} />

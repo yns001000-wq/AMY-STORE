@@ -43,10 +43,10 @@ export function GestionAbonnement({ offre, fin, resiliationPrevue, retractation 
         <div className="alerte" style={{ margin: 0, display: "grid", gap: ".3rem" }}>
           <b>Vous allez résilier votre abonnement {offre}.</b>
           <span>Date d&apos;effet : <b>{dateFin}</b>. Jusque-là, rien ne change. Ensuite : offre Gratuite, vos prospects, sites et factures restent accessibles ; les sites en ligne sont retirés 15 jours plus tard.</span>
-          <span>Une confirmation vous est envoyée par e-mail.</span>
+          <span>Une confirmation vous est envoyée par e-mail (vérifiez aussi vos indésirables).</span>
         </div>
         <div className="ed-ligne" style={{ flexWrap: "wrap" }}>
-          <button type="button" className="btn p" disabled={charge} onClick={() => appel("/api/abonnement/resilier", (j) => `Résiliation confirmée. Accès maintenu jusqu'au ${j.fin ? new Date(String(j.fin)).toLocaleDateString("fr-FR") : dateFin}.${j.email ? " Un e-mail de confirmation vous a été envoyé." : ""}`)}>{charge ? "Résiliation…" : "Confirmer la résiliation"}</button>
+          <button type="button" className="btn p" disabled={charge} onClick={() => appel("/api/abonnement/resilier", (j) => `Résiliation confirmée. Accès maintenu jusqu'au ${j.fin ? new Date(String(j.fin)).toLocaleDateString("fr-FR") : dateFin}.${j.email ? " Un e-mail de confirmation vous a été envoyé : s'il n'apparaît pas, vérifiez vos indésirables." : ""}`)}>{charge ? "Résiliation…" : "Confirmer la résiliation"}</button>
           <button type="button" className="btn" onClick={() => setEtape("repos")}>Annuler</button>
         </div>
       </> : <>
