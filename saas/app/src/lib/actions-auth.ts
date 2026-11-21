@@ -28,11 +28,14 @@ export async function sInscrire(form: FormData) {
   const retour = new URLSearchParams({ mode: "inscription", ...(offre ? { offre } : {}), ...(source ? { src: source } : {}), ...(parrain ? { ref: parrain } : {}) });
   if (mdp.length < MDP_MIN) redirect(`/connexion?${retour}&erreur=mdp`);
   const sb = await supabaseServeur();
-  const { error } = await sb.auth.signUp({
+  const { data, error } = await sb.auth.signUp({
     email: String(form.get("email")), password: mdp,
     options: { emailRedirectTo: `${await origineSite()}/auth/callback?suite=/espace/bienvenue`, data: { ...(source ? { source } : {}), ...(offre ? { offre } : {}), ...(parrain ? { parrain } : {}) } },
   });
   if (error) redirect(`/connexion?${retour}&erreur=inscription`);
+  // Confirmation d'e-mail désactivée dans Supabase (21/11/2026) : la session est ouverte tout de suite, on entre dans l'appli.
+  // Si la confirmation est réactivée un jour, Supabase ne renvoie pas de session et on affiche « vérifiez votre boîte mail ».
+  if (data.session) redirect("/espace/bienvenue");
   redirect("/connexion?verifier=1");
 }
 
