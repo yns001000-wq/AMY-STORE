@@ -4,7 +4,11 @@ import Image from "next/image";
  * Vraies captures de l'application, prises avec un compte de démonstration (entreprises fictives, aucune donnée d'utilisateur).
  * Fichiers dans public/captures/. La section reste masquée tant que la liste est vide.
  */
-export const CAPTURES: { src: string; titre: string; texte: string; largeur: number; hauteur: number }[] = [];
+export const CAPTURES: { src: string; titre: string; texte: string; largeur: number; hauteur: number }[] = [
+  { src: "/captures/liste-priorite.webp", titre: "Vos entreprises, par priorité", texte: "Un score de 0 à 100 indique qui contacter en premier.", largeur: 1200, hauteur: 1107 },
+  { src: "/captures/carte-prospects.webp", titre: "La carte de vos prospects", texte: "Couleurs par priorité, pour organiser vos tournées.", largeur: 1200, hauteur: 790 },
+  { src: "/captures/studio-maquette.webp", titre: "La maquette à son nom, en un clic", texte: "Vous ajustez textes, couleurs et sections, l'aperçu suit.", largeur: 1200, hauteur: 1032 },
+];
 
 export function Captures() {
   if (!CAPTURES.length) return null;

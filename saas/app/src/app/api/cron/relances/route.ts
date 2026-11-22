@@ -4,7 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { envoyerEmail, urlSite } from "@/lib/email";
 import { premiersPas } from "@/lib/croissance";
 import { MODULES } from "@/lib/academie/cours";
-import { contenuRelance, jetonDesinscription, relanceDuJour, SUJETS, type Relance } from "@/lib/relances";
+import { contenuRelance, ETAPES_TU, jetonDesinscription, relanceDuJour, SUJETS, type Relance } from "@/lib/relances";
 
 export const maxDuration = 120;
 const LECONS_DEMARRER = MODULES.find((m) => m.id === "demarrer")!.lecons.map((l) => l.id);
@@ -34,7 +34,7 @@ export async function GET(req: Request) {
     if (!email) continue;
     const pas = premiersPas({ prospects: prospects ?? 0, messages: (conso ?? []).reduce((n, l) => n + (l.messages_ia ?? 0), 0), sites: sites ?? 0, lecons: lecons ?? 0, leconsDemarrer: LECONS_DEMARRER.length });
     const envoyees = (p.relances_envoyees ?? {}) as Partial<Record<Relance, string>>;
-    const etat = { creeLe: p.cree_le as string, desinscrit: !!p.relances_desinscrit, envoyees, prospects: prospects ?? 0, sites: sites ?? 0, etapesRestantes: pas.filter((x) => !x.fait).map((x) => x.titre) };
+    const etat = { creeLe: p.cree_le as string, desinscrit: !!p.relances_desinscrit, envoyees, prospects: prospects ?? 0, sites: sites ?? 0, etapesRestantes: pas.filter((x) => !x.fait).map((x) => ETAPES_TU[x.id] ?? x.titre) };
     const r = relanceDuJour(etat);
     if (!r) continue;
     const lienDes = urlSite(`/api/relances/desinscription?u=${p.id}&t=${jetonDesinscription(p.id)}`);

@@ -40,6 +40,14 @@ export function relanceDuJour(e: EtatRelance, maintenant = new Date()): Relance 
   return null;
 }
 
+/** Titres des étapes de la liste de démarrage, au tutoiement (comme les autres e-mails MySite). */
+export const ETAPES_TU: Record<string, string> = {
+  prospects: "Réserve ta première entreprise",
+  message: "Envoie le premier message (IA)",
+  maquette: "Crée sa maquette",
+  academie: "Suis l'Académie « Démarrer »",
+};
+
 export const SUJETS: Record<Relance, string> = {
   j1: "Ta première entreprise t'attend",
   j3: "Montre-lui sa maquette",
