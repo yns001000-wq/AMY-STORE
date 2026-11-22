@@ -129,3 +129,6 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 
 ## Confirmation d'e-mail désactivée (21/11/2026)
 - Accord de l'utilisatrice. Supabase `mailer_autoconfirm=true` ; inscription → /espace/bienvenue directement (actions-auth.ts, repli « vérifiez votre boîte » si réactivée). 2 inscrits du 21/11 confirmés manuellement. Testé sur le site en ligne (mobile). Surveiller les faux comptes 1-2 semaines ; réactiver si abus.
+
+## Règle (22/11/2026)
+- Exemples de ville ou de code postal (interface, captures, vidéos, tests) : toujours Lyon ou Paris, jamais Uzès ni le Gard.
