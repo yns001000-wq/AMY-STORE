@@ -6,21 +6,48 @@ import type { ResultatDemo } from "@/lib/demo";
 
 const fmt = (n: number) => n.toLocaleString("fr-FR");
 
-/** Carte floutée : points rouges placés dans leur case d'environ 1 km, sur un fond de rues flouté. Aucun nom, aucune adresse. */
+/** Fond de plan stylisé (rues, parcs, rivière), identique pour toutes les villes : il évoque une carte sans rien révéler. */
+const RUES = [
+  "M-5 22 C 40 18, 80 30, 165 24", "M-5 58 C 50 52, 95 66, 165 60", "M-5 86 C 45 80, 110 92, 165 84",
+  "M24 -5 C 20 30, 30 70, 22 105", "M62 -5 C 70 35, 58 65, 66 105", "M104 -5 C 98 40, 110 70, 102 105", "M140 -5 C 146 30, 136 75, 142 105",
+  "M-5 40 L 60 -5", "M90 105 L 165 38",
+];
+const RUELLES = ["M-5 10 L 165 14", "M-5 34 L 165 40", "M-5 72 L 165 70", "M-5 96 L 165 98", "M10 -5 L 14 105", "M44 -5 L 40 105", "M84 -5 L 86 105", "M122 -5 L 120 105", "M156 -5 L 152 105"];
+
+/** Carte floutée : chaque zone d'environ 1 km est un point lumineux, sa taille suit le nombre d'entreprises. Aucun nom, aucune adresse. */
 function CarteFloutee({ points }: { points: ResultatDemo["points"] }) {
   if (!points.length) return null;
   const lats = points.map((p) => p.lat), lons = points.map((p) => p.lon);
   const [la0, la1, lo0, lo1] = [Math.min(...lats), Math.max(...lats), Math.min(...lons), Math.max(...lons)];
-  const dla = Math.max(la1 - la0, 0.01), dlo = Math.max(lo1 - lo0, 0.01);
-  const x = (lo: number) => 8 + ((lo - lo0) / dlo) * 84, y = (la: number) => 92 - ((la - la0) / dla) * 84;
+  const dla = Math.max(la1 - la0, 0.012), dlo = Math.max(lo1 - lo0, 0.012);
+  // Repère 160 × 100 (même proportion que le cadre) : les cercles restent ronds.
+  const x = (lo: number) => 18 + ((lo - lo0) / dlo) * 124, y = (la: number) => 86 - ((la - la0) / dla) * 72;
+  const max = Math.max(...points.map((p) => p.n));
+  const tries = [...points].sort((a, b) => a.n - b.n);
   return (
-    <div className="demo-carte" role="img" aria-label={`Carte floutée : ${points.length} zones où se trouvent ces entreprises`}>
-      <div className="demo-carte-fond" aria-hidden />
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
-        {points.map((p, i) => <circle key={i} cx={x(p.lon)} cy={y(p.lat)} r={Math.min(2 + Math.sqrt(p.n) * 1.1, 6)} className="demo-point" />)}
+    <figure className="demo-carte" aria-label={`Carte floutée : ${points.length} zones d'environ 1 km où se trouvent ces entreprises`}>
+      <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" aria-hidden>
+        <defs>
+          <radialGradient id="halo"><stop offset="0" stopColor="#ef4444" stopOpacity=".55" /><stop offset=".45" stopColor="#f97316" stopOpacity=".22" /><stop offset="1" stopColor="#f97316" stopOpacity="0" /></radialGradient>
+          <filter id="flou" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="1.1" /></filter>
+        </defs>
+        <rect width="160" height="100" fill="#f3f5fa" />
+        <g filter="url(#flou)">
+          <ellipse cx="38" cy="70" rx="16" ry="10" fill="#dcefe2" /><ellipse cx="124" cy="22" rx="14" ry="8" fill="#dcefe2" /><ellipse cx="96" cy="78" rx="9" ry="6" fill="#dcefe2" />
+          <path d="M-5 48 C 30 40, 55 62, 85 50 S 130 30, 165 44" fill="none" stroke="#d6e6f7" strokeWidth="5" strokeLinecap="round" />
+          {RUELLES.map((d) => <path key={d} d={d} fill="none" stroke="#ffffff" strokeWidth="1.2" />)}
+          {RUES.map((d) => <path key={d} d={d} fill="none" stroke="#ffffff" strokeWidth="2.6" strokeLinecap="round" />)}
+        </g>
+        {tries.map((p, i) => {
+          const r = 4 + (p.n / max) * 9;
+          return <g key={i} transform={`translate(${x(p.lon).toFixed(1)} ${y(p.lat).toFixed(1)})`}>
+            <circle r={r} fill="url(#halo)" />
+            <circle r={p.n / max > 0.5 ? 1.7 : 1.25} className="demo-point" />
+          </g>;
+        })}
       </svg>
-      <span className="demo-carte-cadenas"><Lock aria-hidden />Noms et adresses visibles après inscription</span>
-    </div>
+      <figcaption className="demo-carte-legende"><span className="demo-carte-cadenas"><Lock aria-hidden />Noms et adresses après inscription</span></figcaption>
+    </figure>
   );
 }
 
