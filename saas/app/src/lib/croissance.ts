@@ -17,14 +17,18 @@ export function offrePayante(v: unknown): Exclude<PlanId, "gratuit"> | null {
 
 export interface Pas { id: "prospects" | "message" | "maquette" | "academie"; titre: string; aide: string; lien: string; fait: boolean }
 
-/** Les premiers pas affichés sur le tableau de bord tant qu'ils ne sont pas tous faits. */
-export function premiersPas(e: { prospects: number; messages: number; sites: number; lecons: number; premierProspect?: string | null }): Pas[] {
+/**
+ * Liste de démarrage du tableau de bord, affichée tant qu'elle n'est pas terminée. Chaque étape est cochée d'après les vraies données :
+ * `lecons` = leçons terminées du module « Démarrer » de l'Académie, `leconsDemarrer` = nombre de leçons de ce module.
+ */
+export function premiersPas(e: { prospects: number; messages: number; sites: number; lecons: number; leconsDemarrer?: number; premierProspect?: string | null }): Pas[] {
   const fiche = e.premierProspect ? `/espace/prospects/${e.premierProspect}` : "/espace";
+  const total = e.leconsDemarrer ?? 2;
   return [
-    { id: "prospects", titre: "Trouver vos premiers commerces", aide: "Un clic : MySite cherche les commerces de votre zone.", lien: "/espace", fait: e.prospects > 0 },
-    { id: "message", titre: "Préparer votre premier message", aide: "Ouvrez une fiche : le message est rédigé pour ce commerce.", lien: fiche, fait: e.messages > 0 },
-    { id: "maquette", titre: "Créer une maquette de site", aide: "Montrez au commerçant son futur site, avec son nom.", lien: fiche, fait: e.sites > 0 },
-    { id: "academie", titre: "Suivre la première leçon de l'Académie", aide: "6 minutes pour se lancer en règle. Inclus dans l'offre Gratuite.", lien: "/espace/academie/demarrer-statut", fait: e.lecons > 0 },
+    { id: "prospects", titre: "Réservez votre première entreprise", aide: "Un clic : MySite cherche les entreprises de votre zone et vous les réserve.", lien: "/espace", fait: e.prospects > 0 },
+    { id: "message", titre: "Envoyez le premier message (IA)", aide: "Ouvrez une fiche : le message est rédigé pour cette entreprise. Vous l'envoyez vous-même.", lien: fiche, fait: e.messages > 0 },
+    { id: "maquette", titre: "Créez sa maquette", aide: "Montrez au gérant son futur site, à son nom.", lien: fiche, fait: e.sites > 0 },
+    { id: "academie", titre: "Suivez l'Académie « Démarrer »", aide: `${total} leçons courtes pour se lancer en règle. Incluses dans l'offre Gratuite.`, lien: "/espace/academie/demarrer-statut", fait: e.lecons >= total },
   ];
 }
 

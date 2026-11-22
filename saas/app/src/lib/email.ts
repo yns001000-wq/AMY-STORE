@@ -7,7 +7,7 @@ import { emailHtml, emailTexte, type ContenuEmail } from "./email-gabarit";
  * et enregistrée dans le journal de conformité). Un e-mail est le « support durable » attendu par la loi : configurez-le avant le lancement.
  * Un contenu structuré part en HTML aux couleurs de MySite, avec sa version texte ; une simple chaîne part en texte brut (messages internes).
  */
-export async function envoyerEmail(a: string, sujet: string, contenu: ContenuEmail | string): Promise<boolean> {
+export async function envoyerEmail(a: string, sujet: string, contenu: ContenuEmail | string, entetes?: Record<string, string>): Promise<boolean> {
   const cle = process.env.RESEND_API_KEY, de = process.env.EMAIL_EXPEDITEUR;
   if (!cle || !de || !a) return false;
   const pied = { site: process.env.NEXT_PUBLIC_SITE_URL ?? "", contact: process.env.CONTACT_EMAIL || undefined };
@@ -15,7 +15,7 @@ export async function envoyerEmail(a: string, sujet: string, contenu: ContenuEma
   try {
     const r = await fetch("https://api.resend.com/emails", {
       method: "POST", headers: { Authorization: `Bearer ${cle}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ from: de, to: [a], subject: sujet, ...corps }),
+      body: JSON.stringify({ from: de, to: [a], subject: sujet, ...corps, ...(entetes ? { headers: entetes } : {}) }),
     });
     return r.ok;
   } catch { return false; }

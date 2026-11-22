@@ -13,6 +13,8 @@ export interface ContenuEmail {
   bouton?: { texte: string; url: string };
   /** Petit texte sous le bouton (rappel légal, précision). */
   note?: string;
+  /** Lien de désinscription (e-mails de conseils et de relance), affiché dans le pied. */
+  desinscription?: string;
 }
 
 export interface PiedEmail { site: string; contact?: string }
@@ -41,6 +43,8 @@ export function emailHtml(c: ContenuEmail, pied: PiedEmail): string {
     : "";
   const note = c.note ? `<p style="margin:0 0 8px;font-size:13px;line-height:1.5;color:#5f6680">${echapper(c.note)}</p>` : "";
   const site = echapper(pied.site.replace(/^https?:\/\//, "").replace(/\/$/, ""));
+  const lienDes = c.desinscription ? urlSure(c.desinscription) : null;
+  const desinscription = lienDes ? `<p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#8a90a8">Tu reçois ces conseils car tu as créé un compte MySite. <a href="${lienDes}" style="color:#8a90a8">Ne plus recevoir ces e-mails</a></p>` : "";
   return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${echapper(c.titre)}</title></head>
 <body style="margin:0;padding:0;background:#f4f2ff;${POLICE}">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f2ff;padding:24px 12px"><tr><td align="center">
@@ -55,7 +59,7 @@ ${liste}${bouton}${note}
 </td></tr>
 <tr><td style="padding:18px 28px 26px;border-top:1px solid #ece9f7">
 <p style="margin:0;font-size:13px;line-height:1.6;color:#5f6680">À très vite sur MySite 💜<br><a href="${echapper(pied.site)}" style="color:#6d4aff;text-decoration:none">${site}</a>${pied.contact ? ` · <a href="mailto:${echapper(pied.contact)}" style="color:#6d4aff;text-decoration:none">${echapper(pied.contact)}</a>` : ""}</p>
-</td></tr></table>
+${desinscription}</td></tr></table>
 </td></tr></table>
 </body></html>`;
 }
@@ -66,5 +70,6 @@ export function emailTexte(c: ContenuEmail, pied: PiedEmail): string {
   if (c.bouton) blocs.push(`👉 ${c.bouton.texte} : ${c.bouton.url}`);
   if (c.note) blocs.push(c.note);
   blocs.push(`—\nÀ très vite sur MySite 💜\n${pied.site}${pied.contact ? `\nContact : ${pied.contact}` : ""}`);
+  if (c.desinscription) blocs.push(`Ne plus recevoir ces e-mails : ${c.desinscription}`);
   return blocs.join("\n\n");
 }

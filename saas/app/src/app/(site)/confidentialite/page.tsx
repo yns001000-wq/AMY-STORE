@@ -18,8 +18,10 @@ export default function Confidentialite() {
         <li><b>Abonnement et facturation</b> (offre, historique de paiement, factures) : obligation légale. Pièces comptables conservées 10 ans. Votre carte est traitée uniquement par Stripe.</li>
         <li><b>Preuves des démarches</b> (résiliation, rétractation, suppression de compte) : pour pouvoir justifier du respect de vos droits (intérêt légitime et obligation légale), pendant 5 ans.</li>
         <li><b>E-mails de service</b> (bienvenue, confirmations, rappel de reconduction d&apos;un abonnement annuel) : obligations légales et exécution du contrat. Aucune newsletter sans votre accord.</li>
+        <li><b>Conseils de démarrage</b> (au plus 3 e-mails, 1, 3 et 6 jours après l&apos;inscription, envoyés seulement si l&apos;étape proposée n&apos;est pas encore faite) : pour vous aider à utiliser le service que vous venez d&apos;ouvrir (intérêt légitime, art. L34-5 du Code des postes et des communications électroniques). Chaque e-mail contient un lien pour ne plus les recevoir, en un clic.</li>
         <li><b>Provenance de l&apos;inscription</b> (par exemple « tiktok », si le lien que vous avez suivi l&apos;indiquait) : pour savoir quels contenus font connaître MySite (intérêt légitime), pendant la durée du compte. Aucun cookie n&apos;est utilisé pour cela.</li>
         <li><b>Sécurité</b> (journaux techniques) : intérêt légitime, 12 mois au plus.</li>
+        <li><b>Démo de la page d&apos;accueil</b> : le code postal saisi sert seulement à compter les entreprises de cette zone ; il n&apos;est associé à aucune personne. Une empreinte non réversible de l&apos;adresse IP limite le nombre de recherches (contre les abus), 2 jours au plus.</li>
       </ul>
       <p>À la suppression de votre compte, vos données sont effacées, sauf ce que la loi oblige à conserver (factures, preuves des démarches).</p>
 

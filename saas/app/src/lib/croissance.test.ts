@@ -27,6 +27,7 @@ describe("premiers pas", () => {
     expect(pas[1].lien).toBe("/espace/prospects/abc");
     expect(pas[3].lien).toBe("/espace/academie/demarrer-statut");
     expect(premiersPas({ prospects: 1, messages: 1, sites: 1, lecons: 2 }).every((p) => p.fait)).toBe(true);
+    expect(premiersPas({ prospects: 1, messages: 1, sites: 1, lecons: 1, leconsDemarrer: 2 })[3].fait).toBe(false); // module « Démarrer » pas fini
   });
 });
 

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Check, ChevronRight, Crown, Download, Gift, Lock, Map as IconeCarte, Search, Store, Target, WandSparkles } from "lucide-react";
+import { ChevronRight, Crown, Download, Gift, Lock, Map as IconeCarte, Search, Store, Target, WandSparkles } from "lucide-react";
 import { utilisateurConnecte } from "@/lib/supabase/serveur";
 import { consommation, profilEtPlan } from "@/lib/quotas";
 import { departementsAutorises, libelleOffre, PLANS, type TypeQuota } from "@/lib/plans";
@@ -12,6 +12,12 @@ import { BandeauLimite } from "@/components/BandeauLimite";
 import { moisGratuitEpuise, compteurs as etatCompteurs } from "@/lib/limites";
 import { premiersPas } from "@/lib/croissance";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { BadgeScore, InfoScore } from "@/components/BadgeScore";
+import { scoreProspect } from "@/lib/score";
+import { ListeDemarrage } from "@/components/ListeDemarrage";
+import { MODULES } from "@/lib/academie/cours";
+
+const LECONS_DEMARRER = MODULES.find((m) => m.id === "demarrer")!.lecons.map((l) => l.id);
 
 export const metadata = { title: "Mon cockpit" };
 
@@ -28,7 +34,11 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
   const { profil, plan, quotas } = await profilEtPlan(session.user.id);
   if (!profil.cgu_acceptees_le) redirect("/espace/bienvenue");
   const conso = await consommation(session.user.id);
-  const { data: prospects } = await session.sb.from("prospects").select("id, nom, metier, ville, code_postal, statut, indices, telephone").order("cree_le", { ascending: false }).limit(200);
+  const { data: bruts } = await session.sb.from("prospects").select("id, nom, metier, naf, ville, code_postal, statut, indices, telephone, date_creation, tranche_effectif").order("cree_le", { ascending: false }).limit(200);
+  // Tri « les plus prometteurs d'abord » (par défaut) ou « les plus récents ».
+  const tri = q.tri === "recents" ? "recents" : "score";
+  const avecScore = (bruts ?? []).map((p) => ({ ...p, score: scoreProspect(p) }));
+  const prospects = tri === "score" ? [...avecScore].sort((a, b) => b.score - a.score) : avecScore;
   const secteur = secteurParId(profil.secteur as string);
   const deps = departementsAutorises(plan, (profil.departements as string[]) ?? []);
   const ignores = ((profil.departements as string[]) ?? []).length - deps.length;
@@ -39,9 +49,9 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
   const [{ data: total }, { count: nbSites }, { count: nbLecons }] = await Promise.all([
     admin.from("consommation").select("messages_ia").eq("user_id", session.user.id),
     admin.from("sites").select("id", { count: "exact", head: true }).eq("user_id", session.user.id),
-    admin.from("progression_cours").select("lecon", { count: "exact", head: true }).eq("user_id", session.user.id),
+    admin.from("progression_cours").select("lecon", { count: "exact", head: true }).eq("user_id", session.user.id).in("lecon", LECONS_DEMARRER),
   ]);
-  const pas = premiersPas({ prospects: prospects?.length ?? 0, messages: (total ?? []).reduce((n, l) => n + (l.messages_ia ?? 0), 0), sites: nbSites ?? 0, lecons: nbLecons ?? 0, premierProspect: prospects?.[prospects.length - 1]?.id });
+  const pas = premiersPas({ prospects: prospects?.length ?? 0, messages: (total ?? []).reduce((n, l) => n + (l.messages_ia ?? 0), 0), sites: nbSites ?? 0, lecons: nbLecons ?? 0, leconsDemarrer: LECONS_DEMARRER.length, premierProspect: avecScore[avecScore.length - 1]?.id });
   const faits = pas.filter((x) => x.fait).length;
   return (
     <>
@@ -54,12 +64,7 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
       </div>
       <BandeauLimite userId={session.user.id} />
       {q.abonnement === "ok" && <p className="alerte ok" role="status">Merci ! Votre abonnement est en cours d&apos;activation : il apparaît ici dans quelques secondes.</p>}
-      {faits < pas.length && (
-        <section className="carte" style={{ marginBottom: "1.4rem" }} aria-label="Premiers pas">
-          <h2 style={{ fontSize: "1.15rem", margin: "0 0 .8rem" }}>Vos premiers pas <span className="note">({faits} sur {pas.length})</span></h2>
-          <ol className="pas">{pas.map((x, i) => <li key={x.id} className={x.fait ? "fait" : ""}><Link href={x.lien}><span className="pas-num">{x.fait ? <Check size={16} aria-label="fait" /> : i + 1}</span><strong>{x.titre}</strong><small>{x.aide}</small></Link></li>)}</ol>
-        </section>
-      )}
+      {faits < pas.length && <ListeDemarrage pas={pas} />}
       {ignores > 0 && <p className="alerte">Votre offre couvre {P.departements} département(s) : {ignores} département(s) choisi(s) ne sont pas utilisés.&nbsp;<Link href="/espace/abonnement">Élargir ma zone</Link></p>}
 
       <section className="stats" aria-label="Consommation du mois">
@@ -82,6 +87,7 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
       <section className="carte">
         <div className="tableau-entete">
           <h2>Mes prospects <span className="note">({prospects?.length ?? 0})</span></h2>
+          {prospects.length > 1 && <p className="tri-liens note" role="group" aria-label="Trier les prospects">Trier : <Link href="/espace" aria-current={tri === "score" ? "true" : undefined}>les plus prometteurs d&apos;abord</Link> · <Link href="/espace?tri=recents" aria-current={tri === "recents" ? "true" : undefined}>les plus récents</Link></p>}
           <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
             <Link className="btn" href="/espace/carte"><IconeCarte aria-hidden />Carte</Link>
             {PLANS[plan].export
@@ -93,14 +99,15 @@ export default async function Espace({ searchParams }: { searchParams: Promise<R
         {!prospects?.length ? (
           <div className="vide"><Search aria-hidden /><h3>Aucun prospect pour l&apos;instant</h3><p className="note">Lancez votre première recherche : MySite parcourt la base officielle des entreprises de votre zone.</p></div>
         ) : (
-          <div className="table-wrap">
+          <div className="table-wrap table-prospects">
             <table>
-              <thead><tr><th>Entreprise</th><th>Métier</th><th>Ville</th><th>Statut</th><th>Téléphone</th><th><span className="cache">Fiche</span></th></tr></thead>
+              <thead><tr><th><span className="th-info">Priorité <InfoScore /></span></th><th>Entreprise</th><th>Métier</th><th>Ville</th><th>Statut</th><th>Téléphone</th><th><span className="cache">Fiche</span></th></tr></thead>
               <tbody>
                 {prospects.map((p, i) => {
                   const recherche = encodeURIComponent(`${p.nom} ${p.ville ?? ""}`);
                   return (
                     <tr key={p.id}>
+                      <td><BadgeScore score={p.score} /></td>
                       <td><div className="ent"><span className="avatar" style={{ background: COULEURS[i % COULEURS.length] }}>{initiales(p.nom)}</span><span><Link href={`/espace/prospects/${p.id}`}><strong>{p.nom}</strong></Link><small>{p.indices}</small></span></div></td>
                       <td>{p.metier}</td>
                       <td>{p.ville} <span className="note">{p.code_postal}</span></td>

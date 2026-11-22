@@ -11,9 +11,71 @@ import { useInvitation } from "./BandeauParrainage";
 
 const fmt = (n: number) => n.toLocaleString("fr-FR");
 
+/** Une seule source pour la grille et le tableau comparatif : tout vient de lib/plans.ts (ce que le code autorise vraiment). */
+function lignesOffre(id: PlanId): [boolean, string][] {
+  const p = PLANS[id];
+  return [
+    [true, Number.isFinite(p.departements) ? `${p.departements} département${p.departements > 1 ? "s" : ""}` : "France entière"],
+    [true, `${fmt(p.quotas.prospects)} prospects par mois`],
+    [true, `${fmt(p.quotas.messages_ia)} messages rédigés par l'IA par mois`],
+    [true, id === "gratuit" ? `${p.studio.sitesMax} maquettes express (modèles prêts, sans IA)` : `Maquettes express : ${fmt(p.studio.sitesMax)} conservées`],
+    [p.quotas.sites_ia > 0, p.quotas.sites_ia ? `${p.quotas.sites_ia} sites sur mesure par l'IA par mois, ${p.quotas.retouches_ia} retouches` : "0 site sur mesure par l'IA (dès l'offre Pro)"],
+    [p.studio.publications > 0, p.studio.publications ? `Mise en ligne : ${fmt(p.studio.publications)} sites en même temps, nom de domaine du client` : "Mise en ligne des sites (dès l'offre Pro)"],
+    [true, "Pipeline, rappels et carte"],
+    [true, p.academie === "complete" ? "Académie complète (7 modules)" : "Académie : modules Démarrer et Prospecter"],
+    [p.export, "Export CSV"],
+    [p.facturation, "Devis, factures et suivi des encaissements"],
+    ...(p.utilisateurs > 1 ? [[true, `${p.utilisateurs} utilisateurs`] as [boolean, string]] : []),
+    ...(p.studio.marqueBlanche ? [[true, "Marque blanche (aucune mention MySite)"] as [boolean, string]] : []),
+  ];
+}
+
+/** Tableau comparatif : une ligne par fonctionnalité, une colonne par offre. */
+const COMPARATIF: { t: string; v: (p: (typeof PLANS)[PlanId]) => string | boolean }[] = [
+  { t: "Départements", v: (p) => (Number.isFinite(p.departements) ? String(p.departements) : "France entière") },
+  { t: "Prospects par mois", v: (p) => fmt(p.quotas.prospects) },
+  { t: "Messages rédigés par l'IA par mois", v: (p) => fmt(p.quotas.messages_ia) },
+  { t: "Maquettes express conservées", v: (p) => fmt(p.studio.sitesMax) },
+  { t: "Sites sur mesure par l'IA par mois", v: (p) => String(p.quotas.sites_ia) },
+  { t: "Retouches par l'IA par mois", v: (p) => String(p.quotas.retouches_ia) },
+  { t: "Studio : édition complète et couleurs libres", v: (p) => p.studio.editionComplete },
+  { t: "Studio : photos du client et polices", v: (p) => p.studio.photosPerso && p.studio.polices },
+  { t: "Sites en ligne en même temps", v: (p) => (p.studio.publications ? fmt(p.studio.publications) : false) },
+  { t: "Nom de domaine du client", v: (p) => p.studio.domainePerso },
+  { t: "Pipeline, rappels et carte", v: () => true },
+  { t: "Score de priorité des prospects", v: () => true },
+  { t: "Académie", v: (p) => (p.academie === "complete" ? "7 modules" : "2 modules") },
+  { t: "Export CSV", v: (p) => p.export },
+  { t: "Devis, factures et suivi des encaissements", v: (p) => p.facturation },
+  { t: "Marque blanche (aucune mention MySite)", v: (p) => p.studio.marqueBlanche },
+  { t: "Utilisateurs", v: (p) => String(p.utilisateurs) },
+];
+
+function Comparatif() {
+  return (
+    <div className="comparatif">
+      <h3>Comparer les offres en détail</h3>
+      <div className="table-wrap">
+        <table>
+          <caption className="cache">Fonctionnalités incluses dans chaque offre MySite</caption>
+          <thead><tr><th scope="col">Fonctionnalité</th>{ORDRE_PLANS.map((id) => <th key={id} scope="col" className={PLANS[id].misEnAvant ? "avant" : ""}>{PLANS[id].nom}</th>)}</tr></thead>
+          <tbody>
+            {COMPARATIF.map((l) => (
+              <tr key={l.t}><th scope="row">{l.t}</th>{ORDRE_PLANS.map((id) => {
+                const v = l.v(PLANS[id]);
+                return <td key={id} className={PLANS[id].misEnAvant ? "avant" : ""}>{v === true ? <Check aria-label="Inclus" /> : v === false ? <Minus aria-label="Non inclus" /> : v}</td>;
+              })}</tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 /** Bouton de chaque offre : lien d'inscription (site public) ou formulaire de paiement Stripe (espace connecté). */
 function Action({ id, periode, mode, particulier, abonne, refCode, remise }: { id: PlanId; periode: Periode; mode: "inscription" | "abonnement"; particulier?: boolean; abonne?: boolean; refCode?: string; remise?: boolean }) {
-  const p = id === "premium" ? " p" : "";
+  const p = PLANS[id].misEnAvant ? " p" : "";
   if (mode === "inscription") return <Link className={`btn bloc${p}`} href={`/connexion?mode=inscription${id === "gratuit" ? "" : `&offre=${id}`}${refCode ? `&ref=${encodeURIComponent(refCode)}` : ""}`}>{id === "gratuit" ? "Commencer gratuitement" : `Choisir ${PLANS[id].nom}`}</Link>;
   if (id === "gratuit" || abonne) return null;
   return (
@@ -52,21 +114,10 @@ export function Tarifs({ mode, planActuel, particulier, abonne, voulue, remise }
           const p = { ...p0, prixMensuel: prixOffre(id, "mensuel"), prixAnnuel: prixOffre(id, "annuel") };
           const annuel = periode === "annuel" && p.prixAnnuel > 0;
           const prix = annuel ? Math.round((p.prixAnnuel / 12) * 100) / 100 : p.prixMensuel;
-          const lignes: [boolean, string][] = [
-            [true, Number.isFinite(p.departements) ? `${p.departements} département${p.departements > 1 ? "s" : ""}` : "France entière"],
-            [true, `${fmt(p.quotas.prospects)} prospects par mois`],
-            [true, `${fmt(p.quotas.messages_ia)} messages rédigés par l'IA`],
-            [true, id === "gratuit" ? `${p.studio.sitesMax} maquettes express (modèles prêts, sans IA)` : `Maquettes express : ${p.studio.sitesMax.toLocaleString("fr-FR")} conservées`],
-            [p.quotas.sites_ia > 0, p.quotas.sites_ia ? `${p.quotas.sites_ia} sites sur mesure par l'IA, ${p.quotas.retouches_ia} retouches` : "Sites sur mesure par l'IA"],
-            [true, "Pipeline, rappels et carte"],
-            [true, p.academie === "complete" ? "Académie complète (7 modules)" : "Académie : modules Démarrer et Prospecter"],
-            [p.export, "Export CSV"],
-            [p.facturation, "Devis et factures"],
-            ...(p.utilisateurs > 1 ? [[true, `${p.utilisateurs} utilisateurs`] as [boolean, string]] : []),
-          ];
+          const lignes = lignesOffre(id);
           return (
             <article key={id} className={`carte offre${(voulue ? voulue === id : p.misEnAvant) ? " avant" : ""}`} aria-labelledby={`offre-${id}`}>
-              {voulue === id ? <span className="badge"><Star aria-hidden />Votre choix</span> : !voulue && p.misEnAvant && <span className="badge"><Star aria-hidden />Le plus complet</span>}
+              {voulue === id ? <span className="badge"><Star aria-hidden />Votre choix</span> : !voulue && p.misEnAvant && <span className="badge"><Star aria-hidden />Recommandé pour démarrer</span>}
               <h3 id={`offre-${id}`}>{p.nom}</h3>
               <p className="accroche">{p.accroche}</p>
               <p className="prix"><b>{prix.toLocaleString("fr-FR", annuel ? { minimumFractionDigits: 2, maximumFractionDigits: 2 } : {})} €</b><span>{annuel ? "/mois" : "TTC / mois"}</span></p>
@@ -84,6 +135,7 @@ export function Tarifs({ mode, planActuel, particulier, abonne, voulue, remise }
           );
         })}
       </div>
+      <Comparatif />
     </>
   );
 }

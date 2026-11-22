@@ -5,8 +5,9 @@ import { MapPinned } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 import { ETAPES } from "@/lib/pipeline";
 import { nomDepartement } from "@/lib/departements";
+import { COULEUR_NIVEAU, EXPLICATION_SCORE, LIBELLE_NIVEAU, niveauScore, type NiveauScore } from "@/lib/score";
 
-interface P { id: string; nom: string; metier: string | null; ville: string | null; departement: string | null; statut: string; latitude: number | null; longitude: number | null; telephone: string | null }
+interface P { id: string; nom: string; metier: string | null; ville: string | null; departement: string | null; statut: string; latitude: number | null; longitude: number | null; telephone: string | null; score: number }
 
 const esc = (s: unknown) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
@@ -18,6 +19,7 @@ export function CarteProspects({ prospects, tuiles, attribution }: { prospects: 
   const couche = useRef<import("leaflet").LayerGroup | null>(null);
   const [actives, setActives] = useState<Set<string>>(new Set(ETAPES.map((e) => e.id).filter((e) => e !== "perdu" && e !== "refus")));
   const [geo, setGeo] = useState<{ charge?: boolean; message?: string }>({});
+  const [mode, setMode] = useState<"statut" | "score">("score");
 
   const places = useMemo(() => prospects.filter((p) => p.latitude != null && p.longitude != null), [prospects]);
   const visibles = useMemo(() => places.filter((p) => actives.has(p.statut)), [places, actives]);
@@ -45,14 +47,17 @@ export function CarteProspects({ prospects, tuiles, attribution }: { prospects: 
     if (!c || !g) return;
     g.clearLayers();
     const coul = Object.fromEntries(ETAPES.map((e) => [e.id, e.couleur]));
-    visibles.forEach((p) => {
-      L.circleMarker([p.latitude!, p.longitude!], { radius: 8, color: "#fff", weight: 2, fillColor: coul[p.statut] ?? "#6d4aff", fillOpacity: 0.95 })
-        .bindPopup(`<b>${esc(p.nom)}</b><br>${esc(p.metier)} · ${esc(p.ville)}${p.telephone ? `<br>${esc(p.telephone)}` : ""}<br><a href="/espace/prospects/${p.id}">Ouvrir la fiche</a>`)
+    // Les plus prometteurs sont dessinés en dernier, donc au-dessus des autres.
+    [...visibles].sort((a, b) => a.score - b.score).forEach((p) => {
+      const n = niveauScore(p.score);
+      const fond = mode === "score" ? COULEUR_NIVEAU[n] : coul[p.statut] ?? "#6d4aff";
+      L.circleMarker([p.latitude!, p.longitude!], { radius: mode === "score" && n === "fort" ? 10 : 8, color: "#fff", weight: 2, fillColor: fond, fillOpacity: 0.95 })
+        .bindPopup(`<b>${esc(p.nom)}</b><br>${esc(p.metier)} · ${esc(p.ville)}<br><span style="color:${COULEUR_NIVEAU[n]};font-weight:700">Priorité ${p.score}/100 · ${LIBELLE_NIVEAU[n]}</span>${p.telephone ? `<br>${esc(p.telephone)}` : ""}<br><a href="/espace/prospects/${p.id}">Ouvrir la fiche</a>`)
         .addTo(g);
     });
     if (visibles.length) c.fitBounds(L.latLngBounds(visibles.map((p) => [p.latitude!, p.longitude!] as [number, number])).pad(0.15), { maxZoom: 13 });
   }
-  useEffect(() => { import("leaflet").then(dessiner); }, [visibles]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { import("leaflet").then(dessiner); }, [visibles, mode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function geocoder() {
     setGeo({ charge: true });
@@ -69,6 +74,14 @@ export function CarteProspects({ prospects, tuiles, attribution }: { prospects: 
     <div className="carte-grille">
       <div className="carte carte-fond"><div ref={div} className="carte-leaflet" role="application" aria-label="Carte des prospects" /></div>
       <aside className="carte pile carte-cote">
+        <div className="bascule" role="group" aria-label="Couleur des points">
+          <button type="button" aria-pressed={mode === "score"} onClick={() => setMode("score")}>Priorité</button>
+          <button type="button" aria-pressed={mode === "statut"} onClick={() => setMode("statut")}>Étape du suivi</button>
+        </div>
+        {mode === "score" && <>
+          <div className="legende">{(["fort", "moyen", "faible"] as NiveauScore[]).map((n) => <span key={n} className="legende-score"><i style={{ background: COULEUR_NIVEAU[n] }} />{LIBELLE_NIVEAU[n]}<small>{places.filter((p) => actives.has(p.statut) && niveauScore(p.score) === n).length}</small></span>)}</div>
+          <p className="note" style={{ margin: 0, fontSize: ".8rem" }}>{EXPLICATION_SCORE}</p>
+        </>}
         <h2 style={{ fontSize: "1.05rem", margin: 0 }}>Étapes affichées</h2>
         <div className="legende">
           {ETAPES.map((e) => (

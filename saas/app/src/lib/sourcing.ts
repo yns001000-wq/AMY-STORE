@@ -22,7 +22,7 @@ interface EtablissementApi {
 export interface ResultatApi {
   siren?: string; nom_complet?: string; nom_raison_sociale?: string | null; activite_principale?: string | null;
   statut_diffusion?: string | null; opposition_diffusion_commerciale?: boolean | null; etat_administratif?: string;
-  date_creation?: string | null; nombre_etablissements_ouverts?: number | null;
+  date_creation?: string | null; nombre_etablissements_ouverts?: number | null; tranche_effectif_salarie?: string | null;
   siege?: EtablissementApi | null; matching_etablissements?: EtablissementApi[] | null;
 }
 
@@ -30,6 +30,7 @@ export interface ProspectTrouve {
   siren: string; siret: string; nom: string; enseigne: string | null; naf: string; metier: string;
   adresse: string; code_postal: string; ville: string; departement: string; source: string; indices: string;
   latitude: number | null; longitude: number | null;
+  date_creation: string | null; tranche_effectif: string | null;
 }
 
 export interface Opposition { sirens: Set<string>; sirets: Set<string> }
@@ -64,6 +65,7 @@ export function versProspect(r: ResultatApi, secteur: Secteur, dep: string, opp:
     siren: r.siren, siret: e.siret, nom, enseigne: enseigne ? titre(enseigne) : null, naf, metier: secteur.metier(naf),
     adresse: e.adresse ?? "", code_postal: e.code_postal ?? "", ville: titre(e.libelle_commune ?? ""), departement: dep,
     source: SOURCE_SIRENE, indices, ...coordonnees(e),
+    date_creation: /^\d{4}-\d{2}-\d{2}$/.test(r.date_creation ?? "") ? r.date_creation! : null, tranche_effectif: r.tranche_effectif_salarie ?? null,
   };
 }
 

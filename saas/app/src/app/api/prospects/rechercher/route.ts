@@ -51,11 +51,17 @@ export async function POST() {
     return reponseLimite("prospects", plan);
   }
 
-  const { error } = await admin.from("prospects").insert(reserves.map((p) => ({
+  const lignes = reserves.map((p) => ({
     user_id: uid, siret: p.siret, siren: p.siren, nom: p.nom, enseigne: p.enseigne, naf: p.naf, metier: p.metier, adresse: p.adresse,
     code_postal: p.code_postal, ville: p.ville, departement: p.departement, source: p.source, indices: p.indices, latitude: p.latitude, longitude: p.longitude,
+    date_creation: p.date_creation, tranche_effectif: p.tranche_effectif,
     journal: [{ d: new Date().toISOString().slice(0, 10), t: "Trouvé dans la base Sirene (registre public)" }],
-  })));
+  }));
+  let { error } = await admin.from("prospects").insert(lignes);
+  // Migration 0010 pas encore appliquée (colonnes du score absentes) : on enregistre sans elles plutôt que d'échouer.
+  if (error && /date_creation|tranche_effectif/.test(error.message ?? "")) {
+    ({ error } = await admin.from("prospects").insert(lignes.map(({ date_creation: _d, tranche_effectif: _t, ...reste }) => reste)));
+  }
   if (error) {
     await admin.from("attributions").delete().in("siret", reserves.map((p) => p.siret)).eq("user_id", uid);
     return NextResponse.json({ erreur: "Enregistrement impossible" }, { status: 500 });

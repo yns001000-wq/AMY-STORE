@@ -1,17 +1,19 @@
 import Link from "next/link";
 import { ArrowRight, BadgeEuro, Check, ChartLine, Croissant, GraduationCap, Hammer, Handshake, MapPin, MessageSquareText, MonitorSmartphone, ReceiptText, Rocket, Scissors, Search, ShieldCheck, Store, UtensilsCrossed, WandSparkles, Wrench, Zap } from "lucide-react";
 import { Tarifs } from "@/components/Tarifs";
-import { ApercuCockpit } from "@/components/ApercuCockpit";
+import { DemoCodePostal } from "@/components/DemoCodePostal";
+import { Captures } from "@/components/Captures";
+import { Temoignages } from "@/components/Temoignages";
 import { Provenance } from "@/components/Provenance";
 import { PLANS } from "@/lib/plans";
 import { prixOffre } from "@/lib/lancement";
 
 const METHODE = [
-  { ico: Search, t: "Trouver", d: "Vous choisissez un métier et un département. MySite cherche les commerces indépendants dans le registre officiel des entreprises, et vous les réserve." },
-  { ico: MessageSquareText, t: "Contacter", d: "Pour chaque commerce, un premier message court et personnel est rédigé. Vous relisez, puis vous l'envoyez vous-même." },
-  { ico: MonitorSmartphone, t: "Montrer", d: "En un clic, une maquette de site à son nom. Vous la montrez sur votre téléphone : le commerçant voit son futur site." },
-  { ico: Handshake, t: "Signer et livrer", d: "Devis, mise en ligne en un clic, branchement de son nom de domaine : chaque étape est guidée." },
-  { ico: BadgeEuro, t: "Encaisser", d: "Factures numérotées, suivi des paiements et total encaissé. Vos prix restent les vôtres." },
+  { ico: Search, t: "Trouver", d: "Vous choisissez un métier et un département. MySite cherche les petites entreprises indépendantes dans le registre officiel des entreprises, et vous les réserve." },
+  { ico: MessageSquareText, t: "Contacter", d: "Pour chaque entreprise, un premier message court et personnel est rédigé. Vous relisez, puis vous l'envoyez vous-même." },
+  { ico: MonitorSmartphone, t: "Montrer", d: "En un clic, une maquette de site à son nom. Vous la montrez sur votre téléphone : le gérant voit son futur site." },
+  { ico: Handshake, t: "Signer et livrer", d: "Mise en ligne en un clic et branchement de son nom de domaine (dès l'offre Pro) : chaque étape est guidée." },
+  { ico: BadgeEuro, t: "Encaisser", d: "Devis, factures et suivi des encaissements (dès l'offre Premium). Vos prix restent les vôtres." },
 ];
 const POUR_QUI = [
   { t: "Vous débutez", d: "Pas besoin de savoir coder ni vendre. L'Académie vous guide pas à pas, du statut à la première facture." },
@@ -19,23 +21,23 @@ const POUR_QUI = [
   { t: "Vous avez une agence", d: "Plusieurs départements, gros volumes, sites sans mention MySite : l'offre Ultra est faite pour ça." },
 ];
 const FONCTIONS = [
-  { ico: WandSparkles, coul: "p-rose", t: "Des messages écrits pour chacun", d: "Adaptés au métier, à la ville et à la situation du commerce, avec la mention pour refuser. Rien n'est envoyé sans vous." },
+  { ico: WandSparkles, coul: "p-rose", t: "Des messages écrits pour chacun", d: "Adaptés au métier, à la ville et à la situation de l'entreprise, avec la mention pour refuser. Rien n'est envoyé sans vous." },
   { ico: Store, coul: "p-cyan", t: "Le Studio de sites", d: "Restaurant, pizzeria, coiffure, artisan : un site complet, modifiable, prêt pour le téléphone." },
   { ico: ChartLine, coul: "p-orange", t: "Un suivi clair", d: "Statuts, rappels, historique : vous savez toujours qui rappeler, et quand." },
   { ico: MapPin, coul: "p-vert", t: "La carte de vos prospects", d: "Regroupez vos visites par quartier et organisez vos tournées." },
-  { ico: ReceiptText, coul: "p-violet", t: "Devis et factures", d: "Mentions usuelles, numérotation, suivi des encaissements (dès l'offre Premium)." },
-  { ico: ShieldCheck, coul: "p-indigo", t: "Dans les règles", d: "Registres publics uniquement, entreprises opposées exclues, un seul utilisateur par commerce." },
+  { ico: ReceiptText, coul: "p-violet", t: "Devis, factures et suivi des encaissements", d: "Mentions usuelles, numérotation, total encaissé du mois et de l'année. Inclus dès l'offre Premium." },
+  { ico: ShieldCheck, coul: "p-indigo", t: "Dans les règles", d: "Registres publics uniquement, entreprises opposées exclues, un seul utilisateur par entreprise." },
 ];
 const SECTEURS = [[UtensilsCrossed, "Restaurants et snacks"], [Croissant, "Boulangeries et traiteurs"], [Hammer, "Artisans du bâtiment"], [Scissors, "Coiffure et beauté"], [Wrench, "Services de proximité"]] as const;
 const FAQ = [
-  ["Faut-il savoir créer un site ?", "Non. Le Studio crée le site à partir du nom et du métier du commerce. Vous changez les textes, les photos et les couleurs dans un panneau simple, sans une ligne de code."],
-  ["Je n'ai jamais rien vendu. C'est pour moi ?", "Oui, si vous êtes prêt à contacter des commerçants. L'Académie explique chaque étape : le statut, l'offre, le premier message, la visite, le devis, la livraison."],
+  ["Faut-il savoir créer un site ?", "Non. Le Studio crée le site à partir du nom et du métier de l'entreprise. Vous changez les textes, les photos et les couleurs dans un panneau simple, sans une ligne de code."],
+  ["Je n'ai jamais rien vendu. C'est pour moi ?", "Oui, si vous êtes prêt à contacter des gérants d'entreprise. L'Académie explique chaque étape : le statut, l'offre, le premier message, la visite, le devis, la livraison."],
   ["Est-ce que je vais gagner de l'argent ?", "MySite vous fait gagner du temps (recherche, messages, maquettes, suivi), mais ne garantit aucun revenu : vos ventes dépendent de votre travail, de votre offre et de votre zone."],
   ["À quel prix vendre un site ?", "Vous fixez vos prix librement. L'Académie donne des repères et un exemple d'offre (un prix de création fixe, puis un petit abonnement mensuel)."],
-  ["D'où viennent les commerces proposés ?", "Du registre officiel des entreprises (base Sirene de l'INSEE), complété par OpenStreetMap. Les entreprises qui s'opposent à l'usage commercial de leurs données sont exclues automatiquement."],
-  ["Les commerces proposés ont-ils déjà un site ?", "Certains, oui : le registre ne le dit pas. Chaque fiche a un lien pour le vérifier en un clic avant de contacter le commerce."],
+  ["D'où viennent les entreprises proposées ?", "Du registre officiel des entreprises (base Sirene de l'INSEE), complété par OpenStreetMap. Les entreprises qui s'opposent à l'usage commercial de leurs données sont exclues automatiquement."],
+  ["Les entreprises proposées ont-elles déjà un site ?", "Certains, oui : le registre ne le dit pas. Chaque fiche a un lien pour le vérifier en un clic avant de contacter l'entreprise."],
   ["Faut-il une entreprise pour s'inscrire ?", "Non pour essayer. Pour facturer vos clients, il vous faudra un statut : la micro-entreprise se crée gratuitement en ligne, et l'Académie vous montre comment."],
-  ["Puis-je essayer avant de payer ?", "Oui, avec l'offre Gratuite, sans limite de durée et sans carte bancaire : vos premiers commerces chaque mois, les maquettes express et les deux premiers modules de l'Académie pour comprendre la méthode."],
+  ["Puis-je essayer avant de payer ?", "Oui, avec l'offre Gratuite, sans limite de durée et sans carte bancaire : vos premières entreprises chaque mois, les maquettes express et les deux premiers modules de l'Académie pour comprendre la méthode."],
   ["Puis-je résilier quand je veux ?", "Oui, en ligne, en quelques clics, sans frais ni justification. La résiliation prend effet à la fin de la période payée, et vos données restent accessibles en offre Gratuite."],
 ];
 
@@ -48,8 +50,8 @@ export default function Accueil() {
         <div className="conteneur hero-grille">
           <div>
             <span className="surtitre"><Zap aria-hidden />Débutants, freelances, agences</span>
-            <h1>Vendez des sites web aux <span className="degrade-texte">commerces de votre ville.</span></h1>
-            <p className="chapo">MySite trouve les commerces à contacter, rédige votre premier message, crée une maquette de site à leur nom et prépare le devis, la mise en ligne et la facture. Vous, vous allez les voir.</p>
+            <h1>Montrez à une entreprise son futur site <span className="degrade-texte">avant même de l&apos;appeler.</span></h1>
+            <p className="chapo">MySite trouve les petites entreprises à démarcher autour de vous, écrit le premier message et crée la maquette à leur nom en un clic.</p>
             <div className="actions">
               <Link className="btn p grand" href="/connexion?mode=inscription">Commencer gratuitement <ArrowRight aria-hidden /></Link>
               <Link className="btn grand fantome" href="#methode">Voir comment ça marche</Link>
@@ -58,7 +60,7 @@ export default function Accueil() {
               <li><Check aria-hidden />Sans carte bancaire</li><li><Check aria-hidden />Offre gratuite sans limite de durée</li><li><Check aria-hidden />Résiliable en ligne</li>
             </ul>
           </div>
-          <div><ApercuCockpit /><p className="note" style={{ textAlign: "center", marginTop: ".9rem", fontSize: ".8rem" }}>Aperçu du cockpit, avec des données d&apos;exemple.</p></div>
+          <div><h2 className="demo-titre">Combien d&apos;entreprises à démarcher près de chez vous ?</h2><DemoCodePostal /></div>
         </div>
       </section>
 
@@ -82,6 +84,8 @@ export default function Accueil() {
           </div>
         </div>
       </section>
+
+      <Captures />
 
       <section className="bloc" style={{ paddingTop: 0 }}>
         <div className="conteneur">
@@ -117,6 +121,8 @@ export default function Accueil() {
         </div>
       </section>
 
+      <Temoignages />
+
       <section className="bloc" id="tarifs" style={{ paddingTop: 0 }}>
         <div className="conteneur">
           <div className="tete"><span className="surtitre">Tarifs</span><h2>Gratuit pour commencer, sans engagement ensuite</h2><p>Prix TTC. Vous changez d&apos;offre ou vous arrêtez quand vous voulez, en ligne.</p></div>
@@ -133,7 +139,7 @@ export default function Accueil() {
 
       <section className="conteneur" style={{ paddingBottom: "1rem" }}>
         <div className="appel">
-          <h2>Vos premiers commerces en 2 minutes</h2>
+          <h2>Vos premières entreprises en 2 minutes</h2>
           <p>Créez votre compte gratuit, choisissez un métier et un département : la première recherche part toute seule.</p>
           <Link className="btn grand" href="/connexion?mode=inscription">Créer mon compte gratuit <ArrowRight aria-hidden /></Link>
         </div>
