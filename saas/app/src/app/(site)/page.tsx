@@ -74,10 +74,10 @@ export default function Accueil() {
               {METHODE.map(({ ico: Ico, t, d }, i) => <li key={t} className="carte"><span className="num">{i + 1}</span><div><h3><Ico aria-hidden />{t}</h3><p>{d}</p></div></li>)}
             </ol>
             <figure className="tel-video">
-              <video controls playsInline preload="none" poster="/video/mysite-methode.jpg" aria-label="Vidéo : comment fonctionne MySite, en 40 secondes">
-                <source src="/video/mysite-methode.mp4" type="video/mp4" />
+              <video controls playsInline preload="none" poster="/video/mysite-etapes.jpg" aria-label="Vidéo : vendre ton premier site en 3 étapes avec MySite">
+                <source src="/video/mysite-etapes.mp4" type="video/mp4" />
               </video>
-              <figcaption className="note">La méthode en 40 secondes. Écrans de démonstration, données d&apos;exemple.</figcaption>
+              <figcaption className="note">Vendre ton premier site en 3 étapes, en 40 secondes.</figcaption>
             </figure>
           </div>
         </div>
