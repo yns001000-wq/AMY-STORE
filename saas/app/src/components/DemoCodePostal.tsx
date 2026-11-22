@@ -46,7 +46,7 @@ export function DemoCodePostal() {
       <form className="demo-form" onSubmit={chercher}>
         <label htmlFor="demo-cp"><MapPin aria-hidden />Votre code postal</label>
         <div className="demo-ligne">
-          <input id="demo-cp" inputMode="numeric" autoComplete="postal-code" pattern="\d{5}" maxLength={5} placeholder="ex. 30700" value={cp} onChange={(e) => setCp(e.target.value.replace(/\D/g, ""))} required />
+          <input id="demo-cp" inputMode="numeric" autoComplete="postal-code" pattern="\d{5}" maxLength={5} placeholder="ex. 69003" value={cp} onChange={(e) => setCp(e.target.value.replace(/\D/g, ""))} required />
           <button className="btn p" type="submit" disabled={etat.charge}><Search aria-hidden />{etat.charge ? "Recherche…" : "Voir les entreprises à démarcher"}</button>
         </div>
         <p className="note" style={{ margin: 0, fontSize: ".8rem" }}>Sans inscription. Recherche en direct dans le registre officiel des entreprises : comptez quelques secondes.</p>
