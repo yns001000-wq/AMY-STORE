@@ -53,6 +53,7 @@ export default async function FicheProspect({ params }: { params: Promise<{ id: 
             <p style={{ display: "flex", gap: ".5rem" }}><MapPin size={18} aria-hidden style={{ flex: "none", marginTop: ".2rem", color: "var(--violet)" }} />{p.adresse}</p>
             {p.telephone ? <p><a className="btn p" href={`tel:${String(p.telephone).replace(/[^\d+]/g, "")}`}><Phone aria-hidden />Appeler le {p.telephone}</a></p>
               : <p className="liens-num">Trouver le numéro : <a href={`https://www.google.com/maps/search/?api=1&query=${q}`} target="_blank" rel="noopener">Google Maps</a><a href={`https://www.pagesjaunes.fr/annuaire/chercherlespros?quoiqui=${encodeURIComponent(p.nom)}&ou=${encodeURIComponent(p.ville ?? "")}`} target="_blank" rel="noopener">Pages Jaunes</a></p>}
+            <p className="liens-num">A-t-elle déjà un site ? <a href={`https://www.google.com/search?q=${encodeURIComponent(`"${p.nom}" ${p.ville ?? ""} site`)}`} target="_blank" rel="noopener">Vérifier sur Google</a><a href={`https://www.google.com/maps/search/?api=1&query=${q}`} target="_blank" rel="noopener">Fiche Google Maps</a></p>
             <p className="note" style={{ margin: 0 }}>{p.indices}{p.indices && <br />}{p.siret ? `SIRET ${p.siret} · ` : ""}Source : {p.source}</p>
           </div>
           <form action={enregistrerSuivi} className="carte pile">

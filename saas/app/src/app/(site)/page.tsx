@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BadgeEuro, Check, ChartLine, Croissant, GraduationCap, Hammer, Handshake, MapPin, MessageSquareText, MonitorSmartphone, ReceiptText, Rocket, Scissors, Search, ShieldCheck, Store, UtensilsCrossed, WandSparkles, Wrench, Zap } from "lucide-react";
+import { ArrowRight, BadgeEuro, Check, Croissant, GraduationCap, Hammer, Handshake, MessageSquareText, MonitorSmartphone, ReceiptText, Rocket, Scissors, Search, ShieldCheck, UtensilsCrossed, WandSparkles, Wrench, Zap } from "lucide-react";
 import { Tarifs } from "@/components/Tarifs";
 import { DemoCodePostal } from "@/components/DemoCodePostal";
 import { Captures } from "@/components/Captures";
@@ -8,25 +8,24 @@ import { Provenance } from "@/components/Provenance";
 import { PLANS } from "@/lib/plans";
 import { prixOffre } from "@/lib/lancement";
 
-const METHODE = [
-  { ico: Search, t: "Trouver", d: "Vous choisissez un métier et un département. MySite cherche les petites entreprises indépendantes dans le registre officiel des entreprises, et vous les réserve." },
-  { ico: MessageSquareText, t: "Contacter", d: "Pour chaque entreprise, un premier message court et personnel est rédigé. Vous relisez, puis vous l'envoyez vous-même." },
-  { ico: MonitorSmartphone, t: "Montrer", d: "En un clic, une maquette de site à son nom. Vous la montrez sur votre téléphone : le gérant voit son futur site." },
-  { ico: Handshake, t: "Signer et livrer", d: "Mise en ligne en un clic et branchement de son nom de domaine (dès l'offre Pro) : chaque étape est guidée." },
-  { ico: BadgeEuro, t: "Encaisser", d: "Devis, factures et suivi des encaissements (dès l'offre Premium). Vos prix restent les vôtres." },
+const ETAPES = [
+  { ico: Search, coul: "p-violet", t: "Trouvez", d: "Indiquez votre zone : MySite liste les petites entreprises indépendantes autour de vous, et vous les réserve." },
+  { ico: MessageSquareText, coul: "p-rose", t: "Contactez", d: "Un premier message court et personnel est rédigé pour chacune. Vous relisez, vous l'envoyez." },
+  { ico: MonitorSmartphone, coul: "p-cyan", t: "Montrez", d: "En un clic, une maquette de site à son nom. Le gérant voit son futur site sur votre téléphone." },
+];
+const ENSUITE = [
+  { ico: Handshake, t: "Devis et mise en ligne en un clic", d: "dès l'offre Pro" },
+  { ico: BadgeEuro, t: "Factures et suivi des encaissements", d: "dès l'offre Premium" },
 ];
 const POUR_QUI = [
   { t: "Vous débutez", d: "Pas besoin de savoir coder ni vendre. L'Académie vous guide pas à pas, du statut à la première facture." },
   { t: "Vous êtes freelance", d: "Vous savez faire des sites, mais chercher des clients vous prend trop de temps. MySite prépare vos journées de prospection." },
   { t: "Vous avez une agence", d: "Plusieurs départements, gros volumes, sites sans mention MySite : l'offre Ultra est faite pour ça." },
 ];
-const FONCTIONS = [
-  { ico: WandSparkles, coul: "p-rose", t: "Des messages écrits pour chacun", d: "Adaptés au métier, à la ville et à la situation de l'entreprise, avec la mention pour refuser. Rien n'est envoyé sans vous." },
-  { ico: Store, coul: "p-cyan", t: "Le Studio de sites", d: "Restaurant, pizzeria, coiffure, artisan : un site complet, modifiable, prêt pour le téléphone." },
-  { ico: ChartLine, coul: "p-orange", t: "Un suivi clair", d: "Statuts, rappels, historique : vous savez toujours qui rappeler, et quand." },
-  { ico: MapPin, coul: "p-vert", t: "La carte de vos prospects", d: "Regroupez vos visites par quartier et organisez vos tournées." },
-  { ico: ReceiptText, coul: "p-violet", t: "Devis, factures et suivi des encaissements", d: "Mentions usuelles, numérotation, total encaissé du mois et de l'année. Inclus dès l'offre Premium." },
-  { ico: ShieldCheck, coul: "p-indigo", t: "Dans les règles", d: "Registres publics uniquement, entreprises opposées exclues, un seul utilisateur par entreprise." },
+const AUSSI = [
+  { ico: WandSparkles, coul: "p-rose", t: "Messages écrits pour chacun", d: "SMS, e-mail ou script d'appel, avec la mention pour refuser. Rien n'est envoyé sans vous." },
+  { ico: ReceiptText, coul: "p-violet", t: "Devis et factures", d: "Mentions usuelles, numérotation, total encaissé. Dès l'offre Premium." },
+  { ico: ShieldCheck, coul: "p-indigo", t: "Dans les règles", d: "Registres publics, entreprises opposées exclues, un seul utilisateur par entreprise." },
 ];
 const SECTEURS = [[UtensilsCrossed, "Restaurants et snacks"], [Croissant, "Boulangeries et traiteurs"], [Hammer, "Artisans du bâtiment"], [Scissors, "Coiffure et beauté"], [Wrench, "Services de proximité"]] as const;
 const FAQ = [
@@ -54,13 +53,13 @@ export default function Accueil() {
             <p className="chapo">MySite trouve les petites entreprises à démarcher autour de vous, écrit le premier message et crée la maquette à leur nom en un clic.</p>
             <div className="actions">
               <Link className="btn p grand" href="/connexion?mode=inscription">Commencer gratuitement <ArrowRight aria-hidden /></Link>
-              <Link className="btn grand fantome" href="#methode">Voir comment ça marche</Link>
+              <Link className="btn grand fantome" href="#methode">Comment ça marche</Link>
             </div>
             <ul className="preuves">
               <li><Check aria-hidden />Sans carte bancaire</li><li><Check aria-hidden />Offre gratuite sans limite de durée</li><li><Check aria-hidden />Résiliable en ligne</li>
             </ul>
           </div>
-          <div><h2 className="demo-titre">Combien d&apos;entreprises à démarcher près de chez vous ?</h2><DemoCodePostal /></div>
+          <div className="hero-demo"><span className="demo-badge">Essayez sans inscription</span><h2 className="demo-titre">Combien d&apos;entreprises à démarcher près de chez vous ?</h2><DemoCodePostal /></div>
         </div>
       </section>
 
@@ -70,22 +69,38 @@ export default function Accueil() {
 
       <section className="bloc" id="methode">
         <div className="conteneur">
-          <div className="tete"><span className="surtitre"><Rocket aria-hidden />La méthode</span><h2>Cinq étapes, un seul outil</h2><p>Du premier contact à la facture payée, vous savez toujours quoi faire ensuite.</p></div>
-          <div className="methode-grille">
-            <ol className="methode">
-              {METHODE.map(({ ico: Ico, t, d }, i) => <li key={t} className="carte"><span className="num">{i + 1}</span><div><h3><Ico aria-hidden />{t}</h3><p>{d}</p></div></li>)}
+          <div className="tete"><span className="surtitre"><Rocket aria-hidden />Comment ça marche</span><h2>Votre premier client en 3 étapes</h2><p>Pas besoin de savoir coder ni de connaître la vente : MySite prépare chaque étape, vous allez à la rencontre des gérants.</p></div>
+          <div className="etapes-grille">
+            <ol className="etapes3">
+              {ETAPES.map(({ ico: Ico, coul, t, d }, i) => (
+                <li key={t} className="carte">
+                  <span className={`pastille ${coul}`}><Ico aria-hidden /></span>
+                  <span className="etape-num">Étape {i + 1}</span>
+                  <h3>{t}</h3><p>{d}</p>
+                </li>
+              ))}
             </ol>
             <figure className="tel-video">
               <video controls playsInline preload="none" poster="/video/mysite-etapes.jpg" aria-label="Vidéo : vendre ton premier site en 3 étapes avec MySite">
                 <source src="/video/mysite-etapes.mp4" type="video/mp4" />
               </video>
-              <figcaption className="note">Vendre ton premier site en 3 étapes, en 40 secondes.</figcaption>
+              <figcaption className="note">Les 3 étapes en 40 secondes.</figcaption>
             </figure>
           </div>
+          <div className="ensuite"><strong>Il accepte ?</strong> MySite vous guide jusqu&apos;au bout :{ENSUITE.map(({ ico: Ico, t, d }) => <span key={t}><Ico aria-hidden />{t} <small>({d})</small></span>)}</div>
         </div>
       </section>
 
       <Captures />
+
+      <section className="bloc" id="fonctionnalites" style={{ paddingTop: 0 }}>
+        <div className="conteneur">
+          <div className="tete"><h2>Et aussi</h2></div>
+          <div className="aussi">
+            {AUSSI.map(({ ico: Ico, coul, t, d }) => <article key={t} className="aussi-item"><span className={`pastille ${coul}`}><Ico aria-hidden /></span><div><h3>{t}</h3><p>{d}</p></div></article>)}
+          </div>
+        </div>
+      </section>
 
       <section className="bloc" style={{ paddingTop: 0 }}>
         <div className="conteneur">
@@ -94,14 +109,6 @@ export default function Accueil() {
         </div>
       </section>
 
-      <section className="bloc" id="fonctionnalites" style={{ paddingTop: 0 }}>
-        <div className="conteneur">
-          <div className="tete"><h2>Tout ce qu&apos;il faut, au même endroit</h2><p>Fini les tableurs, les heures sur les annuaires et les sites refaits de zéro.</p></div>
-          <div className="grille">
-            {FONCTIONS.map(({ ico: Ico, coul, t, d }) => <article key={t} className="carte fonction"><span className={`pastille ${coul}`}><Ico aria-hidden /></span><h3>{t}</h3><p>{d}</p></article>)}
-          </div>
-        </div>
-      </section>
 
       <section className="bloc" style={{ paddingTop: 0 }}>
         <div className="conteneur duo">

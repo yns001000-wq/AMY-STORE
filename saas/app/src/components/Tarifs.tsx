@@ -53,8 +53,8 @@ const COMPARATIF: { t: string; v: (p: (typeof PLANS)[PlanId]) => string | boolea
 
 function Comparatif() {
   return (
-    <div className="comparatif">
-      <h3>Comparer les offres en détail</h3>
+    <details className="comparatif">
+      <summary><h3>Comparer les offres en détail</h3><span className="note">Voir le tableau</span></summary>
       <div className="table-wrap">
         <table>
           <caption className="cache">Fonctionnalités incluses dans chaque offre MySite</caption>
@@ -69,7 +69,7 @@ function Comparatif() {
           </tbody>
         </table>
       </div>
-    </div>
+    </details>
   );
 }
 
