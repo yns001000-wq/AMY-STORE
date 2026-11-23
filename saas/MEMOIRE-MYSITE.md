@@ -132,3 +132,9 @@ Ce document est la mémoire complète du projet. Il est fait pour être ajouté 
 
 ## Règle (22/11/2026)
 - Exemples de ville ou de code postal (interface, captures, vidéos, tests) : toujours Lyon ou Paris, jamais Uzès ni le Gard.
+
+## Conversion en ligne (23/11/2026)
+- Fusionné sur main : démo par code postal (/api/demo/compter, cache 24 h, 15/h par IP, aucune donnée personnelle), score de priorité (lib/score.ts), offres cohérentes + comparatif repliable, liste de démarrage, relances J+1/J+3/J+6 (cron 09:23 UTC, /api/cron/relances, désinscription signée), nouveau titre, captures réelles (compte démo fictif Lyon, supprimé), accueil restructuré (3 étapes, captures en zigzag, « Et aussi »).
+- Migration 0010 appliquée le 22/11 avec accord.
+- « Sans site » non affirmé (pas de vérification réelle) ; « Le plus choisi » remplacé par « Recommandé pour démarrer » (aucun abonné).
+- Fiche prospect : lien « A-t-elle déjà un site ? » (recherche Google + fiche Maps).
