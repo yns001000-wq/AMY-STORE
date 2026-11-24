@@ -16,7 +16,7 @@ const ERREURS: Record<string, string> = {
 
 export default async function Connexion({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const q = await searchParams, inscription = q.mode === "inscription", oubli = q.mode === "oubli";
-  const offre = offrePayante(q.offre), src = nettoyerSource(q.src), ref = normaliserCode(q.ref) ?? normaliserCode((await cookies()).get(COOKIE_PARRAIN)?.value);
+  const offre = offrePayante(q.offre), src = nettoyerSource(q.src ?? (q.ref && !normaliserCode(q.ref) ? q.ref : undefined)), ref = normaliserCode(q.ref) ?? normaliserCode((await cookies()).get(COOKIE_PARRAIN)?.value);
   const parrain = inscription && ref ? await parrainDuCode(ref).catch(() => null) : null;
   const suiteInscription = `/connexion?${new URLSearchParams({ mode: "inscription", ...(offre ? { offre } : {}), ...(src ? { src } : {}), ...(ref ? { ref } : {}) })}`;
   return (
