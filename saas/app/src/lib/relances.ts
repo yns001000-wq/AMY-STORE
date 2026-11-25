@@ -26,7 +26,7 @@ export interface EtatRelance {
 /** L'étape correspondante est-elle encore à faire ? */
 function utile(r: Relance, e: EtatRelance): boolean {
   if (r === "j1") return e.prospects === 0;
-  if (r === "j3") return e.sites === 0;
+  if (r === "j3") return e.prospects > 0 && e.sites === 0; // une maquette se crée depuis une entreprise trouvée
   return e.etapesRestantes.length > 0;
 }
 

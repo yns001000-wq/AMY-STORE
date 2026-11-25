@@ -15,6 +15,7 @@ describe("relances des inscrits", () => {
   it("J+3 seulement sans maquette, J+6 seulement si la liste n'est pas finie", () => {
     expect(relanceDuJour(etat({ creeLe: ilYa(3.1), prospects: 2 }), maintenant)).toBe("j3");
     expect(relanceDuJour(etat({ creeLe: ilYa(3.1), prospects: 2, sites: 1 }), maintenant)).toBeNull();
+    expect(relanceDuJour(etat({ creeLe: ilYa(3.1), prospects: 0 }), maintenant)).toBeNull(); // pas de maquette sans entreprise trouvée
     expect(relanceDuJour(etat({ creeLe: ilYa(6.1), prospects: 2, sites: 1 }), maintenant)).toBe("j6");
     expect(relanceDuJour(etat({ creeLe: ilYa(6.1), prospects: 2, sites: 1, etapesRestantes: [] }), maintenant)).toBeNull();
   });
