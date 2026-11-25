@@ -44,7 +44,7 @@ export function emailHtml(c: ContenuEmail, pied: PiedEmail): string {
   const note = c.note ? `<p style="margin:0 0 8px;font-size:13px;line-height:1.5;color:#5f6680">${echapper(c.note)}</p>` : "";
   const site = echapper(pied.site.replace(/^https?:\/\//, "").replace(/\/$/, ""));
   const lienDes = c.desinscription ? urlSure(c.desinscription) : null;
-  const desinscription = lienDes ? `<p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#8a90a8">Tu reçois ces conseils car tu as créé un compte MySite. <a href="${lienDes}" style="color:#8a90a8">Ne plus recevoir ces e-mails</a></p>` : "";
+  const desinscription = lienDes ? `<p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#8a90a8">Tu reçois ces conseils et ton point de la semaine car tu as créé un compte MySite. <a href="${lienDes}" style="color:#8a90a8">Ne plus recevoir ces e-mails</a></p>` : "";
   return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${echapper(c.titre)}</title></head>
 <body style="margin:0;padding:0;background:#f4f2ff;${POLICE}">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f2ff;padding:24px 12px"><tr><td align="center">

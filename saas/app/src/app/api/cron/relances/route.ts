@@ -4,6 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { envoyerEmail, urlSite } from "@/lib/email";
 import { premiersPas } from "@/lib/croissance";
 import { MODULES } from "@/lib/academie/cours";
+import { envoisRecents, MAX_PAR_SEMAINE } from "@/lib/hebdo";
 import { contenuRelance, ETAPES_TU, jetonDesinscription, relanceDuJour, SUJETS, type Relance } from "@/lib/relances";
 
 export const maxDuration = 120;
@@ -37,6 +38,7 @@ export async function GET(req: Request) {
     const etat = { creeLe: p.cree_le as string, desinscrit: !!p.relances_desinscrit, envoyees, prospects: prospects ?? 0, sites: sites ?? 0, etapesRestantes: pas.filter((x) => !x.fait).map((x) => ETAPES_TU[x.id] ?? x.titre) };
     const r = relanceDuJour(etat);
     if (!r) continue;
+    if (envoisRecents(envoyees as Record<string, string>) >= MAX_PAR_SEMAINE) continue; // 2 e-mails de conseils au plus sur 7 jours
     const lienDes = urlSite(`/api/relances/desinscription?u=${p.id}&t=${jetonDesinscription(p.id)}`);
     const ok = await envoyerEmail(email, SUJETS[r], contenuRelance(r, etat, { espace: urlSite("/espace"), desinscription: lienDes }),
       { "List-Unsubscribe": `<${lienDes}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" });
